@@ -1,0 +1,20 @@
+<svg width="64" height="42" viewBox="0 0 64 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M23.353 18.2311C22.014 16.5861 19.509 15.9211 17.358 17.0371C15.554 17.9731 14.23 20.4561 14.755 21.9001L23.353 18.2311ZM27.793 19.5171L12.602 26.0101C11.127 23.9771 10.571 20.4581 12.211 17.4211C13.919 14.2581 17.49 12.5071 21.035 13.1221C24.861 13.7871 27.229 16.7761 27.793 19.5171ZM29.347 9.22607H32.572V9.52407C32.572 14.7431 32.574 19.9611 32.568 25.1801C32.567 25.3861 32.631 25.4741 32.817 25.5481C33.617 25.8661 34.408 26.2021 35.203 26.5331C35.259 26.5561 35.313 26.5841 35.394 26.6221L34.058 29.8361C33.625 29.6571 33.218 29.4901 32.812 29.3211C32.347 29.1271 31.882 28.9301 31.417 28.7391C30.097 28.1991 29.454 27.1871 29.352 25.7941C29.346 25.7091 29.347 25.6241 29.347 25.5381V9.22607V9.22607Z" fill="#F7F7F7"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M41.602 29.373L42.699 26.098C44.113 26.53 45.471 26.423 46.746 25.682C48.013 24.945 48.786 23.832 49.121 22.397L52.503 23.09C51.603 28.053 46.233 31.044 41.602 29.373Z" fill="#81858E"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M42.702 16.739L41.611 13.474C45.754 11.864 51.417 14.347 52.517 19.752L49.122 20.446C48.784 19.01 48.017 17.893 46.748 17.156C45.478 16.42 44.13 16.306 42.702 16.738" fill="#E5E5E5"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M38.726 27.7189C34.94 24.4769 34.902 18.4069 38.721 15.1189L41.018 17.7119C39.932 18.7139 39.348 19.9509 39.35 21.4189C39.351 22.8819 39.925 24.1159 41.021 25.1229L38.726 27.7179" fill="#81858E"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M23.09 24.947L25.49 27.412C22.835 30.182 18.236 30.6 15.14 28.514L16.968 25.6C19.155 26.798 21.181 26.574 23.09 24.947" fill="#F7F7F7"/>
+</g>
+<defs>
+<filter id="filter0_d" x="9.21191" y="8.22607" width="45.3051" height="24.6129" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.509804 0 0 0 0 0.509804 0 0 0 0 0.509804 0 0 0 0.5 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+</defs>
+</svg>

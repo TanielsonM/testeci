@@ -1,0 +1,60 @@
+{
+  "product_card": {
+    "title_header": "COMPRA 100% SEGURA",
+    "author": "Autor",
+    "warranty": "Garantia",
+    "warranty_days": "dias de garantia"
+  },
+  "locales": {
+    "change_country": "Cambiar pais",
+    "search_country": "Buscar pais"
+  },
+  "forms": {
+    "personal": {
+      "inputs": {
+        "name": {
+          "label": "Nombre completo",
+          "placeholder": "Ingrese su nombre completo aquí"
+        },
+        "mail": {
+          "label": "Dirección de correo electrónico",
+          "placeholder": "Dirección de correo electrónico que recibirá el producto"
+        },
+        "confirmation_mail": {
+          "label": "Confirme su dirección de correo electrónico",
+          "placeholder": "Confirme el dirección de correo electrónico recibirá el producto"
+        },
+        "cellphone": {
+          "label": "Teléfono",
+          "placeholder": "Número de teléfono"
+        }
+      }
+    }
+  },
+  "steps": {
+    "personal_data": "Datos personales"
+  },
+  "footer": {
+    "reverved_text": "Todos los derechos reservados",
+    "annual_fee": "*Tasa de Cuota de 2,92% a.m.",
+    "safe": {
+      "first": {
+        "label": "Compra",
+        "emphasis": "SEGURA"
+      },
+      "second": {
+        "label": "Producto",
+        "emphasis": "REVISADO"
+      },
+      "third": {
+        "label": "Dados",
+        "emphasis": "PROTEGIDOS"
+      }
+    }
+  },
+  "general": {
+    "close": "Cerrar",
+    "mail": "Correo electrónico",
+    "telephone": "Teléfono"
+  }
+}

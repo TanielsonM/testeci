@@ -1,0 +1,63 @@
+/* Animations */
+[data-anima=top] {
+  animation: slideFromTop 0.5s forwards;
+}
+[data-anima=right] {
+  animation: slideFromRight 0.5s forwards;
+}
+[data-anima=bottom] {
+  animation: slideFromBottom 0.5s forwards;
+}
+[data-anima=left] {
+  animation: slideFromLeft 0.5s forwards;
+}
+
+/* Keyframes */
+@keyframes slideFromTop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -50px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes slideFromBottom {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 50px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-50px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translate3d(50px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Transitions */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}

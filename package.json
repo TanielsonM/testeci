@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "engines": {
+    "node": "^14.20"
+  },
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 3000",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/image-edge": "^1.0.0-27919678.2f5b64b",
+    "@nuxtjs/i18n": "^8.0.0-beta.9",
+    "@types/node": "^18.11.19",
+    "nuxt": "3.1.2",
+    "sass": "^1.58.0",
+    "sass-loader": "^13.2.0"
+  },
+  "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.3.1",
+    "@pinia/nuxt": "^0.4.6",
+    "nuxt-icon": "^0.2.11",
+    "vue-tel-input": "^5.12.0",
+    "vue-the-mask": "^0.11.1"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "product_card": {
+    "title_header": "100% SAFE PURCHASE",
+    "author": "Author",
+    "warranty": "Warranty",
+    "warranty_days": "warranty days"
+  },
+  "locales": {
+    "change_country": "Change country",
+    "search_country": "Search country"
+  },
+  "forms": {
+    "personal": {
+      "inputs": {
+        "name": {
+          "label": "Full name",
+          "placeholder": "Enter your full name here"
+        },
+        "mail": {
+          "label": "Email address",
+          "placeholder": "E-mail that will receive the product"
+        },
+        "confirmation_mail": {
+          "label": "Confirm your email address",
+          "placeholder": "Confirm the email you will receive the product"
+        },
+        "cellphone": {
+          "label": "Cellphone",
+          "placeholder": "Phone number"
+        }
+      }
+    }
+  },
+  "steps": {
+    "personal_data": "Personal data"
+  },
+  "footer": {
+    "reverved_text": "All rights reserved",
+    "annual_fee": "*Installment at a rate of 2.92% per month",
+    "safe": {
+      "first": {
+        "label": "Safe",
+        "emphasis": "BUY"
+      },
+      "second": {
+        "label": "Revised",
+        "emphasis": "PRODUCT"
+      },
+      "third": {
+        "label": "Protected",
+        "emphasis": "DATA"
+      }
+    }
+  },
+  "general": {
+    "close": "Close",
+    "mail": "Email",
+    "telephone": "Telephone"
+  }
+}
