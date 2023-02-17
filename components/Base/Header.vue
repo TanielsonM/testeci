@@ -25,6 +25,7 @@ const custom_checkout = useCustomCheckoutStore();
       px-4
       sticky
       top-0
+      z-50
     "
   >
     <img
