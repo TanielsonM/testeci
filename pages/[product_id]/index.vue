@@ -16,7 +16,10 @@ const { product } = storeToRefs(productStore);
   </Head>
   <section class="w-full md:max-w-[780px] flex flex-col gap-10">
     <!-- Purchase card -->
-    <BaseCard class="flex justify-end items-end p-5 md:py-[50px] md:px-[60px]" data-anima="bottom">
+    <BaseCard
+      class="flex justify-end items-end p-5 md:py-[50px] md:px-[60px]"
+      data-anima="bottom"
+    >
       <Steps :title="$t('steps.personal_data')" step="01">
         <template #end-line>
           <LocaleSelect />
@@ -37,7 +40,7 @@ const { product } = storeToRefs(productStore);
   </section>
   <!-- Product Card -->
   <section class="w-full md:max-w-[380px] flex flex-col gap-10">
-    <ProductCard :product="product" data-anima="bottom"/>
+    <ProductCard :product="product" data-anima="bottom" />
     <!-- Side Thumb -->
     <img
       v-if="custom_checkout.sideThumb"
