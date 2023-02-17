@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { resolve } from "path";
 // Locales
 import pt from "./locales/pt.json";
 import en from "./locales/en.json";

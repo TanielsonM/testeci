@@ -10,7 +10,6 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "clean-branches": "git branch | grep -v 'main' | xargs git branch -D"
-
   },
   "devDependencies": {
     "@nuxt/image-edge": "^1.0.0-27919678.2f5b64b",
