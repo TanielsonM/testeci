@@ -1,14 +1,4 @@
 {
-  "product_card": {
-    "title_header": "COMPRA 100% SEGURA",
-    "author": "Autor",
-    "warranty": "Garantia",
-    "warranty_days": "dias de garantia"
-  },
-  "locales": {
-    "change_country": "Cambiar pais",
-    "search_country": "Buscar pais"
-  },
   "forms": {
     "personal": {
       "inputs": {
@@ -31,27 +21,40 @@
       }
     }
   },
-  "steps": {
-    "personal_data": "Datos personales"
-  },
-  "footer": {
-    "reverved_text": "Todos los derechos reservados",
-    "annual_fee": "*Tasa de Cuota de 2,92% a.m.",
-    "safe": {
-      "first": {
-        "label": "Compra",
-        "emphasis": "SEGURA"
-      },
-      "second": {
-        "label": "Producto",
-        "emphasis": "REVISADO"
-      },
-      "third": {
-        "label": "Dados",
-        "emphasis": "PROTEGIDOS"
+  "components": {
+    "product_card": {
+      "title_header": "COMPRA 100% SEGURA",
+      "author": "Autor",
+      "warranty": "Garantia",
+      "warranty_days": "dias de garantia"
+    },
+    "locales": {
+      "change_country": "Cambiar pais",
+      "search_country": "Buscar pais"
+    },
+    "steps": {
+      "personal_data": "Datos personales"
+    },
+    "footer": {
+      "reverved_text": "Todos los derechos reservados",
+      "annual_fee": "*Tasa de Cuota de 2,92% a.m.",
+      "safe": {
+        "first": {
+          "label": "Compra",
+          "emphasis": "SEGURA"
+        },
+        "second": {
+          "label": "Producto",
+          "emphasis": "REVISADO"
+        },
+        "third": {
+          "label": "Dados",
+          "emphasis": "PROTEGIDOS"
+        }
       }
     }
   },
+  "pages": {},
   "general": {
     "close": "Cerrar",
     "mail": "Correo electrónico",

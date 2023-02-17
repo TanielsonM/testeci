@@ -20,7 +20,7 @@ const { product } = storeToRefs(productStore);
       class="flex justify-end items-end p-5 md:py-[50px] md:px-[60px]"
       data-anima="bottom"
     >
-      <Steps :title="$t('steps.personal_data')" step="01">
+      <Steps :title="$t('components.steps.personal_data')" step="01">
         <template #end-line>
           <LocaleSelect />
         </template>

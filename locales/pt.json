@@ -1,14 +1,4 @@
 {
-  "product_card": {
-    "title_header": "COMPRA 100% SEGURA",
-    "author": "Autor",
-    "warranty": "Garantia",
-    "warranty_days": "dias de garantia"
-  },
-  "locales": {
-    "change_country": "Alterar país",
-    "search_country": "Buscar país"
-  },
   "forms": {
     "personal": {
       "inputs": {
@@ -31,27 +21,40 @@
       }
     }
   },
-  "steps": {
-    "personal_data": "Dados pessoais"
-  },
-  "footer": {
-    "reverved_text": "Todos os direitos reservados",
-    "annual_fee": "*Parcelamento com tarifa de 2.92% a.m",
-    "safe": {
-      "first": {
-        "label": "Compra",
-        "emphasis": "SEGURA"
-      },
-      "second": {
-        "label": "Produto",
-        "emphasis": "REVISADO"
-      },
-      "third": {
-        "label": "Dados",
-        "emphasis": "PROTEGIDOS"
+  "components": {
+    "product_card": {
+      "title_header": "COMPRA 100% SEGURA",
+      "author": "Autor",
+      "warranty": "Garantia",
+      "warranty_days": "dias de garantia"
+    },
+    "locales": {
+      "change_country": "Alterar país",
+      "search_country": "Buscar país"
+    },
+    "steps": {
+      "personal_data": "Dados pessoais"
+    },
+    "footer": {
+      "reverved_text": "Todos os direitos reservados",
+      "annual_fee": "*Parcelamento com tarifa de 2.92% a.m",
+      "safe": {
+        "first": {
+          "label": "Compra",
+          "emphasis": "SEGURA"
+        },
+        "second": {
+          "label": "Produto",
+          "emphasis": "REVISADO"
+        },
+        "third": {
+          "label": "Dados",
+          "emphasis": "PROTEGIDOS"
+        }
       }
     }
   },
+  "pages": {},
   "general": {
     "close": "Fechar",
     "mail": "E-mail",

@@ -1,14 +1,4 @@
 {
-  "product_card": {
-    "title_header": "100% SAFE PURCHASE",
-    "author": "Author",
-    "warranty": "Warranty",
-    "warranty_days": "warranty days"
-  },
-  "locales": {
-    "change_country": "Change country",
-    "search_country": "Search country"
-  },
   "forms": {
     "personal": {
       "inputs": {
@@ -31,27 +21,40 @@
       }
     }
   },
-  "steps": {
-    "personal_data": "Personal data"
-  },
-  "footer": {
-    "reverved_text": "All rights reserved",
-    "annual_fee": "*Installment at a rate of 2.92% per month",
-    "safe": {
-      "first": {
-        "label": "Safe",
-        "emphasis": "BUY"
-      },
-      "second": {
-        "label": "Revised",
-        "emphasis": "PRODUCT"
-      },
-      "third": {
-        "label": "Protected",
-        "emphasis": "DATA"
+  "components": {
+    "product_card": {
+      "title_header": "100% SAFE PURCHASE",
+      "author": "Author",
+      "warranty": "Warranty",
+      "warranty_days": "warranty days"
+    },
+    "locales": {
+      "change_country": "Change country",
+      "search_country": "Search country"
+    },
+    "steps": {
+      "personal_data": "Personal data"
+    },
+    "footer": {
+      "reverved_text": "All rights reserved",
+      "annual_fee": "*Installment at a rate of 2.92% per month",
+      "safe": {
+        "first": {
+          "label": "Safe",
+          "emphasis": "BUY"
+        },
+        "second": {
+          "label": "Revised",
+          "emphasis": "PRODUCT"
+        },
+        "third": {
+          "label": "Protected",
+          "emphasis": "DATA"
+        }
       }
     }
   },
+  "pages": {},
   "general": {
     "close": "Close",
     "mail": "Email",

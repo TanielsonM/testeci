@@ -52,7 +52,7 @@ const selectCountry = (country) => {
           height="20"
           alt="Selected country logo"
         />
-        {{ !opened ? $t("locales.change_country") : $t("general.close") }}
+        {{ !opened ? $t("components.locales.change_country") : $t("general.close") }}
       </span>
       <Icon name="fluent:chevron-up-down-20-regular" />
     </button>
@@ -92,7 +92,7 @@ const selectCountry = (country) => {
         <Icon name="ic:sharp-search" class="w-[20px] h-[20px] text-txt-color"/>
         <input
           type="text"
-          :placeholder="$t('locales.search_country')"
+          :placeholder="$t('components.locales.search_country')"
           v-model="search"
           class="w-full outline-none bg-checkout text-txt-color"
         />

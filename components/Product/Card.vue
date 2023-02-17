@@ -31,7 +31,7 @@ const amountText = computed(() => {
     >
       <Icon name="mdi:shield-half-full" class="text-white w-4 h-4" />
       <p class="text-white font-semibold text-sm">
-        {{ $t("product_card.title_header") }}
+        {{ $t("components.product_card.title_header") }}
       </p>
     </header>
     <section class="flex gap-4 w-full items-start px-5">
@@ -64,12 +64,12 @@ const amountText = computed(() => {
     <section class="flex flex-col gap-3 px-5 pb-5">
       <!-- Warranty -->
       <p class="flex items-center md:items-start md:flex-col gap-1" v-if="custom_checkout.showWarranty">
-        <span class="infos-title">{{ $t("product_card.warranty") }}</span>
-        <span class="infos-content">{{ product.warranty }} {{ $t('product_card.warranty_days') }}</span>
+        <span class="infos-title">{{ $t("components.product_card.warranty") }}</span>
+        <span class="infos-content">{{ product.warranty }} {{ $t('components.product_card.warranty_days') }}</span>
       </p>
       <!-- Author -->
       <p class="flex items-center md:items-start md:flex-col gap-1" v-if="product.seller">
-        <span class="infos-title">{{ $t("product_card.author") }}</span>
+        <span class="infos-title">{{ $t("components.product_card.author") }}</span>
         <span class="infos-content">{{ product.seller.name }}</span>
       </p>
       <!-- Email -->
