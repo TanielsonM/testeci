@@ -53,4 +53,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  pwa: {
+    manifest: {
+      lang: 'en',
+    },
+  },
 });

@@ -17,4 +17,7 @@ defineProps({
     </span>
     <slot name="end-line" />
   </section>
+  <section class="w-full flex-col mb-5">
+    <slot name="content"/>
+  </section>
 </template>

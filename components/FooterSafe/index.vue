@@ -9,18 +9,18 @@ const items = computed(() => {
   return [
     {
       image: safe_lock,
-      label: t("footer.safe.first.label"),
-      emphasis: t("footer.safe.first.emphasis"),
+      label: t("components.footer.safe.first.label"),
+      emphasis: t("components.footer.safe.first.emphasis"),
     },
     {
       image: safe_product,
-      label: t("footer.safe.second.label"),
-      emphasis: t("footer.safe.second.emphasis"),
+      label: t("components.footer.safe.second.label"),
+      emphasis: t("components.footer.safe.second.emphasis"),
     },
     {
       image: safe_data,
-      label: t("footer.safe.third.label"),
-      emphasis: t("footer.safe.third.emphasis"),
+      label: t("components.footer.safe.third.label"),
+      emphasis: t("components.footer.safe.third.emphasis"),
     },
   ];
 });
