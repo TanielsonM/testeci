@@ -47,7 +47,6 @@ const personalData = ref({
 });
 
 const confirmation_mail = ref("");
-const teste = () => console.log(`teste`);
 </script>
 
 <template>
