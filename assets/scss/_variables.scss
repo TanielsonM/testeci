@@ -1,6 +1,6 @@
 :root {
   /* colors */
-  --greenn: #00E4A0;
+  --greenn: #00e4a0;
 }
 
 [data-theme="light"] {
@@ -8,7 +8,7 @@
   --input-color: #000;
   --checkout: #fff;
   --border-color: #e4e4ec;
-  --bg: #FAFAFB;
+  --bg: #fafafb;
 }
 
 [data-theme="dark"] {
@@ -16,71 +16,71 @@
   --input-color: #f7f7f7;
   --checkout: #1a1c23;
   --border-color: #414249;
-  --background: #17191F
+  --background: #17191f;
 }
 
 [data-theme_color="#00E4A0"] {
-  --main-color: #00E4A0;
+  --main-color: #00e4a0;
   --transparent-color: rgba(0, 228, 160, 0.5);
   --transparent: rgba(0, 228, 160, 0.1);
 }
 
 [data-theme_color="heaven"] {
-  --main-color: #0070EB;
-  --transparent-color: #0058B8;
-  --transparent: #F5F2FC;
+  --main-color: #0070eb;
+  --transparent-color: #0058b8;
+  --transparent: #f5f2fc;
 }
 
 [data-theme_color="#2133D2"] {
-  --main-color: #2133D2;
+  --main-color: #2133d2;
   --transparent-color: rgba(33, 51, 210, 0.5);
   --transparent: rgba(33, 51, 210, 0.1);
 }
 
 [data-theme_color="#FF0C37"] {
-  --main-color: #FF0C37;
+  --main-color: #ff0c37;
   --transparent-color: rgba(255, 12, 55, 0.5);
   --transparent: rgba(255, 12, 55, 0.1);
 }
 
 [data-theme_color="#FFCB37"] {
-  --main-color: #FFCB37;
+  --main-color: #ffcb37;
   --transparent-color: rgba(255, 203, 55, 0.5);
   --transparent: rgba(255, 203, 55, 0.1);
 }
 
 [data-theme_color="#2ED7EE"] {
-  --main-color: #2ED7EE;
+  --main-color: #2ed7ee;
   --transparent-color: rgba(46, 215, 238, 0.5);
   --transparent: rgba(46, 215, 238, 0.1);
 }
 
 [data-theme_color="#5D21D2"] {
-  --main-color: #5D21D2;
+  --main-color: #5d21d2;
   --transparent-color: rgba(93, 33, 210, 0.5);
   --transparent: rgba(93, 33, 210, 0.1);
 }
 
 [data-theme_color="#17191F"] {
-  --main-color: #17191F;
+  --main-color: #17191f;
   --transparent-color: rgba(255, 255, 255, 0.5);
   --transparent: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme_color="#00e4a0"] {
-  --main-color: #17191F;
+  --main-color: #17191f;
   --transparent-color: rgba(255, 255, 255, 0.5);
   --transparent: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme_color="#3483FA"] {
-  --main-color: #3483FA;
+  --main-color: #3483fa;
   --transparent-color: rgba(52, 131, 250, 0.5);
   --transparent: rgba(52, 131, 250, 0.1);
 }
 
 [data-theme_color="#00AF7B"] {
-  --main-color: #00AF7B;
+  --main-color: #00af7b;
   --transparent-color: rgba(0, 175, 123, 0.5);
   --transparent: rgba(0, 175, 123, 0.1);
 }

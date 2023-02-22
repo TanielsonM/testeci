@@ -31,17 +31,7 @@ const selectCountry = (country) => {
 <template>
   <section class="relative">
     <button
-      class="
-        bg-transparent
-        h-[40px]
-        flex
-        justify-between
-        items-center
-        pl-8
-        gap-5
-        text-txt-color
-        locale-focused
-      "
+      class="text-txt-color locale-focused flex h-[40px] items-center justify-between gap-5 bg-transparent pl-8"
       @click="opened = !opened"
     >
       <span class="flex items-center gap-3 text-xs">
@@ -52,49 +42,28 @@ const selectCountry = (country) => {
           height="20"
           alt="Selected country logo"
         />
-        {{ !opened ? $t("components.locales.change_country") : $t("general.close") }}
+        {{
+          !opened
+            ? $t("components.locales.change_country")
+            : $t("general.close")
+        }}
       </span>
       <Icon name="fluent:chevron-up-down-20-regular" />
     </button>
     <ul
       data-anima="top"
       v-if="opened"
-      class="
-        absolute
-        -left-[150px]
-        md:-left-[70px]
-        z-10
-        rounded
-        bg-checkout
-        w-max
-        max-w-[300px]
-        shadow
-        max-h-[400px]
-        overflow-y-auto
-        p-5
-      "
+      class="bg-checkout absolute -left-[150px] z-10 max-h-[400px] w-max max-w-[300px] overflow-y-auto rounded p-5 shadow md:-left-[70px]"
     >
       <section
-        class="
-          box-border
-          flex
-          gap-4
-          items-center
-          border border-gray-400
-          transition-colors
-          duration-300
-          hover:border-gray-100
-          p-2
-          rounded
-          mb-3
-        "
+        class="mb-3 box-border flex items-center gap-4 rounded border border-gray-400 p-2 transition-colors duration-300 hover:border-gray-100"
       >
-        <Icon name="ic:sharp-search" class="w-[20px] h-[20px] text-txt-color"/>
+        <Icon name="ic:sharp-search" class="text-txt-color h-[20px] w-[20px]" />
         <input
           type="text"
           :placeholder="$t('components.locales.search_country')"
           v-model="search"
-          class="w-full outline-none bg-checkout text-txt-color"
+          class="bg-checkout text-txt-color w-full outline-none"
         />
       </section>
       <li
@@ -103,16 +72,7 @@ const selectCountry = (country) => {
           item.sub.toLowerCase().includes(search)
         )"
         :key="index"
-        class="
-          flex flex-nowrap
-          items-center
-          locale-focused
-          py-3
-          text-xs
-          px-3
-          text-txt-color
-          gap-3
-        "
+        class="locale-focused text-txt-color flex flex-nowrap items-center gap-3 py-3 px-3 text-xs"
       >
         <img
           :src="country.img"

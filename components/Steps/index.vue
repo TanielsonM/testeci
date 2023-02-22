@@ -1,23 +1,27 @@
 <script setup>
 defineProps({
   title: String,
-  step: [Number, String]
-})
+  step: [Number, String],
+});
 </script>
 
 <template>
-  <section class="w-full flex justify-between items-center pb-3 border-b border-[#e4e4ec]">
-    <span class="flex items-center gap-5 text-base font-semibold text-black flex-nowrap">
-      <p class="text-main-color text-2xl ">
+  <section
+    class="flex w-full items-center justify-between border-b border-[#e4e4ec] pb-3"
+  >
+    <span
+      class="flex flex-nowrap items-center gap-5 text-base font-semibold text-black"
+    >
+      <p class="text-main-color text-2xl">
         {{ step }}
       </p>
-      <p class="flex-nowrap text-txt-color">
+      <p class="text-txt-color flex-nowrap">
         {{ title }}
       </p>
     </span>
     <slot name="end-line" />
   </section>
-  <section class="w-full flex-col mb-5">
-    <slot name="content"/>
+  <section class="mb-5 w-full flex-col">
+    <slot name="content" />
   </section>
 </template>

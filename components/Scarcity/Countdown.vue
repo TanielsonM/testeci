@@ -75,22 +75,13 @@ watch(
 
 <template>
   <section
-    class="
-      countdown
-      px-2
-      py-1
-      md:px-5 md:py-[10px]
-      rounded-md
-      flex
-      items-center
-      gap-1
-    "
+    class="countdown flex items-center gap-1 rounded-md px-2 py-1 md:px-5 md:py-[10px]"
   >
-    <span class="text-white font-semibold md:text-xl">00h :</span>
-    <span class="text-white font-semibold md:text-xl"
+    <span class="font-semibold text-white md:text-xl">00h :</span>
+    <span class="font-semibold text-white md:text-xl"
       >{{ minutesText }}m :</span
     >
-    <span class="text-white font-semibold md:text-xl">{{ secondText }}s</span>
+    <span class="font-semibold text-white md:text-xl">{{ secondText }}s</span>
   </section>
 </template>
 

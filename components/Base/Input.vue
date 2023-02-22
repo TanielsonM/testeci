@@ -70,36 +70,18 @@ const onInput = (event) => {
 <template>
   <label
     for="input"
-    class="flex flex-col items-start w-full text-txt-color font-semibold gap-2"
+    class="text-txt-color flex w-full flex-col items-start gap-2 font-semibold"
     :data-anima="animation"
   >
     {{ label }}
     <section
-      class="
-        w-full
-        border border-bd-color
-        rounded
-        p-4
-        transition-colors
-        duration-300
-        bg-checkout
-        focus:border-main-color
-        hover:border-main-color
-        flex
-        items-center
-        gap-5
-      "
+      class="border-bd-color bg-checkout focus:border-main-color hover:border-main-color flex w-full items-center gap-5 rounded border p-4 transition-colors duration-300"
     >
       <Icon
         :name="icon"
         v-if="icon && iconPosition === 'start'"
         size="24"
-        class="
-          text-txt-color
-          cursor-pointer
-          focus:text-main-color
-          hover:text-main-color
-        "
+        class="text-txt-color focus:text-main-color hover:text-main-color cursor-pointer"
         @click="emit('prepend-click')"
       />
       <input
@@ -108,7 +90,7 @@ const onInput = (event) => {
         :value="modelValue"
         :placeholder="placeholder"
         :autocomplete="autocomplete"
-        class="w-full h-full bg-checkout outline-none"
+        class="bg-checkout h-full w-full outline-none"
         @input="onInput"
       />
       <input
@@ -117,7 +99,7 @@ const onInput = (event) => {
         :value="modelValue"
         :placeholder="placeholder"
         :autocomplete="autocomplete"
-        class="w-full h-full bg-checkout outline-none"
+        class="bg-checkout h-full w-full outline-none"
         v-mask="mask"
         @input="onInput"
       />
@@ -125,12 +107,7 @@ const onInput = (event) => {
         :name="icon"
         v-if="icon && iconPosition === 'end'"
         size="24"
-        class="
-          text-txt-color
-          cursor-pointer
-          focus:text-main-color
-          hover:text-main-color
-        "
+        class="text-txt-color focus:text-main-color hover:text-main-color cursor-pointer"
         @click="emit('append-click')"
       />
     </section>

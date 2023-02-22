@@ -1,5 +1,7 @@
 <template>
-  <section class="card flex flex-col rounded-lg gap-4 bg-checkout w-full max-w-[1200px] h-auto">
+  <section
+    class="card bg-checkout flex h-auto w-full max-w-[1200px] flex-col gap-4 rounded-lg"
+  >
     <slot />
   </section>
 </template>

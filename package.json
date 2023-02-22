@@ -9,15 +9,28 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "clean-branches": "git branch | grep -v 'main' | xargs git branch -D"
+    "clean-branches": "git branch | grep -v 'main' | xargs git branch -D",
+    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+    "lint:prettier": "prettier --check .",
+    "lint": "yarn lint:js && yarn lint:prettier",
+    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "devDependencies": {
     "@nuxt/image-edge": "^1.0.0-27919678.2f5b64b",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/i18n": "^8.0.0-beta.9",
     "@types/node": "^18.11.19",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "nuxt": "3.1.2",
+    "prettier": "^2.8.4",
+    "prettier-plugin-tailwindcss": "^0.2.3",
     "sass": "^1.58.0",
-    "sass-loader": "^13.2.0"
+    "sass-loader": "^13.2.0",
+    "typescript": "^4.9.5",
+    "vue-eslint-parser": "^9.1.0"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.3.1",

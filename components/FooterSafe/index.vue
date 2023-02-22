@@ -27,7 +27,7 @@ const items = computed(() => {
 </script>
 
 <template>
-  <section class="w-full flex justify-around">
+  <section class="flex w-full justify-around">
     <span
       class="flex flex-col items-center"
       v-for="(item, index) in items"
@@ -39,10 +39,10 @@ const items = computed(() => {
         :alt="`icon safe ${index + 1}`"
         width="25"
         height="34"
-        class="w-[25px] h-[34px] mb-2"
+        class="mb-2 h-[34px] w-[25px]"
       />
-      <p class="text-[11px] text-txt-color">{{ item.label }}</p>
-      <p class="text-[13px] font-semibold emphasis">{{ item.emphasis }}</p>
+      <p class="text-txt-color text-[11px]">{{ item.label }}</p>
+      <p class="emphasis text-[13px] font-semibold">{{ item.emphasis }}</p>
     </span>
   </section>
 </template>

@@ -1,7 +1,9 @@
 import { useProductStore } from "@/stores/product.js";
 import { useCustomCheckoutStore } from "@/stores/customCheckout.js";
+import { useProductsStore } from "@/stores/products.js";
 
 export const useGetProduct = async (id, offer = null, configs = {}) => {
+  const productsStore = useProductsStore()
   const productStore = useProductStore();
   const customCheckoutStore = useCustomCheckoutStore();
   const { setProduct } = productStore;
@@ -26,13 +28,13 @@ export const useGetProduct = async (id, offer = null, configs = {}) => {
   if (data.hasError) {
     throw createError({
       statusCode: data.status,
-      message: `Ocorreu um erro ao processar a sua solicitação`
-    })
+      message: `Ocorreu um erro ao processar a sua solicitação`,
+    });
     return;
   }
 
-
   setProduct(data.value?.data);
+  productsStore.addProduct(data.value?.data)
 
   if (data.value?.custom_checkout && customThemeId) {
     setCustomCheckout(data.value.custom_checkout);

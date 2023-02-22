@@ -23,31 +23,35 @@ const custom_checkout = useCustomCheckoutStore();
 
 const imgs = [
   {
-    src: custom_checkout.theme === 'light' ? logo : logoDark,
+    src: custom_checkout.theme === "light" ? logo : logoDark,
     alt: "Greenn logo",
   },
   {
-    src: custom_checkout.theme === 'light' ? VisaIcon : VisaIconDark,
+    src: custom_checkout.theme === "light" ? VisaIcon : VisaIconDark,
     alt: "Visa icon",
   },
   {
-    src: custom_checkout.theme === 'light' ? MastercardIcon : MastercardIconDark,
+    src:
+      custom_checkout.theme === "light" ? MastercardIcon : MastercardIconDark,
     alt: "Mastercard icon",
   },
   {
-    src: custom_checkout.theme === 'light' ? HipercardIcon : HipercardIconDark,
+    src: custom_checkout.theme === "light" ? HipercardIcon : HipercardIconDark,
     alt: "Hipercard-v2 icon",
   },
   {
-    src: custom_checkout.theme === 'light' ? DinersIcon : DinersIconDark,
+    src: custom_checkout.theme === "light" ? DinersIcon : DinersIconDark,
     alt: "Diners icon",
   },
   {
-    src: custom_checkout.theme === 'light' ? EloIcon : EloIconDark,
+    src: custom_checkout.theme === "light" ? EloIcon : EloIconDark,
     alt: "Elo icon",
   },
   {
-    src: custom_checkout.theme === 'light' ? BoletoBarcodeIcon : BoletoBarcodeIconDark,
+    src:
+      custom_checkout.theme === "light"
+        ? BoletoBarcodeIcon
+        : BoletoBarcodeIconDark,
     alt: "Boleto barcode icon",
   },
 ];
@@ -57,21 +61,17 @@ const actual_year = computed(() => new Date().getFullYear());
 
 <template>
   <footer
-    class="
-      w-screen
-      min-h-[45px]
-      flex flex-col
-      items-center
-      justify-center
-      p-4
-      gap-5
-    "
+    class="flex min-h-[45px] w-screen flex-col items-center justify-center gap-5 p-4"
   >
-    <section class="flex flex-wrap gap-5 w-full items-center justify-center px-10">
-      <p class="relative text-txt-color font-normal text-[10px] flex flex-nowrap">
+    <section
+      class="flex w-full flex-wrap items-center justify-center gap-5 px-10"
+    >
+      <p
+        class="text-txt-color relative flex flex-nowrap text-[10px] font-normal"
+      >
         {{ $t("components.footer.annual_fee") }}
       </p>
-      <span class="flex flex-wrap gap-5 items-center justify-center">
+      <span class="flex flex-wrap items-center justify-center gap-5">
         <img
           v-for="(img, index) in imgs"
           :src="img.src"
@@ -83,7 +83,7 @@ const actual_year = computed(() => new Date().getFullYear());
         />
       </span>
     </section>
-    <p class="text-txt-color font-normal text-[10px]">
+    <p class="text-txt-color text-[10px] font-normal">
       Greenn © {{ actual_year }} - {{ $t("components.footer.reverved_text") }}
     </p>
   </footer>
@@ -103,7 +103,7 @@ const actual_year = computed(() => new Date().getFullYear());
   }
 }
 
-[data-theme=dark] {
+[data-theme="dark"] {
   .footer-icons {
     opacity: 0.7;
   }

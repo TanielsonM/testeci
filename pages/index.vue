@@ -5,8 +5,8 @@ setTimeout(() => {
 </script>
 
 <template>
-  <main class="h-screen w-screen flex justify-center">
-    <h1 class="text-6xl text-gray-400 font-semibold mt-[20vh]">
+  <main class="flex h-screen w-screen justify-center">
+    <h1 class="mt-[20vh] text-6xl font-semibold text-gray-400">
       Esta página não foi encontrada...
     </h1>
   </main>

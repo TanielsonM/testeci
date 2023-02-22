@@ -1,6 +1,6 @@
 <script setup>
-import { useCustomCheckoutStore } from '~~/stores/customCheckout';
-const { showWhatsappButton, whatsapp_options } = useCustomCheckoutStore()
+import { useCustomCheckoutStore } from "~~/stores/customCheckout";
+const { showWhatsappButton, whatsapp_options } = useCustomCheckoutStore();
 const openWhatsapp = () => {
   window.open(
     `https://wa.me/${
@@ -13,24 +13,9 @@ const openWhatsapp = () => {
 
 <template>
   <section
-    class="
-      whatsapp
-      flex
-      items-center
-      justify-center
-      fixed
-      bottom-10
-      right-10
-      rounded-full
-      bg-[#25d366]
-      w-[60px]
-      h-[60px]
-      cursor-pointer
-    "
+    class="whatsapp fixed bottom-10 right-10 flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-full bg-[#25d366]"
     v-if="
-      showWhatsappButton &&
-      whatsapp_options.number &&
-      whatsapp_options.message
+      showWhatsappButton && whatsapp_options.number && whatsapp_options.message
     "
     @click="openWhatsapp"
   >

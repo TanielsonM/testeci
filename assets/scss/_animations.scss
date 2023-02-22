@@ -1,14 +1,14 @@
 /* Animations */
-[data-anima=top] {
+[data-anima="top"] {
   animation: slideFromTop 0.5s forwards;
 }
-[data-anima=right] {
+[data-anima="right"] {
   animation: slideFromRight 0.5s forwards;
 }
-[data-anima=bottom] {
+[data-anima="bottom"] {
   animation: slideFromBottom 0.5s forwards;
 }
-[data-anima=left] {
+[data-anima="left"] {
   animation: slideFromLeft 0.5s forwards;
 }
 
@@ -55,9 +55,11 @@
 }
 
 /* Transitions */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }

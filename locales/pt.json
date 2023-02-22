@@ -19,6 +19,38 @@
           "placeholder": "Número de telefone"
         }
       }
+    },
+    "address": {
+      "inputs": {
+        "zipcode": {
+          "label": "CEP",
+          "placeholder": "CEP"
+        },
+        "public_place": {
+          "label": "Logradouro",
+          "placeholder": "Digite o logradouro"
+        },
+        "number": {
+          "label": "Número",
+          "placeholder": "Número"
+        },
+        "city": {
+          "label": "Cidade",
+          "placeholder": "Cidade"
+        },
+        "neighborhood": {
+          "label": "Bairro",
+          "placeholder": "Bairro"
+        },
+        "complement": {
+          "label": "Complemento",
+          "placeholder": "Complemento do endereço"
+        },
+        "state": {
+          "label": "Estado",
+          "placeholder": "Selecione um estado"
+        }
+      }
     }
   },
   "components": {
@@ -26,14 +58,16 @@
       "title_header": "COMPRA 100% SEGURA",
       "author": "Autor",
       "warranty": "Garantia",
-      "warranty_days": "dias de garantia"
+      "warranty_days": "dias de garantia",
+      "is_subscription": "Você está assinando"
     },
     "locales": {
       "change_country": "Alterar país",
       "search_country": "Buscar país"
     },
     "steps": {
-      "personal_data": "Dados pessoais"
+      "personal_data": "Dados pessoais",
+      "address": "Endereço"
     },
     "footer": {
       "reverved_text": "Todos os direitos reservados",

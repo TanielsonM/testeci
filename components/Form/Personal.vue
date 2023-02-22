@@ -1,7 +1,10 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~~/stores/customCheckout";
+import { usePersonalStore } from "@/stores/forms/personal";
 
 /* Variables */
+const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
 const documentText = computed(() => {
@@ -39,33 +42,28 @@ const documentText = computed(() => {
   }
 });
 
-const personalData = ref({
-  name: "",
-  mail: "",
-  cellphone: "",
-  document: "",
-});
+const { name, email, cellphone, document } = storeToRefs(personalStore);
 
 const confirmation_mail = ref("");
 </script>
 
 <template>
-  <form class="w-full grid gap-3">
+  <form class="grid grid-cols-12 w-full gap-3">
     <BaseInput
-      class="col-span-1"
+      class="col-span-12"
       :label="$t('forms.personal.inputs.name.label')"
       :placeholder="$t('forms.personal.inputs.name.placeholder')"
-      v-model="personalData.name"
+      v-model="name"
     />
     <BaseInput
-      class="col-span-1"
+      class="col-span-12"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       type="email"
-      v-model="personalData.mail"
+      v-model="email"
     />
     <BaseInput
-      class="col-span-1"
+      class="col-span-12"
       :label="$t('forms.personal.inputs.confirmation_mail.label')"
       :placeholder="$t('forms.personal.inputs.confirmation_mail.placeholder')"
       type="email"
@@ -73,20 +71,20 @@ const confirmation_mail = ref("");
       v-model="confirmation_mail"
       v-if="custom_checkout.hasConfirmationEmail"
     />
-    <section class="flex flex-col lg:flex-row w-full gap-5">
-      <BaseInput
-        class="md:min-w-[350px]"
-        :label="$t('forms.personal.inputs.cellphone.label')"
-        :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
-        v-model="personalData.cellphone"
-      />
-      <BaseInput
-        v-if="['BR', 'MX', 'UY', 'AR', 'CL'].includes(currentCountry)"
-        :label="documentText.label"
-        :placeholder="documentText.placeholder"
-        v-model="personalData.document"
-        :mask="documentText.mask"
-      />
-    </section>
+    <BaseInput
+      class="col-span-12 xl:col-span-6"
+      :label="$t('forms.personal.inputs.cellphone.label')"
+      :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
+      v-model="cellphone"
+      type="tel"
+    />
+    <BaseInput
+      class="col-span-12 xl:col-span-6"
+      v-if="['BR', 'MX', 'UY', 'AR', 'CL'].includes(currentCountry)"
+      :label="documentText.label"
+      :placeholder="documentText.placeholder"
+      v-model="document"
+      :mask="documentText.mask"
+    />
   </form>
 </template>

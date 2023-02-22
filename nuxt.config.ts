@@ -1,4 +1,6 @@
 import { resolve } from "path";
+import { createCommonJS } from 'mlly'
+const { __dirname } = createCommonJS(import.meta.url)
 // Locales
 import pt from "./locales/pt.json";
 import en from "./locales/en.json";
@@ -21,7 +23,7 @@ export default defineNuxtConfig({
     dirs: ["stores"],
   },
   plugins: ["~/plugins/vue-the-mask.js"],
-  css: ["~/assets/scss/_global.scss"],
+  css: ["~/assets/scss/_global.scss", "~/assets/tailwind.css"],
   app: {
     head: {
       charset: "utf-8",
@@ -55,7 +57,16 @@ export default defineNuxtConfig({
   },
   pwa: {
     manifest: {
-      lang: 'en',
+      lang: "en",
     },
   },
+  hooks: {
+    'pages:extend' (pages) {
+      pages.push({
+        name: 'has-offer',
+        path: '/:product_id/offer/:hash',
+        file: resolve(__dirname, '/pages/[product_id]/index.vue')
+      })
+    }
+  }
 });

@@ -19,6 +19,38 @@
           "placeholder": "Phone number"
         }
       }
+    },
+    "address": {
+      "inputs": {
+        "zipcode": {
+          "label": "Zip code",
+          "placeholder": "Zip code"
+        },
+        "public_place": {
+          "label": "Public place",
+          "placeholder": "Enter the Backyard"
+        },
+        "number": {
+          "label": "Number",
+          "placeholder": "Number"
+        },
+        "city": {
+          "label": "City",
+          "placeholder": "City"
+        },
+        "neighborhood": {
+          "label": "Neighborhood",
+          "placeholder": "Neighborhood"
+        },
+        "complement": {
+          "label": "Complement",
+          "placeholder": "Address complement"
+        },
+        "state": {
+          "label": "State/District",
+          "placeholder": "Select a state/district"
+        }
+      }
     }
   },
   "components": {
@@ -26,14 +58,16 @@
       "title_header": "100% SAFE PURCHASE",
       "author": "Author",
       "warranty": "Warranty",
-      "warranty_days": "warranty days"
+      "warranty_days": "warranty days",
+      "is_subscription": "You are signing"
     },
     "locales": {
       "change_country": "Change country",
       "search_country": "Search country"
     },
     "steps": {
-      "personal_data": "Personal data"
+      "personal_data": "Personal data",
+      "address": "Address"
     },
     "footer": {
       "reverved_text": "All rights reserved",

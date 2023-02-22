@@ -9,24 +9,13 @@ const custom_checkout = useCustomCheckoutStore();
   <Scarcity />
   <header
     v-if="custom_checkout.topThumb"
-    class="w-screen max-h-[40vh] flex items-center justify-center -mt-8"
+    class="-mt-8 flex max-h-[40vh] w-screen items-center justify-center"
   >
     <img :src="custom_checkout.topThumb" alt="Thumb superior" />
   </header>
   <header
     v-if="!custom_checkout.hasScarcity || !custom_checkout.topThumb"
-    class="
-      w-screen
-      min-h-[60px]
-      bg-checkout
-      shadow-lg
-      flex
-      items-center
-      px-4
-      sticky
-      top-0
-      z-50
-    "
+    class="bg-checkout sticky top-0 z-50 flex min-h-[60px] w-screen items-center px-4 shadow-lg"
   >
     <img
       :src="
