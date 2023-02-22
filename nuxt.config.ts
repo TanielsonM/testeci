@@ -1,6 +1,6 @@
 import { resolve } from "path";
-import { createCommonJS } from 'mlly'
-const { __dirname } = createCommonJS(import.meta.url)
+import { createCommonJS } from "mlly";
+const { __dirname } = createCommonJS(import.meta.url);
 // Locales
 import pt from "./locales/pt.json";
 import en from "./locales/en.json";
@@ -61,12 +61,12 @@ export default defineNuxtConfig({
     },
   },
   hooks: {
-    'pages:extend' (pages) {
+    "pages:extend"(pages) {
       pages.push({
-        name: 'has-offer',
-        path: '/:product_id/offer/:hash',
-        file: resolve(__dirname, '/pages/[product_id]/index.vue')
-      })
-    }
-  }
+        name: "has-offer",
+        path: "/:product_id/offer/:hash",
+        file: resolve(__dirname, "/pages/[product_id]/index.vue"),
+      });
+    },
+  },
 });

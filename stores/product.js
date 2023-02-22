@@ -9,6 +9,10 @@ export const useProductStore = definePiniaStore("product", {
   getters: {
     product_id: (state) => state.product.id,
     isSubscription: (state) => state.product.type === "SUBSCRIPTION",
+    isValid: (state) =>
+      state.product.state_offer === "APPROVED" &&
+      state.product.state_product === "APPROVED" &&
+      state.product.is_active,
   },
   actions: {
     setProduct(product) {

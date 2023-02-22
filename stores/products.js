@@ -1,12 +1,12 @@
 export const useProductsStore = definePiniaStore("products", {
   state: () => ({
-    list: []
+    list: [],
   }),
   getters: {},
   actions: {
     addProduct(product) {
       this.list.push(product);
     },
-    removeProduct(product) {}
-  }
-})
+    removeProduct(product) {},
+  },
+});

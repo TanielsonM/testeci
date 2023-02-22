@@ -3,7 +3,7 @@ import { useCustomCheckoutStore } from "@/stores/customCheckout.js";
 import { useProductsStore } from "@/stores/products.js";
 
 export const useGetProduct = async (id, offer = null, configs = {}) => {
-  const productsStore = useProductsStore()
+  const productsStore = useProductsStore();
   const productStore = useProductStore();
   const customCheckoutStore = useCustomCheckoutStore();
   const { setProduct } = productStore;
@@ -34,7 +34,7 @@ export const useGetProduct = async (id, offer = null, configs = {}) => {
   }
 
   setProduct(data.value?.data);
-  productsStore.addProduct(data.value?.data)
+  productsStore.addProduct(data.value?.data);
 
   if (data.value?.custom_checkout && customThemeId) {
     setCustomCheckout(data.value.custom_checkout);

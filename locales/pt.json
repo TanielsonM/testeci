@@ -92,6 +92,7 @@
   "general": {
     "close": "Fechar",
     "mail": "E-mail",
-    "telephone": "Telefone"
+    "telephone": "Telefone",
+    "error_message": "Este produto não está disponível para pagamento."
   }
 }

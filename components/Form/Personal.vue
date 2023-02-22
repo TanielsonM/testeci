@@ -48,7 +48,7 @@ const confirmation_mail = ref("");
 </script>
 
 <template>
-  <form class="grid grid-cols-12 w-full gap-3">
+  <form class="grid w-full grid-cols-12 gap-3">
     <BaseInput
       class="col-span-12"
       :label="$t('forms.personal.inputs.name.label')"

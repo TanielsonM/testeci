@@ -92,6 +92,7 @@
   "general": {
     "close": "Cerrar",
     "mail": "Correo electrónico",
-    "telephone": "Teléfono"
+    "telephone": "Teléfono",
+    "error_message": "Este producto no está disponible para pago."
   }
 }

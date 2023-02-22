@@ -13,6 +13,7 @@ export default <Partial<Config>>{
         greenn: "var(--greenn)",
         background: "var(--background)",
         checkout: "var(--checkout)",
+        error: "var(--error)",
         "txt-color": "var(--txt-color)",
         "main-color": "var(--main-color)",
         "main-transparent-color": "var(--transparent-color)",
