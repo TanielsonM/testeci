@@ -1,3 +1,5 @@
+import { useCheckoutStore } from "~/store/checkout.js";
+
 export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
   state: () => ({
     custom_checkout: null,
@@ -20,6 +22,8 @@ export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
     /* hasConfirmationEmail */
     hasConfirmationEmail: (state) =>
       state.custom_checkout?.confirmation_email === "on" || null,
+    /* Jivochat ID */
+    hasJivochatId: (state) => state.custom_checkout?.jivochat_id ?? null,
     /* showWarranty */
     showWarranty: (state) =>
       state.custom_checkout?.warranty_checkout === "on" || null,
@@ -47,6 +51,10 @@ export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
   actions: {
     setCustomCheckout(checkout) {
       this.custom_checkout = checkout;
+      if (this.hasJivochatId) {
+        const checkout = useCheckoutStore();
+        checkout.setJivochat(this.hasJivochatId);
+      }
     },
   },
 });

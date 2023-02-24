@@ -16,7 +16,7 @@ import DinersIconDark from "@/assets/footer/diners-dark.svg";
 import EloIconDark from "@/assets/footer/elo-dark.svg";
 import BoletoBarcodeIconDark from "@/assets/footer/boleto-barcode-dark.svg";
 
-import { useCustomCheckoutStore } from "~~/stores/customCheckout";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 /* Variables */
 const custom_checkout = useCustomCheckoutStore();

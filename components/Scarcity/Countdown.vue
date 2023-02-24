@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { useProductStore } from "~~/stores/product";
+import { useProductStore } from "~~/store/product";
 
 const { product_id } = useProductStore();
 const cookie = useCookie(`time_scarcity-${product_id}`);

@@ -1,5 +1,5 @@
 <script setup>
-import { useCustomCheckoutStore } from "~~/stores/customCheckout";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import logo from "../../assets/logos/logo.png";
 
 const custom_checkout = useCustomCheckoutStore();

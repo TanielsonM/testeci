@@ -1,7 +1,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { useProductStore } from "~~/stores/product";
-import { useCustomCheckoutStore } from "~~/stores/customCheckout";
+import { useProductStore } from "~~/store/product";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 /* Variables */
 const custom_checkout = useCustomCheckoutStore();
