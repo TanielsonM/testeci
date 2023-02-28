@@ -56,6 +56,16 @@ const props = defineProps({
     default: () => "end",
     validator: (value) => ["start", "end"].includes(value),
   },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  customClass: {
+    type: String,
+    required: false,
+    default: () => "",
+  },
 });
 const emit = defineEmits([
   "update:modelValue",
@@ -90,7 +100,9 @@ const onInput = (event) => {
         :value="modelValue"
         :placeholder="placeholder"
         :autocomplete="autocomplete"
+        :disabled="disabled"
         class="bg-checkout h-full w-full outline-none"
+        :class="customClass"
         @input="onInput"
       />
       <input
@@ -99,7 +111,9 @@ const onInput = (event) => {
         :value="modelValue"
         :placeholder="placeholder"
         :autocomplete="autocomplete"
+        :disabled="disabled"
         class="bg-checkout h-full w-full outline-none"
+        :class="customClass"
         v-mask="mask"
         @input="onInput"
       />
@@ -115,3 +129,9 @@ const onInput = (event) => {
     <small data-anima="right" class="text-red-400" v-else>{{ error }}</small>
   </label>
 </template>
+
+<style lang="scss" scoped>
+input::placeholder {
+  text-transform: none;
+}
+</style>

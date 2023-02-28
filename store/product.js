@@ -12,19 +12,28 @@ export const useProductStore = definePiniaStore("product", {
       state.product.is_active == 1,
     hasFees: (state) => state.product.no_interest_installments, // com ou sem juros
     isPhysicalProduct: (state) => state.product.is_produto_fisico,
+    productType: (state) => state.product.type,
+    hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
+    allowedCoupon: (state) => state.product.allowed_coupon,
   },
   actions: {
     setProduct(product) {
       this.product = product;
 
+      if (this.product.status_product === "CHANGED")
+        this.product.status_product = "APPROVED";
+      if (this.product.status_offer === "PENDING")
+        this.product.status_offer = "APPROVED";
+
       const checkout = useCheckoutStore();
       checkout.setAmount(product.amount);
       checkout.setOriginalAmount(product.amount);
-      checkout.setAllowedMethods(product.method.split(","));
       checkout.setInstallments(
         this.product.max_installments,
-        this.product.max_installments
+        this.product.max_installments,
+        this.hasFixedInstallments
       );
+      checkout.setAllowedMethods(product.method.split(","));
     },
   },
 });

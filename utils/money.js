@@ -1,4 +1,5 @@
 export function formatMoney(amount) {
+  if (!amount) return amount;
   const cookie = useCookie("locale");
   let localeFormat = computed(
     () => `${cookie.value?.language}-${cookie.value?.sigla}` || "pt-BR"

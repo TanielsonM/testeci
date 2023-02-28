@@ -5,14 +5,12 @@ export const useApi = async (url, method, configs) => {
     method,
     baseURL: config.public.baseURL,
   });
-
-  if (error.value) {
-    return {
-      hasError: true,
-      status: error.value.statusCode,
-      message: error.value.statusMessage,
-    };
+  if (!data.value) {
+    throw createError({
+      statusCode: 404,
+      message: `Ocorreu um erro ao processar a sua solicitação`,
+    });
   }
 
-  return data;
+  return data.value;
 };

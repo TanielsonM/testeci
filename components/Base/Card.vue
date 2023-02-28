@@ -8,6 +8,6 @@
 
 <style lang="scss" scoped>
 .card {
-  box-shadow: 0 0 5px rgba($color: #000000, $alpha: 0.2);
+  box-shadow: 2px 4px 10px rgba($color: #000000, $alpha: 0.05);
 }
 </style>

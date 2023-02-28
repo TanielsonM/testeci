@@ -86,6 +86,11 @@
           "emphasis": "DATA"
         }
       }
+    },
+    "coupon": {
+      "add": "Add a discount coupon",
+      "input_placeholder": "Enter a coupon",
+      "apply": "Apply coupon"
     }
   },
   "pages": {},

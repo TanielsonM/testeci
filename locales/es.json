@@ -86,6 +86,11 @@
           "emphasis": "PROTEGIDOS"
         }
       }
+    },
+    "coupon": {
+      "add": "Añadir un cupón de descuento",
+      "input_placeholder": "Introduce un cupón",
+      "apply": "Aplicar cupón"
     }
   },
   "pages": {},

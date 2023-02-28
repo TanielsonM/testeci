@@ -1,10 +1,15 @@
-import { useProductStore } from "@/stores/product.js";
-import { useCustomCheckoutStore } from "@/stores/customCheckout.js";
-import { useProductsStore } from "@/stores/products.js";
+import { useProductStore } from "@/store/product.js";
+import { useCustomCheckoutStore } from "@/store/customCheckout.js";
+import { useCheckoutStore } from "@/store/checkout.js";
 
-export const useGetProduct = async (id, offer = null, configs = {}) => {
-  const productsStore = useProductsStore();
+export const useGetProduct = async (
+  id,
+  offer = null,
+  country = null,
+  configs = {}
+) => {
   const productStore = useProductStore();
+  const checkoutStore = useCheckoutStore();
   const customCheckoutStore = useCustomCheckoutStore();
   const { setProduct } = productStore;
   const { setCustomCheckout } = customCheckoutStore;
@@ -22,26 +27,20 @@ export const useGetProduct = async (id, offer = null, configs = {}) => {
       ? `/product/checkout/${id}/offer/${offer}`
       : `/product/checkout/${id}`;
   }
+  let query = {};
+  if (country) query.country = country;
+  if (checkoutStore.global_settings.contry !== "BR" && !country)
+    query.country = checkoutStore.global_settings.contry;
 
-  const data = await useApi(url, "get", configs);
-
-  if (data.hasError) {
-    throw createError({
-      statusCode: data.status,
-      message: `Ocorreu um erro ao processar a sua solicitação`,
-    });
-    return;
+  try {
+    const data = await useApi(url, "get", { ...configs, query });
+    setProduct(data.data);
+    if (data?.custom_checkout && customThemeId) {
+      setCustomCheckout(data.custom_checkout);
+    }
+    return data?.data;
+  } catch (error) {
+    checkoutStore.setError(true);
+    checkoutStore.setLoading();
   }
-
-  setProduct(data.value?.data);
-  productsStore.addProduct(data.value?.data);
-
-  if (data.value?.custom_checkout && customThemeId) {
-    setCustomCheckout(data.value.custom_checkout);
-  }
-  if (data.value?.checkout_payment) {
-    useState("checkout_payment", () => ref(data.value.checkout_payment));
-  }
-
-  return data.value?.data;
 };

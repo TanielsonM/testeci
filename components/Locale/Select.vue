@@ -1,23 +1,37 @@
 <script setup>
+import { storeToRefs } from "pinia";
+/* Import and instance checkout store */
+import { useCheckoutStore } from "~~/store/checkout";
+const checkout = useCheckoutStore();
+const { global_settings } = storeToRefs(checkout);
+/* import locale */
 const { locale } = useI18n();
+/* import country list */
 const { alphabetical } = useCountrys();
+/* Use locale cookie and set default value*/
 const cookie = useCookie("locale", {
   default: () =>
-    alphabetical.filter((item) => item.language === locale.value).pop(),
+    alphabetical
+      .filter((item) => item.sigla === global_settings.value.country)
+      .pop(),
   watch: true,
 });
+/* set default value in locale */
 locale.value = cookie.value.language;
+/* set default value in use state */
 const currentCountryAcronym = useState(
   "currentCountry",
   () => cookie.value.sigla
 );
+/* Get current country */
 const currentCountry = computed(() =>
   alphabetical.filter((item) => item.sigla === cookie.value.sigla).pop()
 );
+/* set current country in controller variable */
 const selectedCountry = ref(currentCountry.value);
 const opened = ref(false);
 const search = ref("");
-
+/* Function to set new country after selected */
 const selectCountry = (country) => {
   opened.value = !opened.value;
   search.value = "";
@@ -25,6 +39,9 @@ const selectCountry = (country) => {
   cookie.value = JSON.stringify(country);
   selectedCountry.value = country;
   currentCountryAcronym.value = country.sigla;
+  setTimeout(() => {
+    checkout.init();
+  }, 20);
 };
 </script>
 

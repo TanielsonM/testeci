@@ -1,18 +1,25 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { useProductStore } from "~~/stores/product";
-import { useCustomCheckoutStore } from "~~/stores/customCheckout";
-
+import { useProductStore } from "~~/store/product";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
+import { useCheckoutStore } from "~~/store/checkout";
+import { formatMoney } from "~/utils/money";
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
+const checkout = useCheckoutStore();
 /* State */
-const { product, amount, method } = storeToRefs(productStore);
+const { product, allowedCoupon } = storeToRefs(productStore);
+const { getInstallments, method, installments, hasFees } =
+  storeToRefs(checkout);
+/* Show amount text */
 const amountText = computed(() => {
   switch (method.value) {
     case "CREDIT_CARD":
-      return `12x de R$ ${amount.value}`;
+      return `${installments.value}x de ${formatMoney(
+        getInstallments.value()
+      )} ${hasFees.value ? "(Sem juros)" : ""}`;
     default:
-      return `R$ ${amount.value}`;
+      return `${formatMoney(getInstallments.value())}`;
   }
 });
 </script>
@@ -112,6 +119,8 @@ const amountText = computed(() => {
           {{ product.seller.company.support_telephone }}
         </a>
       </p>
+      <!-- Coupon -->
+      <ProductCoupon v-if="allowedCoupon" />
     </section>
   </BaseCard>
 </template>

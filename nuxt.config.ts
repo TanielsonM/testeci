@@ -7,6 +7,21 @@ import en from "./locales/en.json";
 import es from "./locales/es.json";
 
 export default defineNuxtConfig({
+  ssr: true,
+  modern: "server",
+  cache: {
+    max: 1000,
+    maxAge: 900000,
+  },
+  image: {
+    presets: {
+      default: {
+        quality: 75,
+        width: 1200,
+        height: 1200,
+      },
+    },
+  },
   modules: [
     "@nuxtjs/tailwindcss",
     "nuxt-icon",
@@ -20,7 +35,7 @@ export default defineNuxtConfig({
     ],
   ],
   imports: {
-    dirs: ["stores"],
+    dirs: ["store"],
   },
   plugins: ["~/plugins/vue-the-mask.js"],
   css: ["~/assets/scss/_global.scss", "~/assets/tailwind.css"],
@@ -35,7 +50,6 @@ export default defineNuxtConfig({
           content: "My amazing site.",
         },
       ],
-      link: [],
     },
   },
   runtimeConfig: {
