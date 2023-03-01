@@ -27,6 +27,7 @@ import flagCA from "@/assets/locales/flag-CA.png";
 import flagAU from "@/assets/locales/flag-AU.png";
 import flagUS from "@/assets/locales/flag-US.png";
 import flagUK from "@/assets/locales/flag-UK.png";
+import flagOthers from "@/assets/locales/flag-OTHER.png";
 
 export default [
   /* Pt */
@@ -37,6 +38,7 @@ export default [
     pais: "Brasil",
     currency: "BRL",
     img: flagBR,
+    show: true,
   },
   /* Es */
   {
@@ -46,6 +48,7 @@ export default [
     pais: "Argentina",
     currency: "ARS",
     img: flagAR,
+    show: false,
   },
   {
     language: "es",
@@ -54,6 +57,7 @@ export default [
     pais: "Bolivia",
     currency: "BOB",
     img: flagBO,
+    show: false,
   },
   {
     language: "es",
@@ -62,6 +66,7 @@ export default [
     pais: "Chile",
     currency: "CLP",
     img: flagCL,
+    show: true,
   },
   {
     language: "es",
@@ -70,6 +75,7 @@ export default [
     pais: "Colombia",
     currency: "COP",
     img: flagCO,
+    show: true,
   },
   {
     language: "es",
@@ -78,6 +84,7 @@ export default [
     pais: "Costa Rica",
     currency: "CRC",
     img: flagCR,
+    show: false,
   },
   {
     language: "es",
@@ -86,6 +93,7 @@ export default [
     pais: "República Dominicana",
     currency: "DOP",
     img: flagDO,
+    show: false,
   },
   {
     language: "es",
@@ -94,6 +102,7 @@ export default [
     pais: "Equador",
     currency: "ECS",
     img: flagEC,
+    show: true,
   },
   {
     language: "es",
@@ -102,6 +111,7 @@ export default [
     pais: "Espanha",
     currency: "EUR",
     img: flagES,
+    show: true,
   },
   {
     language: "es",
@@ -110,6 +120,7 @@ export default [
     pais: "França",
     currency: "EUR",
     img: flagFR,
+    show: true,
   },
   {
     language: "es",
@@ -118,6 +129,7 @@ export default [
     pais: "Guatemala",
     currency: "GTQ",
     img: flagGT,
+    show: false,
   },
   {
     language: "es",
@@ -126,6 +138,7 @@ export default [
     pais: "Honduras",
     currency: "HNL",
     img: flagHN,
+    show: false,
   },
   {
     language: "es",
@@ -134,6 +147,7 @@ export default [
     pais: "Italia",
     currency: "",
     img: flagIT,
+    show: true,
   },
   {
     language: "es",
@@ -142,6 +156,7 @@ export default [
     pais: "Israel",
     currency: "EUR",
     img: flagIL,
+    show: true,
   },
   {
     language: "es",
@@ -150,6 +165,7 @@ export default [
     pais: "Japão",
     currency: "JPY",
     img: flagJP,
+    show: true,
   },
   {
     language: "es",
@@ -158,6 +174,7 @@ export default [
     pais: "Malaysia",
     currency: "MYR",
     img: flagMY,
+    show: true,
   },
   {
     language: "es",
@@ -166,6 +183,7 @@ export default [
     pais: "México",
     currency: "MXN",
     img: flagMX,
+    show: true,
   },
   {
     language: "es",
@@ -174,6 +192,7 @@ export default [
     pais: "Panamá",
     currency: "PAB",
     img: flagPA,
+    show: false,
   },
   {
     language: "es",
@@ -182,6 +201,7 @@ export default [
     pais: "Peru",
     currency: "PEN",
     img: flagPE,
+    show: true,
   },
   {
     language: "es",
@@ -190,14 +210,16 @@ export default [
     pais: "Porto Rico",
     currency: "USD",
     img: flagPR,
+    show: true,
   },
   {
-    language: "es",
+    language: "pt",
     sigla: "PT",
     sub: "Portugal",
     pais: "Portugal",
     currency: "EUR",
     img: flagPT,
+    show: true,
   },
   {
     language: "es",
@@ -206,6 +228,7 @@ export default [
     pais: "Paraguai",
     currency: "PYG",
     img: flagPY,
+    show: false,
   },
   {
     language: "es",
@@ -214,6 +237,7 @@ export default [
     pais: "Uruguai",
     currency: "UYU",
     img: flagUY,
+    show: false,
   },
   /* En */
   {
@@ -223,6 +247,7 @@ export default [
     pais: "Alemanha",
     currency: "EUR",
     img: flagDE,
+    show: true,
   },
   {
     language: "en",
@@ -231,6 +256,7 @@ export default [
     pais: "Canadá",
     currency: "CAD",
     img: flagCA,
+    show: false,
   },
   {
     language: "en",
@@ -239,6 +265,7 @@ export default [
     pais: "Austrália",
     currency: "AUD",
     img: flagAU,
+    show: false,
   },
   {
     language: "en",
@@ -247,6 +274,7 @@ export default [
     pais: "Estados Unidos",
     currency: "USD",
     img: flagUS,
+    show: true,
   },
   {
     language: "en",
@@ -255,5 +283,15 @@ export default [
     pais: "Reino Unido",
     currency: "GBP",
     img: flagUK,
+    show: true,
+  },
+  {
+    language: "en",
+    sigla: "OUTROS",
+    sub: "Others",
+    pais: "Outros",
+    currency: "USD",
+    img: flagOthers,
+    show: true,
   },
 ];
