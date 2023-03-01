@@ -40,6 +40,15 @@ export default [
     img: flagBR,
     show: true,
   },
+  {
+    language: "pt",
+    sigla: "PT",
+    sub: "Portugal",
+    pais: "Portugal",
+    currency: "EUR",
+    img: flagPT,
+    show: true,
+  },
   /* Es */
   {
     language: "es",
@@ -210,15 +219,6 @@ export default [
     pais: "Porto Rico",
     currency: "USD",
     img: flagPR,
-    show: true,
-  },
-  {
-    language: "pt",
-    sigla: "PT",
-    sub: "Portugal",
-    pais: "Portugal",
-    currency: "EUR",
-    img: flagPT,
     show: true,
   },
   {
