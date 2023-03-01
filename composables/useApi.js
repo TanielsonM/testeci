@@ -3,11 +3,11 @@ export const useApi = async (url, method, configs) => {
   const { data, error } = await useFetch(url, {
     ...configs,
     method,
-    baseURL: config.public.baseURL,
+    baseURL: config.public.API_BASE_URL,
   });
-  if (!data.value) {
-    throw createError({
-      statusCode: 404,
+  if (error.value) {
+    throw showError({
+      statusCode: error.value.statusCode,
       message: `Ocorreu um erro ao processar a sua solicitação`,
     });
   }

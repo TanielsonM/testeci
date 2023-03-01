@@ -22,7 +22,7 @@ checkout.init();
   </main>
   <main
     v-else
-    class="bg-background flex min-h-screen w-screen flex-col items-center gap-8"
+    class="bg-background flex min-h-screen w-screen flex-col items-center gap-8 px-5"
     :data-theme="custom_checkout.theme"
     :data-theme_color="custom_checkout.themeColor"
   >
@@ -32,7 +32,7 @@ checkout.init();
       v-if="!product.isValid"
     >
       <Icon name="mdi:close-circle" size="120" class="text-error" />
-      <h1 class="text-2xl">{{ $t("general.error_message") }}</h1>
+      <h1 class="text-2xl text-center">{{ $t("general.error_message") }}</h1>
     </BaseCard>
     <section
       v-else
