@@ -7,7 +7,7 @@ const { global_settings } = storeToRefs(checkout);
 /* import locale */
 const { locale } = useI18n();
 /* import country list */
-const { alphabetical } = useCountrys();
+const { alphabetical, searcher } = useCountrys();
 /* Use locale cookie and set default value*/
 const cookie = useCookie("locale", {
   default: () =>
@@ -85,9 +85,7 @@ const selectCountry = (country) => {
       </section>
       <li
         @click="selectCountry(country)"
-        v-for="(country, index) in alphabetical.filter((item) =>
-          item.sub.toLowerCase().includes(search)
-        )"
+        v-for="(country, index) in searcher(search)"
         :key="index"
         class="locale-focused text-txt-color flex flex-nowrap items-center gap-3 py-3 px-3 text-xs"
       >
