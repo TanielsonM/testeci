@@ -8,11 +8,6 @@ import es from "./locales/es.json";
 
 export default defineNuxtConfig({
   ssr: true,
-  modern: "server",
-  cache: {
-    max: 1000,
-    maxAge: 900000,
-  },
   image: {
     presets: {
       default: {
@@ -54,7 +49,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      baseURL: "https://greenn-back-2.innovaweb.com.br/api",
+      API_BASE_URL: "https://greenn-back-2.innovaweb.com.br/api",
     },
   },
   i18n: {
@@ -67,11 +62,6 @@ export default defineNuxtConfig({
         en,
         es,
       },
-    },
-  },
-  pwa: {
-    manifest: {
-      lang: "en",
     },
   },
   hooks: {
