@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      API_BASE_URL: "https://greenn-back-2.innovaweb.com.br/api",
+      API_BASE_URL: process.env.API_HOST,
     },
   },
   i18n: {
@@ -72,5 +72,8 @@ export default defineNuxtConfig({
         file: resolve(__dirname, "/pages/[product_id]/index.vue"),
       });
     },
+  },
+  typescript: {
+    strict: true,
   },
 });
