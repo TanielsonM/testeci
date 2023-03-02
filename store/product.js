@@ -6,15 +6,22 @@ export const useProductStore = definePiniaStore("product", {
   getters: {
     product_id: (state) => state.product.id,
     isSubscription: (state) => state.product.type === "SUBSCRIPTION",
-    isValid: (state) =>
-      state.product.status_offer === "APPROVED" &&
-      state.product.status_product === "APPROVED" &&
-      state.product.is_active == 1,
+    isValid(state) {
+      return () => {
+        const checkout = useCheckoutStore();
+        return (
+          state.product.status_offer === "APPROVED" &&
+          state.product.status_product === "APPROVED" &&
+          state.product.is_active == 1
+        );
+      };
+    },
     hasFees: (state) => state.product.no_interest_installments, // com ou sem juros
     isPhysicalProduct: (state) => state.product.is_produto_fisico,
     productType: (state) => state.product.type,
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
     allowedCoupon: (state) => state.product.allowed_coupon,
+    isHeaven: (state) => !!state.product.seller.is_heaven,
   },
   actions: {
     setProduct(product) {

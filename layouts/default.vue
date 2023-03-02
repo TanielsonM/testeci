@@ -28,8 +28,8 @@ checkout.init();
   >
     <BaseHeader />
     <BaseCard
-      class="border-b-error mt-10 flex max-w-[800px] flex-col items-center gap-6 border-b-4 py-10 px-20"
-      v-if="!product.isValid"
+      class="border-b-error mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-gray-200 border-b-4 py-10 px-5 md:px-20"
+      v-if="!product.isValid()"
     >
       <Icon name="mdi:close-circle" size="120" class="text-error" />
       <h1 class="text-2xl text-center">{{ $t("general.error_message") }}</h1>
@@ -40,7 +40,7 @@ checkout.init();
     >
       <slot />
     </section>
-    <BaseFooter v-if="product.isValid" />
-    <ButtonWhatsapp v-if="product.isValid" />
+    <BaseFooter v-if="product.isValid()" />
+    <ButtonWhatsapp v-if="product.isValid()" />
   </main>
 </template>
