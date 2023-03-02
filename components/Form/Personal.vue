@@ -45,6 +45,10 @@ const documentText = computed(() => {
 const { name, email, cellphone, document } = storeToRefs(personalStore);
 
 const confirmation_mail = ref("");
+
+const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+  currentCountry.value
+);
 </script>
 
 <template>
@@ -72,7 +76,8 @@ const confirmation_mail = ref("");
       v-if="custom_checkout.hasConfirmationEmail"
     />
     <BaseInput
-      class="col-span-12 xl:col-span-6"
+      class="col-span-12"
+      :class="{ 'xl:col-span-6': showPhoneInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       v-model="cellphone"
@@ -80,7 +85,7 @@ const confirmation_mail = ref("");
     />
     <BaseInput
       class="col-span-12 xl:col-span-6"
-      v-if="['BR', 'MX', 'UY', 'AR', 'CL'].includes(currentCountry)"
+      v-if="showPhoneInput"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
       v-model="document"
