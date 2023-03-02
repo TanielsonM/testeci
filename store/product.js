@@ -22,6 +22,7 @@ export const useProductStore = definePiniaStore("product", {
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
     allowedCoupon: (state) => state.product.allowed_coupon,
     isHeaven: (state) => !!state.product.seller.is_heaven,
+    isGreenn: (state) => !!state.product.seller.is_greenn,
   },
   actions: {
     setProduct(product) {

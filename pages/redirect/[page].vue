@@ -1,6 +1,13 @@
 <script setup>
 const route = useRoute();
-await useRedirect(route.params.page);
+await useApi()
+  .read(`/link/${route.params.page}`)
+  .then((res) => {
+    if (res.value.url)
+      navigateTo(res.value.url, {
+        external: true,
+      });
+  });
 </script>
 
 <template>

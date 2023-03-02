@@ -56,7 +56,7 @@ export const useGetProduct = async (
     }
     return response?.data;
   } catch (error) {
-    checkoutStore.setError("Ocorreu um erro ao processar os dados do produto");
+    checkoutStore.setError("Ocorreu um erro ao processar a sua solicitação");
     checkoutStore.setLoading();
   }
 };

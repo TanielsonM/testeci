@@ -150,26 +150,29 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       ];
       const query = { keys: keys.join(",") };
       try {
-        const res = await useApi("/global-settings", "get", { query });
-        res.forEach((item) => {
-          if (item.key == "PAGARME_ANTIFRAUDE") {
-            this.global_settings.antifraud =
-              item.value == "ENABLED" ? true : false;
-          }
-          if (item.key == "MONTHLY_INTEREST") {
-            this.global_settings.monthly_interest = parseFloat(item.value);
-          }
-          if (item.key == "CHECKOUT_CAPTCHA") {
-            this.global_settings.captcha =
-              item.value == "ENABLED" ? true : false;
-          }
-        });
-        let countryGlobalSettings = [...res].find((item) => item.country);
-        this.global_settings.country = countryGlobalSettings
-          ? countryGlobalSettings.country
-          : "US";
+        await useApi()
+          .read("/global-settings", { query })
+          .then((res) => {
+            res.forEach((item) => {
+              if (item.key == "PAGARME_ANTIFRAUDE") {
+                this.global_settings.antifraud =
+                  item.value == "ENABLED" ? true : false;
+              }
+              if (item.key == "MONTHLY_INTEREST") {
+                this.global_settings.monthly_interest = parseFloat(item.value);
+              }
+              if (item.key == "CHECKOUT_CAPTCHA") {
+                this.global_settings.captcha =
+                  item.value == "ENABLED" ? true : false;
+              }
+            });
+            let countryGlobalSettings = [...res].find((item) => item.country);
+            this.global_settings.country = countryGlobalSettings
+              ? countryGlobalSettings.country
+              : "US";
+          });
       } catch (error) {
-        this.setError(true);
+        this.setError("Ocorreu um erro ao processar os dados do produto");
         this.global_settings.country = "BR";
         this.setLoading();
       }
@@ -236,11 +239,11 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     setLoading(value = false) {
       this.global_loading = value;
     },
-    setError(error = false) {
-      this.hasError = error;
-      createError({
+    setError(error = "") {
+      this.hasError = true;
+      showError({
         statusCode: 404,
-        message: "teste",
+        message: error,
       });
     },
   },
