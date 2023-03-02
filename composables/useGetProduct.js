@@ -29,8 +29,9 @@ export const useGetProduct = async (
   }
   let query = {};
   if (country) query.country = country;
-  if (checkoutStore.global_settings.contry !== "BR" && !country)
-    query.country = checkoutStore.global_settings.contry;
+  if (checkoutStore.global_settings.country !== "BR" && !country) {
+    query.country = checkoutStore.global_settings.country;
+  }
 
   try {
     const data = await useApi(url, "get", { ...configs, query });

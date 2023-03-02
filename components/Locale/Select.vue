@@ -9,11 +9,12 @@ const { locale } = useI18n();
 /* import country list */
 const { alphabetical, searcher } = useCountrys();
 /* Use locale cookie and set default value*/
+const countryDefault =
+  alphabetical
+    .filter((item) => item.sigla === global_settings.value.country)
+    .pop() || searcher("OTHERS").pop();
 const cookie = useCookie("locale", {
-  default: () =>
-    alphabetical
-      .filter((item) => item.sigla === global_settings.value.country)
-      .pop(),
+  default: () => countryDefault,
   watch: true,
 });
 /* set default value in locale */
@@ -65,7 +66,11 @@ const selectCountry = (country) => {
             : $t("general.close")
         }}
       </span>
-      <Icon name="fluent:chevron-up-down-20-regular" />
+      <Icon
+        name="ic:round-arrow-drop-down"
+        class="duration-500"
+        :class="{ 'rotate-180': opened }"
+      />
     </button>
     <ul
       data-anima="top"
