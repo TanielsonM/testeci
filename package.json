@@ -5,7 +5,8 @@
   },
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --port 3000",
+    "dev": "nuxt dev --port 3000 --dotenv .env.development",
+    "staging": "nuxt dev --port 3000 --dotenv .env.staging",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
