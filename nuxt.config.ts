@@ -50,6 +50,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       API_BASE_URL: process.env.API_HOST,
+      CHECKOUT_PAGE: process.env.VUE_CHECKOUT_PAGE,
+      HEAVEN_CHECKOUT_PAGE: process.env.VUE_CHECKOUT_HEAVEN_PAGE,
     },
   },
   i18n: {
