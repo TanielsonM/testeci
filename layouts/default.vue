@@ -2,14 +2,15 @@
 // Logos
 import Greenn from "@/assets/logos/logo.png";
 import Heaven from "@/assets/heaven/logo.svg";
-
+// Stores
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
+// Variables
 const custom_checkout = useCustomCheckoutStore();
 const product = useProductStore();
 const checkout = useCheckoutStore();
-checkout.init();
+const logo = computed(() => checkout.isHeaven ? Heaven : Greenn);
 </script>
 
 <template>
@@ -18,7 +19,7 @@ checkout.init();
     class="bg-background flex h-screen w-screen flex-col items-center justify-center gap-8"
   >
     <img
-      :src="checkout.isHeaven ? Heaven : Greenn"
+      :src="logo"
       alt="logo do greenn"
       width="250"
       class="animate-bounce"

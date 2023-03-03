@@ -22,7 +22,7 @@ function apply() {
       @click="isOpen = !isOpen"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
-      <p class="font-bold text-[13px] text-txt-color w-full">
+      <p class="font-semibold text-[13px] text-txt-color w-full">
         {{ $t("components.coupon.add") }}
       </p>
       <Icon

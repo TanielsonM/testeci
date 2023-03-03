@@ -1,8 +1,11 @@
 <script setup>
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
-import logo from "../../assets/logos/logo.png";
+import { useCheckoutStore } from "~~/store/checkout";
+import greenn from "../../assets/logos/logo.png";
+import heaven from "../../assets/heaven/logo.svg";
 
 const custom_checkout = useCustomCheckoutStore();
+const checkout = useCheckoutStore();
 </script>
 
 <template>
@@ -19,7 +22,11 @@ const custom_checkout = useCustomCheckoutStore();
   >
     <img
       :src="
-        custom_checkout.customLogotipo ? custom_checkout.customLogotipo : logo
+        custom_checkout.customLogotipo
+          ? custom_checkout.customLogotipo
+          : checkout.isHeaven
+          ? heaven
+          : greenn
       "
       alt="Logo da pagina"
       class="max-h-10 max-w-[100px]"

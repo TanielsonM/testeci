@@ -45,7 +45,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       loading: false,
       name: "",
     },
-    isHeaven: false,
+    is_heaven: false,
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -106,6 +106,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         return amount;
       };
     },
+    isHeaven: (state) => state.is_heaven,
     /**
      * @description this method validate if checkout is greenn or heaven and if product is greenn or heaven
      */
@@ -113,8 +114,8 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       return () => {
         const product = useProductStore();
         return (
-          (product.isHeaven && state.isHeaven) ||
-          (!product.isHeaven && !state.isHeaven)
+          (product.isHeaven && this.isHeaven) ||
+          (!product.isHeaven && !this.isHeaven)
         );
       };
     },
@@ -261,7 +262,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     },
     setProjectDomain(url = "") {
       const config = useRuntimeConfig();
-      this.isHeaven = url.includes(config.public.HEAVEN_CHECKOUT_PAGE);
+      this.is_heaven = url.includes(config.public.HEAVEN_CHECKOUT_PAGE);
     },
   },
 });
