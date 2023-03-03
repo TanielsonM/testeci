@@ -1,4 +1,8 @@
 <script setup>
+// Logos
+import Greenn from "@/assets/logos/logo.png";
+import Heaven from "@/assets/heaven/logo.svg";
+
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
@@ -14,7 +18,7 @@ checkout.init();
     class="bg-background flex h-screen w-screen flex-col items-center justify-center gap-8"
   >
     <img
-      src="@/assets/logos/logo.png"
+      :src="checkout.isHeaven ? Heaven : Greenn"
       alt="logo do greenn"
       width="250"
       class="animate-bounce"
