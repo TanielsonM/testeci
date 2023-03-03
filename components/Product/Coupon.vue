@@ -28,7 +28,8 @@ function apply() {
       <Icon
         name="ic:baseline-arrow-drop-down"
         size="22"
-        class="text-gray-400"
+        class="text-gray-400 duration-500"
+        :class="{ 'rotate-180': isOpen }"
       />
     </span>
     <section v-if="isOpen && !coupon.applied" class="w-full">
