@@ -12,7 +12,8 @@ export const useProductStore = definePiniaStore("product", {
         return (
           state.product.status_offer === "APPROVED" &&
           state.product.status_product === "APPROVED" &&
-          state.product.is_active == 1
+          state.product.is_active == 1 &&
+          checkout.isValid()
         );
       };
     },
@@ -21,8 +22,7 @@ export const useProductStore = definePiniaStore("product", {
     productType: (state) => state.product.type,
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
     allowedCoupon: (state) => state.product.allowed_coupon,
-    isHeaven: (state) => !!state.product.seller.is_heaven,
-    isGreenn: (state) => !!state.product.seller.is_greenn,
+    isHeaven: (state) => !!state.product.is_heaven,
   },
   actions: {
     setProduct(product) {
