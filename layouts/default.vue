@@ -28,7 +28,7 @@ checkout.init();
     v-else
     class="bg-background flex min-h-screen w-screen flex-col items-center gap-8 px-5"
     :data-theme="custom_checkout.theme"
-    :data-theme_color="custom_checkout.themeColor"
+    :data-theme_color="custom_checkout.themeColor()"
   >
     <BaseHeader />
     <BaseCard

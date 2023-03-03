@@ -8,7 +8,14 @@ export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
     /* theme */
     theme: (state) => state.custom_checkout?.theme || "light",
     /* themeColor */
-    themeColor: (state) => state.custom_checkout?.theme_color || "#00E4A0",
+    themeColor(state) {
+      return () => {
+        const checkout = useCheckoutStore();
+        return state.custom_checkout?.theme_color || checkout.isHeaven
+          ? "heaven"
+          : "#00E4A0";
+      };
+    },
     /* hasCustomLogo */
     hasCustomLogo: (state) => state.custom_checkout?.logotipo || null,
     /* topThumb */
