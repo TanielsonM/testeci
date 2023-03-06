@@ -42,7 +42,11 @@ export default defineNuxtConfig({
       meta: [
         {
           name: "description",
-          content: "My amazing site.",
+          content: "Your payment platform!",
+        },
+        {
+          "http-equiv": "x-ua-compatible",
+          content: "IE=edge",
         },
       ],
     },
