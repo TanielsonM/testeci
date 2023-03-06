@@ -1,5 +1,12 @@
 <script setup>
+// Logos
+import Greenn from "@/assets/logos/logo.png";
+import Heaven from "@/assets/heaven/logo.svg";
+
+import { useCheckoutStore } from "./store/checkout";
+
 const error = useError();
+const checkout = useCheckoutStore();
 </script>
 
 <template>
@@ -11,7 +18,7 @@ const error = useError();
     </section>
     <section class="flex h-full items-center justify-center">
       <img
-        src="~/assets/logos/logo.png"
+        :src="checkout.isHeaven ? Heaven : Greenn"
         alt="Logo do greenn"
         width="150"
         height="50"
