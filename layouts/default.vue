@@ -1,7 +1,4 @@
 <script setup>
-// Logos
-import Greenn from "@/assets/logos/logo.png";
-import Heaven from "@/assets/heaven/logo.svg";
 // Stores
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useProductStore } from "~~/store/product";
@@ -10,7 +7,7 @@ import { useCheckoutStore } from "~~/store/checkout";
 const custom_checkout = useCustomCheckoutStore();
 const product = useProductStore();
 const checkout = useCheckoutStore();
-const logo = computed(() => checkout.isHeaven ? Heaven : Greenn);
+const logo = computed(() => checkout.isHeaven ? "Heaven" : "Greenn");
 </script>
 
 <template>
@@ -19,7 +16,15 @@ const logo = computed(() => checkout.isHeaven ? Heaven : Greenn);
     class="bg-background flex h-screen w-screen flex-col items-center justify-center gap-8"
   >
     <img
-      :src="logo"
+      v-if="logo === 'Heaven'"
+      src="@/assets/heaven/logo.svg"
+      alt="logo do greenn"
+      width="250"
+      class="animate-bounce"
+    />
+    <img
+      v-if="logo === 'Greenn'"
+      src="@/assets/logos/logo.png"
       alt="logo do greenn"
       width="250"
       class="animate-bounce"
