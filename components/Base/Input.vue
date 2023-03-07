@@ -66,6 +66,11 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  inputId: {
+    type: String,
+    required: false,
+    default: () => ""
+  }
 });
 const emit = defineEmits([
   "update:modelValue",
@@ -85,7 +90,7 @@ const onInput = (event) => {
   >
     {{ label }}
     <section
-      class="border-bd-color bg-checkout focus:border-main-color hover:border-main-color flex w-full items-center gap-5 rounded border p-4 transition-colors duration-300"
+      class="border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex w-full items-center gap-5 rounded border p-4 transition-colors duration-300"
     >
       <Icon
         :name="icon"
@@ -96,6 +101,7 @@ const onInput = (event) => {
       />
       <input
         v-if="!mask"
+        :id="inputId"
         :type="type"
         :value="modelValue"
         :placeholder="placeholder"
@@ -107,6 +113,7 @@ const onInput = (event) => {
       />
       <input
         v-else
+        :id="inputId"
         :type="type"
         :value="modelValue"
         :placeholder="placeholder"
