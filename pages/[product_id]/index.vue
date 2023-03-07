@@ -1,13 +1,17 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
+import { useCheckoutStore } from "~~/store/checkout";
+import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 /* Variables */
 const custom_checkout = useCustomCheckoutStore();
 const productStore = useProductStore();
+const checkout = useCheckoutStore();
+const address = useAddressStore();
 const { product } = storeToRefs(productStore);
-const showDeliveryForm = ref(true);
+const { showDeliveryForm } = storeToRefs(address);
 </script>
 
 <template>
@@ -31,15 +35,30 @@ const showDeliveryForm = ref(true);
         </template>
       </Steps>
       <!-- Address form -->
-      <Steps :title="$t('components.steps.address')" step="02">
+      <Steps
+        :title="$t('components.steps.address')"
+        step="02"
+        v-if="checkout.showAddressStep()"
+      >
         <template #content>
           <FormAddress />
           <BaseToogle
+            v-if="checkout.hasPhysicalProduct()"
             class="my-5"
             v-model="showDeliveryForm"
             id="address-form"
-            label="Endereço da entrega é o mesmo da cobrança"
+            :label="$t('general.address_toogle_label')"
           />
+          <Steps
+            :title="$t('general.delivery_address')"
+            icon="📦"
+            v-if="!showDeliveryForm"
+          >
+            <template #content>
+              <br>
+              <FormAddress type="shipping" />
+            </template>
+          </Steps>
         </template>
       </Steps>
     </BaseCard>

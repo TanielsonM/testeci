@@ -1,13 +1,49 @@
 <script setup>
+// Store
+import { useAddressStore } from "@/store/forms/address";
+const store = useAddressStore();
+// Props
+const props = defineProps({
+  type: {
+    type: String,
+    required: false,
+    default: () => "charge",
+    validator: (value) => ["charge", "shipping"].includes(value),
+  },
+});
+
+// Variables
 const form = ref({
   zipcode: "",
-  public_place: "",
+  street: "",
   number: "",
   city: "",
   neighborhood: "",
   complement: "",
   state: "",
 });
+
+// Watches
+watch(form.value, () => {
+  store.setFields(form.value, props.type);
+});
+
+// methods
+async function getAddress(cep = "") {
+  if (cep.length < 8) return;
+  await useFetch(`https://viacep.com.br/ws/${cep}/json`)
+    .then(({ data }) => {
+      form.value.number = "";
+      form.value.street = data.value.logradouro;
+      form.value.city = data.value.localidade;
+      form.value.neighborhood = data.value.bairro;
+      form.value.complement = data.value.complemento;
+      form.value.state = data.value.uf;
+    })
+    .then(() => {
+      document.querySelector(`#number-address-${props.type}`).focus();
+    });
+}
 </script>
 
 <template>
@@ -18,14 +54,16 @@ const form = ref({
       class="col-span-12 xl:col-span-3"
       v-mask="'#####-###'"
       v-model="form.zipcode"
+      @input="getAddress(form.zipcode.replace('-', ''))"
     />
     <BaseInput
       :label="$t('forms.address.inputs.public_place.label')"
       :placeholder="$t('forms.address.inputs.public_place.placeholder')"
       class="col-span-12 xl:col-span-6"
-      v-model="form.public_place"
+      v-model="form.street"
     />
     <BaseInput
+      :inputId="`number-address-${type}`"
       :label="$t('forms.address.inputs.number.label')"
       :placeholder="$t('forms.address.inputs.number.placeholder')"
       class="col-span-12 xl:col-span-3"

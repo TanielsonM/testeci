@@ -73,6 +73,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     captcha: (state) => state.global_settings.captcha,
     antifraud: (state) => state.global_settings.antifraud,
     monthly_interest: (state) => state.global_settings.monthly_interest,
+    selectedCountry: (state) => state.global_settings.country,
     /**
      * Juros
      */
@@ -117,6 +118,18 @@ export const useCheckoutStore = definePiniaStore("checkout", {
           (product.isHeaven && this.isHeaven) ||
           (!product.isHeaven && !this.isHeaven)
         );
+      };
+    },
+    showAddressStep(state) {
+      return () => {
+        const product = useProductStore();
+        return this.antifraud || !!product.showAddress;
+      };
+    },
+    hasPhysicalProduct(state) {
+      return () => {
+        const product = useProductStore();
+        return product.isPhysicalProduct;
       };
     },
   },

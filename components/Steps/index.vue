@@ -1,7 +1,14 @@
 <script setup>
 defineProps({
   title: String,
-  step: [Number, String],
+  step: {
+    type: [Number, String, Boolean],
+    default: () => false,
+  },
+  icon: {
+    type: [String, Boolean],
+    default: () => false,
+  },
 });
 </script>
 
@@ -12,8 +19,11 @@ defineProps({
     <span
       class="flex flex-nowrap items-center gap-5 text-base font-semibold text-black"
     >
-      <p class="text-main-color text-2xl">
+      <p class="text-main-color text-2xl" v-if="step">
         {{ step }}
+      </p>
+      <p class="text-main-color text-2xl" v-if="icon">
+        <Icon :name="icon"/>
       </p>
       <p class="text-txt-color flex-nowrap">
         {{ title }}
@@ -21,7 +31,7 @@ defineProps({
     </span>
     <slot name="end-line" />
   </section>
-  <section class="mb-5 w-full flex-col">
+  <section class="w-full flex-col">
     <slot name="content" />
   </section>
 </template>

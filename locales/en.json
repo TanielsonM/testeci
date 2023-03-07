@@ -98,6 +98,8 @@
     "close": "Close",
     "mail": "Email",
     "telephone": "Telephone",
-    "error_message": "This product is not available for payment."
+    "error_message": "This product is not available for payment.",
+    "address_toogle_label": "Address of delivery é the same as the charge.",
+    "delivery_address": "Delivery address"
   }
 }

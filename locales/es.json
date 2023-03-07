@@ -98,6 +98,8 @@
     "close": "Cerrar",
     "mail": "Correo electrónico",
     "telephone": "Teléfono",
-    "error_message": "Este producto no está disponible para pago."
+    "error_message": "Este producto no está disponible para pago.",
+    "address_toogle_label": "Dirección de entrega é lo mismo que el cargo.",
+    "delivery_address": "Dirección de entrega"
   }
 }

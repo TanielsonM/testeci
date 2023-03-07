@@ -18,11 +18,12 @@ export const useProductStore = definePiniaStore("product", {
       };
     },
     hasFees: (state) => state.product.no_interest_installments, // com ou sem juros
-    isPhysicalProduct: (state) => state.product.is_produto_fisico,
+    isPhysicalProduct: (state) => state.product.format == "PHYSICALPRODUCT",
     productType: (state) => state.product.type,
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
     allowedCoupon: (state) => state.product.allowed_coupon,
     isHeaven: (state) => !!state.product.is_heaven,
+    showAddress: (state) => state.product.is_checkout_address,
   },
   actions: {
     setProduct(product) {
