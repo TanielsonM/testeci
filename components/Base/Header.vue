@@ -1,23 +1,25 @@
 <script setup>
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
+import { useProductStore } from "~~/store/product";
 import greenn from "../../assets/logos/logo.png";
 import heaven from "../../assets/heaven/logo.svg";
 
 const custom_checkout = useCustomCheckoutStore();
 const checkout = useCheckoutStore();
+const product = useProductStore();
 </script>
 
 <template>
-  <Scarcity />
+  <Scarcity v-if="product.isValid()"/>
   <header
-    v-if="custom_checkout.topThumb"
+    v-if="custom_checkout.topThumb && product.isValid()"
     class="-mt-8 flex max-h-[40vh] w-screen items-center justify-center"
   >
     <img :src="custom_checkout.topThumb" alt="Thumb superior" />
   </header>
   <header
-    v-if="!custom_checkout.hasScarcity || !custom_checkout.topThumb"
+    v-if="!custom_checkout.hasScarcity || !custom_checkout.topThumb || !product.isValid()"
     class="bg-checkout sticky top-0 z-50 flex min-h-[60px] w-screen items-center px-4 shadow-lg"
   >
     <img
