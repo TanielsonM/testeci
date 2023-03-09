@@ -10,7 +10,7 @@ type addressForm = {
 
 export const useAddressStore = definePiniaStore("address", {
   state: () => ({
-    showDeliveryForm: true,
+    sameAddress: true,
     shipping: {
       zipcode: "",
       number: 0,

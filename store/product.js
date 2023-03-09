@@ -43,6 +43,7 @@ export const useProductStore = definePiniaStore("product", {
         this.hasFixedInstallments
       );
       checkout.setAllowedMethods(product.method.split(","));
+      checkout.setProductList(this.product);
     },
   },
 });

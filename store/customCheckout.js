@@ -54,6 +54,16 @@ export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
             .replace(".", "") ?? null,
         message: state.custom_checkout?.whatsapp_msg ?? null,
       } || null),
+    /* Order bump */
+    hasCustomBump: (state) => state.custom_checkout?.ob_custom ?? null,
+    bump_options: (state) => ({
+      background_color: JSON.parse(state.custom_checkout?.ob_background_color),
+      border: state.custom_checkout?.ob_border,
+      border_px: state.custom_checkout?.ob_border_px,
+      description: state.custom_checkout?.ob_description,
+      subtitle: state.custom_checkout?.ob_subtitle,
+      title: state.custom_checkout?.ob_title,
+    }),
   },
   actions: {
     setCustomCheckout(checkout) {

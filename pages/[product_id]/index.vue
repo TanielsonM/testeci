@@ -11,7 +11,7 @@ const productStore = useProductStore();
 const checkout = useCheckoutStore();
 const address = useAddressStore();
 const { product } = storeToRefs(productStore);
-const { showDeliveryForm } = storeToRefs(address);
+const { sameAddress } = storeToRefs(address);
 </script>
 
 <template>
@@ -19,7 +19,7 @@ const { showDeliveryForm } = storeToRefs(address);
     <Title>{{ product.name }} | Checkout</Title>
     <Meta name="description" :content="product.description" />
   </Head>
-  <section class="flex w-full flex-col gap-10 md:max-w-[780px]">
+  <section class="flex w-full flex-col gap-10 lg:max-w-[780px]">
     <!-- Purchase card -->
     <BaseCard
       class="flex items-end justify-end p-5 md:py-[50px] md:px-[60px]"
@@ -45,22 +45,36 @@ const { showDeliveryForm } = storeToRefs(address);
           <BaseToogle
             v-if="checkout.hasPhysicalProduct()"
             class="my-5"
-            v-model="showDeliveryForm"
+            v-model:checked="sameAddress"
             id="address-form"
             :label="$t('general.address_toogle_label')"
           />
           <Steps
             :title="$t('general.delivery_address')"
             icon="📦"
-            v-if="!showDeliveryForm"
+            v-if="!sameAddress"
           >
             <template #content>
-              <br>
+              <br />
               <FormAddress type="shipping" />
             </template>
           </Steps>
         </template>
       </Steps>
+      <template v-if="checkout.getBumpList.length">
+        <p class="w-full text-txt-color">
+          {{
+            custom_checkout.hasCustomBump
+              ? custom_checkout.bump_options.title
+              : `${$t("checkout.pagamento.bump.title")} 🔥`
+          }}
+        </p>
+        <OrderBumps
+          v-for="(bump, index) in checkout.getBumpList"
+          :key="index"
+          :bump="bump"
+        />
+      </template>
     </BaseCard>
     <!-- End purchase card -->
     <!-- Bottom thumb (custom checkout) -->
@@ -74,14 +88,14 @@ const { showDeliveryForm } = storeToRefs(address);
     <FooterSafe />
   </section>
   <!-- Product Card -->
-  <section class="flex w-full flex-col gap-10 md:max-w-[380px]">
+  <section class="flex w-full flex-col gap-10 lg:max-w-[380px]">
     <ProductCard :product="product" data-anima="bottom" />
     <!-- Side Thumb -->
     <img
       v-if="custom_checkout.sideThumb"
       :src="custom_checkout.sideThumb"
       alt="Thumb lateral"
-      class="hidden w-full md:block"
+      class="hidden w-full lg:block"
     />
     <!-- End side Thumb -->
   </section>

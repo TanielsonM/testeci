@@ -46,6 +46,16 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       name: "",
     },
     is_heaven: false,
+    /**
+     * Product List
+     */
+    product_list: [],
+    products_client_statistics: [],
+    /**
+     * Order Bump List
+     */
+    order_bumps: [],
+    bump_list: [],
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -54,6 +64,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
      */
     hasBusiness: (state) => state.url.query?.b, // Jivochat
     hasBump: (state) => state.url.fullPath.includes("b_id"),
+    hasNewBump: (state) => state.url.fullPath.includes("b_id_1"),
     hasCoupon: (state) => state.url.query?.cupom ?? "",
     hasCustomCheckout: (state) => state.url.query?.ch_id,
     hasDocument: (state) => state.url.query?.document,
@@ -123,15 +134,23 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     showAddressStep(state) {
       return () => {
         const product = useProductStore();
-        return this.antifraud || !!product.showAddress;
+        return (
+          this.antifraud || !!product.showAddress || this.hasPhysicalProduct()
+        );
       };
     },
     hasPhysicalProduct(state) {
       return () => {
         const product = useProductStore();
-        return product.isPhysicalProduct;
+        return (
+          product.isPhysicalProduct ||
+          state.bump_list.some(
+            (bump) => bump.format === "PHYSICALPRODUCT" && bump.checkbox
+          )
+        );
       };
     },
+    getBumpList: (state) => state.bump_list,
   },
   actions: {
     async init() {
@@ -142,11 +161,13 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
+      await this.getCustomCheckout();
       await this.getProduct(this.product_id, this.product_offer);
 
       /* Initial configs */
       this.setJivochat();
       this.setCoupon(true);
+      if (this.hasBump) this.getBumps();
 
       setTimeout(() => {
         this.setLoading();
@@ -204,9 +225,129 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         this.setLoading();
       }
     },
-    async getProduct(id, offer = null, isBump = false) {
+    async getProduct(id, offer = null, isBump = false, configs = {}) {
+      const product = useProductStore();
+      const { setProduct } = product;
+      /* Get country */
       const cookie = useCookie("locale");
-      await useGetProduct(id, offer, cookie.value?.sigla);
+      const country = cookie.value?.sigla;
+      /* Set product url */
+      const url = offer
+        ? `/product/checkout/${id}/offer/${offer}`
+        : `/product/checkout/${id}`;
+      /* Set country in query */
+      const query = {};
+      if (country) query.country = country;
+      if (this.selectedCountry !== "BR" && !country) {
+        query.country = this.selectedCountry;
+      }
+      /* Call api to get product */
+      try {
+        await useApi()
+          .read(url, {
+            ...configs,
+            query,
+          })
+          .then((response) => {
+            if (
+              response.checkout_payment &&
+              response.checkout_payment.data &&
+              response.checkout_payment.data.amount
+            ) {
+              response.data.amount = response.checkout_payment.data.amount;
+            }
+
+            if (response.checkout_payment && response.checkout_payment.paypal) {
+              response.data.paypal = response.checkout_payment.paypal;
+            }
+
+            if (response?.data && !isBump) setProduct(response.data);
+            else if (isBump && this.product_id !== id)
+              this.bump_list.push({ ...response.data, checkbox: false });
+          });
+      } catch (error) {
+        this.setError("Ocorreu um erro ao processar a sua solicitação ble");
+        this.setLoading();
+      }
+    },
+    async getBumps() {
+      if (!this.hasNewBump) {
+        await this.getOldBumps();
+        return;
+      }
+      this.bump_list = [];
+      // parse apenas dos params
+      let searchParams = new URLSearchParams(this.url.query);
+      // instancia o array final
+      let bumpsWithOffers = [];
+      // regex para pegar ids dos bumps
+      let bumpRegex = new RegExp("(b_id_)(\\d*$)", "i");
+      // regex para pegar o hash das ofertas
+      let offerRegex = new RegExp("(b_offer_)(\\d*$)", "i");
+      // passamos uma vez apenas pegando o id dos produtos
+      searchParams.forEach((value, key) => {
+        let matches = key.match(bumpRegex);
+        if (matches) {
+          // caso esteja repetido, ignoramos
+          if (!bumpsWithOffers.find((item) => item.bump_id === matches[2])) {
+            // setamos o id do produto junto com a posicional para depois encontrar a oferta
+            bumpsWithOffers.push({ bump_id: matches[2], product_id: value });
+          }
+        }
+      });
+      // passamos novamente pois temos certeza que os produtos estão no array
+      searchParams.forEach((value, key) => {
+        let matches = key.match(offerRegex);
+        if (matches) {
+          // pegamos o index do produto pelo id posicional dos elementos
+          let indexOfBump = bumpsWithOffers
+            .map((item) => item.bump_id)
+            .indexOf(matches[2]);
+          // caso exista
+          if (bumpsWithOffers[indexOfBump]) {
+            let bump = bumpsWithOffers[indexOfBump];
+            bump.offer_hash = value;
+            // sobrescrevemos o objeto com id da oferta
+            bumpsWithOffers[indexOfBump] = bump;
+          }
+        }
+      });
+
+      if (bumpsWithOffers.length) {
+        this.products_client_statistics = [];
+        bumpsWithOffers.forEach((bump) => {
+          this.getProduct(bump.product_id, bump.offer_hash, true);
+        });
+      }
+    },
+    async getOldBumps() {
+      if (typeof this.url.query.b_id === "string") {
+        this.getProduct(this.url.query.b_id, null, true);
+      } else {
+        for (let b in this.url.query.b_id) {
+          this.getProduct(this.url.query.b_id[b], null, true);
+          this.products_client_statistics.push({
+            product_id: +this.url.query.b_id[b],
+          });
+        }
+      }
+    },
+    async getCustomCheckout() {
+      if (!this.hasCustomCheckout) return;
+      const customCheckoutStore = useCustomCheckoutStore();
+      const { setCustomCheckout } = customCheckoutStore;
+
+      let url = `/product/checkout/${this.product_id}/checkout/${this.hasCustomCheckout}`;
+
+      try {
+        await useApi()
+          .read(url)
+          .then((response) => {
+            if (response?.custom_checkout) {
+              setCustomCheckout(response.custom_checkout);
+            }
+          });
+      } catch (error) {}
     },
     setAllowedMethods(allowed_methods = []) {
       this.allowed_methods = allowed_methods;
@@ -276,6 +417,16 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     setProjectDomain(url = "") {
       const config = useRuntimeConfig();
       this.is_heaven = url.includes(config.public.HEAVEN_CHECKOUT_PAGE);
+    },
+    setProductList(product) {
+      const index = this.product_list
+        .map((item) => item.id)
+        .indexOf(product.id);
+      if (index === -1) {
+        this.product_list.push(product);
+        return;
+      }
+      this.product_list.slice(index, 1);
     },
   },
 });

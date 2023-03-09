@@ -1,6 +1,7 @@
 <script setup>
 // Core
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
+import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "~~/store/forms/address";
 // Utils
 import { formatMoney } from "~/utils/money";
@@ -13,6 +14,7 @@ const props = defineProps({
     default: () => {},
   },
 });
+const checkoutStore = useCheckoutStore();
 const checkout = useCustomCheckoutStore();
 const address = useAddressStore();
 
@@ -114,6 +116,7 @@ watch(
   () => props.bump.checkbox,
   (isChecked) => {
     if (isChecked) getShippingOptions();
+    checkoutStore.setProductList(props.bump);
   }
 );
 
