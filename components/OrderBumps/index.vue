@@ -125,7 +125,7 @@ if (isFixedShipping.value)
 </script>
 
 <template>
-  <BaseCard class="order-bump-card gap-0" :style="stylesheet">
+  <BaseCard class="order-bump-card" :style="stylesheet">
     <header
       class="w-full h-[50px] bg-red-600 rounded-t-lg flex items-center justify-between"
     >
@@ -154,6 +154,7 @@ if (isFixedShipping.value)
 
 <style lang="scss" scoped>
 .order-bump-card {
+  gap: 0 !important;
   header {
     width: 100%;
     height: 50px;
