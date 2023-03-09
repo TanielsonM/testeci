@@ -154,6 +154,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
   },
   actions: {
     async init() {
+      this.resetProducts();
       this.setLoading(true);
       await this.getGlobalSettings();
 
@@ -427,6 +428,12 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         return;
       }
       this.product_list.slice(index, 1);
+    },
+    resetProducts() {
+      this.product_list = [];
+      this.bump_list = [];
+      this.order_bumps = [];
+      this.products_client_statistics = [];
     },
   },
 });
