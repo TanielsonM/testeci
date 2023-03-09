@@ -1,12 +1,13 @@
+import { useCheckoutStore } from "@/store/checkout";
+
 export function formatMoney(amount) {
   if (!amount) return amount;
-  const cookie = useCookie("locale");
-  let localeFormat = computed(
-    () => `${cookie.value?.language}-${cookie.value?.sigla}` || "pt-BR"
-  );
-  let currency = computed(() => cookie.value?.currency || "BRL");
-  return new Intl.NumberFormat(localeFormat, {
-    style: "currency",
-    currency: currency.value,
-  }).format(amount);
+  const store = useCheckoutStore();
+  return `${store.payment.data.symbol_currency} ${amount.toLocaleString(
+    "pt-BR",
+    {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    }
+  )}`;
 }

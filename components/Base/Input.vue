@@ -142,6 +142,6 @@ input::placeholder {
   text-transform: none;
   font-weight: 400;
   font-size: 15px !important;
-  color: var(--text-color) !important;
+  color: var(--txt-color) !important;
 }
 </style>

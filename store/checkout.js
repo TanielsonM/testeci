@@ -56,6 +56,8 @@ export const useCheckoutStore = definePiniaStore("checkout", {
      */
     order_bumps: [],
     bump_list: [],
+    /* Payment details */
+    payment: null,
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -262,8 +264,10 @@ export const useCheckoutStore = definePiniaStore("checkout", {
               response.data.paypal = response.checkout_payment.paypal;
             }
 
-            if (response?.data && !isBump) setProduct(response.data);
-            else if (isBump && this.product_id !== id)
+            if (response?.data && !isBump) {
+              this.payment = response.checkout_payment;
+              setProduct(response.data);
+            } else if (isBump && this.product_id !== id)
               this.bump_list.push({ ...response.data, checkbox: false });
           });
       } catch (error) {
@@ -323,7 +327,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     },
     async getOldBumps() {
       if (typeof this.url.query.b_id === "string") {
-        this.getProduct(this.url.query.b_id, null, true);
+        this.getProduct(this.url.query.b_id, this.url.query.b_offer, true);
       } else {
         for (let b in this.url.query.b_id) {
           this.getProduct(this.url.query.b_id[b], null, true);
