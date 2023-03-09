@@ -3,7 +3,7 @@
     "personal": {
       "inputs": {
         "name": {
-          "label": "Nome Completo",
+          "label": "Nome completo",
           "placeholder": "Digite aqui seu nome completo"
         },
         "mail": {
