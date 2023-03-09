@@ -93,13 +93,344 @@
       "apply": "Aplicar cupom"
     }
   },
-  "pages": {},
+  "routes": {
+    "obrigado": "obrigado"
+  },
+  "checkout": {
+    "captcha": "Este site é protegido pelo Google reCAPTCHA",
+    "captcha2": "Política de Privacidade",
+    "captcha3": "Termos de serviço",
+    "captcha4": "e",
+    "captcha5": "",
+    "dados_pessoais": {
+      "title": "Dados Pessoais",
+      "title_error": "Algo deu errado",
+      "btn_error": "Ok, entendido",
+      "nome": "Nome completo",
+      "nome_holder": "Digite seu nome completo",
+      "email": "Endereço de email",
+      "confirmation_email": "Confirme seu endereço de email",
+      "email_holder": "E-mail que receberá o produto",
+      "confirmation_email_holder": "Confirme o e-mail que receberá o produto",
+      "telefone": "Celular",
+      "telefone_holder": "Seu telefone",
+      "document": "CPF ou CNPJ",
+      "document_holder": "Doc. do titular da compra",
+      "country": "Selecione o seu país",
+      "feedbacks": {
+        "nome": "Preencha seu nome.",
+        "email": "Este email é inválido.",
+        "confirmation_email": "Os emails digitados devem ser iguais.",
+        "celular": "Este celular é inválido.",
+        "gift_message": "Preencha a mensagem"
+      }
+    },
+    "address": {
+      "address": "Endereço",
+      "zipcode_label": "CEP",
+      "zipcode_placeholder": "CEP",
+      "zipcode_feedback_message": "Preencha seu CEP.",
+      "street_label": "Logradouro",
+      "street_placeholder": "Digite o Logradouro",
+      "street_feedback_message": "Preencha seu logradouro.",
+      "number_label": "Número",
+      "number_placeholder": "Número",
+      "number_feedback_message": "Preencha corretamente o número.",
+      "city_label": "Cidade",
+      "city_placeholder": "Cidade",
+      "city_feedback_message": "Preencha sua cidade.",
+      "neighborhood_label": "Bairro",
+      "neighborhood_placeholder": "Bairro",
+      "neighborhood_feedback_message": "Preencha seu bairro.",
+      "complement_label": "Complemento",
+      "complement_placeholder": "Complemento do Endereço",
+      "state_label": "Estado",
+      "state_placeholder": "Estado",
+      "state_feedback_message": "Selecione seu estado.",
+      "of_gift": "do presente",
+      "of_delivery": "da entrega",
+      "same_as_charge": "o mesmo da cobrança",
+      "where_we_should_send_gift": "Para onde devemos enviar o presente",
+      "where_we_should_send_delivery": "Endereço de Entrega",
+      "zipcode_shipping_label": "CEP",
+      "zipcode_shipping_placeholder": "CEP",
+      "zipcode_shipping_feedback_message": "Preencha o CEP de entrega.",
+      "street_shipping_label": "Logradouro",
+      "street_shipping_placeholder": "Digite o Logradouro",
+      "street_shipping_feedback_message": "Preencha o logradouro.",
+      "number_shipping_label": "Número",
+      "number_shipping_placeholder": "Número",
+      "number_shipping_feedback_message": "Preencha corretamente o número.",
+      "city_shipping_label": "Cidade",
+      "city_shipping_placeholder": "Cidade",
+      "city_shipping_feedback_message": "Preencha a cidade.",
+      "neighborhood_shipping_label": "Bairro",
+      "neighborhood_shipping_placeholder": "Bairro",
+      "neighborhood_shipping_feedback_message": "Preencha seu bairro.",
+      "complement_shipping_label": "Complemento",
+      "complement_shipping_placeholder": "Complemento do Endereço",
+      "state_shipping_label": "Estado",
+      "state_shipping_placeholder": "Estado",
+      "state_shipping_feedback_message": "Selecione seu estado.",
+      "select_shipping": "Selecione o Frete",
+      "at": "à",
+      "working_days": "dias úteis",
+      "next_step": "Próxima etapa",
+      "district_label": "Estado/Distrito",
+      "district_placeholder": "Selecione um estado/distrito",
+      "district_search": "Pesquise pelo estado/distrito",
+      "district_feedback_message": "Oops! Nenhum gerente encontrado. Pesquise outro nome",
+      "want_gift_someone": "Quero presentear alguém"
+    },
+    "pagamento": {
+      "paypal_desabilitado_pelo_bump": "Não é possível realizar o pagamento com Paypal de produtos OrderBump",
+      "title": "Pagamento",
+      "metodos": {
+        "cartao_credito": "Cartão de Crédito",
+        "cartao_debito": "Cartão de Debito",
+        "um_cartao": {
+          "title": "Um cartão",
+          "numero": "Número",
+          "numero_holder": "Somente números",
+          "titular": "Titular do cartão",
+          "titular_holder": "Como no cartão",
+          "mes": "Mês",
+          "ano": "Ano",
+          "CVV": "CVV",
+          "parcelas": "Parcelas",
+          "card": {
+            "numero": "Número do Cartão",
+            "nome": "Nome",
+            "nome_holder": "NOME COMPLETO",
+            "validade": "Validade"
+          }
+        },
+        "dois_cartoes": {
+          "title": "Dois cartões",
+          "flag": "Cartão",
+          "valor": "Valor a ser descontado"
+        },
+        "paypal": {
+          "btn_text": "Comprar agora"
+        },
+        "pix": {
+          "text": "Pagamentos com o Pix são bem rápidos para serem compensados e então terem os produtos liberados.",
+          "pix_info1": {
+            "titulo": "Rápido",
+            "texto": "Faça seus pagamentos em poucos segundos."
+          },
+          "pix_info2": {
+            "titulo": "Fácil",
+            "texto": "Abriu o Pix no app do seu banco, escaneou o QR code, finalizou a compra."
+          },
+          "pix_info3": {
+            "titulo": "Seguro",
+            "texto": "O Pix foi criado pelo Banco Central para facilitar suas compras."
+          }
+        }
+      },
+      "bump": {
+        "title": "Aproveite e compre junto",
+        "yes_i_want": "Sim, eu quero!",
+        "hide": "Ocultar",
+        "details": "Detalhes",
+        "product": "Produto",
+        "free": "Grátis",
+        "to_calculate": "à calcular",
+        "select_shipping": "Selecione o Frete",
+        "at": "em",
+        "working_days": "dias úteis",
+        "free_for": "Grátis para",
+        "day": "dia",
+        "after_trial_period": "Após período de teste",
+        "signature": "Assinatura",
+        "transaction": "Transação",
+        "month": "mês"
+      },
+      "feedbacks": {
+        "valor_cartao": "Preencha o valor corretamente. Valor min. R$ 1,00",
+        "numero_cartao": "Preencha corretamente o número do cartão de crédito.",
+        "titular_cartao": "Preencha corretamente o nome impresso no cartão.",
+        "mes_cartao": "Escolha o mês de validade.",
+        "ano_cartao": "Escolha o ano de validade.",
+        "cvv_cartao": "Preencha corretamente o número CVV do cartão."
+      }
+    },
+    "footer": {
+      "btn_compra": "Comprar agora",
+      "btn_reservar": "Reservar agora",
+      "info_seguranca": "Informações seguras e criptografadas",
+      "icons": {
+        "compra_segura": {
+          "label": "Compra",
+          "destaque": "SEGURA"
+        },
+        "produto_revisado": {
+          "label": "Produto",
+          "destaque": "REVISADO"
+        },
+        "dados_protegidos": {
+          "label": "Dados",
+          "destaque": "PROTEGIDOS"
+        }
+      },
+      "taxa_parcela": "*Parcelamento com tarifa de 2.92% a.m",
+      "direitos_reservados": "Todos os direitos reservados",
+      "direitos_reservados_me": "Heaven Ecommerce FZE - Todos os direitos reservados"
+    },
+    "mobile": {
+      "proxima_etapa": "Próxima etapa"
+    },
+    "erro_compra": "Compra não concluída",
+    "sucesso_compra": "Sua compra foi efetuada com sucesso!",
+    "feedbacks": {
+      "dados_obrigatorios": {
+        "title": "Valida por gentileza",
+        "text": "Os dados são obrigatórios."
+      }
+    },
+    "cupom": {
+      "cupom": "Cupom",
+      "aplicado": "aplicado",
+      "header_aplicado": "Cupom aplicado",
+      "no_produto": " no produto",
+      "header_add": "Adicione um cupom de desconto",
+      "insira": "Insira um cupom",
+      "invalido": "Cupom inválido",
+      "conversao": "Cupom não permite conversão",
+      "aplicar": "Aplicar cupom",
+      "remover": "Remover este cupom",
+      "restam": "Restam apenas ",
+      "disponiveis": "cupons disponíveis.",
+      "acabando": "Está acabando!"
+    },
+    "recurring_shipping": {
+      "isNotRecurring": "O frete será cobrado apenas no primeiro envio."
+    },
+    "different_amount_text": {
+      "charge": "cobrança",
+      "show_more": "Ver mais",
+      "other_charges": "Demais cobranças"
+    }
+  },
+  "order": {
+    "text_header": "COMPRA 100% SEGURA",
+    "a_vista": "à vista",
+    "taxa": "Taxa:",
+    "impostos": "+ Impostos aplicáveis",
+    "de": "de",
+    "garantia_label": "Garantia",
+    "dias_garantia": "dias de garantia",
+    "autor_label": "Autor",
+    "telefone_label": "Telefone",
+    "email_label": "E-mail",
+    "info_sub": "Você está assinando",
+    "por_mes": "/ mês",
+    "por_trimestre": "/ trimestre",
+    "por_semestre": "/ semestre",
+    "por_ano": "/ ano",
+    "gratuito_por": "Gratuito por",
+    "dias": "dias",
+    "anos": "anos",
+    "apos_trial": "Após período de avaliação",
+    "vc_pagara": "Você pagará",
+    "country_taxs": "Imposto(s) do país"
+  },
+  "pg_obrigado": {
+    "pix": {
+      "text_header": {
+        "pague": "Pague o",
+        "via_pix": "via Pix para garantir sua compra",
+        "info_completa": "Pague o valor via Pix para garantir sua compra"
+      },
+      "efetuando": "Você está efetuando um pagamento para",
+      "ver_codigo": "Ver Código do PIX",
+      "fechar_codigo": "Fechar Código do PIX",
+      "expirou": "Seu código expirou",
+      "expira_em": "Código expira em",
+      "ref": "ref. a compra do seu Produto",
+      "escaneie": "Instruções para o pagamento via Pix",
+      "step_01": "Abra o app o seu banco e encontre a opçao de pagamento “Pix”",
+      "step_02": "Escolha Pagar com Pix ou Escanear QR code",
+      "step_03": " Verifique os detalhes e finalize a compra",
+      "creditado_na_hora": "Pague e será creditado na hora",
+      "ou_copie": "Ou copie este código QR para fazer o pagamento",
+      "cole": "Escolha pagar via Pix pelo seu Internet Banking ou app de pagamentos.",
+      "btn_text": "Copiar código",
+      "codigo_copiado": "O código de barras foi copiado!",
+      "copiado": "Copiado!",
+      "btn_visualizar_qr": "Visualizar QR Code",
+      "ja_fiz": "Já fiz meu pagamento",
+      "prazo_expirado": "Prazo para o pagamento expirado!",
+      "expirado_1": "Estamos verificando o seu pagamento, assim que recebermos a confirmação do mesmo, você receberá um e-mail com mais informações.",
+      "expirado_2": "Caso ainda não tenha feito o pagamento, clique no botão abaixo para gerar novamente.",
+      "gerar_novo": "Quero gerar um novo código"
+    },
+    "modal": {
+      "text_header": {
+        "pague": "Pague o",
+        "via_boleto": "via boleto para garantir sua compra",
+        "info_completa": "Parabéns, esse produto já é seu"
+      },
+      "prazo_pagar": "Você tem 2 dias úteis para pagar",
+      "internet_banking": "Para pagar via Internet Banking, copie a linha digitável. Para pagar em qualquer banco, caixas eletrônicos ou lotéricas, imprima o boleto.",
+      "recebe_email": "Você também receberá o boleto por email.",
+      "compensacao": "Pagamentos com Boleto Bancário levam até 3 dias úteis para serem compensados",
+      "agradecemos": "Agradecemos a sua compra",
+      "proximos_passos": "Você receberá mais informações em seu e-mail com os próximos passos.",
+      "vc_adquiriu": "Você adquiriu o",
+      "no_valor": "no valor de",
+      "transacao": "Transação Ok",
+      "em": "em",
+      "de": "de",
+      "detalhes_email": "Enviamos maiores detalhes para o seu e-mail.",
+      "produto_trial": "Este produto possui um período de teste gratuito, ele ficará disponível",
+      "dias_teste": "dias para testes.",
+      "dia_teste": "dia para testes.",
+      "btn_codigo": "Copiar código de barras",
+      "imprimir_boleto": "Imprimir boleto",
+      "entendido": "Entendido!",
+      "codigo_copiado": "O código de barras foi copiado!",
+      "copiado": "Copiado!",
+      "compra_parcelada": "Compra parcelada em ",
+      "detalhes_compra": "Detalhes da compra",
+      "codigo_transacao": "Código da Transação",
+      "id_assinatura": "ID da Assinatura"
+    }
+  },
+  "locales": {
+    "close": "Fechar",
+    "trocar": "Alterar País",
+    "placeholder": "Buscar País"
+  },
+  "error": {
+    "0001": "Este cupom que está utilizando não é mais válido.",
+    "BANK": "Algo deu errado com sua compra, por favor, entre em contato com o banco ou emissor do seu cartão.",
+    "BLACKLIST_PURCHASE": "Após inúmeras tentativas de pagamento o banco retornou que seu cartão foi bloqueado, entre em contato com sua operadora de cartão solicitando o desbloqueio e caso já tenha feito, nos avise em greenn.com.br para liberarmos aqui.",
+    "INVALID_CVV": "Código de segurança do cartão inválido, verifique e tente novamente",
+    "INVALID_CLIENT_DATA": "Dados do cliente consta incorretos, verifique e tente novamente",
+    "DUPLICATE_PURCHASE": "Você já efetuou uma compra deste produto",
+    "PRODUCT_OUT_OF_STOCK": "Produto sem estoque. Não foi possível efetivar a compra.",
+    "CREDIT_CARD_OPERATOR": "Algo deu errado com sua compra, por favor, entre em contato com a operadora do seu cartão.",
+    "INVALID_DATA": "Os dados do seu cartão foram inseridos incorretamente, verifique e tente novamente.",
+    "INVALID_CREDIT_CARD": "O cartão usado está desabilitado, bloqueado ou está vencido, entre em contato com o banco ou emissor do cartão.",
+    "INSUFFICIENT_FUNDS": "Não há limite suficiente, Tente com outro cartão ou método de pagamento.",
+    "INVALID_PAYMENT_TYPE": "Método de pagamento inválido, tente com outro cartão ou método de pagamento.",
+    "INVALID_INSTALLMENTS": "Número ou valor das parcelas não foi autorizado, tente com outro cartão ou método de pagamento.",
+    "CURRENCY_NOT_SUPPORTED": "Moeda não suportada.",
+    "SUSPECTED_FRAUD": "Transação não permitida - Entre em contato com o banco ou tente outra forma de pagamento.",
+    "GENERIC": "Ocorreu um erro durante o processamento da compra, verifique os dados e tente novamente, em caso de falhas, faça contato conosco para maiores orientações.",
+    "0404": "Nenhuma assinatura foi efetuada com este CPF/CNPJ.",
+    "1404": "Esse produto não é uma assinatura.",
+    "1405": "Não há nenhuma assinatura vinculada a este CPF/CNPJ."
+  },
   "general": {
     "close": "Fechar",
     "mail": "E-mail",
     "telephone": "Telefone",
     "error_message": "Este produto não está disponível para pagamento.",
     "address_toogle_label": "Endereço da entrega é o mesmo da cobrança.",
-    "delivery_address": "Endereço de entrega"
+    "delivery_address": "Endereço de entrega",
+    "day": "dia"
   }
 }

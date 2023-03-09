@@ -93,13 +93,343 @@
       "apply": "Apply coupon"
     }
   },
-  "pages": {},
+  "routes": {
+    "obrigado": "thanks"
+  },
+  "checkout": {
+    "captcha": "This site is protected by reCAPTCHA and the Google",
+    "captcha2": "Privacy Policy",
+    "captcha3": "Terms of Service",
+    "captcha4": "and",
+    "captcha5": "apply",
+    "dados_pessoais": {
+      "title": "Personal Data",
+      "nome": "Full Name",
+      "title_error": "Something went wrong",
+      "btn_error": "OK, understood",
+      "nome_holder": "Enter your full name",
+      "email": "Email address",
+      "confirmation_email": "Confirm your email address",
+      "email_holder": "Email that will receive the product",
+      "confirmation_email_holder": "Confirm the email you will receive the product",
+      "telefone": "Telephone",
+      "telefone_holder": "Your telephone",
+      "document": "Document",
+      "document_holder": "Purchase holder's document",
+      "country": "Select your country",
+      "feedbacks": {
+        "nome": "Fill in your name.",
+        "email": "Fill in your email.",
+        "confirmation_email": "The emails entered must be the same.",
+        "celular": "Fill your cell phone.",
+        "gift_message": "Fill a message"
+      }
+    },
+    "address": {
+      "address": "Address",
+      "zipcode_label": "Zip code",
+      "zipcode_placeholder": "Zip code",
+      "zipcode_feedback_message": "Fill in your zip code.",
+      "street_label": "Public place",
+      "street_placeholder": "Enter the Backyard",
+      "street_feedback_message": "Fill in your place.",
+      "number_label": "Number",
+      "number_placeholder": "Number",
+      "number_feedback_message": "Fill in the number correctly.",
+      "city_label": "City",
+      "city_placeholder": "City",
+      "city_feedback_message": "Fill in your city.",
+      "neighborhood_label": "Neighborhood",
+      "neighborhood_placeholder": "Neighborhood",
+      "neighborhood_feedback_message": "Fill in your neighborhood.",
+      "complement_label": "Complement",
+      "complement_placeholder": "Address complement",
+      "state_label": "State",
+      "state_feedback_message": "Select your state.",
+      "of_gift": "of the present",
+      "of_delivery": "of delivery",
+      "same_as_charge": "the same as the charge",
+      "where_we_should_send_gift": "Where should we send the gift?",
+      "where_we_should_send_delivery": "Delivery address",
+      "zipcode_shipping_label": "Zip code",
+      "zipcode_shipping_placeholder": "Zip code",
+      "zipcode_shipping_feedback_message": "Fill in the delivery zip code.",
+      "street_shipping_label": "Public place",
+      "street_shipping_placeholder": "Enter the Backyard",
+      "street_shipping_feedback_message": "Fill in the street.",
+      "number_shipping_label": "Number",
+      "number_shipping_placeholder": "Number",
+      "number_shipping_feedback_message": "Fill in the number correctly.",
+      "city_shipping_label": "City",
+      "city_shipping_placeholder": "City",
+      "city_shipping_feedback_message": "Fill in the city.",
+      "neighborhood_shipping_label": "Neighborhood",
+      "neighborhood_shipping_placeholder": "Neighborhood",
+      "neighborhood_shipping_feedback_message": "Fill in your neighborhood.",
+      "complement_shipping_label": "Complement",
+      "complement_shipping_placeholder": "Address complement",
+      "state_shipping_label": "State",
+      "state_shipping_placeholder": "State",
+      "state_shipping_feedback_message": "Select your state.",
+      "select_shipping": "Select Shipping",
+      "at": "at",
+      "working_days": "working days",
+      "next_step": "Next Step",
+      "district_label": "State/District",
+      "district_placeholder": "Select a state/district",
+      "district_search": "Search by state/district",
+      "district_feedback_message": "Oops! No manager found. Search for another name",
+      "want_gift_someone": "I want to gift someone"
+    },
+    "pagamento": {
+      "paypal_desabilitado_pelo_bump": "It is not possible to pay with Paypal for OrderBump products",
+      "title": "Payment",
+      "metodos": {
+        "cartao_credito": "Credit Card",
+        "cartao_debito": "Debit Card",
+        "um_cartao": {
+          "title": "One card",
+          "numero": "Number",
+          "numero_holder": "Only numbers",
+          "titular": "Card Holder",
+          "titular_holder": "As on the card",
+          "mes": "Month",
+          "ano": "Year",
+          "CVV": "CVV",
+          "parcelas": "Installments",
+          "card": {
+            "numero": "Card number",
+            "nome": "Name",
+            "nome_holder": "FULL NAME",
+            "validade": "Validity"
+          }
+        },
+        "dois_cartoes": {
+          "title": "Two cards",
+          "flag": "Card",
+          "valor": "Value to be discounted"
+        },
+        "paypal": {
+          "btn_text": "Buy now"
+        },
+        "pix": {
+          "text": "Payments with Pix are very quick to clear and then have the products released.",
+          "pix_info1": {
+            "titulo": "Fast",
+            "texto": "Make your payments in seconds."
+          },
+          "pix_info2": {
+            "titulo": "Easy",
+            "texto": "Opened Pix in your bank app, scanned the QR code, completed the purchase."
+          },
+          "pix_info3": {
+            "titulo": "Safe",
+            "texto": "Pix was created by the Central Bank to facilitate your purchases."
+          }
+        }
+      },
+      "bump": {
+        "title": "Enjoy and buy together",
+        "yes_i_want": "Yes I want!",
+        "hide": "Hide",
+        "details": "Details",
+        "product": "Product",
+        "free": "Free",
+        "to_calculate": "to calculate",
+        "select_shipping": "Select Shipping",
+        "at": "at",
+        "working_days": "working days",
+        "free_for": "Free for",
+        "day": "day",
+        "after_trial_period": "After trial period",
+        "signature": "Signature",
+        "transaction": "Transaction",
+        "month": "month"
+      },
+      "feedbacks": {
+        "valor_cartao": "Fill in the value correctly. Min value BRL 1.00",
+        "numero_cartao": "Fill in your credit card number.",
+        "titular_cartao": "Fill in the name printed on the card.",
+        "mes_cartao": "Choose the expiration month.",
+        "ano_cartao": "Choose the year of validity.",
+        "cvv_cartao": "Fill in the CVV number on the card."
+      }
+    },
+    "footer": {
+      "btn_compra": "Buy now",
+      "btn_reservar": "Book now",
+      "info_seguranca": "Secure and encrypted information",
+      "icons": {
+        "compra_segura": {
+          "label": "Safe",
+          "destaque": "BUY"
+        },
+        "produto_revisado": {
+          "label": "Revised",
+          "destaque": "PRODUCT"
+        },
+        "dados_protegidos": {
+          "label": "Protected",
+          "destaque": "DATA"
+        }
+      },
+      "taxa_parcela": "* Installment at a rate of 2.92% per month",
+      "direitos_reservados": "Heaven Ecommerce FZE - All rights reserved.",
+      "direitos_reservados_me": "Heaven Ecommerce FZE - All rights reserved."
+    },
+    "mobile": {
+      "proxima_etapa": "Next step"
+    },
+    "erro_compra": "Purchase not completed",
+    "sucesso_compra": "Your purchase was successful!",
+    "feedbacks": {
+      "dados_obrigatorios": {
+        "title": "Validate please",
+        "text": "Data is mandatory."
+      }
+    },
+    "cupom": {
+      "cupom": "Coupon",
+      "aplicado": "applied",
+      "header_aplicado": "Coupon applied",
+      "no_produto": " in product",
+      "header_add": "Add a discount coupon",
+      "insira": "Enter a coupon",
+      "invalido": "Invalid coupon",
+      "conversao": "Coupon does not allow conversion",
+      "aplicar": "Apply coupon",
+      "remover": "Remove this coupon",
+      "restam": "Only remain ",
+      "disponiveis": "coupons available.",
+      "acabando": "Is ending!"
+    },
+    "recurring_shipping": {
+      "isNotRecurring": "Shipping will only be charged on the first shipment."
+    },
+    "different_amount_text": {
+      "charge": "charge",
+      "show_more": "View more",
+      "other_charges": "Other charges"
+    }
+  },
+  "order": {
+    "text_header": "100% SAFE PURCHASE",
+    "a_vista": "in cash",
+    "taxa": "Tax:",
+    "impostos": "+ Applicable taxes",
+    "de": "of",
+    "garantia_label": "Warranty",
+    "dias_garantia": "warranty days",
+    "autor_label": "Author",
+    "telefone_label": "Telephone",
+    "email_label": "Email",
+    "info_sub": "You are signing",
+    "por_mes": "/ month",
+    "por_trimestre": "/ trimester",
+    "por_semestre": "/ semester",
+    "por_ano": "/ year",
+    "gratuito_por": "Free for",
+    "dias": "days",
+    "anos": "years",
+    "apos_trial": "After evaluation period",
+    "vc_pagara": "You will pay",
+    "country_taxs": "Country tax(s)"
+  },
+  "pg_obrigado": {
+    "pix": {
+      "text_header": {
+        "pague": "Pay the",
+        "via_pix": "in Pix to guarantee your purchase",
+        "info_completa": "Pay the amount in Pix to guarantee your purchase"
+      },
+      "efetuando": "You are making a payment to",
+      "ver_codigo": "View PIX Code",
+      "fechar_codigo": "Close PIX Code",
+      "expirou": "Your code has expired",
+      "expira_em": "Code expires in",
+      "ref": "regarding the purchase of the Product",
+      "escaneie": "Instructions for payment via Pix",
+      "step_01": "Open your bank app and find the “Pix” payment option",
+      "step_02": "Choose Pay with Pix or Scan QR code",
+      "step_03": "Check the details and complete the purchase",
+      "creditado_na_hora": "Pay and will be credited on time",
+      "ou_copie": "Or copy this QR code to make payment",
+      "cole": "Choose to pay via Pix through your Internet Banking or payment app.",
+      "btn_text": "Copy Code",
+      "codigo_copiado": "The barcode has been copied!",
+      "copiado": "Copied!",
+      "btn_visualizar_qr": "View QR code",
+      "ja_fiz": "I already made my payment",
+      "prazo_expirado": "Deadline for payment expired!",
+      "expirado_1": "We are verifying your payment, as soon as we receive your payment confirmation, you will receive an email with more information.",
+      "expirado_2": "If you haven't made the payment yet, click the button below to generate again.",
+      "gerar_novo": "I want to generate a new code"
+    },
+    "modal": {
+      "text_header": {
+        "pague": "Pay the",
+        "via_boleto": "via bank slip to guarantee your purchase",
+        "info_completa": "Congratulations, this product is already yours"
+      },
+      "prazo_pagar": "You have 2 business days to pay",
+      "internet_banking": "To pay via Internet Banking, copy the typed line. To pay at any bank, ATM or lottery, print the bill.",
+      "recebe_email": "You will also receive the payment slip by email.",
+      "compensacao": "Payments with Boleto Bancário take up to 3 business days to be cleared",
+      "agradecemos": "Thank you for your purchase",
+      "proximos_passos": "You will receive more information in your email with the next steps.",
+      "vc_adquiriu": "You purchased the",
+      "no_valor": "in the amount of",
+      "transacao": "Transaction Ok",
+      "em": "in",
+      "de": "of",
+      "detalhes_email": "We send further details to your email.",
+      "produto_trial": "This product has a free trial period, it will be available",
+      "dias_teste": "days for testing.",
+      "dia_teste": "day for testing.",
+      "btn_codigo": "Copy barcode",
+      "imprimir_boleto": "Print billet",
+      "entendido": "Understood!",
+      "codigo_copiado": "The barcode has been copied!",
+      "copiado": "Copied!",
+      "compra_parcelada": "Purchase in installments in",
+      "detalhes_compra": "Purchase Details",
+      "codigo_transacao": "Transaction Code",
+      "id_assinatura": "Subscription ID"
+    }
+  },
+  "locales": {
+    "close": "Close",
+    "trocar": "Change country",
+    "placeholder": "Search country"
+  },
+  "error": {
+    "0001": "This coupon you are using is no longer valid.",
+    "BANK": "Something went wrong with your purchase, please contact your bank or card issuer.",
+    "BLACKLIST_PURCHASE": "After numerous payment attempts, the bank returned that your card was blocked, contact your card operator asking to unblock it and if you have already done so, let us know at greenn.com.br to release here.",
+    "INVALID_CVV": "Invalid card security code, please check and try again",
+    "INVALID_CLIENT_DATA": "Customer data is incorrect, please check and try again",
+    "DUPLICATE_PURCHASE": "You have already purchased this product",
+    "PRODUCT_OUT_OF_STOCK": "Product out of stock. Unable to complete the purchase.",
+    "CREDIT_CARD_OPERATOR": "Something went wrong with your purchase, please contact your card company.",
+    "INVALID_DATA": "Your card details were entered incorrectly, please check and try again.",
+    "INVALID_CREDIT_CARD": "The card used is disabled, blocked or expired, contact your bank or card issuer.",
+    "INSUFFICIENT_FUNDS": "There is not enough limit, Try with another card or payment method.",
+    "INVALID_PAYMENT_TYPE": "Invalid payment method, please try another card or payment method.",
+    "INVALID_INSTALLMENTS": "Number or value of installments not authorized, try with another card or payment method.",
+    "CURRENCY_NOT_SUPPORTED": "Currency not supported.",
+    "SUSPECTED_FRAUD": "Transaction not allowed - Contact your bank or try another payment method",
+    "GENERIC": "An error occurred while processing the purchase, please check the data and try again, in case of failures, please contact us for further guidance.",
+    "0404": "No signature has been made with this document.",
+    "1404": "This product is not a subscription.",
+    "1405": "There is no signature linked to this document."
+  },
   "general": {
     "close": "Close",
     "mail": "Email",
     "telephone": "Telephone",
     "error_message": "This product is not available for payment.",
     "address_toogle_label": "Address of delivery é the same as the charge.",
-    "delivery_address": "Delivery address"
+    "delivery_address": "Delivery address",
+    "day": "day"
   }
 }
