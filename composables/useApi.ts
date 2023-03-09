@@ -29,11 +29,11 @@ export default function () {
   }
 
   async function create<T>(url: string, body?: any, config?: any) {
-    return await instance<T>(url, "post", body, config);
+    return await instance<T>(url, "post", config, body);
   }
 
   async function update<T>(url: string, body?: any, config?: any) {
-    return await instance<T>(url, "put", body, config);
+    return await instance<T>(url, "put", config, body);
   }
 
   async function remove<T>(url: string, config?: any) {
