@@ -4,7 +4,7 @@ export default function () {
     method: "get" | "post" | "put" | "delete",
     config?: any,
     body: any = null
-  ): Promise<T> {
+  ): Promise<T | any> {
     if (body) config.body = body;
     const { data, error } = await useFetch<T>(url, {
       ...config,
@@ -14,11 +14,15 @@ export default function () {
         "Content-type": "application/json",
       },
     });
-    if (error.value) {
+
+    if (error.value?.statusCode === 500) {
       throw showError({
         statusCode: error.value.statusCode,
         message: `Ocorreu um erro ao processar a sua solicitação`,
       });
+    }
+    if (error.value) {
+      throw error;
     }
     const retorno: T | any = data.value;
     return retorno;

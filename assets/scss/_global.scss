@@ -5,3 +5,17 @@
 * {
   font-family: "Montserrat", sans-serif;
 }
+
+.infos {
+  &-title {
+    color: var(--txt-color);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  &-content {
+    color: var(--txt-color);
+    font-size: 12px;
+    font-weight: 400;
+  }
+}

@@ -34,7 +34,7 @@ const amountText = computed(() => {
         {{ $t("components.product_card.title_header") }}
       </p>
     </header>
-    <section class="flex w-full items-start gap-4 px-5">
+    <section class="flex w-full items-start gap-4 px-5 pb-5">
       <!-- Product Image -->
       <nuxt-img
         v-if="product.images.length"
@@ -124,19 +124,3 @@ const amountText = computed(() => {
     </section>
   </BaseCard>
 </template>
-
-<style lang="scss" scoped>
-.infos {
-  &-title {
-    @apply text-txt-color;
-    font-weight: 600;
-    font-size: 13px;
-  }
-
-  &-content {
-    @apply text-txt-color;
-    font-size: 12px;
-    font-weight: 400;
-  }
-}
-</style>

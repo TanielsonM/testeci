@@ -7,7 +7,6 @@ const { coupon, hasCoupon } = storeToRefs(checkout);
 const isOpen = ref(!!coupon.value.name);
 
 function apply() {
-  coupon.value.applied = true;
   checkout.setCoupon();
 }
 </script>
@@ -32,13 +31,14 @@ function apply() {
         :class="{ 'rotate-180': isOpen }"
       />
     </span>
-    <section v-if="isOpen && !coupon.applied" class="w-full">
+    <section v-if="isOpen && !coupon.applied" class="w-full flex flex-col gap-5">
       <BaseInput
         :placeholder="$t('components.coupon.input_placeholder')"
         v-model="coupon.name"
         animation="top"
         :disabled="!!hasCoupon"
         custom-class="uppercase"
+        :error="coupon.error ? $t('checkout.cupom.invalido') : ''"
       />
       <BaseButton
         :disabled="!coupon.name.length"

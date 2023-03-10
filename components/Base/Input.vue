@@ -21,9 +21,9 @@ const props = defineProps({
     default: () => "",
   },
   error: {
-    type: String,
+    type: [String, Boolean],
     required: false,
-    default: () => "",
+    default: () => false,
   },
   placeholder: {
     type: String,
