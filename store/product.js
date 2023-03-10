@@ -2,6 +2,8 @@ import { useCheckoutStore } from "@/store/checkout.js";
 export const useProductStore = definePiniaStore("product", {
   state: () => ({
     product: null,
+    amount: 0,
+    original_amount: 0,
   }),
   getters: {
     product_id: (state) => state.product.id,
@@ -33,6 +35,9 @@ export const useProductStore = definePiniaStore("product", {
         this.product.status_product = "APPROVED";
       if (this.product.status_offer === "PENDING")
         this.product.status_offer = "APPROVED";
+
+      this.amount = this.product.amount;
+      this.original_amount = this.product.amount;
 
       const checkout = useCheckoutStore();
       checkout.setAmount(product.amount);

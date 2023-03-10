@@ -153,6 +153,32 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       };
     },
     getBumpList: (state) => state.bump_list,
+    totalAmount(state) {
+      return () => {
+        const product = useProductStore();
+        const productAmount = this.coupon.applied
+          ? this.coupon.discount
+          : product.amount;
+        const initial = 0;
+        const amountBumps = this.bump_list
+          .filter((item) => item.checkbox)
+          .reduce(function (accumulator, current) {
+            const amount = current.amount;
+            if (current?.shipping?.amount) {
+              amount += current?.shipping?.amount;
+            }
+            return accumulator + amount;
+          }, initial);
+        return productAmount + amountBumps;
+      };
+    },
+    shippingProducts(state) {
+      return () => {
+        return this.product_list.filter(
+          (item) => item.format === "PHYSICALPRODUCT"
+        );
+      };
+    },
   },
   actions: {
     async init() {
@@ -177,18 +203,16 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       }, 1000);
     },
     async getCoupon() {
-      const url = `/coupon/check/${this.coupon.name.toUpperCase()}/${
-        this.url.params.product_id
-      }`;
+      const url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
 
       if (this.url.params.hash) {
-        url = url + `/offer/${this.$route.params.hash}`;
+        url = url + `/offer/${this.url.params.hash}`;
       }
       try {
-        const res = await useApi(url, "get");
+        const res = await useApi().read(url, "get");
         return res;
       } catch (error) {
-        this.coupon.error = error;
+        throw error;
       } finally {
         this.coupon.loading = false;
       }
@@ -264,14 +288,23 @@ export const useCheckoutStore = definePiniaStore("checkout", {
               response.data.paypal = response.checkout_payment.paypal;
             }
 
+            if (response.data.format === "PHYSICALPRODUCT") {
+              if (response.data.type_shipping_fee === "FIXED") {
+                const shipping = {};
+                shipping.amount = response.data.amount_fixed_shipping_fee;
+                response.data = { ...response.data, shipping };
+              }
+            }
+
             if (response?.data && !isBump) {
               this.payment = response.checkout_payment;
               setProduct(response.data);
-            } else if (isBump && this.product_id !== id)
+            } else {
               this.bump_list.push({ ...response.data, checkbox: false });
+            }
           });
       } catch (error) {
-        this.setError("Ocorreu um erro ao processar a sua solicitação ble");
+        this.setError("Ocorreu um erro ao processar a sua solicitação");
         this.setLoading();
       }
     },
@@ -321,7 +354,8 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       if (bumpsWithOffers.length) {
         this.products_client_statistics = [];
         bumpsWithOffers.forEach((bump) => {
-          this.getProduct(bump.product_id, bump.offer_hash, true);
+          if (this.product_id !== bump.product_id)
+            this.getProduct(bump.product_id, bump.offer_hash, true);
         });
       }
     },
@@ -374,18 +408,35 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         const store = useProductStore();
         const current_amount = this.amount;
 
-        const { amount, available, due_date } = await this.getCoupon();
+        await this.getCoupon()
+          .then(({ amount, available, due_date }) => {
+            this.coupon.amount = Math.abs(store.product.amount - amount);
+            this.coupon.available = available;
+            this.coupon.due_date = due_date;
+            this.coupon.discount = amount;
 
-        this.coupon.amount = Math.abs(store.product.amount - amount);
-        this.coupon.available = available;
-        this.coupon.due_date = due_date;
-        this.coupon.discount = amount;
+            this.setAmount(this.amount - this.coupon.amount);
 
-        this.setAmount(this.amount - this.coupon.amount);
-
-        this.coupon.error = false;
-        this.coupon.applied = true;
-        this.coupon.is_valid = true;
+            this.coupon.error = false;
+            this.coupon.applied = true;
+            this.coupon.is_valid = true;
+          })
+          .catch((error) => {
+            if (error.value.statusCode === 404) {
+              this.coupon = {
+                amount: 0,
+                applied: false,
+                available: null,
+                discount: 0,
+                due_date: null,
+                error: null,
+                is_valid: false,
+                loading: false,
+                name: "",
+              };
+              this.coupon.error = true;
+            }
+          });
       }
     },
     setInstallments(installments = null, maxInstallments = null, fixed = null) {
@@ -431,7 +482,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         this.product_list.push(product);
         return;
       }
-      this.product_list.slice(index, 1);
+      this.product_list.splice(index, 1);
     },
     resetProducts() {
       this.product_list = [];
