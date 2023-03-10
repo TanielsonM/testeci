@@ -23,11 +23,13 @@ const checkout = useCheckoutStore();
         <p>{{ item.name }}</p>
         <p>
           {{
-            item?.shipping?.amount
-              ? formatMoney(item.shipping.amount)
-              : item?.shipping?.amount === 0
+            !item.has_shipping_fee 
               ? $t("checkout.pagamento.bump.free")
-              : $t("checkout.pagamento.bump.to_calculate")
+              : item?.shipping?.amount
+                ? formatMoney(item.shipping.amount)
+                : item?.shipping?.amount === 0
+                ? $t("checkout.pagamento.bump.free")
+                : $t("checkout.pagamento.bump.to_calculate")
           }}
         </p>
       </span>
