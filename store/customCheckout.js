@@ -64,6 +64,7 @@ export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
       subtitle: state.custom_checkout?.ob_subtitle,
       title: state.custom_checkout?.ob_title,
     }),
+    trial_info: (state) => state.custom_checkout.trial_info ?? null,
   },
   actions: {
     setCustomCheckout(checkout) {
