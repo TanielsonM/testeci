@@ -1,4 +1,6 @@
 import { useCheckoutStore } from "@/store/checkout.js";
+import { useCustomCheckoutStore } from "@/store/customCheckout";
+import { formatMoney } from "~~/utils/money";
 export const useProductStore = definePiniaStore("product", {
   state: () => ({
     product: null,
@@ -26,6 +28,34 @@ export const useProductStore = definePiniaStore("product", {
     allowedCoupon: (state) => state.product.allowed_coupon,
     isHeaven: (state) => !!state.product.is_heaven,
     showAddress: (state) => state.product.is_checkout_address,
+    hasTrial: (state) => state.product.trial,
+    getPeriod: (state) => state.product.period,
+    hasCustomCharges: (state) => state.product.custom_charges ?? null,
+    calculateAmountAfterTrial(state) {
+      return () => {
+        const checkout = useCheckoutStore();
+        const customCheckout = useCustomCheckoutStore();
+        if (this.hasFixedInstallments && customCheckout.trial_info == "fixa") {
+          return `${this.hasFixedInstallments}x de ${formatMoney(
+            checkout.getInstallments(this.hasFixedInstallments)
+          )}`;
+        } else {
+          if (state.product.shipping_fee_is_recurring) {
+            if (state.product.type_shipping_fee === "FIXED") {
+              return `${formatMoney(
+                state.product.amount + state.product.amount_fixed_shipping_fee
+              )}`;
+            } else {
+              return `${formatMoney(
+                state.product.amount + state.product.shipping.amount
+              )}`;
+            }
+          } else {
+            return `${formatMoney(state.product.amount)}`;
+          }
+        }
+      };
+    },
   },
   actions: {
     setProduct(product) {
@@ -40,7 +70,9 @@ export const useProductStore = definePiniaStore("product", {
       this.original_amount = this.product.amount;
 
       const checkout = useCheckoutStore();
-      checkout.setAmount(product.amount);
+      checkout.setAmount(
+        this.hasCustomCharges ? this.hasCustomCharges[0].amount : product.amount
+      );
       checkout.setOriginalAmount(product.amount);
       checkout.setInstallments(
         this.product.max_installments,
