@@ -19,3 +19,15 @@
     font-weight: 400;
   }
 }
+
+textarea {
+  resize: none !important;
+  height: 15vh !important;
+}
+
+input::placeholder, textarea::placeholder {
+  text-transform: none;
+  font-weight: 400;
+  font-size: 15px !important;
+  color: var(--txt-color) !important;
+}
