@@ -136,12 +136,3 @@ const onInput = (event) => {
     <small data-anima="right" class="text-red-400" v-else>{{ error }}</small>
   </label>
 </template>
-
-<style lang="scss" scoped>
-input::placeholder {
-  text-transform: none;
-  font-weight: 400;
-  font-size: 15px !important;
-  color: var(--txt-color) !important;
-}
-</style>
