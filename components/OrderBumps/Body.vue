@@ -77,7 +77,7 @@ function getType(type = "") {
 
 <template>
   <section class="body w-full h-full flex flex-col lg:flex-row">
-    <section class="content">
+    <section class="content flex flex-col md:flex-row">
       <!-- Image, type and detail button -->
       <section class="left__side">
         <section v-if="!bump.images.length" class="no-image"></section>
@@ -279,7 +279,7 @@ function getType(type = "") {
       gap: 20px;
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 768px) {
       & {
         max-width: 100%;
       }
