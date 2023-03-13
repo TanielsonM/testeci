@@ -11,7 +11,7 @@ const checkout = useCheckoutStore();
   <section class="flex w-full flex-col gap-3 px-5">
     <!-- Shipping -->
     <p
-      class="flex items-center gap-1 md:flex-col md:items-start"
+      class="flex flex-col items-start gap-1"
       v-if="checkout.hasPhysicalProduct()"
     >
       <span class="infos-title">Frete</span>
