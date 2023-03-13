@@ -1,0 +1,33 @@
+<script setup>
+const props = defineProps({
+  variant: {
+    type: String,
+    required: false,
+    default: () => "primary",
+    validator: (value) =>
+      ["primary", "danger", "warning", "success"].includes(value),
+  },
+});
+
+const style = computed(() => {
+  switch (props.variant) {
+    case "primary":
+      return { bg: "bg-blue-100", text: "text-blue-600" };
+    case "danger":
+      return { bg: "bg-red-300", text: "text-red-600" };
+    case "warning":
+      return { bg: "bg-orange-300", text: "text-orange-600" };
+    case "success":
+      return { bg: "bg-green-200", text: "text-green-600" };
+  }
+});
+</script>
+
+<template>
+  <section
+    :class="[style.bg, style.text]"
+    class="px-[15px] py-[10px] rounded font-semibold text-[75%] flex-wrap text-left"
+  >
+    <slot></slot>
+  </section>
+</template>
