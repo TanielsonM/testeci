@@ -10,8 +10,7 @@ const checkout = useCheckoutStore();
 const { t } = useI18n();
 /* State */
 const opened = ref(false);
-const { product, allowedCoupon, is_gift, gift_message } =
-  storeToRefs(productStore);
+const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { getInstallments, method, installments, hasFees } =
   storeToRefs(checkout);
 /* Show amount text */
@@ -247,7 +246,7 @@ const period = computed(() => {
         </a>
       </p>
       <!-- Coupon -->
-      <ProductCoupon v-if="allowedCoupon" />
+      <ProductCoupon v-if="productStore.allowedCoupon()" />
     </section>
   </BaseCard>
 </template>

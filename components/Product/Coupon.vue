@@ -31,12 +31,15 @@ function apply() {
         :class="{ 'rotate-180': isOpen }"
       />
     </span>
-    <section v-if="isOpen && !coupon.applied" class="w-full flex flex-col gap-5">
+    <section
+      v-if="isOpen && !coupon.applied"
+      class="w-full flex flex-col gap-5"
+    >
       <BaseInput
         :placeholder="$t('components.coupon.input_placeholder')"
         v-model="coupon.name"
         animation="top"
-        :disabled="!!hasCoupon"
+        :disabled="!!hasCoupon && checkout.coupon.applied"
         custom-class="uppercase"
         :error="coupon.error ? $t('checkout.cupom.invalido') : ''"
       />
@@ -49,8 +52,20 @@ function apply() {
         <p class="font-semibold text-sm">{{ $t("components.coupon.apply") }}</p>
       </BaseButton>
     </section>
-    <section v-else-if="isOpen">
-      <h1>teste</h1>
+    <section
+      v-else-if="isOpen"
+      class="flex flex-col items-start justify-start w-full gap-2"
+    >
+      <p class="text-txt-color text-xs">
+        {{ $t("checkout.cupom.cupom") }}
+        <span class="font-bold">{{ coupon.name.toUpperCase() }}</span>
+        {{ $t("checkout.cupom.aplicado") }}
+      </p>
+      <a
+        class="hover:underline text-blue-600 text-[13px] cursor-pointer"
+        @click.prevent="checkout.setCoupon(false, true)"
+        >{{ $t("checkout.cupom.remover") }}</a
+      >
     </section>
   </section>
 </template>

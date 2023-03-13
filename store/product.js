@@ -27,7 +27,15 @@ export const useProductStore = definePiniaStore("product", {
     isPhysicalProduct: (state) => state.product.format == "PHYSICALPRODUCT",
     productType: (state) => state.product.type,
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
-    allowedCoupon: (state) => state.product.allowed_coupon,
+    allowedCoupon(state) {
+      return () => {
+        const store = useProductStore();
+        return (
+          state.product.allowed_coupon &&
+          store.product.format !== "PHYSICALPRODUCT"
+        );
+      };
+    },
     isHeaven: (state) => !!state.product.is_heaven,
     showAddress: (state) => state.product.is_checkout_address,
     hasTrial: (state) => state.product.trial,

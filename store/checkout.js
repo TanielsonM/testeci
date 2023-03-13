@@ -102,13 +102,15 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         let amount = this.amount;
         const product = useProductStore();
         if (installments === 1) {
-          return !product.isPhysicalProduct ? state.amount : state.amount + 592;
+          return !product.isPhysicalProduct
+            ? product.amount
+            : product.amount + 592;
         }
         if (
           this.hasFees &&
           ["CREDIT_CARD", "TWO_CREDIT_CARD"].includes(state.method)
         ) {
-          amount = state.amount / installments;
+          amount = product.amount / installments;
           return amount;
         } else {
           let tax = this.monthly_interest / 100; // tax per month
@@ -399,13 +401,28 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     setAmount(amount = 0) {
       this.amount = amount;
     },
-    async setCoupon(initial = false) {
-      if (!!this.hasCoupon) {
+    async setCoupon(initial = false, remove = false) {
+      const store = useProductStore();
+      if (remove) {
+        store.amount = store.original_amount;
+        this.coupon = {
+          amount: 0,
+          applied: false,
+          available: null,
+          discount: 0,
+          due_date: null,
+          error: null,
+          is_valid: false,
+          loading: false,
+          name: "",
+        };
+        return;
+      }
+      if (!!this.hasCoupon && initial) {
         this.coupon.name = this.hasCoupon;
       }
       if (!!this.coupon.name) {
         this.coupon.loading = true;
-        const store = useProductStore();
         const current_amount = this.amount;
 
         await this.getCoupon()
@@ -415,7 +432,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
             this.coupon.due_date = due_date;
             this.coupon.discount = amount;
 
-            this.setAmount(this.amount - this.coupon.amount);
+            store.amount -= this.coupon.amount;
 
             this.coupon.error = false;
             this.coupon.applied = true;
