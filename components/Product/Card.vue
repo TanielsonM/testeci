@@ -7,7 +7,9 @@ import { formatMoney } from "~/utils/money";
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const checkout = useCheckoutStore();
+const { t } = useI18n();
 /* State */
+const opened = ref(false);
 const { product, allowedCoupon } = storeToRefs(productStore);
 const { getInstallments, method, installments, hasFees } =
   storeToRefs(checkout);
@@ -22,6 +24,43 @@ const amountText = computed(() => {
       return `${formatMoney(getInstallments.value())}`;
   }
 });
+/* Trial message */
+const trialMessage = computed({
+  get() {
+    if (product.value.trial === 1) {
+      return `${t("order.gratuito_por")} ${product.value.trial} ${t(
+        "checkout.pagamento.bump.day"
+      )}.`;
+    }
+    return `${t("order.gratuito_por")} ${product.value.trial} ${t(
+      "checkout.pagamento.bump.day"
+    )}s.`;
+  },
+});
+const period = computed(() => {
+  switch (productStore.getPeriod) {
+    case 30:
+      return t("order.por_mes");
+
+    case 90:
+      return t("order.por_trimestre");
+
+    case 180:
+      return t("order.por_semestre");
+
+    case 365:
+      return t("order.por_ano");
+
+    default:
+      if (productStore.getPeriod > 365) {
+        return `/ ${Math.floor(productStore.getPeriod / 365)} ${t(
+          "order.anos"
+        )}`;
+      } else {
+        return `/ ${productStore.getPeriod} ${t("order.dias")}`;
+      }
+  }
+});
 </script>
 
 <template>
@@ -34,7 +73,7 @@ const amountText = computed(() => {
         {{ $t("components.product_card.title_header") }}
       </p>
     </header>
-    <section class="flex w-full items-start gap-4 px-5 pb-5">
+    <section class="flex w-full items-start gap-4 px-5">
       <!-- Product Image -->
       <nuxt-img
         v-if="product.images.length"
@@ -59,10 +98,68 @@ const amountText = computed(() => {
           $t("components.product_card.is_subscription")
         }}</small>
         <h1 class="text-lg font-bold">{{ product.name }}</h1>
-        <p class="text-txt-color text-lg font-semibold">{{ amountText }}</p>
+        <p
+          class="text-txt-color text-lg font-semibold"
+          :class="{ underline: productStore.hasTrial }"
+        >
+          {{ productStore.hasTrial ? trialMessage : amountText }}
+        </p>
+        <section class="custom_charges" v-if="productStore.hasCustomCharges">
+          <section class="charges" :opened="opened">
+            <p
+              v-for="charge in productStore.hasCustomCharges.filter(
+                (item) => item.amount > 0
+              )"
+              :key="charge.id"
+              class="w-full flex items-center justify-between"
+            >
+              <span
+                >{{ charge.sequence }}ª
+                {{ $t("checkout.different_amount_text.charge") }}</span
+              >
+              <span class="flex-nowrap">{{ formatMoney(charge.amount) }}</span>
+            </p>
+            <p class="w-full flex items-center justify-between">
+              <span class="flex-wrap">{{
+                $t("checkout.different_amount_text.other_charges")
+              }}</span>
+              <span class="flex-nowrap text-end min-w-[70px]">{{
+                formatMoney(product.amount)
+              }}</span>
+            </p>
+          </section>
+          <button class="show-more" @click="opened = !opened">
+            {{
+              !opened
+                ? $t("checkout.different_amount_text.show_more")
+                : $t("checkout.pagamento.bump.hide")
+            }}
+          </button>
+        </section>
       </section>
       <!--  -->
     </section>
+    <!-- Has shipping recurring -->
+    <BaseBadge
+      class="mx-5"
+      v-if="
+        product.type === 'SUBSCRIPTION' &&
+        !!product.has_shipping_fee &&
+        product.shipping_fee_is_recurring === 0
+      "
+    >
+      {{ $t("checkout.recurring_shipping.isNotRecurring") }}
+    </BaseBadge>
+    <!-- Trial info -->
+    <BaseBadge class="mx-5" v-if="productStore.hasTrial">
+      {{ $t("order.apos_trial") }} {{ $t("order.de") }}
+      {{ productStore.hasTrial }}
+      {{ $t("order.dias") }}:
+      {{ productStore.calculateAmountAfterTrial() }}
+      <span v-if="product.type === 'SUBSCRIPTION'">
+        {{ period }}
+      </span>
+    </BaseBadge>
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->
@@ -124,3 +221,50 @@ const amountText = computed(() => {
     </section>
   </BaseCard>
 </template>
+
+<style lang="scss" scoped>
+.custom_charges {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  .charges {
+    width: 100%;
+    border: 1px #3c88fa solid;
+    border-radius: 5px;
+
+    margin: 10px 0;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 45px;
+    overflow-y: hidden;
+
+    &[opened="true"] {
+      height: 100%;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+
+      color: #81858e;
+      font: 12px 400 "Montserrat";
+      line-height: 15px;
+      font-size: 13px;
+      font-weight: 400;
+    }
+  }
+
+  .show-more {
+    color: #3c88fa;
+    background: transparent;
+    outline: none;
+    border: none;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+</style>
