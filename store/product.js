@@ -6,6 +6,8 @@ export const useProductStore = definePiniaStore("product", {
     product: null,
     amount: 0,
     original_amount: 0,
+    is_gift: false,
+    gift_message: "",
   }),
   getters: {
     product_id: (state) => state.product.id,
@@ -31,6 +33,7 @@ export const useProductStore = definePiniaStore("product", {
     hasTrial: (state) => state.product.trial,
     getPeriod: (state) => state.product.period,
     hasCustomCharges: (state) => state.product.custom_charges ?? null,
+    canBeGifted: (state) => !!state.product.can_be_gifted,
     calculateAmountAfterTrial(state) {
       return () => {
         const checkout = useCheckoutStore();

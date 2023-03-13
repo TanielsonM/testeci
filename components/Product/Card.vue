@@ -10,7 +10,8 @@ const checkout = useCheckoutStore();
 const { t } = useI18n();
 /* State */
 const opened = ref(false);
-const { product, allowedCoupon } = storeToRefs(productStore);
+const { product, allowedCoupon, is_gift, gift_message } =
+  storeToRefs(productStore);
 const { getInstallments, method, installments, hasFees } =
   storeToRefs(checkout);
 /* Show amount text */
@@ -104,7 +105,10 @@ const period = computed(() => {
         >
           {{ productStore.hasTrial ? trialMessage : amountText }}
         </p>
-        <section class="custom_charges" v-if="!!productStore.hasCustomCharges.length">
+        <section
+          class="custom_charges"
+          v-if="!!productStore.hasCustomCharges.length"
+        >
           <section class="charges" :opened="opened">
             <p
               v-for="charge in productStore.hasCustomCharges.filter(
@@ -139,6 +143,32 @@ const period = computed(() => {
       </section>
       <!--  -->
     </section>
+    <!-- Gift content -->
+    <section
+      class="w-full flex flex-col gap-5 px-5"
+      v-if="
+        product.type == 'TRANSACTION' &&
+        product.format == 'PHYSICALPRODUCT' &&
+        productStore.canBeGifted
+      "
+    >
+      <BaseBadge>
+        <BaseCheckbox
+          id="gift"
+          v-model:checked="is_gift"
+          :label="`${$t('checkout.address.want_gift_someone')} 🎁`"
+          label-custom-class="font-semibold text-xs"
+        >
+        </BaseCheckbox>
+      </BaseBadge>
+      <BaseTextarea
+        v-if="is_gift"
+        v-model="gift_message"
+        animation="top"
+        placeholder="Escreva uma mensagem para quem receberá o presente"
+      ></BaseTextarea>
+    </section>
+    <!--  -->
     <!-- Has shipping recurring -->
     <BaseBadge
       class="mx-5"
