@@ -1,7 +1,11 @@
 <script setup>
+// Data
+import states from "@/data/states";
 // Store
+import { useCheckoutStore } from "@/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 const store = useAddressStore();
+const checkout = useCheckoutStore();
 // Props
 const props = defineProps({
   type: {
@@ -85,14 +89,23 @@ async function getAddress(cep = "") {
     <BaseInput
       :label="$t('forms.address.inputs.complement.label')"
       :placeholder="$t('forms.address.inputs.complement.placeholder')"
-      class="col-span-12 xl:col-span-8"
+      class="col-span-12 xl:col-span-7"
       v-model="form.complement"
     />
     <BaseInput
       :label="$t('forms.address.inputs.state.label')"
       :placeholder="$t('forms.address.inputs.state.placeholder')"
-      class="col-span-12 xl:col-span-4"
+      class="col-span-12 xl:col-span-5"
       v-model="form.state"
+      v-if="checkout.selectedCountry !== 'BR'"
+    />
+    <BaseSelect
+      v-else
+      :label="$t('forms.address.inputs.state.label')"
+      :placeholder="$t('forms.address.inputs.state.placeholder')"
+      class="col-span-12 xl:col-span-5"
+      v-model="form.state"
+      :data="states"
     />
   </form>
 </template>

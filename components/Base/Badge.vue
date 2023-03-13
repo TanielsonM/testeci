@@ -25,9 +25,16 @@ const style = computed(() => {
 
 <template>
   <section
-    :class="[style.bg, style.text]"
+    :class="[variant]"
     class="px-[15px] py-[10px] rounded font-semibold text-[75%] flex-wrap text-left"
   >
     <slot></slot>
   </section>
 </template>
+
+<style lang="scss" scoped>
+.primary {
+  background-color: rgba(65,137,230,.15);
+  color: #3483fa;
+}
+</style>
