@@ -70,9 +70,13 @@ export const useProductStore = definePiniaStore("product", {
       this.original_amount = this.product.amount;
 
       const checkout = useCheckoutStore();
+      console.log(this.hasCustomCharges);
       checkout.setAmount(
-        this.hasCustomCharges ? this.hasCustomCharges[0].amount : product.amount
+        !!this.hasCustomCharges.length
+          ? this.hasCustomCharges[0].amount
+          : product.amount
       );
+      console.log("aqui");
       checkout.setOriginalAmount(product.amount);
       checkout.setInstallments(
         this.product.max_installments,

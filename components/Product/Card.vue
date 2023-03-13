@@ -104,7 +104,7 @@ const period = computed(() => {
         >
           {{ productStore.hasTrial ? trialMessage : amountText }}
         </p>
-        <section class="custom_charges" v-if="productStore.hasCustomCharges">
+        <section class="custom_charges" v-if="!!productStore.hasCustomCharges.length">
           <section class="charges" :opened="opened">
             <p
               v-for="charge in productStore.hasCustomCharges.filter(
