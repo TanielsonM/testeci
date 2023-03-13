@@ -15,6 +15,11 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  labelCustomClass: {
+    type: String,
+    required: false,
+    default: () => "",
+  },
 });
 const emit = defineEmits(["update:checked"]);
 </script>
@@ -34,6 +39,6 @@ const emit = defineEmits(["update:checked"]);
     <div class="flex items-center justify-center bg-white w-4 h-4 rounded">
       <Icon name="mdi:check-bold" v-if="checked"/>
     </div>
-    <span class="text-white font-semibold text-sm flex-wrap">{{ label }}</span>
+    <span class="text-sm flex-wrap" :class="labelCustomClass">{{ label }}</span>
   </label>
 </template>
