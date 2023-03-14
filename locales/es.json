@@ -59,7 +59,8 @@
       "author": "Autor",
       "warranty": "Garantia",
       "warranty_days": "dias de garantia",
-      "is_subscription": "Estás suscrito"
+      "is_subscription": "Estás suscrito",
+      "gift_placeholder": "Escribe un mensaje al destinatario del regalo."
     },
     "locales": {
       "change_country": "Cambiar pais",

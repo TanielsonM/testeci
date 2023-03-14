@@ -210,8 +210,11 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
       }
+      const query = {
+        country: this.selectedCountry,
+      };
       try {
-        const res = await useApi().read(url, "get");
+        const res = await useApi().read(url, { query });
         return res;
       } catch (error) {
         throw error;

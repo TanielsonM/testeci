@@ -59,7 +59,8 @@
       "author": "Author",
       "warranty": "Warranty",
       "warranty_days": "warranty days",
-      "is_subscription": "You are signing"
+      "is_subscription": "You are signing",
+      "gift_placeholder": "Write a message to the recipient of the gift."
     },
     "locales": {
       "change_country": "Change country",

@@ -164,7 +164,7 @@ const period = computed(() => {
         v-if="is_gift"
         v-model="gift_message"
         animation="top"
-        placeholder="Escreva uma mensagem para quem receberá o presente"
+        :placeholder="$t('components.product_card.gitf_placeholder')"
       ></BaseTextarea>
     </section>
     <!--  -->
