@@ -13,17 +13,7 @@ const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { getInstallments, method, installments, hasFees } =
   storeToRefs(checkout);
-/* Show amount text */
-const amountText = computed(() => {
-  switch (method.value) {
-    case "CREDIT_CARD":
-      return `${installments.value}x de ${formatMoney(
-        getInstallments.value()
-      )} ${hasFees.value ? "(Sem juros)" : ""}`;
-    default:
-      return `${formatMoney(getInstallments.value())}`;
-  }
-});
+
 /* Trial message */
 const trialMessage = computed({
   get() {
@@ -101,9 +91,11 @@ const period = computed(() => {
         <p
           class="text-txt-color text-lg font-semibold"
           :class="{ underline: productStore.hasTrial }"
+          v-if="productStore.hasTrial"
         >
-          {{ productStore.hasTrial ? trialMessage : amountText }}
+          {{ trialMessage }}
         </p>
+        <ProductTotalAmount v-else />
         <section
           class="custom_charges"
           v-if="!!productStore.hasCustomCharges.length"
