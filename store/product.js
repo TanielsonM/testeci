@@ -27,6 +27,8 @@ export const useProductStore = definePiniaStore("product", {
     isPhysicalProduct: (state) => state.product.format == "PHYSICALPRODUCT",
     productType: (state) => state.product.type,
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
+    hasPreSelectedInstallments: (state) =>
+      state.product.pre_selected_installment ?? null,
     allowedCoupon(state) {
       return () => {
         const store = useProductStore();
