@@ -37,4 +37,8 @@ const style = computed(() => {
   background-color: rgba(65,137,230,.15);
   color: #3483fa;
 }
+.success {
+  background-color: var(--transparent);
+  color: var(--main-color);
+}
 </style>

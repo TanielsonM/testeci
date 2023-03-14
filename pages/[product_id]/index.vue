@@ -61,6 +61,7 @@ const { sameAddress } = storeToRefs(address);
           </Steps>
         </template>
       </Steps>
+      <!-- Bumps -->
       <template v-if="checkout.getBumpList.length">
         <p class="w-full text-txt-color">
           {{
