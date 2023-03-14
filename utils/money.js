@@ -3,7 +3,7 @@ import { useCheckoutStore } from "@/store/checkout";
 export function formatMoney(amount) {
   if (!amount) return amount;
   const store = useCheckoutStore();
-  return `${store.payment.data.symbol_currency} ${amount.toLocaleString(
+  return `${store.checkoutPayment.data.symbol_currency} ${amount.toLocaleString(
     "pt-BR",
     {
       maximumFractionDigits: 2,

@@ -57,7 +57,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     order_bumps: [],
     bump_list: [],
     /* Payment details */
-    payment: null,
+    checkoutPayment: null,
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -99,8 +99,8 @@ export const useCheckoutStore = definePiniaStore("checkout", {
      */
     getInstallments(state) {
       return (installments = state.installments) => {
-        let amount = this.amount;
         const product = useProductStore();
+        let amount = product.amount;
         if (installments === 1) {
           return !product.isPhysicalProduct
             ? product.amount
@@ -302,7 +302,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
             }
 
             if (response?.data && !isBump) {
-              this.payment = response.checkout_payment;
+              this.checkoutPayment = response.checkout_payment;
               setProduct(response.data);
             } else {
               this.bump_list.push({ ...response.data, checkbox: false });
@@ -430,19 +430,20 @@ export const useCheckoutStore = definePiniaStore("checkout", {
 
         await this.getCoupon()
           .then(({ amount, available, due_date }) => {
-            this.coupon.amount = Math.abs(store.product.amount - amount);
+            this.coupon.amount = Math.abs(store.amount - amount);
             this.coupon.available = available;
             this.coupon.due_date = due_date;
             this.coupon.discount = amount;
 
             store.amount -= this.coupon.amount;
+            this.amount -= this.coupon.amount;
 
             this.coupon.error = false;
             this.coupon.applied = true;
             this.coupon.is_valid = true;
           })
           .catch((error) => {
-            if (error.value.statusCode === 404) {
+            if (error.statusCode === 404) {
               this.coupon = {
                 amount: 0,
                 applied: false,
