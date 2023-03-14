@@ -38,6 +38,7 @@ const colorClasses = computed(() => {
     secondary: "border-transparent text-white bg-gray-500",
     success: "border-transparent text-white bg-green-500",
     danger: "border-transparent text-white bg-red-500",
+    info: "border-transparent text-[#3483fa] bg-[rgba(65,137,230,.15)]"
   };
   return colors[props.color] || colors.primary;
 });

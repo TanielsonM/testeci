@@ -44,6 +44,7 @@ function apply() {
         :error="coupon.error ? $t('checkout.cupom.invalido') : ''"
       />
       <BaseButton
+        color="info"
         :disabled="!coupon.name.length"
         :loading="coupon.loading"
         animation="top"
