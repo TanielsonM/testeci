@@ -91,7 +91,9 @@
     "coupon": {
       "add": "Adicione um cupom de desconto",
       "input_placeholder": "Insira um cupom",
-      "apply": "Aplicar cupom"
+      "apply": "Aplicar cupom",
+      "coupon_due_date": "O tempo está passando",
+      "coupon_expires": "Este cupom expira em"
     }
   },
   "routes": {

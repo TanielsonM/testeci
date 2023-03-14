@@ -91,7 +91,9 @@
     "coupon": {
       "add": "Add a discount coupon",
       "input_placeholder": "Enter a coupon",
-      "apply": "Apply coupon"
+      "apply": "Apply coupon",
+      "coupon_due_date": "Clock is ticking",
+      "coupon_expires": "This coupon expires in"
     }
   },
   "routes": {

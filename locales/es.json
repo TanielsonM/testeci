@@ -91,7 +91,9 @@
     "coupon": {
       "add": "Añadir un cupón de descuento",
       "input_placeholder": "Introduce un cupón",
-      "apply": "Aplicar cupón"
+      "apply": "Aplicar cupón",
+      "coupon_due_date": "El tiempo corre",
+      "coupon_expires": "Este cupón vence en"
     }
   },
   "routes":{

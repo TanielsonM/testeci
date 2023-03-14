@@ -66,6 +66,23 @@ function apply() {
         @click.prevent="checkout.setCoupon(false, true)"
         >{{ $t("checkout.cupom.remover") }}</a
       >
+      <BaseBadge variant="success" v-if="coupon.available">
+        {{
+          coupon.available > 10
+            ? `${$t("checkout.cupom.restam")} ${coupon.available} ${$t(
+                "checkout.cupom.disponiveis"
+              )}`
+            : `${$t("checkout.cupom.acabando")} ${$t(
+                "checkout.cupom.restam"
+              )} ${coupon.available} ${$t("checkout.cupom.disponiveis")}`
+        }}
+      </BaseBadge>
+      <section class="w-full" v-if="coupon.due_date">
+        <span class="text-txt-color text-[13px]">{{
+          $t("components.coupon.coupon_due_date")
+        }}</span>
+        <ProductCountDown :coupon="coupon" />
+      </section>
     </section>
   </section>
 </template>
