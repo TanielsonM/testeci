@@ -25,13 +25,21 @@ textarea {
   height: 15vh !important;
 }
 
-input::placeholder, textarea::placeholder, [showAsPlaceholder] {
+input::placeholder,
+textarea::placeholder,
+[showAsPlaceholder] {
   text-transform: none;
   font-weight: 400;
   font-size: 15px !important;
   color: var(--txt-color) !important;
 }
 
-input, textarea {
+input,
+textarea {
   font-weight: 500 !important;
+}
+
+.small-text {
+  font-size: 13px;
+  color: #3483fa;
 }
