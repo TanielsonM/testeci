@@ -961,6 +961,14 @@
     vue-i18n "9.3.0-beta.16"
     vue-i18n-routing "^0.10.2"
 
+"@nuxtjs/robots@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/robots/-/robots-3.0.0.tgz#057f0a68d847f22c36b4e574b456173e3f3d80b0"
+  integrity sha512-qsHGW1KXBvV5Kq7u3huPnFCUTbHS4Fk8Za2mNPgmUXcwLgp3exvhPtdZfIdjrCF/aZk3A8OZONNmGghs6CecBA==
+  dependencies:
+    "@nuxt/kit" "^3.0.0"
+    h3 "^1.0.1"
+
 "@nuxtjs/tailwindcss@^6.3.1":
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/@nuxtjs/tailwindcss/-/tailwindcss-6.3.1.tgz#2bc8b94389ef8e717b6091f372625d147b4c443e"
@@ -3505,6 +3513,19 @@ gzip-size@^7.0.0:
   dependencies:
     duplexer "^0.1.2"
 
+h3@^1.0.1:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/h3/-/h3-1.6.0.tgz#66594a1ca67dbcdee8e74b3f2b1c60a4fcc7df3e"
+  integrity sha512-MthVCNIGkFnywJcwaPe7BWB5Y5BQJmtddu0ABnn3TAjkCqa/EzPafIfwv+wajWxjepRGrVsmu4X0ld5IGtLDHQ==
+  dependencies:
+    cookie-es "^0.5.0"
+    defu "^6.1.2"
+    destr "^1.2.2"
+    iron-webcrypto "^0.5.0"
+    radix3 "^1.0.0"
+    ufo "^1.1.1"
+    uncrypto "^0.1.2"
+
 h3@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/h3/-/h3-1.1.0.tgz#ff10d590005711dfb41034b9b1496d165507b1ea"
@@ -3797,6 +3818,11 @@ ipx@1.0.0-2:
     sharp "^0.31.2"
     ufo "^1.0.0"
     xss "^1.0.14"
+
+iron-webcrypto@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/iron-webcrypto/-/iron-webcrypto-0.5.0.tgz#6028474b6de42bb3b5ea8d2222f5af791696ccf9"
+  integrity sha512-9m0tDUIo+GPwDYi1CNlAW3ToIFTS9y88lf41KsEwbBsL4PKNjhrNDGoA0WlB6WWaJ6pgp+FOP1+6ls0YftivyA==
 
 is-array-buffer@^3.0.1:
   version "3.0.1"
@@ -6556,6 +6582,11 @@ ufo@^1.0.0, ufo@^1.0.1:
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.0.1.tgz#64ed43b530706bda2e4892f911f568cf4cf67d29"
   integrity sha512-boAm74ubXHY7KJQZLlXrtMz52qFvpsbOxDcZOnw/Wf+LS4Mmyu7JxmzD4tDLtUQtmZECypJ0FrCz4QIe6dvKRA==
 
+ufo@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.1.1.tgz#e70265e7152f3aba425bd013d150b2cdf4056d7c"
+  integrity sha512-MvlCc4GHrmZdAllBc0iUDowff36Q9Ndw/UzqmEKyrfSzokTd9ZCy1i+IIk5hrYKkjoYVQyNbrw7/F8XJ2rEwTg==
+
 ultrahtml@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ultrahtml/-/ultrahtml-1.2.0.tgz#169583f2a069d6de3b9686bd994c19811d95a0d6"
@@ -6570,6 +6601,11 @@ unbox-primitive@^1.0.2:
     has-bigints "^1.0.2"
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
+
+uncrypto@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/uncrypto/-/uncrypto-0.1.2.tgz#225aa7d41a13e4ad07ed837aedfa975a93afa924"
+  integrity sha512-kuZwRKV615lEw/Xx3Iz56FKk3nOeOVGaVmw0eg+x4Mne28lCotNFbBhDW7dEBCBKyKbRQiCadEZeNAFPVC5cgw==
 
 unctx@^2.1.1:
   version "2.1.1"

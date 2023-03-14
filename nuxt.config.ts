@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     "nuxt-icon",
     "@nuxtjs/i18n",
     "@nuxt/image-edge",
+    "@nuxtjs/robots",
     [
       "@pinia/nuxt",
       {
@@ -37,8 +38,11 @@ export default defineNuxtConfig({
   app: {
     head: {
       charset: "utf-8",
-      viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+      viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0",
       title: "Loading... pay",
+      htmlAttrs: {
+        lang: "en",
+      },
       meta: [
         {
           name: "description",
