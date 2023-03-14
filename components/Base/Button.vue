@@ -60,7 +60,7 @@ const sizeClasses = computed(() => {
     :disabled="disabled"
     :type="type"
   >
-    <Icon name="mdi:loading" class="animate-spin" v-if="loading" />
+    <Icon name="mdi:loading" class="animate-spin" v-if="loading" size="20" />
     <slot v-else />
   </button>
 </template>
