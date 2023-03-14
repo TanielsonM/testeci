@@ -32,7 +32,7 @@ const logo = computed(() => checkout.isHeaven ? "Heaven" : "Greenn");
   </main>
   <main
     v-else
-    class="bg-background flex min-h-screen w-screen flex-col items-center gap-8 px-5"
+    class="bg-background flex min-h-screen w-screen justify-between flex-col items-center px-5 gap-10"
     :data-theme="custom_checkout.theme"
     :data-theme_color="custom_checkout.themeColor()"
   >
@@ -46,7 +46,7 @@ const logo = computed(() => checkout.isHeaven ? "Heaven" : "Greenn");
     </BaseCard>
     <section
       v-else
-      class="flex w-screen flex-col-reverse items-center justify-center gap-5 px-5 pb-10 lg:flex-row md:items-start md:gap-16"
+      class="flex w-screen h-full flex-col-reverse items-center justify-center gap-5 px-5 pb-10 lg:flex-row md:items-start md:gap-16"
     >
       <slot />
     </section>
