@@ -443,7 +443,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
             this.coupon.is_valid = true;
           })
           .catch((error) => {
-            if (error.statusCode === 404) {
+            if (error.value.statusCode === 404) {
               this.coupon = {
                 amount: 0,
                 applied: false,
