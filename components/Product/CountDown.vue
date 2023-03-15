@@ -26,9 +26,22 @@ function setTime() {
     diff.seconds() < 10 ? `0${diff.seconds()}` : diff.seconds();
 }
 setTime();
-setInterval(() => {
+const interval = setInterval(() => {
   setTime();
 }, 1000);
+
+watch(
+  () => time.value.seconds,
+  (value) => {
+    if (
+      parseInt(time.value.hours) === 0 &&
+      parseInt(time.value.minutes) === 0 &&
+      parseInt(time.value.seconds) === 0
+    ) {
+      window.clearInterval(interval);
+    }
+  }
+);
 </script>
 
 <template>

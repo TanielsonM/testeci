@@ -443,20 +443,18 @@ export const useCheckoutStore = definePiniaStore("checkout", {
             this.coupon.is_valid = true;
           })
           .catch((error) => {
-            if (error.value.statusCode === 404) {
-              this.coupon = {
-                amount: 0,
-                applied: false,
-                available: null,
-                discount: 0,
-                due_date: null,
-                error: null,
-                is_valid: false,
-                loading: false,
-                name: "",
-              };
-              this.coupon.error = true;
-            }
+            this.coupon = {
+              amount: 0,
+              applied: false,
+              available: null,
+              discount: 0,
+              due_date: null,
+              error: null,
+              is_valid: false,
+              loading: false,
+              name: "",
+            };
+            this.coupon.error = true;
           });
       }
     },
