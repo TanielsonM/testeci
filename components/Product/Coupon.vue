@@ -22,7 +22,11 @@ function apply() {
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
       <p class="font-semibold text-[13px] text-txt-color w-full">
-        {{ $t("components.coupon.add") }}
+        {{
+          coupon.applied
+            ? $t("checkout.cupom.header_aplicado")
+            : $t("checkout.cupom.header_add")
+        }}
       </p>
       <Icon
         name="ic:baseline-arrow-drop-down"
