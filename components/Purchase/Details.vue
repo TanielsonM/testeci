@@ -45,7 +45,7 @@ const amountText = computed(() => {
             !item.has_shipping_fee
               ? $t("checkout.pagamento.bump.free")
               : item?.shipping?.amount
-              ? formatMoney(item.shipping.amount)
+              ? '+' + formatMoney(item.shipping.amount)
               : item?.shipping?.amount === 0
               ? $t("checkout.pagamento.bump.free")
               : $t("checkout.pagamento.bump.to_calculate")
