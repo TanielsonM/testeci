@@ -40,7 +40,7 @@ const amountText = computed(() => {
         :key="index"
       >
         <p>{{ item.name }}</p>
-        <p>
+        <p class="min-w-fit">
           {{
             !item.has_shipping_fee
               ? $t("checkout.pagamento.bump.free")

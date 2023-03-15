@@ -75,7 +75,7 @@ const period = computed(() => {
         height="auto"
         rel="preload"
         format="webp"
-        class="h-full max-h-[120px] w-full max-w-[120px] rounded object-contain"
+        class="h-full max-h-[120px] w-[120px] rounded object-contain"
       />
       <span
         v-else
