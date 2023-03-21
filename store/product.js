@@ -69,6 +69,28 @@ export const useProductStore = definePiniaStore("product", {
         }
       };
     },
+
+    resolveInstallments(state) {
+      return () => {
+        if (
+          this.product.type == "SUBSCRIPTION" &&
+          this.product.period > 30 &&
+          this.product.max_subscription_installments
+        ) {
+          return this.product.max_subscription_installments;
+        }
+
+        if (this.product.type == "SUBSCRIPTION" && this.product.period === 30) {
+          return 1;
+        }
+
+        // quantidade de parcelas
+        if (this.product.type == "TRANSACTION") {
+          return this.product.max_installments || 12;
+        }
+        return 1;
+      };
+    },
   },
   actions: {
     setProduct(product) {
@@ -90,8 +112,8 @@ export const useProductStore = definePiniaStore("product", {
       );
       checkout.setOriginalAmount(product.amount);
       checkout.setInstallments(
-        this.product.max_installments,
-        this.product.max_installments,
+        this.resolveInstallments(),
+        this.product.max_installments || 12,
         this.hasFixedInstallments
       );
       checkout.setAllowedMethods(product.method.split(","));
