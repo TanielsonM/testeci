@@ -112,7 +112,7 @@ export const useProductStore = definePiniaStore("product", {
       );
       checkout.setOriginalAmount(product.amount);
       checkout.setInstallments(
-        this.resolveInstallments(),
+        this.product.pre_selected_installment ?? this.resolveInstallments(),
         this.product.max_installments || 12,
         this.hasFixedInstallments
       );
