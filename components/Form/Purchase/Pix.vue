@@ -4,19 +4,19 @@ const { t } = useI18n();
 const items = ref([
   {
     icon: "fa6-solid:bolt",
-    size: 27,
+    size: "27",
     title: t("checkout.pagamento.metodos.pix.pix_info1.titulo"),
     text: t("checkout.pagamento.metodos.pix.pix_info1.texto"),
   },
   {
     icon: "tabler:rectangle-vertical-filled",
-    size: 27,
+    size: "27",
     title: t("checkout.pagamento.metodos.pix.pix_info2.titulo"),
     text: t("checkout.pagamento.metodos.pix.pix_info2.texto"),
   },
   {
     icon: "bi:shield-fill",
-    size: 27,
+    size: "27",
     title: t("checkout.pagamento.metodos.pix.pix_info3.titulo"),
     text: t("checkout.pagamento.metodos.pix.pix_info3.texto"),
   },
