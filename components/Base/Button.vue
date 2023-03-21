@@ -2,7 +2,7 @@
 const props = defineProps({
   disabled: {
     type: Boolean,
-    default: false,
+    default: () => false,
   },
   type: {
     type: String,
@@ -38,15 +38,15 @@ const colorClasses = computed(() => {
     secondary: "border-transparent text-white bg-gray-500",
     success: "border-transparent text-white bg-green-500",
     danger: "border-transparent text-white bg-red-500",
-    info: "border-transparent text-[#3483fa] bg-[rgba(65,137,230,.15)]"
+    info: "border-transparent text-[#3483fa] bg-[rgba(65,137,230,.15)]",
   };
   return colors[props.color] || colors.primary;
 });
 const sizeClasses = computed(() => {
   const sizes = {
-    sm: "px-4 py-2 text-sm leading-5",
-    md: "px-5 py-3 text-base leading-6",
-    lg: "px-6 py-4 text-lg leading-7",
+    sm: "sm:px-4 sm:py-2 text-sm leading-5",
+    md: "sm:px-5 sm:py-3 text-base leading-6",
+    lg: "sm:px-6 sm:py-4 text-lg leading-7",
   };
   return sizes[props.size] || sizes.md;
 });
@@ -55,10 +55,9 @@ const sizeClasses = computed(() => {
 <template>
   <button
     :data-anima="animation"
-    class="button w-full"
+    class="button w-full py-2 px-3"
     :class="[baseClasses, colorClasses, sizeClasses]"
     :disabled="disabled"
-    :type="type"
   >
     <Icon name="mdi:loading" class="animate-spin" v-if="loading" size="20" />
     <slot v-else />
@@ -66,10 +65,11 @@ const sizeClasses = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-button {
+.button {
   font-size: 14px;
-  &:hover:not([disabled]) {
-    transform: scale(1.07);
+  animation: ease-in-out 300ms;
+  &:hover:not([disabled], .pulse) {
+    transform: scale(1.07) !important;
   }
 
   &:disabled {
