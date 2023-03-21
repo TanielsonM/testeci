@@ -15,7 +15,7 @@ const {
   hasFees,
   coupon,
   original_amount,
-  checkoutPayment
+  checkoutPayment,
 } = storeToRefs(checkout);
 
 /* computeds */
@@ -26,7 +26,7 @@ const amountText = computed(() => {
         getInstallments.value()
       )} ${hasFees.value ? "(Sem juros)" : ""}`;
     default:
-      return `${formatMoney(getInstallments.value())}`;
+      return `${formatMoney(getInstallments.value(1))}`;
   }
 });
 </script>
@@ -35,6 +35,9 @@ const amountText = computed(() => {
   <p v-if="coupon.applied" class="text-[13px] line-through text-[#81858e]">
     {{ formatMoney(original_amount) }}
   </p>
+  <small v-if="installments < 2" class="d-block small-text">
+    {{ $t("order.vc_pagara") }}
+  </small>
   <p class="text-txt-color text-lg font-semibold">
     {{ amountText }}
   </p>
