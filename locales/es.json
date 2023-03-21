@@ -96,16 +96,16 @@
       "coupon_expires": "Este cupón vence en"
     }
   },
-  "routes":{
+  "routes": {
     "obrigado": "gracias"
   },
-  "checkout":{
+  "checkout": {
     "captcha": "Este sitio está protegido por reCAPTCHA y Google",
     "captcha2": "Política de privacidad",
     "captcha3": "Términos de servicio",
     "captcha4": "y",
     "captcha5": "aplicar",
-    "dados_pessoais":{
+    "dados_pessoais": {
       "title": "Datos personales",
       "nome": "Nombre completo",
       "title_error": "Algo salió mal",
@@ -120,7 +120,7 @@
       "document": "Documento",
       "document_holder": "Doc. del titular de la compra",
       "country": "Selecciona su pais",
-      "feedbacks":{
+      "feedbacks": {
         "nome": "Rellena tu nombre.",
         "email": "Este email no es válido.",
         "confirmation_email": "Los correos ingresados ​​deben ser los mismos.",
@@ -185,13 +185,13 @@
       "district_feedback_message": "¡Vaya! No se encontró ningún administrador. Busque otro nombre",
       "want_gift_someone": "Quiero regalar a alguien"
     },
-    "pagamento":{
+    "pagamento": {
       "paypal_desabilitado_pelo_bump": "No es posible pagar con Paypal los productos de OrderBump",
       "title": "Pago",
-      "metodos":{
+      "metodos": {
         "cartao_credito": "Tarjeta de crédito",
         "cartao_debito": "Tarjeta de débito",
-        "um_cartao":{
+        "um_cartao": {
           "title": "Una tarjeta",
           "numero": "Número",
           "numero_holder": "Sólo números",
@@ -208,31 +208,31 @@
             "validade": "Validez"
           }
         },
-        "dois_cartoes":{
+        "dois_cartoes": {
           "title": "Dos Tarjeta",
           "flag": "Tarjeta",
           "valor": "Importe a cobrar"
         },
-        "paypal":{
+        "paypal": {
           "btn_text": "Comprar ahora"
         },
-        "pix":{
+        "pix": {
           "text": "Los pagos con Pix se liquidan muy rápidamente y luego se liberan los productos.",
-          "pix_info1":{
+          "pix_info1": {
             "titulo": "Rápido",
             "texto": "Realiza tus pagos en segundos."
           },
-          "pix_info2":{
+          "pix_info2": {
             "titulo": "Fácil",
             "texto": "Abrió Pix en la aplicación de su banco, escaneó el código QR y completó la compra."
           },
-          "pix_info3":{
+          "pix_info3": {
             "titulo": "Seguro",
             "texto": "Pix fue creado por el Banco Central para facilitar tus compras."
           }
         }
       },
-      "bump":{
+      "bump": {
         "title": "Disfrutar y comprar juntos",
         "yes_i_want": "¡Si yo quiero!",
         "hide": "Ocultar",
@@ -250,7 +250,7 @@
         "transaction": "Transacción",
         "month": "mes"
       },
-      "feedbacks":{
+      "feedbacks": {
         "valor_cartao": "Rellene el valor correctamente. Valor mínimo $ 1,00",
         "numero_cartao": "Rellenar correctamente número de la tarjeta de crédito.",
         "titular_cartao": "Rellenar correctamente el nombre impreso en la tarjeta.",
@@ -258,42 +258,41 @@
         "ano_cartao": "Elige el año de validez.",
         "cvv_cartao": "Rellenar correctamente el número CVV de la tarjeta."
       }
-
     },
-    "footer":{
+    "footer": {
       "btn_compra": "Comprar ahora",
       "btn_reservar": "Reservar ahora",
       "info_seguranca": "Información segura y cifrada",
-      "icons":{
+      "icons": {
         "compra_segura": {
           "label": "Compra",
           "destaque": "SEGURA"
         },
-        "produto_revisado":{
+        "produto_revisado": {
           "label": "Producto",
           "destaque": "REVISADO"
         },
-        "dados_protegidos":{
+        "dados_protegidos": {
           "label": "Datos",
           "destaque": "PROTEGIDOS"
         }
       },
       "taxa_parcela": "*Tasa de Cuota de 2,92% a.m.",
-       "direitos_reservados": "Heaven Ecommerce FZE - Todos los derechos reservados.",
+      "direitos_reservados": "Heaven Ecommerce FZE - Todos los derechos reservados.",
       "direitos_reservados_me": "Heaven Ecommerce FZE - Todos los derechos reservados."
     },
     "mobile": {
       "proxima_etapa": "Próximo paso"
     },
-    "erro_compra":"Compra no completada",
+    "erro_compra": "Compra no completada",
     "sucesso_compra": "¡Su compra se ha completado con éxito!",
-    "feedbacks":{
+    "feedbacks": {
       "dados_obrigatorios": {
         "title": "Validar por favor",
         "text": "Los datos son obligatorios."
       }
     },
-    "cupom":{
+    "cupom": {
       "cupom": "Cupón",
       "aplicado": "aplicado",
       "header_aplicado": "Cupón aplicado",
@@ -316,9 +315,8 @@
       "show_more": "Ver más",
       "other_charges": "otros cargos"
     }
-
   },
-  "order":{
+  "order": {
     "text_header": "COMPRA 100% SEGURA",
     "a_vista": "en efectivo",
     "taxa": "Tarifa:",
@@ -341,8 +339,8 @@
     "vc_pagara": "Usted pagará",
     "country_taxs": "Impuesto(s) del país"
   },
-  "pg_obrigado":{
-    "pix":{
+  "pg_obrigado": {
+    "pix": {
       "text_header": {
         "pague": "Paga el",
         "via_pix": "vía Pix para asegurar su compra",
@@ -362,7 +360,7 @@
       "ou_copie": "O copie este código QR para realizar el pago",
       "cole": "Elija pagar a través de Pix a través de su aplicación de pagos o banca por Internet.",
       "btn_text": "Copiar codigo",
-      "codigo_copiado":"¡El código de barras ha sido copiado!",
+      "codigo_copiado": "¡El código de barras ha sido copiado!",
       "copiado": "Copiado!",
       "btn_visualizar_qr": "Ver código QR",
       "ja_fiz": "Ya hice mi pago",
@@ -371,7 +369,7 @@
       "expirado_2": "Si aún no ha realizado el pago, haga clic en el botón de abajo para generar de nuevo.",
       "gerar_novo": "Quiero generar un nuevo código."
     },
-    "modal":{
+    "modal": {
       "text_header": {
         "pague": "Paga el",
         "via_boleto": "vía boleto para asegurar su compra",
@@ -402,16 +400,14 @@
       "detalhes_compra": "Detalles de la compra",
       "codigo_transacao": "Codigo de transacción",
       "id_assinatura": "ID de suscripción"
-
-
     }
   },
-  "locales":{
+  "locales": {
     "close": "Cerca",
     "trocar": "Cambiar pais",
     "placeholder": "Buscar pais"
   },
-  "error":{
+  "error": {
     "0001": "Este cupón que está utilizando ya no es válido.",
     "BANK": "Algo salió mal con su compra, comuníquese con su banco o emisor de la tarjeta.",
     "BLACKLIST_PURCHASE": "Después de numerosos intentos de pago, el banco devolvió que su tarjeta estaba bloqueada, comuníquese con el operador de su tarjeta para solicitar el desbloqueo y, si ya lo hizo, infórmenos en greenn.com.br para publicar aquí.",

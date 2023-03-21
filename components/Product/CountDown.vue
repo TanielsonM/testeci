@@ -1,6 +1,6 @@
 <script setup>
 import moment from "moment";
-import { useCheckoutStore } from "@/store/checkout"
+import { useCheckoutStore } from "@/store/checkout";
 const checkout = useCheckoutStore();
 const props = defineProps({
   coupon: {
@@ -41,7 +41,7 @@ watch(
       parseInt(time.value.seconds) === 0
     ) {
       window.clearInterval(interval);
-      checkout.setCoupon(false, true)
+      checkout.setCoupon(false, true);
     }
   }
 );

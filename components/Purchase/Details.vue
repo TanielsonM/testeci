@@ -6,13 +6,8 @@ import { useCheckoutStore } from "@/store/checkout";
 import { formatMoney } from "~~/utils/money";
 
 const checkout = useCheckoutStore();
-const {
-  coupon,
-  method,
-  installments,
-  getInstallments,
-  hasFees,
-} = storeToRefs(checkout);
+const { coupon, method, installments, getInstallments, hasFees } =
+  storeToRefs(checkout);
 
 const amountText = computed(() => {
   switch (method.value) {
@@ -35,7 +30,7 @@ const amountText = computed(() => {
     >
       <span class="infos-title">Frete</span>
       <span
-        class="infos-content w-full flex justify-between items-center"
+        class="infos-content flex w-full items-center justify-between"
         v-for="(item, index) in checkout.shippingProducts()"
         :key="index"
       >
@@ -45,7 +40,7 @@ const amountText = computed(() => {
             !item.has_shipping_fee
               ? $t("checkout.pagamento.bump.free")
               : item?.shipping?.amount
-              ? '+' + formatMoney(item.shipping.amount)
+              ? "+" + formatMoney(item.shipping.amount)
               : item?.shipping?.amount === 0
               ? $t("checkout.pagamento.bump.free")
               : $t("checkout.pagamento.bump.to_calculate")
@@ -59,7 +54,7 @@ const amountText = computed(() => {
       v-if="coupon.applied && coupon.amount > 0"
     >
       <span class="infos-title">{{ $t("checkout.cupom.cupom") }}</span>
-      <span class="infos-content w-full flex justify-between items-center">
+      <span class="infos-content flex w-full items-center justify-between">
         <p>{{ coupon.name.toUpperCase() }}</p>
         <p>-{{ formatMoney(coupon.amount) }}</p>
       </span>

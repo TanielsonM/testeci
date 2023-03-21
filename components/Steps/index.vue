@@ -23,7 +23,7 @@ defineProps({
         {{ step }}
       </p>
       <p class="text-main-color text-2xl" v-if="icon">
-        <Icon :name="icon"/>
+        <Icon :name="icon" />
       </p>
       <p class="text-txt-color flex-nowrap">
         {{ title }}

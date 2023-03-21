@@ -24,15 +24,19 @@ const items = ref([
 </script>
 
 <template>
-  <section class="w-full flex items-start justify-between gap-5">
+  <section class="flex w-full items-start justify-between gap-5">
     <section
       class="flex flex-col items-start justify-start gap-3"
       v-for="(item, index) in items"
       :key="index"
     >
-      <Icon :name="item.icon" class="text-main-color h-full" :size="item.size"/>
-      <h4 class="font-semibold text-sm text-txt-color">{{ item.title }}</h4>
-      <p class="font-normal text-[13px] text-txt-color">{{ item.text }}</p>
+      <Icon
+        :name="item.icon"
+        class="text-main-color h-full"
+        :size="item.size"
+      />
+      <h4 class="text-txt-color text-sm font-semibold">{{ item.title }}</h4>
+      <p class="text-txt-color text-[13px] font-normal">{{ item.text }}</p>
     </section>
   </section>
 </template>

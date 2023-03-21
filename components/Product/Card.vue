@@ -106,7 +106,7 @@ const period = computed(() => {
                 (item) => item.amount > 0
               )"
               :key="charge.id"
-              class="w-full flex items-center justify-between"
+              class="flex w-full items-center justify-between"
             >
               <span
                 >{{ charge.sequence }}ª
@@ -114,11 +114,11 @@ const period = computed(() => {
               >
               <span class="flex-nowrap">{{ formatMoney(charge.amount) }}</span>
             </p>
-            <p class="w-full flex items-center justify-between">
+            <p class="flex w-full items-center justify-between">
               <span class="flex-wrap">{{
                 $t("checkout.different_amount_text.other_charges")
               }}</span>
-              <span class="flex-nowrap text-end min-w-[70px]">{{
+              <span class="min-w-[70px] flex-nowrap text-end">{{
                 formatMoney(product.amount)
               }}</span>
             </p>
@@ -136,7 +136,7 @@ const period = computed(() => {
     </section>
     <!-- Gift content -->
     <section
-      class="w-full flex flex-col gap-5 px-5"
+      class="flex w-full flex-col gap-5 px-5"
       v-if="
         product.type == 'TRANSACTION' &&
         product.format == 'PHYSICALPRODUCT' &&

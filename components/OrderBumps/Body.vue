@@ -76,7 +76,7 @@ function getType(type = "") {
 </script>
 
 <template>
-  <section class="body w-full h-full flex flex-col lg:flex-row">
+  <section class="body flex h-full w-full flex-col lg:flex-row">
     <section class="content flex flex-col md:flex-row">
       <!-- Image, type and detail button -->
       <section class="left__side">
@@ -144,7 +144,7 @@ function getType(type = "") {
               </p>
             </section>
             <section
-              class="item-info my-2 text-wrap text-left trial-info"
+              class="item-info text-wrap trial-info my-2 text-left"
               v-if="hasShippingFee && bump.shipping_fee_is_recurring === 0"
             >
               {{ $t("checkout.recurring_shipping.isNotRecurring") }}

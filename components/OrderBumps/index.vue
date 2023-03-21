@@ -127,7 +127,7 @@ if (isFixedShipping.value)
 <template>
   <BaseCard class="order-bump-card" :style="stylesheet">
     <header
-      class="w-full h-[50px] bg-red-600 rounded-t-lg flex items-center justify-between"
+      class="flex h-[50px] w-full items-center justify-between rounded-t-lg bg-red-600"
     >
       <BaseCheckbox
         :id="bump.id"
@@ -181,6 +181,6 @@ if (isFixedShipping.value)
 }
 
 .item-value {
-  @apply text-white font-semibold text-sm flex-wrap;
+  @apply flex-wrap text-sm font-semibold text-white;
 }
 </style>

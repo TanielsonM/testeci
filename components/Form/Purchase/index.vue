@@ -70,7 +70,7 @@ const selectedForm = computed(() => {
 </script>
 
 <template>
-  <span data-anima="top" class="w-full flex flex-col gap-8">
+  <span data-anima="top" class="flex w-full flex-col gap-8">
     <component :is="selectedForm" />
   </span>
 </template>

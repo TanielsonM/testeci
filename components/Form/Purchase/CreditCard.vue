@@ -76,7 +76,7 @@ const installmentsOptions = [{ label: "teste", value: "teste" }];
 </script>
 
 <template>
-  <section class="w-full flex items-center justify-between gap-5">
+  <section class="flex w-full items-center justify-between gap-5">
     <BaseButton
       color="info"
       class="pulse flex gap-1"
@@ -101,7 +101,7 @@ const installmentsOptions = [{ label: "teste", value: "teste" }];
       </p>
     </BaseButton>
   </section>
-  <section class="flex gap-5 justify-between">
+  <section class="flex justify-between gap-5">
     <form class="grid w-full grid-cols-12 gap-3">
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
@@ -147,7 +147,7 @@ const installmentsOptions = [{ label: "teste", value: "teste" }];
           v-for="(d, index) in max_installments"
           :key="index"
           :value="index + 1"
-          class="select-none cursor-pointer hover:bg-main-color rounded"
+          class="hover:bg-main-color cursor-pointer select-none rounded"
         >
           {{
             index + 1 > 1

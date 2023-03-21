@@ -34,11 +34,11 @@ const emit = defineEmits(["update:checked"]);
   />
   <label
     :for="`checkbox-${props.id}`"
-    class="flex flex-row items-center font-bold cursor-pointer select-none gap-3"
+    class="flex cursor-pointer select-none flex-row items-center gap-3 font-bold"
   >
-    <div class="flex items-center justify-center bg-white w-4 h-4 rounded">
-      <Icon name="mdi:check-bold" v-if="checked"/>
+    <div class="flex h-4 w-4 items-center justify-center rounded bg-white">
+      <Icon name="mdi:check-bold" v-if="checked" />
     </div>
-    <span class="text-sm flex-wrap" :class="labelCustomClass">{{ label }}</span>
+    <span class="flex-wrap text-sm" :class="labelCustomClass">{{ label }}</span>
   </label>
 </template>

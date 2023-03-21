@@ -85,7 +85,7 @@ const onInput = (event) => {
       :placeholder="placeholder"
       :autocomplete="autocomplete"
       :disabled="disabled"
-      class="h-full outline-none border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex w-full items-center gap-5 rounded border p-4 transition-colors duration-300 text-[13px]"
+      class="border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex h-full w-full items-center gap-5 rounded border p-4 text-[13px] outline-none transition-colors duration-300"
       :class="customClass"
       @input="onInput"
     />

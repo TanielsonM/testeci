@@ -32,7 +32,7 @@ const amountText = computed(() => {
 </script>
 
 <template>
-  <p v-if="coupon.applied" class="text-[13px] line-through text-[#81858e]">
+  <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
     {{ formatMoney(original_amount) }}
   </p>
   <small v-if="installments < 2" class="d-block small-text">

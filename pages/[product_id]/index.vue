@@ -138,7 +138,7 @@ const tabs = computed(() => {
   </Head>
   <section class="flex w-full flex-col gap-10 lg:max-w-[780px]">
     <!-- Purchase card -->
-    <BaseCard class="p-5 md:py-[50px] md:px-[60px] w-full" data-anima="bottom">
+    <BaseCard class="w-full p-5 md:py-[50px] md:px-[60px]" data-anima="bottom">
       <!-- Personal form -->
       <Steps :title="$t('components.steps.personal_data')" step="01">
         <template #end-line>
@@ -181,7 +181,7 @@ const tabs = computed(() => {
         :step="checkout.showAddressStep() ? '03' : '02'"
       >
         <template #content>
-          <section class="w-full flex flex-col gap-8">
+          <section class="flex w-full flex-col gap-8">
             <BaseTabs v-model="method" :tabs="tabs" />
             <FormPurchase />
           </section>
@@ -189,7 +189,7 @@ const tabs = computed(() => {
       </Steps>
       <!-- Bumps -->
       <template v-if="checkout.getBumpList.length">
-        <p class="w-full text-txt-color">
+        <p class="text-txt-color w-full">
           {{
             custom_checkout.hasCustomBump
               ? custom_checkout.bump_options.title
@@ -204,7 +204,7 @@ const tabs = computed(() => {
       </template>
       <!-- Purchase button -->
       <BaseButton class="mt-10">
-        <span class="font-semibold text-[15px]">
+        <span class="text-[15px] font-semibold">
           {{
             !custom_checkout.purchase_text
               ? $t("checkout.footer.btn_compra")

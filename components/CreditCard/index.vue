@@ -72,27 +72,27 @@ function getImg(type) {
 </script>
 
 <template>
-  <section class="w-full flex justify-start">
+  <section class="flex w-full justify-start">
     <section
-      class="card w-full h-1/2 rounded-lg border border-main-color bg-main-transparent p-5 flex flex-col justify-between"
+      class="card border-main-color bg-main-transparent flex h-1/2 w-full flex-col justify-between rounded-lg border p-5"
     >
-      <header class="w-full flex justify-end h-10">
+      <header class="flex h-10 w-full justify-end">
         <Transition name="slide-fade-up" mode="out-in">
           <img
             v-bind:src="getImg(getCardType)"
             v-if="getCardType"
             v-bind:key="getCardType"
             alt="Bandeira do cartao"
-            class="w-full h-full max-w-[50px] invert object-contain"
+            class="h-full w-full max-w-[50px] object-contain invert"
           />
         </Transition>
       </header>
       <section>
-        <p class="text-txt-color text-[10px] opacity-70 mb-1">
+        <p class="text-txt-color mb-1 text-[10px] opacity-70">
           {{ $t("checkout.pagamento.metodos.um_cartao.card.numero") }}
         </p>
-        <p class="w-full text-txt-color" v-if="getCardType === 'amex'"></p>
-        <span v-else class="w-full text-txt-color flex">
+        <p class="text-txt-color w-full" v-if="getCardType === 'amex'"></p>
+        <span v-else class="text-txt-color flex w-full">
           <p
             v-for="(n, index) in defaultCardMask.replaceAll(' ', '').length"
             :key="index"
@@ -106,24 +106,30 @@ function getImg(type) {
                       : "*"
                     : "*"
                 }}
-                <span class="w-5 block" v-if="n % 4 === 0" />
+                <span class="block w-5" v-if="n % 4 === 0" />
               </span>
             </Transition>
           </p>
         </span>
       </section>
       <!-- Holder name and validate -->
-      <section class="w-full flex justify-between items-center">
+      <section class="flex w-full items-center justify-between">
         <!-- Holder name -->
         <span>
-          <p class="text-txt-color text-[10px] opacity-70 mb-1">
+          <p class="text-txt-color mb-1 text-[10px] opacity-70">
             {{ $t("checkout.pagamento.metodos.um_cartao.card.nome") }}
           </p>
           <Transition name="slide-fade-up" mode="out-in">
-            <p class="text-txt-color text-[13px] leading-none whitespace-nowrap text-ellipsis uppercase font-semibold" v-if="card_holder_name">
+            <p
+              class="text-txt-color text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none"
+              v-if="card_holder_name"
+            >
               {{ card_holder_name }}
             </p>
-            <p v-else class="text-txt-color text-[13px] leading-none whitespace-nowrap text-ellipsis uppercase font-semibold">
+            <p
+              v-else
+              class="text-txt-color text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none"
+            >
               {{ $t("checkout.pagamento.metodos.um_cartao.card.nome_holder") }}
             </p>
           </Transition>
@@ -139,5 +145,4 @@ function getImg(type) {
   </section>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

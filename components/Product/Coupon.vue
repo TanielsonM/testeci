@@ -13,15 +13,15 @@ function apply() {
 
 <template>
   <section
-    class="w-full border border-bd-color rounded p-5 flex flex-col items-center gap-5 item-collapse"
+    class="border-bd-color item-collapse flex w-full flex-col items-center gap-5 rounded border p-5"
     :opened="isOpen"
   >
     <span
-      class="w-full flex flex-nowrap gap-2 items-center justify-start"
+      class="flex w-full flex-nowrap items-center justify-start gap-2"
       @click="isOpen = !isOpen"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
-      <p class="font-semibold text-[13px] text-txt-color w-full">
+      <p class="text-txt-color w-full text-[13px] font-semibold">
         {{
           coupon.applied
             ? $t("checkout.cupom.header_aplicado")
@@ -37,7 +37,7 @@ function apply() {
     </span>
     <section
       v-if="isOpen && !coupon.applied"
-      class="w-full flex flex-col gap-5"
+      class="flex w-full flex-col gap-5"
     >
       <BaseInput
         :placeholder="$t('components.coupon.input_placeholder')"
@@ -54,12 +54,12 @@ function apply() {
         animation="top"
         @click="apply"
       >
-        <p class="font-semibold text-sm">{{ $t("components.coupon.apply") }}</p>
+        <p class="text-sm font-semibold">{{ $t("components.coupon.apply") }}</p>
       </BaseButton>
     </section>
     <section
       v-else-if="isOpen"
-      class="flex flex-col items-start justify-start w-full gap-2"
+      class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-txt-color text-xs">
         {{ $t("checkout.cupom.cupom") }}
@@ -67,7 +67,7 @@ function apply() {
         {{ $t("checkout.cupom.aplicado") }}
       </p>
       <a
-        class="hover:underline text-blue-600 text-[13px] cursor-pointer"
+        class="cursor-pointer text-[13px] text-blue-600 hover:underline"
         @click.prevent="checkout.setCoupon(false, true)"
         >{{ $t("checkout.cupom.remover") }}</a
       >
@@ -92,5 +92,4 @@ function apply() {
   </section>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

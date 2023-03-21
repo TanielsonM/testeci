@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
   <p class="text-txt-color text-[13px] font-normal">

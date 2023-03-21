@@ -69,8 +69,8 @@ const props = defineProps({
   inputId: {
     type: String,
     required: false,
-    default: () => ""
-  }
+    default: () => "",
+  },
 });
 const emit = defineEmits([
   "update:modelValue",
