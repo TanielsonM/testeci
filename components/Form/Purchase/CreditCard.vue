@@ -7,8 +7,14 @@ import { usePurchaseStore } from "@/store/forms/purchase";
 
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
-const { method, installments, max_installments, getInstallments, hasFees } =
-  storeToRefs(checkout);
+const {
+  method,
+  installments,
+  max_installments,
+  getInstallments,
+  hasFees,
+  fixed_installments,
+} = storeToRefs(checkout);
 const { first, second } = storeToRefs(purchase);
 
 const years = [
@@ -143,7 +149,22 @@ const installmentsOptions = [{ label: "teste", value: "teste" }];
         :data="installmentsOptions"
         v-model="installments"
       >
+        <!-- Fixed installment -->
         <option
+          :value="fixed_installments"
+          v-if="!!fixed_installments"
+          class="hover:bg-main-color cursor-pointer select-none rounded"
+        >
+          {{
+            `${fixed_installments}x ${$t("order.de")} ${formatMoney(
+              getInstallments()
+            )}`
+          }}
+        </option>
+        <!--  -->
+        <!-- Installments -->
+        <option
+          v-else
           v-for="(d, index) in max_installments"
           :key="index"
           :value="index + 1"
