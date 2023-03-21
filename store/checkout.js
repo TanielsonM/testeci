@@ -102,17 +102,17 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       return (installments = state.installments) => {
         const store = useProductStore();
         const { product } = storeToRefs(store);
-        let amount = store.amount;
+        let amount = this.totalAmount();
         if (installments === 1) {
           return !store.isPhysicalProduct
-            ? store.amount
-            : store.amount + (product.value.shipping?.amount || 0);
+            ? amount
+            : amount + (product.value.shipping?.amount || 0);
         }
         if (
           this.hasFees &&
           ["CREDIT_CARD", "TWO_CREDIT_CARD"].includes(state.method)
         ) {
-          amount = store.amount / installments;
+          amount = amount / installments;
           return amount;
         } else {
           let tax = this.monthly_interest / 100; // tax per month
