@@ -141,35 +141,24 @@ const installmentsOptions = [{ label: "teste", value: "teste" }];
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="col-span-12"
         :data="installmentsOptions"
+        v-model="installments"
       >
-        <li
-          role="option"
+        <option
           v-for="(d, index) in max_installments"
           :key="index"
           :value="index + 1"
           class="select-none cursor-pointer hover:bg-main-color rounded"
         >
-          <div
-            class="flex items-center justify-between h-10 px-5 text-txt-color"
-          >
-            <span class="block truncate">
-              {{
-                index + 1 > 1
-                  ? `${index + 1}x ${$t("order.de")} ${formatMoney(
-                      getInstallments(index + 1)
-                    )} ${hasFees ? "(Sem juros)" : ""}`
-                  : `${index + 1}x ${$t("order.de")} ${formatMoney(
-                      getInstallments(1)
-                    )}`
-              }}
-            </span>
-            <Icon
-              name="mdi:check-bold"
-              size="18"
-              v-if="index + 1 === installments"
-            />
-          </div>
-        </li>
+          {{
+            index + 1 > 1
+              ? `${index + 1}x ${$t("order.de")} ${formatMoney(
+                  getInstallments(index + 1)
+                )} ${hasFees ? "(Sem juros)" : ""}`
+              : `${index + 1}x ${$t("order.de")} ${formatMoney(
+                  getInstallments(1)
+                )}`
+          }}
+        </option>
       </BaseSelect>
     </form>
     <CreditCard
