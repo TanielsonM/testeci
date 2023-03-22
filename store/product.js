@@ -45,6 +45,8 @@ export const useProductStore = definePiniaStore("product", {
     hasCustomCharges: (state) => state.product.custom_charges ?? null,
     hasSubscriptionInstallments: (state) =>
       state.product.max_subscription_installments > 1 ?? null,
+    hasTicketInstallments: (state) =>
+      state.product.max_boleto_installments ?? null,
     canBeGifted: (state) => !!state.product.can_be_gifted,
     calculateAmountAfterTrial(state) {
       return () => {
@@ -115,7 +117,8 @@ export const useProductStore = definePiniaStore("product", {
       checkout.setInstallments(
         this.product.pre_selected_installment ?? this.resolveInstallments(),
         this.product.max_installments || 12,
-        this.hasFixedInstallments
+        this.hasFixedInstallments,
+        this.hasTicketInstallments
       );
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);

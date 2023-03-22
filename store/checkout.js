@@ -21,6 +21,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     method: null,
     /* Installments */
     installments: null,
+    ticket_installments: null,
     max_installments: null,
     fixed_installments: null,
     /**
@@ -460,10 +461,16 @@ export const useCheckoutStore = definePiniaStore("checkout", {
           });
       }
     },
-    setInstallments(installments = null, maxInstallments = null, fixed = null) {
+    setInstallments(
+      installments = null,
+      maxInstallments = null,
+      fixed = null,
+      ticket = null
+    ) {
       this.installments = fixed ?? installments ?? 1;
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
+      if (ticket) this.ticket_installments = 1;
     },
     setJivochat(id = "J0jlVX87X9") {
       const custom_checkout = useCustomCheckoutStore();
