@@ -3,8 +3,10 @@ import moment from "moment";
 import { formatMoney } from "@/utils/money";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
+import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
 
+const product = useProductStore();
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
 const {
@@ -16,6 +18,8 @@ const {
   fixed_installments,
 } = storeToRefs(checkout);
 const { first, second } = storeToRefs(purchase);
+const { hasSubscriptionInstallments, productType, getPeriod } =
+  storeToRefs(product);
 
 const years = [
   { value: moment().year(), label: moment().year() },
@@ -78,7 +82,14 @@ const months = [
   { value: 11, label: "11" },
   { value: 12, label: "12" },
 ];
-const installmentsOptions = [{ label: "teste", value: "teste" }];
+
+const showInstallments = computed(() => {
+  if (productType.value === "SUBSCRIPTION") {
+    return hasSubscriptionInstallments.value && getPeriod.value > 30;
+  }
+
+  return true;
+});
 </script>
 
 <template>
@@ -146,8 +157,8 @@ const installmentsOptions = [{ label: "teste", value: "teste" }];
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="col-span-12"
-        :data="installmentsOptions"
         v-model="installments"
+        v-if="showInstallments"
       >
         <!-- Fixed installment -->
         <option

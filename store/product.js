@@ -43,6 +43,8 @@ export const useProductStore = definePiniaStore("product", {
     hasTrial: (state) => state.product.trial,
     getPeriod: (state) => state.product.period,
     hasCustomCharges: (state) => state.product.custom_charges ?? null,
+    hasSubscriptionInstallments: (state) =>
+      state.product.max_subscription_installments > 1 ?? null,
     canBeGifted: (state) => !!state.product.can_be_gifted,
     calculateAmountAfterTrial(state) {
       return () => {
@@ -69,7 +71,6 @@ export const useProductStore = definePiniaStore("product", {
         }
       };
     },
-
     resolveInstallments(state) {
       return () => {
         if (
