@@ -499,6 +499,8 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       const index = this.product_list
         .map((item) => item.id)
         .indexOf(product.id);
+
+      this.checkAllowedMethods();
       if (index === -1) {
         this.product_list.push(product);
         return;
@@ -510,6 +512,36 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       this.bump_list = [];
       this.order_bumps = [];
       this.products_client_statistics = [];
+    },
+    checkAllowedMethods() {
+      const store = useProductStore();
+      let allowed_methods = store.product.method.split(",");
+      /* Check if exist selected subscription bump */
+      if (
+        this.bump_list.filter((i) => i.checkbox && i.type === "SUBSCRIPTION")
+          .length
+      ) {
+        this.bump_list
+          .filter((i) => i.checkbox)
+          .map((bump) => {
+            allowed_methods = allowed_methods.filter((method) =>
+              bump.method.includes(method)
+            );
+          });
+      }
+      /* check if product has shipping fee and has trial, when remove "PIX" method */
+      if (!store.product.has_shipping_fee && store.product.trial) {
+        allowed_methods = allowed_methods.filter((method) => method !== "PIX");
+      }
+      /* check if has bump with shipping fee and trial, when remove "PIX" method */
+      if (
+        this.bump_list.filter(
+          (i) => i.checkbox && !i.has_shipping_fee && i.trial
+        ).length
+      ) {
+        allowed_methods = allowed_methods.filter((method) => method !== "PIX");
+      }
+      this.allowed_methods = allowed_methods;
     },
   },
 });
