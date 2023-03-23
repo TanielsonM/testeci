@@ -74,7 +74,7 @@ function getImg(type) {
 <template>
   <section class="flex w-full justify-start">
     <section
-      class="card border-main-color bg-main-transparent flex h-1/2 w-full flex-col justify-between rounded-lg border p-5"
+      class="card border-main-color bg-main-transparent flex h-[208px] w-full flex-col justify-between rounded-lg border p-5"
     >
       <header class="flex h-10 w-full justify-end">
         <Transition name="slide-fade-up" mode="out-in">
@@ -87,10 +87,9 @@ function getImg(type) {
           />
         </Transition>
       </header>
-      <section>
-        <p class="text-txt-color mb-1 text-[10px] opacity-70">
-          {{ $t("checkout.pagamento.metodos.um_cartao.card.numero") }}
-        </p>
+      <CreditCardLabel
+        :label="$t('checkout.pagamento.metodos.um_cartao.card.numero')"
+      >
         <p class="text-txt-color w-full" v-if="getCardType === 'amex'"></p>
         <span v-else class="text-txt-color flex w-full">
           <p
@@ -111,14 +110,11 @@ function getImg(type) {
             </Transition>
           </p>
         </span>
-      </section>
-      <!-- Holder name and validate -->
+      </CreditCardLabel>
       <section class="flex w-full items-center justify-between">
-        <!-- Holder name -->
-        <span>
-          <p class="text-txt-color mb-1 text-[10px] opacity-70">
-            {{ $t("checkout.pagamento.metodos.um_cartao.card.nome") }}
-          </p>
+        <CreditCardLabel
+          :label="$t('checkout.pagamento.metodos.um_cartao.card.nome')"
+        >
           <Transition name="slide-fade-up" mode="out-in">
             <p
               class="text-txt-color text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none"
@@ -133,16 +129,29 @@ function getImg(type) {
               {{ $t("checkout.pagamento.metodos.um_cartao.card.nome_holder") }}
             </p>
           </Transition>
-        </span>
-        <!-- Validate -->
-        <span>
-          <p>
-            {{ $t("checkout.pagamento.metodos.um_cartao.card.validade") }}
-          </p>
-        </span>
+        </CreditCardLabel>
+        <CreditCardLabel
+          :label="$t('checkout.pagamento.metodos.um_cartao.card.validade')"
+        >
+          <Transition name="slide-fade-up" mode="out-in">
+            <span v-if="card_month" v-bind:key="card_month">{{
+              parseInt(card_month) < 10 ? `0${card_month}` : card_month
+            }}</span>
+            <span v-else key="2">••</span>
+          </Transition>
+          /
+          <Transition name="slide-fade-up" mode="out-in">
+            <span v-if="card_year" v-bind:key="card_year">{{
+              String(card_year).slice(2, 4)
+            }}</span>
+            <span v-else key="2">••</span>
+          </Transition>
+        </CreditCardLabel>
       </section>
     </section>
+    <section class="back"></section>
   </section>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
