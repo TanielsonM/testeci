@@ -77,6 +77,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     hasForce: (state) => state.url.query?.force === "true",
     hasPhone: (state) => state.url.query?.ph,
     hasUpsell: (state) => state.url.query?.up_id,
+    hasSelectedBump: (state) => state.bump_list.some((bump) => bump.checkbox),
     /**
      * Others
      */
@@ -547,6 +548,17 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         ).length
       ) {
         allowed_methods = allowed_methods.filter((method) => method !== "PIX");
+      }
+      /* Remove paypal when has selected bump */
+      if (this.hasSelectedBump) {
+        allowed_methods = allowed_methods.filter(
+          (method) => method !== "PAYPAL"
+        );
+      }
+      /* Set new method when actual method was removed */
+      if (!allowed_methods.includes(this.method)) {
+        this.setAllowedMethods(allowed_methods);
+        return;
       }
       this.allowed_methods = allowed_methods;
     },
