@@ -133,6 +133,10 @@ const onInput = (event) => {
       />
     </section>
     <small data-anima="top" v-if="!error">{{ hint }}</small>
-    <small data-anima="right" class="text-red-400" v-else>{{ error }}</small>
+    <small data-anima="right" class="text-red-400" v-else>
+      <slot name="error">
+        {{ error }}
+      </slot>
+    </small>
   </label>
 </template>
