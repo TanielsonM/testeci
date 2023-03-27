@@ -13,6 +13,7 @@ const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { getInstallments, method, installments, hasFees } =
   storeToRefs(checkout);
+const { trial_position } = storeToRefs(custom_checkout);
 
 /* Trial message */
 const trialMessage = computed({
@@ -26,30 +27,6 @@ const trialMessage = computed({
       "checkout.pagamento.bump.day"
     )}s.`;
   },
-});
-const period = computed(() => {
-  switch (productStore.getPeriod) {
-    case 30:
-      return t("order.por_mes");
-
-    case 90:
-      return t("order.por_trimestre");
-
-    case 180:
-      return t("order.por_semestre");
-
-    case 365:
-      return t("order.por_ano");
-
-    default:
-      if (productStore.getPeriod > 365) {
-        return `/ ${Math.floor(productStore.getPeriod / 365)} ${t(
-          "order.anos"
-        )}`;
-      } else {
-        return `/ ${productStore.getPeriod} ${t("order.dias")}`;
-      }
-  }
 });
 </script>
 
@@ -172,15 +149,7 @@ const period = computed(() => {
       {{ $t("checkout.recurring_shipping.isNotRecurring") }}
     </BaseBadge>
     <!-- Trial info -->
-    <BaseBadge class="mx-5" v-if="productStore.hasTrial">
-      {{ $t("order.apos_trial") }} {{ $t("order.de") }}
-      {{ productStore.hasTrial }}
-      {{ $t("order.dias") }}:
-      {{ productStore.calculateAmountAfterTrial() }}
-      <span v-if="product.type === 'SUBSCRIPTION'">
-        {{ period }}
-      </span>
-    </BaseBadge>
+    <InfoTrial class="mx-5" v-if="trial_position === 'top'" />
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->

@@ -1,9 +1,13 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "~~/store/checkout";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 const checkout = useCheckoutStore();
+const custom_checkout = useCustomCheckoutStore();
+
 const { method } = storeToRefs(checkout);
+const { trial_position } = storeToRefs(custom_checkout);
 
 // Component forms
 const CREDIT_CARD = resolveComponent("FormPurchaseCreditCard");
@@ -72,5 +76,6 @@ const selectedForm = computed(() => {
 <template>
   <span data-anima="top" class="flex w-full flex-col gap-8">
     <component :is="selectedForm" />
+    <InfoTrial class="w-2/3" v-if="trial_position == 'bottom'" />
   </span>
 </template>

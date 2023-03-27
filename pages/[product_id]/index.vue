@@ -206,9 +206,7 @@ const tabs = computed(() => {
       <BaseButton class="mt-10">
         <span class="text-[15px] font-semibold">
           {{
-            !custom_checkout.purchase_text
-              ? $t("checkout.footer.btn_compra")
-              : themeCheckout.button_text
+            custom_checkout.purchase_text || $t("checkout.footer.btn_compra")
           }}
         </span>
       </BaseButton>
