@@ -209,8 +209,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       }, 1000);
     },
     async getCoupon() {
-      const url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
-
+      let url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
       }

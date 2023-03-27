@@ -94,6 +94,7 @@ export const useProductStore = definePiniaStore("product", {
         return 1;
       };
     },
+    productName: (state) => state.product.name,
   },
   actions: {
     setProduct(product) {

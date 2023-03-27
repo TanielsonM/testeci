@@ -1,13 +1,28 @@
 <script setup>
+import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
+import { useProductStore } from "@/store/product";
 const checkout = useCheckoutStore();
+const product = useProductStore();
 const { coupon, hasCoupon } = storeToRefs(checkout);
+const { productName } = storeToRefs(product);
 
+const { t } = useI18n();
 const isOpen = ref(!!coupon.value.name);
 
 function apply() {
-  checkout.setCoupon();
+  checkout.setCoupon().then(() => {
+    /* Show toast */
+    if (coupon.value.applied) {
+      const toast = useToast();
+      toast.info(
+        `${t("checkout.cupom.header_aplicado")}${t(
+          "checkout.cupom.no_produto"
+        )}: ${productName.value.toUpperCase()}`
+      );
+    }
+  });
 }
 </script>
 
