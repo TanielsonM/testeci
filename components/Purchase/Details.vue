@@ -14,6 +14,7 @@ const {
   hasFees,
   bump_list,
   hasSelectedBump,
+  checkoutPayment,
 } = storeToRefs(checkout);
 
 const amountText = computed(() => {
@@ -31,7 +32,7 @@ const amountText = computed(() => {
 <template>
   <section class="flex w-full flex-col gap-3 px-5">
     <!-- Shipping -->
-    <p
+    <section
       class="flex flex-col items-start gap-1"
       v-if="checkout.hasPhysicalProduct()"
     >
@@ -54,7 +55,7 @@ const amountText = computed(() => {
           }}
         </p>
       </span>
-    </p>
+    </section>
     <!-- Order bumps -->
     <section class="flex flex-col items-start gap-1" v-if="hasSelectedBump">
       <p class="infos-title">Order Bumps</p>
@@ -76,7 +77,7 @@ const amountText = computed(() => {
       </span>
     </section>
     <!-- Coupon -->
-    <p
+    <section
       class="flex flex-col items-start gap-1"
       v-if="coupon.applied && coupon.amount > 0"
     >
@@ -85,12 +86,39 @@ const amountText = computed(() => {
         <p>{{ coupon.name.toUpperCase() }}</p>
         <p>-{{ formatMoney(coupon.amount) }}</p>
       </span>
-    </p>
-    <!--  -->
+    </section>
+    <!-- Tax -->
+    <section
+      class="flex flex-col items-start justify-between gap-1"
+      v-if="
+        typeof checkoutPayment.price === 'object' &&
+        checkoutPayment.price.tax.length > 0
+      "
+    >
+      <span class="infos-title">
+        {{ $t("order.country_taxs") }}
+      </span>
+      <span
+        class="infos-content flex w-full items-center justify-between"
+        v-for="(tax, index) in checkoutPayment.price.tax"
+        :key="'tax_' + index"
+      >
+        <p>{{ tax.description }}</p>
+        <p>+{{ formatMoney(tax.local_amount) }}</p>
+      </span>
+    </section>
     <!-- Total -->
-    <p class="flex items-start justify-between gap-1" v-if="coupon.applied">
+    <section
+      class="flex items-start justify-between gap-1"
+      v-if="
+        hasSelectedBump ||
+        coupon.applied ||
+        (typeof checkoutPayment.price === 'object' &&
+          checkoutPayment.price.tax.length > 0)
+      "
+    >
       <span class="infos-title">Total</span>
       <span class="small-text text-xs">{{ amountText }}</span>
-    </p>
+    </section>
   </section>
 </template>
