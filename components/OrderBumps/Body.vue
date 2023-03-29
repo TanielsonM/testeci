@@ -109,9 +109,9 @@ function getType(type = "") {
       <section class="right__side" :class="`${bump.type.toLowerCase()}`">
         <h1 class="item-title">{{ bump.name }}</h1>
         <template v-if="hasTrial">
-          <h3 class="info-value custom-color">
+          <p class="info-value custom-color">
             {{ trialMessage }}
-          </h3>
+          </p>
           <span class="trial-info">
             {{ trialMessageAlternative }}: {{ `${formatMoney(amount)}` }}/
             {{ $t("checkout.pagamento.bump.month") }}
