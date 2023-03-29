@@ -6,8 +6,15 @@ import { useCheckoutStore } from "@/store/checkout";
 import { formatMoney } from "~~/utils/money";
 
 const checkout = useCheckoutStore();
-const { coupon, method, installments, getInstallments, hasFees } =
-  storeToRefs(checkout);
+const {
+  coupon,
+  method,
+  installments,
+  getInstallments,
+  hasFees,
+  bump_list,
+  hasSelectedBump,
+} = storeToRefs(checkout);
 
 const amountText = computed(() => {
   switch (method.value) {
@@ -48,6 +55,26 @@ const amountText = computed(() => {
         </p>
       </span>
     </p>
+    <!-- Order bumps -->
+    <section class="flex flex-col items-start gap-1" v-if="hasSelectedBump">
+      <p class="infos-title">Order Bumps</p>
+      <span
+        class="infos-content flex w-full items-center justify-between"
+        v-for="(bump, index) in bump_list.filter((i) => i.checkbox)"
+        :key="index"
+      >
+        <p>{{ bump.name }}</p>
+        <p>
+          {{
+            formatMoney(
+              bump.custom_charges.length
+                ? bump.custom_charges[0].amount
+                : bump.amount
+            )
+          }}
+        </p>
+      </span>
+    </section>
     <!-- Coupon -->
     <p
       class="flex flex-col items-start gap-1"
