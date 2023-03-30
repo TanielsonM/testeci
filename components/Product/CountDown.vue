@@ -1,7 +1,10 @@
 <script setup>
 import moment from "moment";
 import { useCheckoutStore } from "@/store/checkout";
+import * as Toast from "vue-toastification";
 const checkout = useCheckoutStore();
+const toast = Toast.useToast();
+const { t } = useI18n();
 const props = defineProps({
   coupon: {
     type: Object,
@@ -15,6 +18,9 @@ const time = ref({
   minutes: 0,
   seconds: 0,
 });
+const interval = setInterval(() => {
+  setTime();
+}, 1000);
 
 function setTime() {
   const today = moment().format("X");
@@ -28,20 +34,19 @@ function setTime() {
     diff.seconds() < 10 ? `0${diff.seconds()}` : diff.seconds();
 }
 setTime();
-const interval = setInterval(() => {
-  setTime();
-}, 1000);
 
 watch(
   () => time.value.seconds,
-  (value) => {
+  () => {
     if (
       parseInt(time.value.hours) === 0 &&
       parseInt(time.value.minutes) === 0 &&
       parseInt(time.value.seconds) === 0
     ) {
       window.clearInterval(interval);
-      checkout.setCoupon(false, true);
+      checkout.setCoupon(false, true).then(() => {
+        toast.warning("Cupom expirou")
+      });
     }
   }
 );
