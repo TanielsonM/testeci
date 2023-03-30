@@ -1,5 +1,5 @@
 <script setup>
-import { useToast } from "vue-toastification";
+import * as Toast from "vue-toastification";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
@@ -15,7 +15,7 @@ function apply() {
   checkout.setCoupon().then(() => {
     /* Show toast */
     if (coupon.value.applied) {
-      const toast = useToast();
+      const toast = Toast.useToast();
       toast.info(
         `${t("checkout.cupom.header_aplicado")}${t(
           "checkout.cupom.no_produto"
