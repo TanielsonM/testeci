@@ -74,7 +74,7 @@ const onChange = (event) => {
   >
     {{ label }}
     <select
-      class="border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex h-full w-full items-center rounded border p-4 font-medium transition-colors duration-300"
+      class="border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex h-full w-full items-center rounded border p-4 font-medium outline-none transition-colors duration-300"
       :class="customClass"
       :disabled="disabled"
       :value="modelValue"
