@@ -112,10 +112,11 @@ const selectCountry = (country) => {
   cursor: pointer;
   transition: 100ms ease-in;
   &:hover {
-    @apply text-main-color;
+    color: var(--main-color);
     &::before {
-      @apply bg-main-color rounded-full;
       content: "";
+      background: var(--main-color);
+      border-radius: 50%;
       position: absolute;
       left: 15px;
       width: 8px;

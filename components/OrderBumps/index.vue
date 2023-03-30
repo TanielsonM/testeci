@@ -181,6 +181,10 @@ if (isFixedShipping.value)
 }
 
 .item-value {
-  @apply flex-wrap text-sm font-semibold text-white;
+  flex-wrap: wrap;
+  font-size: 0.875rem /* 14px */;
+  line-height: 1.25rem /* 20px */;
+  font-weight: 600;
+  color: white;
 }
 </style>
