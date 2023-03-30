@@ -34,7 +34,7 @@ export default defineNuxtConfig({
     dirs: ["store"],
   },
   plugins: ["~/plugins/vue-the-mask.js", "~/plugins/vue-toast.ts"],
-  css: ["~/assets/scss/_global.scss", "~/assets/tailwind.css"],
+  css: ["~/assets/scss/_global.scss"],
   app: {
     head: {
       charset: "utf-8",
@@ -65,7 +65,6 @@ export default defineNuxtConfig({
   i18n: {
     defaultLocale: "pt",
     vueI18n: {
-      legacy: false,
       locale: "pt",
       messages: {
         pt,
@@ -85,5 +84,9 @@ export default defineNuxtConfig({
   },
   typescript: {
     strict: true,
+  },
+  tailwindcss: {
+    cssPath: "~/assets/tailwind.css",
+    configPath: "tailwind.config",
   },
 });
