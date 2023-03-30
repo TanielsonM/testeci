@@ -32,12 +32,12 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
   </main>
   <main
     v-else
-    class="bg-background flex min-h-screen w-full flex-col items-center justify-between gap-10"
+    class="bg-background flex min-h-screen w-full flex-col items-center gap-10"
     :data-theme="custom_checkout.theme"
     :data-theme_color="custom_checkout.themeColor()"
   >
     <BaseHeader />
-    <section class="w-full max-w-[1300px] px-5">
+    <section class="w-full max-w-[1300px] px-5 flex justify-center">
       <BaseCard
         class="border-b-error mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-b-4 border-gray-200 py-10 px-5 md:px-20"
         v-if="!product.isValid()"
