@@ -69,11 +69,32 @@ export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
     purchase_text: (state) => state?.custom_checkout?.button_text,
   },
   actions: {
-    setCustomCheckout(checkout) {
-      this.custom_checkout = checkout;
-      if (this.hasJivochatId) {
-        const checkout = useCheckoutStore();
-        checkout.setJivochat(this.hasJivochatId);
+    async getCustomCheckout() {
+      const { query, params } = useRoute();
+      if (!query.ch_id) return;
+
+      let url = `/product/checkout/${params.product_id}/checkout/${query.ch_id}`;
+
+      try {
+        await useApi()
+          .read(url)
+          .then((response) => {
+            if (response?.custom_checkout) {
+              this.custom_checkout = checkout;
+              if (this.hasJivochatId) {
+                this.setJivochat(this.hasJivochatId);
+              }
+            }
+          });
+      } catch (error) {}
+    },
+    setJivochat(id = "J0jlVX87X9") {
+      const { query } = useRoute();
+      if (!!query.b || this.hasJivochatId) {
+        const jivoScript = document.createElement("script");
+        jivoScript.src = `//code-eu1.jivosite.com/widget/${id}`;
+        jivoScript.async = true;
+        document.head.appendChild(jivoScript);
       }
     },
   },

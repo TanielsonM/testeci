@@ -196,11 +196,11 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      await this.getCustomCheckout();
+      const customCheckout = useCustomCheckoutStore();
+      await customCheckout.getCustomCheckout();
       await this.getProduct(this.product_id, this.product_offer);
 
       /* Initial configs */
-      this.setJivochat();
       this.setCoupon(true);
       if (this.hasBump) this.getBumps();
 
@@ -379,23 +379,6 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         }
       }
     },
-    async getCustomCheckout() {
-      if (!this.hasCustomCheckout) return;
-      const customCheckoutStore = useCustomCheckoutStore();
-      const { setCustomCheckout } = customCheckoutStore;
-
-      let url = `/product/checkout/${this.product_id}/checkout/${this.hasCustomCheckout}`;
-
-      try {
-        await useApi()
-          .read(url)
-          .then((response) => {
-            if (response?.custom_checkout) {
-              setCustomCheckout(response.custom_checkout);
-            }
-          });
-      } catch (error) {}
-    },
     setAllowedMethods(allowed_methods = []) {
       this.allowed_methods = allowed_methods;
       this.setMethod(
@@ -471,15 +454,6 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
       if (ticket) this.ticket_installments = 1;
-    },
-    setJivochat(id = "J0jlVX87X9") {
-      const custom_checkout = useCustomCheckoutStore();
-      if (this.hasBusiness || custom_checkout.hasJivochatId) {
-        const jivoScript = document.createElement("script");
-        jivoScript.src = `//code-eu1.jivosite.com/widget/${id}`;
-        jivoScript.async = true;
-        document.head.appendChild(jivoScript);
-      }
     },
     setMethod(method = "") {
       this.method = method;
