@@ -93,7 +93,7 @@ const showInstallments = computed(() => {
 </script>
 
 <template>
-  <section class="flex w-full items-center justify-between gap-5">
+  <section class="flex w-full items-center justify-between gap-5" data-anima="top">
     <BaseButton
       color="info"
       class="pulse flex gap-1"

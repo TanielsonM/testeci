@@ -24,7 +24,7 @@ const items = ref([
 </script>
 
 <template>
-  <section class="flex w-full items-start justify-between gap-5">
+  <section class="flex w-full items-start justify-between gap-5" data-anima="top">
     <section
       class="flex flex-col items-start justify-start gap-3"
       v-for="(item, index) in items"

@@ -13,7 +13,7 @@ const checkout = useCheckoutStore();
 const address = useAddressStore();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
-const { method, allowed_methods, installments } = storeToRefs(checkout);
+const { method, allowed_methods } = storeToRefs(checkout);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
