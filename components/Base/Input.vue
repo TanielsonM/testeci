@@ -71,6 +71,16 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  inputName: {
+    type: String,
+    required: true,
+    default: () => "",
+  },
+  rules: {
+    type: String,
+    required: false,
+    default: () => "",
+  },
 });
 const emit = defineEmits([
   "update:modelValue",
@@ -85,7 +95,7 @@ const onInput = (event) => {
 <template>
   <label
     for="input"
-    class="text-txt-color flex w-full flex-col items-start gap-2 font-semibold"
+    class="text-txt-color flex w-full flex-col items-start gap-1 font-semibold"
     :data-anima="animation"
   >
     {{ label }}
@@ -99,8 +109,9 @@ const onInput = (event) => {
         class="text-txt-color focus:text-main-color hover:text-main-color cursor-pointer"
         @click="emit('prepend-click')"
       />
-      <input
+      <VeeField
         v-if="!mask"
+        :name="inputName"
         :id="inputId"
         :type="type"
         :value="modelValue"
@@ -109,10 +120,12 @@ const onInput = (event) => {
         :disabled="disabled"
         class="bg-checkout h-full w-full outline-none"
         :class="customClass"
+        :rules="rules"
         @input="onInput"
       />
-      <input
+      <VeeField
         v-else
+        :name="inputName"
         :id="inputId"
         :type="type"
         :value="modelValue"
@@ -121,6 +134,7 @@ const onInput = (event) => {
         :disabled="disabled"
         class="bg-checkout h-full w-full outline-none"
         :class="customClass"
+        :rules="rules"
         v-mask="mask"
         @input="onInput"
       />
@@ -133,10 +147,23 @@ const onInput = (event) => {
       />
     </section>
     <small data-anima="top" v-if="!error">{{ hint }}</small>
-    <small data-anima="right" class="text-red-400" v-else>
+    <small class="text-red-400" v-if="error">
       <slot name="error">
         {{ error }}
       </slot>
     </small>
+    <VeeErrorMessage
+      v-else-if="!!rules"
+      as="p"
+      :name="inputName"
+      data-anima="right"
+      v-slot="{ message }"
+    >
+      <small class="text-red-400">
+        <slot name="error">
+          {{ message }}
+        </slot>
+      </small>
+    </VeeErrorMessage>
   </label>
 </template>

@@ -4,13 +4,14 @@ import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
-
-/* Variables */
-const { t } = useI18n();
+// Stores
 const custom_checkout = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
 const address = useAddressStore();
+
+/* Variables */
+const { t } = useI18n();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);

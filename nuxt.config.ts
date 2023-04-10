@@ -33,7 +33,12 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["store"],
   },
-  plugins: ["~/plugins/vue-the-mask.js", "~/plugins/vue-toast.ts"],
+  plugins: [
+    "~/plugins/vue-the-mask.js",
+    "~/plugins/vue-toast.ts",
+    "~/plugins/veevalidate-components.ts",
+    "~/plugins/veevalidate-rules.ts",
+  ],
   css: ["~/assets/scss/_global.scss"],
   app: {
     head: {
