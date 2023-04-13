@@ -1,3 +1,26 @@
+/* Alphabetical order */
+export type Address = {
+  zipcode: string;
+  number: number;
+  street: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  complement: string;
+};
+
+export type Coupon = {
+  amount: number;
+  applied: boolean;
+  available: number;
+  discount: number;
+  due_date: string | Date;
+  error: boolean;
+  is_valid: boolean;
+  loading: boolean;
+  name: string;
+};
+
 export type GlobalSettings = {
   id?: number;
   key?: string;
@@ -17,42 +40,26 @@ export type Product = {
   checked?: boolean;
 };
 
-export type Coupon = {
-  amount: number;
-  applied: boolean;
-  available: number;
-  discount: number;
-  due_date: string | Date;
-  error: boolean;
-  is_valid: boolean;
-  loading: boolean;
-  name: string;
-};
-
 export type URL = {
   params: any;
   query: any;
   fullPath: string;
 };
 
-/* Store states */
-export type InstallmentsState = {
-  installments: Installment[];
-  maxInstallments: number;
-  minValue: number;
+/* Store states (alphabetical) */
+export type AddressState = {
+  sameAddress: boolean;
+  charge: Address;
+  shipping: Address;
+};
+
+export type AmountState = {
+  amount: number;
+  originalAmount: number;
 };
 
 export type BumpsState = {
   bumps: Product[];
-};
-
-export type StepState = {
-  step: number;
-  format: "one_step" | "default";
-};
-
-export type CouponState = {
-  coupon: Coupon;
 };
 
 export type CheckoutState = {
@@ -104,4 +111,19 @@ export type CheckoutState = {
   showAddressStep: () => boolean;
   totalAmount: () => number;
   shippingProducts: () => Product[] | never[];
+};
+
+export type CouponState = {
+  coupon: Coupon;
+};
+
+export type InstallmentsState = {
+  installments: Installment[];
+  maxInstallments: number;
+  minValue: number;
+};
+
+export type StepState = {
+  step: number;
+  format: "one_step" | "default";
 };
