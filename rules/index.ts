@@ -70,7 +70,3 @@ function valideCNPJ(document: string): boolean {
 export function document(value: string): boolean | string {
   return valideCPF(value) || valideCNPJ(value);
 }
-
-export function required(target: string | number | boolean): boolean {
-  return false;
-}
