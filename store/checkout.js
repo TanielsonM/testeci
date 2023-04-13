@@ -17,13 +17,13 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       fullPath: "",
     },
     /* Methods */
-    allowed_methods: null,
-    method: null,
+    allowed_methods: [],
+    method: "",
     /* Installments */
-    installments: null,
-    ticket_installments: null,
-    max_installments: null,
-    fixed_installments: null,
+    installments: 0,
+    ticket_installments: 0,
+    max_installments: 0,
+    fixed_installments: 0,
     /**
      * Amount
      */
@@ -143,7 +143,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       return () => {
         const product = useProductStore();
         return (
-          this.antifraud || !!product.showAddress || this.hasPhysicalProduct()
+          !!this.antifraud || !!product.showAddress || this.hasPhysicalProduct()
         );
       };
     },
