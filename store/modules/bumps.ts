@@ -1,4 +1,4 @@
-import * as Types from "@/types";
+import { BumpsState } from "@/types";
 
 interface BumpsWithOffers {
   id: number;
@@ -8,9 +8,9 @@ interface BumpsWithOffers {
 }
 
 export const useBumpsStore = definePiniaStore("bumps", {
-  state: (): Types.BumpsState => ({ bumps: [] }),
+  state: (): BumpsState => ({ bumps: [] }),
   getters: {
-    hasSelectedBumps: (state: Types.BumpsState) =>
+    hasSelectedBumps: (state: BumpsState) =>
       state.bumps.some((bump) => bump.checked),
   },
   actions: {
