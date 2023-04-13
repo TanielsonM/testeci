@@ -1,15 +1,7 @@
-type addressForm = {
-  zipcode: string;
-  number: number;
-  street: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  complement: string;
-};
+import { Address, AddressState } from "@/types";
 
 export const useAddressStore = definePiniaStore("address", {
-  state: () => ({
+  state: (): AddressState => ({
     sameAddress: true,
     shipping: {
       zipcode: "",
@@ -32,7 +24,7 @@ export const useAddressStore = definePiniaStore("address", {
   }),
   getters: {},
   actions: {
-    setFields(form: addressForm, type = "charge") {
+    setFields(form: Address, type = "charge") {
       if (type === "charge") {
         this.charge.zipcode = form.zipcode;
         this.charge.number = form.number;
