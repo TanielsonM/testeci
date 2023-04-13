@@ -93,7 +93,10 @@ const showInstallments = computed(() => {
 </script>
 
 <template>
-  <section class="flex w-full items-center justify-between gap-5" data-anima="top">
+  <section
+    class="flex w-full items-center justify-between gap-5"
+    data-anima="top"
+  >
     <BaseButton
       color="info"
       class="pulse flex gap-1"
@@ -183,9 +186,11 @@ const showInstallments = computed(() => {
         >
           {{
             index + 1 > 1
-              ? `${index + 1}x ${$t("order.de")} ${formatMoney(
-                  getInstallments(index + 1)
-                )} ${hasFees ? "(Sem juros)" : ""}`
+              ? `${index + 1}x ${hasFees ? "" : "(Sem juros)"} ${$t(
+                  "order.de"
+                )} ${formatMoney(getInstallments(index + 1))}${
+                  hasFees ? "" : "*"
+                }`
               : `${index + 1}x ${$t("order.de")} ${formatMoney(
                   getInstallments(1)
                 )}`
