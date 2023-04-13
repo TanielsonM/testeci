@@ -1,25 +1,31 @@
 import { formatMoney } from "~~/utils/money";
-import * as Types from "@/types";
+import { InstallmentsState } from "@/types";
 
 export const useInstallmentsStore = definePiniaStore("installments", {
-  state: (): Types.InstallmentsState => ({
+  state: (): InstallmentsState => ({
     installments: [],
     maxInstallments: 0,
     minValue: 0,
   }),
   getters: {},
   actions: {
-    async getInstallments(
-      productId: number,
-      offer: string | null
-    ): Promise<void> {
+    /**
+     * @returns {void}
+     */
+    async getInstallments(): Promise<void> {
       try {
-        let query = new URLSearchParams();
-        if (!!offer) query.set("offer", offer);
+        const params = {
+          maxInstallments: 12,
+          values: [
+            20, // Valor do produto principal
+            // Valor dos bumps caso existam
+            18,
+          ],
+        };
 
         await useApi()
-          .read(`/installments/${productId}`, { query })
-          .then((res: Types.InstallmentsState) => {
+          .read("/installments/", { params })
+          .then((res: InstallmentsState) => {
             this.installments = res.installments;
             this.maxInstallments = res.maxInstallments;
           });
