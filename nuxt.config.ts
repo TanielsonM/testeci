@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxt/image-edge",
     "@nuxtjs/robots",
+    "@nuxt/devtools",
     [
       "@pinia/nuxt",
       {
