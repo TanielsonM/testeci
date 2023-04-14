@@ -95,18 +95,18 @@ const onInput = (event) => {
 <template>
   <label
     for="input"
-    class="text-txt-color flex w-full flex-col items-start gap-1 font-semibold"
+    class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
     :data-anima="animation"
   >
     {{ label }}
     <section
-      class="border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex w-full items-center gap-5 rounded border p-4 transition-colors duration-300"
+      class="w-full items-center gap-5 rounded border border-bd-color bg-checkout p-4 transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
     >
       <Icon
         :name="icon"
         v-if="icon && iconPosition === 'start'"
         size="24"
-        class="text-txt-color focus:text-main-color hover:text-main-color cursor-pointer"
+        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
         @click="emit('prepend-click')"
       />
       <VeeField
@@ -118,7 +118,7 @@ const onInput = (event) => {
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         :disabled="disabled"
-        class="bg-checkout h-full w-full outline-none"
+        class="h-full w-full bg-checkout outline-none"
         :class="customClass"
         :rules="rules"
         @input="onInput"
@@ -132,7 +132,7 @@ const onInput = (event) => {
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         :disabled="disabled"
-        class="bg-checkout h-full w-full outline-none"
+        class="h-full w-full bg-checkout outline-none"
         :class="customClass"
         :rules="rules"
         v-mask="mask"
@@ -142,7 +142,7 @@ const onInput = (event) => {
         :name="icon"
         v-if="icon && iconPosition === 'end'"
         size="24"
-        class="text-txt-color focus:text-main-color hover:text-main-color cursor-pointer"
+        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
         @click="emit('append-click')"
       />
     </section>
