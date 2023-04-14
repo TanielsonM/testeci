@@ -1,3 +1,5 @@
+// Core
+import { v4 as uuidv4 } from "uuid";
 import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
@@ -60,6 +62,8 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     bump_list: [],
     /* Payment details */
     checkoutPayment: null,
+    /* UUID */
+    uuid: uuidv4(),
   }),
   getters: {
     isLoading: (state) => state.global_loading,
