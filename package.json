@@ -1,7 +1,7 @@
 {
   "private": true,
   "engines": {
-    "node": "^14.20"
+    "node": "^16.13"
   },
   "scripts": {
     "build": "nuxt build",
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@nuxt/image-edge": "^1.0.0-27919678.2f5b64b",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
-    "@nuxtjs/i18n": "^8.0.0-beta.9",
+    "@nuxtjs/i18n": "8.0.0-beta.9",
     "@types/moment": "^2.13.0",
     "@types/node": "^18.11.19",
     "@typescript-eslint/parser": "^5.53.0",

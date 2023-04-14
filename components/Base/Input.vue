@@ -73,7 +73,7 @@ const props = defineProps({
   },
   inputName: {
     type: String,
-    required: true,
+    required: false,
     default: () => "",
   },
   rules: {
