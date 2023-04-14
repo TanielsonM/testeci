@@ -6,10 +6,10 @@ export const useCheckoutStore = definePiniaStore("checkout", {
   state: () => ({
     global_loading: true,
     global_settings: {
-      captcha: null,
-      antifraud: null,
-      monthly_interest: null,
-      country: "br",
+      captcha: "",
+      antifraud: "",
+      monthly_interest: "",
+      country: "BR",
     },
     url: {
       params: null,
@@ -39,10 +39,10 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     coupon: {
       amount: 0,
       applied: false,
-      available: null,
+      available: 0,
       discount: 0,
-      due_date: null,
-      error: null,
+      due_date: "",
+      error: false,
       is_valid: false,
       loading: false,
       name: "",
@@ -196,34 +196,16 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      const customCheckout = useCustomCheckoutStore();
-      await customCheckout.getCustomCheckout();
+      if (!!this.hasCustomCheckout) {
+        const customCheckout = useCustomCheckoutStore();
+        await customCheckout.getCustomCheckout();
+      }
       await this.getProduct(this.product_id, this.product_offer);
 
       /* Initial configs */
       this.setCoupon(true);
       if (this.hasBump) this.getBumps();
-
-      setTimeout(() => {
-        this.setLoading();
-      }, 1000);
-    },
-    async getCoupon() {
-      let url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
-      if (this.url.params.hash) {
-        url = url + `/offer/${this.url.params.hash}`;
-      }
-      const query = {
-        country: this.selectedCountry,
-      };
-      try {
-        const res = await useApi().read(url, { query });
-        return res;
-      } catch (error) {
-        throw error;
-      } finally {
-        this.coupon.loading = false;
-      }
+      this.setLoading();
     },
     async getGlobalSettings() {
       const keys = [
