@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { createCommonJS } from "mlly";
 const { __dirname } = createCommonJS(import.meta.url);
+
 // Locales
 import pt from "./locales/pt.json";
 import en from "./locales/en.json";
@@ -24,6 +25,7 @@ export default defineNuxtConfig({
     "@nuxt/image-edge",
     "@nuxtjs/robots",
     "@nuxt/devtools",
+    "@vue-macros/nuxt",
     [
       "@pinia/nuxt",
       {

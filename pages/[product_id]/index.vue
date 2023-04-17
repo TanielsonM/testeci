@@ -155,6 +155,7 @@ await checkout.init();
             <FormPersonal />
           </template>
         </Steps>
+
         <!-- Address form -->
         <Steps
           :title="$t('components.steps.address')"
@@ -182,6 +183,7 @@ await checkout.init();
             </Steps>
           </template>
         </Steps>
+
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
@@ -194,9 +196,10 @@ await checkout.init();
             </section>
           </template>
         </Steps>
+
         <!-- Bumps -->
         <template v-if="checkout.getBumpList.length">
-          <p class="w-full text-txt-color">
+          <p class="text-txt-color w-full">
             {{
               custom_checkout.hasCustomBump
                 ? custom_checkout.bump_options.title
@@ -209,6 +212,7 @@ await checkout.init();
             :bump="bump"
           />
         </template>
+
         <!-- Purchase button -->
         <BaseButton class="mt-10">
           <span class="text-[15px] font-semibold">
@@ -217,14 +221,16 @@ await checkout.init();
             }}
           </span>
         </BaseButton>
+
         <span class="flex items-center gap-3">
           <Icon name="fa6-solid:lock" class="text-main-color" />
-          <p class="text-[13px] font-normal text-txt-color">
+          <p class="text-txt-color text-[13px] font-normal">
             {{ $t("checkout.footer.info_seguranca") }}
           </p>
         </span>
       </BaseCard>
       <!-- End purchase card -->
+
       <!-- Bottom thumb (custom checkout) -->
       <img
         v-if="custom_checkout.bottomThumb"
@@ -235,6 +241,7 @@ await checkout.init();
       <!-- End bottom thumb (custom checkout) -->
       <FooterSafe />
     </section>
+
     <!-- Product Card -->
     <section class="flex w-full flex-col gap-10 lg:max-w-[380px]">
       <ProductCard :product="product" data-anima="bottom" />

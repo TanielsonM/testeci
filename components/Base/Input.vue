@@ -77,16 +77,18 @@ const props = defineProps({
     default: () => "",
   },
   rules: {
-    type: String,
+    type: [String, Object],
     required: false,
     default: () => "",
   },
 });
+
 const emit = defineEmits([
   "update:modelValue",
   "prepend-click",
   "append-click",
 ]);
+
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
 };
@@ -95,18 +97,18 @@ const onInput = (event) => {
 <template>
   <label
     for="input"
-    class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
+    class="text-txt-color flex w-full flex-col items-start gap-2 font-semibold"
     :data-anima="animation"
   >
     {{ label }}
     <section
-      class="w-full items-center gap-5 rounded border border-bd-color bg-checkout p-4 transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
+      class="border-bd-color bg-checkout focus-within:border-main-color hover:border-main-color focus:border-main-color w-full items-center gap-5 rounded border p-4 transition-colors duration-300"
     >
       <Icon
         :name="icon"
         v-if="icon && iconPosition === 'start'"
         size="24"
-        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
+        class="text-txt-color hover:text-main-color focus:text-main-color cursor-pointer"
         @click="emit('prepend-click')"
       />
       <VeeField
@@ -118,7 +120,7 @@ const onInput = (event) => {
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         :disabled="disabled"
-        class="h-full w-full bg-checkout outline-none"
+        class="bg-checkout h-full w-full outline-none"
         :class="customClass"
         :rules="rules"
         @input="onInput"
@@ -132,7 +134,7 @@ const onInput = (event) => {
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         :disabled="disabled"
-        class="h-full w-full bg-checkout outline-none"
+        class="bg-checkout h-full w-full outline-none"
         :class="customClass"
         :rules="rules"
         v-mask="mask"
@@ -142,7 +144,7 @@ const onInput = (event) => {
         :name="icon"
         v-if="icon && iconPosition === 'end'"
         size="24"
-        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
+        class="text-txt-color hover:text-main-color focus:text-main-color cursor-pointer"
         @click="emit('append-click')"
       />
     </section>

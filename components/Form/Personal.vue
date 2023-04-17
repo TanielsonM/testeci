@@ -7,6 +7,11 @@ import { usePersonalStore } from "@/store/forms/personal";
 const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
+
+const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+  currentCountry.value
+);
+
 const documentText = computed(() => {
   switch (currentCountry.value) {
     case "AR":
@@ -14,41 +19,66 @@ const documentText = computed(() => {
         label: "CUIT/CUIL o DNI",
         placeholder: "CUIT/CUIL o DNI",
         mask: ["#####################"],
+        phoneMask: ["+54 # ### ####"],
       };
     case "MX":
       return {
         label: "Número RFC",
         placeholder: "Número RFC",
-        mask: ["########################"],
+        documentMask: ["########################"],
+        phoneMask: ["+52 ###-###-####"],
       };
     case "UY":
       return {
         label: "Número CI",
         placeholder: "Número CI",
-        mask: ["########################"],
+        documentMask: ["########################"],
+        phoneMask: ["+598 ####-####"],
       };
     case "CL":
       return {
         label: "Añadir RUT",
         placeholder: "Añadir RUT",
-        mask: ["#####################"],
+        documentMask: ["#####################"],
+        phoneMask: ["+56 (##) ###-####"],
       };
     default:
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
-        mask: ["###.###.###-##", "##.###.###/####-##"],
+        documentMask: ["###.###.###-##", "##.###.###/####-##"],
+        phoneMask: ["+55 (##) ####-####", "+55 (##) #####-####"],
+      };
+  }
+});
+
+const numberMask = computed(() => {
+  switch (currentCountry.value) {
+    case "AR":
+      return {
+        mask: ["+54 # ### ####"],
+      };
+    case "MX":
+      return {
+        mask: ["+52 ###-###-####"],
+      };
+    case "UY":
+      return {
+        mask: ["+598 ####-####"],
+      };
+    case "CL":
+      return {
+        mask: ["+56 (##) ###-####"],
+      };
+    default:
+      return {
+        mask: ["+55 (##) ####-####", "+55 (##) #####-####"],
       };
   }
 });
 
 const { name, email, cellphone, document } = storeToRefs(personalStore);
-
 const confirmation_mail = ref("");
-
-const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
-  currentCountry.value
-);
 </script>
 
 <template>
@@ -65,6 +95,7 @@ const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
       :label="$t('forms.personal.inputs.mail.label')"
@@ -78,6 +109,7 @@ const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
       :label="$t('forms.personal.inputs.confirmation_mail.label')"
@@ -93,27 +125,40 @@ const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
         {{ $t("checkout.dados_pessoais.feedbacks.confirmation_email") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
-      :class="{ 'xl:col-span-6': showPhoneInput }"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       v-model="cellphone"
+      :mask="numberMask.mask"
+      :rules="{
+        required: true,
+        regex: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+      }"
       type="tel"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
       </template>
     </BaseInput>
+
     <BaseInput
-      class="col-span-12 xl:col-span-6"
-      v-if="showPhoneInput"
+      class="col-span-12"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
+      v-if="showDocumentInput"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
       input-name="document-field"
       v-model="document"
-      :mask="documentText.mask"
-    />
+      :mask="documentText.documentMask"
+      rules="required|number"
+    >
+      <template #error>
+        {{ $t("checkout.dados_pessoais.feedbacks.document") }}
+      </template>
+    </BaseInput>
   </VeeForm>
 </template>
