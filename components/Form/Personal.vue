@@ -19,35 +19,30 @@ const documentText = computed(() => {
         label: "CUIT/CUIL o DNI",
         placeholder: "CUIT/CUIL o DNI",
         mask: ["#####################"],
-        phoneMask: ["+54 # ### ####"],
       };
     case "MX":
       return {
         label: "Número RFC",
         placeholder: "Número RFC",
         documentMask: ["########################"],
-        phoneMask: ["+52 ###-###-####"],
       };
     case "UY":
       return {
         label: "Número CI",
         placeholder: "Número CI",
         documentMask: ["########################"],
-        phoneMask: ["+598 ####-####"],
       };
     case "CL":
       return {
         label: "Añadir RUT",
         placeholder: "Añadir RUT",
         documentMask: ["#####################"],
-        phoneMask: ["+56 (##) ###-####"],
       };
     default:
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
         documentMask: ["###.###.###-##", "##.###.###/####-##"],
-        phoneMask: ["+55 (##) ####-####", "+55 (##) #####-####"],
       };
   }
 });
