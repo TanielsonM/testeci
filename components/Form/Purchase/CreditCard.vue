@@ -5,21 +5,18 @@ import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const product = useProductStore();
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
-const {
-  method,
-  installments,
-  max_installments,
-  getInstallments,
-  hasFees,
-  fixed_installments,
-} = storeToRefs(checkout);
+const installmentsStore = useInstallmentsStore();
+const { method, installments, max_installments, hasFees, fixed_installments } =
+  storeToRefs(checkout);
 const { first, second } = storeToRefs(purchase);
 const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
+const { getInstallments } = storeToRefs(installmentsStore);
 
 const years = [
   { value: moment().year(), label: moment().year() },
@@ -126,10 +123,10 @@ const showInstallments = computed(() => {
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+        mask="#### #### #### ####"
         class="col-span-12"
-        v-mask="'#### #### #### ####'"
         v-model="first.number"
-      />
+        />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
@@ -153,11 +150,10 @@ const showInstallments = computed(() => {
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
+        mask="###"
         class="col-span-4"
-        v-mask="'###'"
         v-model="first.cvv"
         />
-        <!-- v-mask="'###'" -->
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="col-span-12"
@@ -168,7 +164,7 @@ const showInstallments = computed(() => {
         <option
           :value="fixed_installments"
           v-if="!!fixed_installments"
-          class="hover:bg-main-color cursor-pointer select-none rounded"
+          class="cursor-pointer select-none rounded hover:bg-main-color"
         >
           {{
             `${fixed_installments}x ${$t("order.de")} ${formatMoney(
@@ -183,14 +179,14 @@ const showInstallments = computed(() => {
           v-for="(d, index) in max_installments"
           :key="index"
           :value="index + 1"
-          class="hover:bg-main-color cursor-pointer select-none rounded"
+          class="cursor-pointer select-none rounded hover:bg-main-color"
         >
           {{
             index + 1 > 1
               ? `${index + 1}x ${hasFees ? "" : "(Sem juros)"} ${$t(
                   "order.de"
                 )} ${formatMoney(getInstallments(index + 1))}${
-                  hasFees ? "" : "*"
+                  hasFees ? "*" : ""
                 }`
               : `${index + 1}x ${$t("order.de")} ${formatMoney(
                   getInstallments(1)
