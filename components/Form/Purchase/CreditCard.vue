@@ -156,7 +156,8 @@ const showInstallments = computed(() => {
         class="col-span-4"
         v-mask="'###'"
         v-model="first.cvv"
-      />
+        />
+        <!-- v-mask="'###'" -->
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="col-span-12"

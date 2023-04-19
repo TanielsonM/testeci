@@ -56,10 +56,10 @@ async function getAddress(cep = "") {
       :label="$t('forms.address.inputs.zipcode.label')"
       :placeholder="$t('forms.address.inputs.zipcode.placeholder')"
       class="col-span-12 xl:col-span-3"
-      v-mask="'#####-###'"
       v-model="form.zipcode"
       @input="getAddress(form.zipcode.replace('-', ''))"
-    />
+      />
+      <!-- v-mask="'#####-###'" -->
     <BaseInput
       :label="$t('forms.address.inputs.public_place.label')"
       :placeholder="$t('forms.address.inputs.public_place.placeholder')"
@@ -71,9 +71,9 @@ async function getAddress(cep = "") {
       :label="$t('forms.address.inputs.number.label')"
       :placeholder="$t('forms.address.inputs.number.placeholder')"
       class="col-span-12 xl:col-span-3"
-      v-mask="'###########'"
       v-model="form.number"
-    />
+      />
+      <!-- v-mask="'###########'" -->
     <BaseInput
       :label="$t('forms.address.inputs.city.label')"
       :placeholder="$t('forms.address.inputs.city.placeholder')"

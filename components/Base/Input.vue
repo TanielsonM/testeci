@@ -135,9 +135,9 @@ const onInput = (event) => {
         class="h-full w-full bg-checkout outline-none"
         :class="customClass"
         :rules="rules"
-        v-mask="mask"
         @input="onInput"
-      />
+        />
+        <!-- v-mask="mask" -->
       <Icon
         :name="icon"
         v-if="icon && iconPosition === 'end'"
