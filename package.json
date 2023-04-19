@@ -38,14 +38,15 @@
     "vue-eslint-parser": "^9.1.0"
   },
   "dependencies": {
+    "@datadog/browser-logs": "^4.39.0",
     "@nuxtjs/robots": "^3.0.0",
     "@nuxtjs/tailwindcss": "^6.3.1",
     "@pinia/nuxt": "^0.4.6",
+    "maska": "^2.1.8",
     "moment": "^2.29.4",
     "nuxt-icon": "^0.2.11",
     "uuid": "^9.0.0",
     "vee-validate": "^4.8.4",
-    "vue-the-mask": "^0.11.1",
     "vue-toastification": "^2.0.0-rc.5"
   }
 }
