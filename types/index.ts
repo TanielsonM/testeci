@@ -117,6 +117,12 @@ export type CouponState = {
   coupon: Coupon;
 };
 
+export type leadsState = {
+  personal: [];
+  address: [];
+  purchase: [];
+};
+
 export type InstallmentsState = {
   installments: Installment[];
   maxInstallments: number;

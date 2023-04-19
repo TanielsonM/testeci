@@ -254,5 +254,6 @@ await checkout.init();
       />
       <!-- End side Thumb -->
     </section>
+    <Leads />
   </NuxtLayout>
 </template>
