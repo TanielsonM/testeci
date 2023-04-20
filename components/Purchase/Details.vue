@@ -4,18 +4,20 @@ import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 // Utils
 import { formatMoney } from "~~/utils/money";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const checkout = useCheckoutStore();
+const installmentsStore = useInstallmentsStore();
 const {
   coupon,
   method,
   installments,
-  getInstallments,
   hasFees,
   bump_list,
   hasSelectedBump,
   checkoutPayment,
 } = storeToRefs(checkout);
+const { getInstallments } = storeToRefs(installmentsStore);
 
 const amountText = computed(() => {
   switch (method.value) {
