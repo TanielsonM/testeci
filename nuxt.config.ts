@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     [
       "@pinia/nuxt",
       {
-        autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
+        autoImports: ["defineStore"],
       },
     ],
   ],
