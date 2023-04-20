@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 
-export const useCheckoutStore = definePiniaStore("checkout", {
+export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
     global_loading: true,
     global_settings: {
