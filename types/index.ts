@@ -118,9 +118,17 @@ export type CouponState = {
 };
 
 export type leadsState = {
+  step: number;
+  id: string;
   uuid: string;
   personal: {};
   address: {};
+  payment: {
+    proposal_id: number;
+    product_id: number;
+    seller_id: number;
+    affiliate_id: number;
+  };
   purchase: {};
 };
 
