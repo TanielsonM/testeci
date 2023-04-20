@@ -46,7 +46,9 @@ export const useLeadsStore = definePiniaStore("Leads", {
 
       try {
         const getLead = await api.read("/lead", { query }).then((res) => {
-          res.test;
+          console.log(res);
+          if (res.uuid === this.uuid) {
+          }
         });
       } catch (error) {}
     },
