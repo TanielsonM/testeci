@@ -331,10 +331,11 @@ export type leadsState = {
   personal: {};
   address: {};
   payment: {
-    proposal_id: number;
-    product_id: number;
-    seller_id: number;
-    affiliate_id: number;
+    offer_hash: any;
+    proposal_id: any;
+    product_id: any;
+    seller_id: any;
+    affiliate_id: any;
   };
   purchase: {};
 };

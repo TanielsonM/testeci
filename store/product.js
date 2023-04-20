@@ -12,6 +12,7 @@ export const useProductStore = defineStore("product", {
     gift_message: "",
   }),
   getters: {
+    seller_id: (state) => state.product.seller_id,
     product_id: (state) => state.product.id,
     isSubscription: (state) => state.product.type === "SUBSCRIPTION",
     isValid(state) {

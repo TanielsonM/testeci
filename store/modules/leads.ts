@@ -1,10 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { leadsState } from "@/types";
 import { useCheckoutStore } from "../checkout";
+import { useProductStore } from "../product";
+
 import { storeToRefs } from "pinia";
 
+const productStore = useProductStore();
 const checkoutStore = useCheckoutStore();
-const { uuid } = storeToRefs(checkoutStore);
+
+const { seller_id } = storeToRefs(productStore);
+const { uuid, product_offer, product_id, hasAffiliateId } =
+  storeToRefs(checkoutStore);
 
 export const useLeadsStore = defineStore("Leads", {
   state: (): leadsState => ({
@@ -28,10 +34,11 @@ export const useLeadsStore = defineStore("Leads", {
       country_code: "",
     },
     payment: {
+      offer_hash: product_offer,
       proposal_id: 0,
-      product_id: 0,
-      seller_id: 0,
-      affiliate_id: 0,
+      product_id: product_id,
+      seller_id: seller_id,
+      affiliate_id: hasAffiliateId,
     },
     purchase: {
       status: false,
@@ -43,6 +50,8 @@ export const useLeadsStore = defineStore("Leads", {
   getters: {},
   actions: {
     async sendLead(): Promise<void> {
+      const data = {};
+
       const api = useApi();
       const query = { uuid: this.uuid, product_id: this.payment.product_id };
 

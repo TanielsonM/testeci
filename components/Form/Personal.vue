@@ -8,7 +8,7 @@ const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
 
-const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
 );
 
@@ -123,10 +123,9 @@ const confirmation_mail = ref("");
 
     <BaseInput
       class="col-span-12"
-      :class="{ 'xl:col-span-6': showPhoneInput }"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
-      v-if="showPhoneInput"
       input-name="cellphone-field"
       v-model="cellphone"
       :mask="numberMask.mask"
@@ -143,9 +142,10 @@ const confirmation_mail = ref("");
 
     <BaseInput
       class="col-span-12"
-      :class="{ 'xl:col-span-6': showPhoneInput }"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
+      v-if="showDocumentInput"
       input-name="document-field"
       v-model="document"
       :mask="documentText.documentMask"
