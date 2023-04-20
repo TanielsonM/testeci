@@ -4,16 +4,19 @@ import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 import { formatMoney } from "~/utils/money";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const checkout = useCheckoutStore();
+const installmentsStore = useInstallmentsStore()
 const { t } = useI18n();
 /* State */
 const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
-const { getInstallments, method, installments, hasFees } =
+const { method, installments, hasFees } =
   storeToRefs(checkout);
 const { trial_position } = storeToRefs(custom_checkout);
+const { getInstallments } = storeToRefs(installmentsStore)
 
 /* Trial message */
 const trialMessage = computed({
