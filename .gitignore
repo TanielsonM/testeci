@@ -5,5 +5,16 @@ node_modules
 .cache
 .output
 dist
-yarn.lock
+node_modules
+*.iml
+.idea
+.vscode
+.DS_Store
+coverage
+sw.*
+.env
+.output
+.husky
 package-lock.json
+yarn-error.log
+yarn.lock
