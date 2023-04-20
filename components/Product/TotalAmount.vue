@@ -5,11 +5,12 @@ import { formatMoney } from "~~/utils/money";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const checkout = useCheckoutStore();
 const product = useProductStore();
+const installmentsStore = useInstallmentsStore();
 const {
-  getInstallments,
   method,
   installments,
   hasFees,
@@ -18,13 +19,15 @@ const {
   checkoutPayment,
 } = storeToRefs(checkout);
 
+const { getInstallments } = storeToRefs(installmentsStore);
+
 /* computeds */
 const amountText = computed(() => {
   switch (method.value) {
     case "CREDIT_CARD":
       return `${installments.value}x de ${formatMoney(
         getInstallments.value()
-      )} ${hasFees.value ? "(Sem juros)" : ""}`;
+      )} ${hasFees.value ? "" : "(Sem juros)"}`;
     default:
       return `${formatMoney(getInstallments.value(1))}`;
   }
@@ -38,7 +41,7 @@ const amountText = computed(() => {
   <small v-if="installments < 2" class="d-block small-text">
     {{ $t("order.vc_pagara") }}
   </small>
-  <p class="text-txt-color text-lg font-semibold">
+  <p class="text-lg font-semibold text-txt-color">
     {{ amountText }}
   </p>
   <small

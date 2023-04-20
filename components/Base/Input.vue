@@ -1,4 +1,5 @@
 <script setup>
+import { vMaska } from "maska"
 const props = defineProps({
   type: {
     type: String,
@@ -136,8 +137,9 @@ const onInput = (event) => {
         :disabled="disabled"
         class="bg-checkout h-full w-full outline-none"
         :class="customClass"
+        v-maska
+        :data-maska="mask"
         :rules="rules"
-        v-mask="mask"
         @input="onInput"
       />
       <Icon

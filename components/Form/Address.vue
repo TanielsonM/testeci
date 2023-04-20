@@ -55,11 +55,11 @@ async function getAddress(cep = "") {
     <BaseInput
       :label="$t('forms.address.inputs.zipcode.label')"
       :placeholder="$t('forms.address.inputs.zipcode.placeholder')"
+      mask="#####-###"
       class="col-span-12 xl:col-span-3"
-      v-mask="'#####-###'"
       v-model="form.zipcode"
       @input="getAddress(form.zipcode.replace('-', ''))"
-    />
+      />
     <BaseInput
       :label="$t('forms.address.inputs.public_place.label')"
       :placeholder="$t('forms.address.inputs.public_place.placeholder')"
@@ -70,10 +70,10 @@ async function getAddress(cep = "") {
       :inputId="`number-address-${type}`"
       :label="$t('forms.address.inputs.number.label')"
       :placeholder="$t('forms.address.inputs.number.placeholder')"
+      mask="###########"
       class="col-span-12 xl:col-span-3"
-      v-mask="'###########'"
       v-model="form.number"
-    />
+      />
     <BaseInput
       :label="$t('forms.address.inputs.city.label')"
       :placeholder="$t('forms.address.inputs.city.placeholder')"

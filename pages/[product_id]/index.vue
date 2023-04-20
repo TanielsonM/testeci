@@ -4,14 +4,16 @@ import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
+import { usePaymentStore } from "~~/store/modules/payment";
 // Stores
 const custom_checkout = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
 const address = useAddressStore();
+const payment = usePaymentStore();
 
 /* Variables */
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);
@@ -214,7 +216,7 @@ await checkout.init();
         </template>
 
         <!-- Purchase button -->
-        <BaseButton class="mt-10">
+        <BaseButton class="mt-10" @click="payment.payment(locale)">
           <span class="text-[15px] font-semibold">
             {{
               custom_checkout.purchase_text || $t("checkout.footer.btn_compra")

@@ -2,10 +2,13 @@
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const product = useProductStore();
 const checkout = useCheckoutStore();
-const { ticket_installments, getInstallments } = storeToRefs(checkout);
+const installments = useInstallmentsStore();
+const { getInstallments } = storeToRefs(installments);
+const { ticket_installments } = storeToRefs(checkout);
 const { hasTicketInstallments, productType } = storeToRefs(product);
 
 const showInstallments = computed(() => {
@@ -14,7 +17,7 @@ const showInstallments = computed(() => {
 </script>
 
 <template>
-  <p class="text-txt-color text-[13px] font-normal" data-anima="top">
+  <p class="text-[13px] font-normal text-txt-color" data-anima="top">
     Pagamentos com Boleto Bancário levam até 3 dias úteis para serem compensados
     e então terem os produtos liberados.
   </p>
@@ -29,7 +32,7 @@ const showInstallments = computed(() => {
       v-for="(d, index) in hasTicketInstallments"
       :key="index"
       :value="index + 1"
-      class="hover:bg-main-color cursor-pointer select-none rounded"
+      class="cursor-pointer select-none rounded hover:bg-main-color"
     >
       {{
         index + 1 > 1

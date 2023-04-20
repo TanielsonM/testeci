@@ -1,10 +1,9 @@
 // Core
 import { v4 as uuidv4 } from "uuid";
-import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 
-export const useCheckoutStore = definePiniaStore("checkout", {
+export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
     uuid: uuidv4(),
     global_loading: true,
@@ -73,6 +72,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     /**
      * Query getters
      */
+    hasAffiliateId: (state) => state.url.query?.a_id,
     hasBusiness: (state) => state.url.query?.b, // Jivochat
     hasBump: (state) => state.url.fullPath.includes("b_id"),
     hasNewBump: (state) => state.url.fullPath.includes("b_id_1"),
@@ -103,35 +103,6 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     hasFees: (state) => {
       const product = useProductStore();
       return state.method === "CREDIT_CARD" ? product.hasFees : false;
-    },
-    /**
-     * Installments
-     */
-    getInstallments(state) {
-      return (installments = state.installments) => {
-        const store = useProductStore();
-        const { product } = storeToRefs(store);
-        let amount = this.totalAmount();
-        if (installments === 1) {
-          return !store.isPhysicalProduct
-            ? amount
-            : amount + (product.value.shipping?.amount || 0);
-        }
-        if (
-          this.hasFees &&
-          ["CREDIT_CARD", "TWO_CREDIT_CARD"].includes(state.method)
-        ) {
-          amount = amount / installments;
-          return amount;
-        } else {
-          let tax = this.monthly_interest / 100; // tax per month
-          amount =
-            amount /
-            ((Math.pow(1 + tax, installments) - 1) /
-              (Math.pow(1 + tax, installments) * tax));
-        }
-        return amount;
-      };
     },
     isHeaven: (state) => state.is_heaven,
     /**
@@ -305,6 +276,23 @@ export const useCheckoutStore = definePiniaStore("checkout", {
         this.setLoading();
       }
     },
+    async getCoupon() {
+      let url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
+      if (this.url.params.hash) {
+        url = url + `/offer/${this.url.params.hash}`;
+      }
+      const query = {
+        country: this.selectedCountry,
+      };
+      try {
+        const res = await useApi().read(url, { query });
+        return res;
+      } catch (error) {
+        throw error;
+      } finally {
+        this.coupon.loading = false;
+      }
+    },
     async getBumps() {
       if (!this.hasNewBump) {
         await this.getOldBumps();
@@ -369,6 +357,7 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       }
     },
     setAllowedMethods(allowed_methods = []) {
+      this.allowed_methods = [];
       this.allowed_methods = allowed_methods;
       this.setMethod(
         allowed_methods.includes("CREDIT_CARD")
@@ -473,6 +462,8 @@ export const useCheckoutStore = definePiniaStore("checkout", {
       this.checkAllowedMethods();
       if (index === -1) {
         this.product_list.push(product);
+        this.setAmount(product.amount);
+        this.setOriginalAmount(product.amount);
         return;
       }
       this.product_list.splice(index, 1);

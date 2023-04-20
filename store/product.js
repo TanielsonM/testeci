@@ -1,7 +1,9 @@
-import { useCheckoutStore } from "@/store/checkout.js";
+import { useCheckoutStore } from "@/store/checkout";
 import { useCustomCheckoutStore } from "@/store/customCheckout";
 import { formatMoney } from "~~/utils/money";
-export const useProductStore = definePiniaStore("product", {
+import { useInstallmentsStore } from "./modules/installments";
+
+export const useProductStore = defineStore("product", {
   state: () => ({
     product: null,
     amount: 0,
@@ -15,20 +17,22 @@ export const useProductStore = definePiniaStore("product", {
     isValid(state) {
       return () => {
         const checkout = useCheckoutStore();
+        if (!state.product) return false;
         return (
-          state.product.status_offer === "APPROVED" &&
-          state.product.status_product === "APPROVED" &&
-          state.product.is_active == 1 &&
+          state.product?.status_offer === "APPROVED" &&
+          state.product?.status_product === "APPROVED" &&
+          state.product?.is_active == 1 &&
           checkout.isValid()
         );
       };
     },
-    hasFees: (state) => state.product.no_interest_installments, // com ou sem juros
+    hasFees: (state) => !!state.product.no_interest_installments, // 0 = sem juros | 1 = com juros
     isPhysicalProduct: (state) => state.product.format == "PHYSICALPRODUCT",
     productType: (state) => state.product.type,
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,
     hasPreSelectedInstallments: (state) =>
       state.product.pre_selected_installment ?? null,
+    hasShippingFee: (state) => !!state.product.has_shipping_fee,
     allowedCoupon(state) {
       return () => {
         const store = useProductStore();
@@ -39,6 +43,8 @@ export const useProductStore = definePiniaStore("product", {
       };
     },
     isHeaven: (state) => !!state.product.is_heaven,
+    isFixedShipping: (state) => state.product.type_shipping_fee === "FIXED",
+    FixedShippingAmount: (state) => state.product.amount_fixed_shipping_fee,
     showAddress: (state) => state.product.is_checkout_address,
     hasTrial: (state) => state.product.trial,
     getPeriod: (state) => state.product.period,
@@ -50,11 +56,11 @@ export const useProductStore = definePiniaStore("product", {
     canBeGifted: (state) => !!state.product.can_be_gifted,
     calculateAmountAfterTrial(state) {
       return () => {
-        const checkout = useCheckoutStore();
+        const store = useInstallmentsStore();
         const customCheckout = useCustomCheckoutStore();
         if (this.hasFixedInstallments && customCheckout.trial_info == "fixa") {
           return `${this.hasFixedInstallments}x de ${formatMoney(
-            checkout.getInstallments(this.hasFixedInstallments)
+            store.getInstallments(this.hasFixedInstallments)
           )}`;
         } else {
           if (state.product.shipping_fee_is_recurring) {
@@ -109,17 +115,17 @@ export const useProductStore = definePiniaStore("product", {
       this.original_amount = this.product.amount;
 
       const checkout = useCheckoutStore();
-      checkout.setAmount(
-        !!this.hasCustomCharges.length
-          ? this.hasCustomCharges[0].amount
-          : product.amount
-      );
-      checkout.setOriginalAmount(product.amount);
       checkout.setInstallments(
         this.product.pre_selected_installment ?? this.resolveInstallments(),
         this.product.max_installments || 12,
         this.hasFixedInstallments,
         this.hasTicketInstallments
+      );
+      checkout.setOriginalAmount(product.amount);
+      checkout.setAmount(
+        !!this.hasCustomCharges.length
+          ? this.hasCustomCharges[0].amount
+          : product.amount
       );
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);

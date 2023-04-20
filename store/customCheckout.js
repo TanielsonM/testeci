@@ -1,6 +1,6 @@
 import { useCheckoutStore } from "~/store/checkout.js";
 
-export const useCustomCheckoutStore = definePiniaStore("customCheckout", {
+export const useCustomCheckoutStore = defineStore("customCheckout", {
   state: () => ({
     custom_checkout: null,
   }),

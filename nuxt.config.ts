@@ -31,7 +31,7 @@ export default defineNuxtConfig({
     [
       "@pinia/nuxt",
       {
-        autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
+        autoImports: ["defineStore"],
       },
     ],
   ],
@@ -45,7 +45,6 @@ export default defineNuxtConfig({
     dirs: ["store"],
   },
   plugins: [
-    "~/plugins/vue-the-mask.js",
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",

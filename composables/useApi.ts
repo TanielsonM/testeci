@@ -5,7 +5,7 @@ export default function () {
     config?: any,
     body: any = null
   ): Promise<T | any> {
-    if (body) config.body = body;
+    if (body) config = { body };
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,

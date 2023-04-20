@@ -3,7 +3,7 @@ import { CheckoutState, CouponState, Coupon } from "@/types";
 // Stores
 import { useCheckoutStore } from "@/store/checkout";
 
-export const useCouponStore = definePiniaStore("Coupon", {
+export const useCouponStore = defineStore("Coupon", {
   state: (): CouponState => ({
     coupon: {
       amount: 0,
