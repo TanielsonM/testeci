@@ -340,3 +340,93 @@ export type StepState = {
   step: number;
   format: "one_step" | "default";
 };
+
+export type Sale = {
+  sales: SaleElement[];
+  order: null;
+};
+
+export type SaleElement = {
+  id: number;
+  product_id: number;
+  contract_id: null;
+  type: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  installments: number;
+  method: string;
+  client_id: number;
+  total: number;
+  amount: number;
+  proposal_id: null;
+  subscription_id: null;
+  boleto_url: null;
+  boleto_barcode: null;
+  boleto_expiration_date: null;
+  qrcode: string;
+  imgQrcode: string;
+  paid_at: null;
+  country_code: string;
+  coupon_id: null;
+  is_gift: number;
+  gift_message: null;
+  shipping_amount: null;
+  shipping_selected: null;
+  offer_id: number;
+  base_currency_id: number;
+  local_currency_id: number;
+  original_amount: number;
+  trial_with_shipping: number;
+  offer: SaleOffer;
+  product: SaleProduct;
+  upsell: null;
+  local_currency: SaleLocalCurrency;
+};
+
+export type SaleLocalCurrency = {
+  id: number;
+  name: string;
+  currency: string;
+  currency_symbol: string;
+};
+
+export type SaleOffer = {
+  id: number;
+  product_id: number;
+  hash: string;
+  amount: number;
+  method: string;
+  name: string;
+  allowed_coupon: number;
+  fixed_installments: null;
+  max_boleto_installments: number;
+  no_interest_installments: number;
+  max_installments: number;
+  period: null;
+  trial: null;
+  charges: null;
+  default: number;
+  status: string;
+  reason: null;
+  analised: number;
+  created_at: Date;
+  updated_at: Date;
+  max_subscription_installments: null;
+  deleted_at: null;
+  pre_selected_installment: number;
+  currency_id: number;
+  allow_offer_link: number;
+  status_offer: string;
+};
+
+export type SaleProduct = {
+  id: number;
+  name: string;
+  thank_you_page: string;
+  trial: number;
+  amount: number;
+  in_stock: boolean;
+  status_product: null;
+  custom_thank_you_pages: any[];
+};
