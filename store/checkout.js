@@ -6,6 +6,7 @@ import { useProductStore } from "~/store/product";
 
 export const useCheckoutStore = definePiniaStore("checkout", {
   state: () => ({
+    uuid: uuidv4(),
     global_loading: true,
     global_settings: {
       captcha: "",
@@ -63,8 +64,10 @@ export const useCheckoutStore = definePiniaStore("checkout", {
     /* Payment details */
     checkoutPayment: null,
     /* UUID */
-    uuid: uuidv4(),
   }),
+  persist: {
+    paths: ["uuid"],
+  },
   getters: {
     isLoading: (state) => state.global_loading,
     /**

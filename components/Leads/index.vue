@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { v4 as uuidv4 } from "uuid";
-import { usePersonalStore } from "@/store/forms/personal";
-const personalStore = usePersonalStore();
+import { useLeadsStore } from "@/store/modules/leads";
+
+const leadStore = useLeadsStore();
 
 async function updateLeadStates() {
   await useApi()
@@ -17,5 +18,5 @@ async function updateLeadStates() {
 </script>
 
 <template>
-  {{ personalStore.name }}
+  {{ leadStore.uuid }}
 </template>

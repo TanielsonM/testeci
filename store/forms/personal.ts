@@ -5,6 +5,7 @@ export const usePersonalStore = definePiniaStore("personal", {
     cellphone: "",
     document: "",
   }),
+
   getters: {},
   actions: {},
 });

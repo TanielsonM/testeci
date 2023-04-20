@@ -118,9 +118,10 @@ export type CouponState = {
 };
 
 export type leadsState = {
-  personal: [];
-  address: [];
-  purchase: [];
+  uuid: string;
+  personal: {};
+  address: {};
+  purchase: {};
 };
 
 export type InstallmentsState = {

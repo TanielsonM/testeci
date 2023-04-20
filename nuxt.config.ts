@@ -26,6 +26,8 @@ export default defineNuxtConfig({
     "@nuxtjs/robots",
     "@nuxt/devtools",
     "@vue-macros/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+    "@vueuse/nuxt",
     [
       "@pinia/nuxt",
       {
@@ -33,6 +35,12 @@ export default defineNuxtConfig({
       },
     ],
   ],
+  piniaPersistedstate: {
+    cookieOptions: {
+      sameSite: "strict",
+    },
+    storage: "localStorage",
+  },
   imports: {
     dirs: ["store"],
   },
