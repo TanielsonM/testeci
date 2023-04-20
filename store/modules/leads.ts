@@ -6,9 +6,9 @@ import { storeToRefs } from "pinia";
 const checkoutStore = useCheckoutStore();
 const { uuid } = storeToRefs(checkoutStore);
 
-export const useLeadsStore = definePiniaStore("Leads", {
+export const useLeadsStore = defineStore("Leads", {
   state: (): leadsState => ({
-    step: 1,
+    step: 0,
     id: uuid.value,
     uuid: uuid.value,
     personal: {
@@ -37,7 +37,9 @@ export const useLeadsStore = definePiniaStore("Leads", {
       status: false,
     },
   }),
-  persist: true,
+  persist: {
+    paths: ["uuid"],
+  },
   getters: {},
   actions: {
     async sendLead(): Promise<void> {

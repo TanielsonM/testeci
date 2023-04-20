@@ -39,6 +39,7 @@ export default defineNuxtConfig({
     cookieOptions: {
       sameSite: "strict",
     },
+    debug: true,
     storage: "localStorage",
   },
   imports: {
