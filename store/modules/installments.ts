@@ -23,6 +23,7 @@ export const useInstallmentsStore = defineStore("installments", {
         totalAmount,
       } = storeToRefs(checkout);
       return (n: number = installments.value) => {
+        if (typeof n === "string") n = parseInt(n);
         let amount = totalAmount.value();
 
         if (n === 1) return amount;

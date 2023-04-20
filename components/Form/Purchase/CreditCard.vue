@@ -126,7 +126,7 @@ const showInstallments = computed(() => {
         mask="#### #### #### ####"
         class="col-span-12"
         v-model="first.number"
-        />
+      />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
@@ -153,47 +153,49 @@ const showInstallments = computed(() => {
         mask="###"
         class="col-span-4"
         v-model="first.cvv"
-        />
-      <BaseSelect
-        :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
-        class="col-span-12"
-        v-model="installments"
-        v-if="showInstallments"
-      >
-        <!-- Fixed installment -->
-        <option
-          :value="fixed_installments"
-          v-if="!!fixed_installments"
-          class="cursor-pointer select-none rounded hover:bg-main-color"
+      />
+      <ClientOnly>
+        <BaseSelect
+          :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
+          class="col-span-12"
+          v-model="installments"
+          v-if="showInstallments"
         >
-          {{
-            `${fixed_installments}x ${$t("order.de")} ${formatMoney(
-              getInstallments()
-            )}`
-          }}
-        </option>
-        <!--  -->
-        <!-- Installments -->
-        <option
-          v-else
-          v-for="(d, index) in max_installments"
-          :key="index"
-          :value="index + 1"
-          class="cursor-pointer select-none rounded hover:bg-main-color"
-        >
-          {{
-            index + 1 > 1
-              ? `${index + 1}x ${hasFees ? "" : "(Sem juros)"} ${$t(
-                  "order.de"
-                )} ${formatMoney(getInstallments(index + 1))}${
-                  hasFees ? "*" : ""
-                }`
-              : `${index + 1}x ${$t("order.de")} ${formatMoney(
-                  getInstallments(1)
-                )}`
-          }}
-        </option>
-      </BaseSelect>
+          <!-- Fixed installment -->
+          <option
+            :value="fixed_installments"
+            v-if="!!fixed_installments"
+            class="cursor-pointer select-none rounded hover:bg-main-color"
+          >
+            {{
+              `${fixed_installments}x ${$t("order.de")} ${formatMoney(
+                getInstallments()
+              )}`
+            }}
+          </option>
+          <!--  -->
+          <!-- Installments -->
+          <option
+            v-else
+            v-for="(d, index) in max_installments"
+            :key="index"
+            :value="d"
+            class="cursor-pointer select-none rounded hover:bg-main-color"
+          >
+            {{
+              index + 1 > 1
+                ? `${index + 1}x ${hasFees ? "" : "(Sem juros)"} ${$t(
+                    "order.de"
+                  )} ${formatMoney(getInstallments(index + 1))}${
+                    hasFees ? "*" : ""
+                  }`
+                : `${index + 1}x ${$t("order.de")} ${formatMoney(
+                    getInstallments(1)
+                  )}`
+            }}
+          </option>
+        </BaseSelect>
+      </ClientOnly>
     </form>
     <CreditCard
       class="hidden md:block"
