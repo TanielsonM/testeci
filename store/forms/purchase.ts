@@ -1,4 +1,4 @@
-export const usePurchaseStore = definePiniaStore("purchase", {
+export const usePurchaseStore = defineStore("purchase", {
   state: () => ({
     first: {
       amount: 0,

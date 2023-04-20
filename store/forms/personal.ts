@@ -1,4 +1,4 @@
-export const usePersonalStore = definePiniaStore("personal", {
+export const usePersonalStore = defineStore("personal", {
   state: () => ({
     name: "",
     email: "",

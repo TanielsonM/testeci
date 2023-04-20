@@ -1,6 +1,6 @@
 import { StepState } from "~~/types";
 
-export const useStepStore = definePiniaStore("Step", {
+export const useStepStore = defineStore("Step", {
   state: (): StepState => ({
     step: 1,
     format: "default",

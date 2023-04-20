@@ -7,7 +7,7 @@ interface BumpsWithOffers {
   offer_hash: string;
 }
 
-export const useBumpsStore = definePiniaStore("bumps", {
+export const useBumpsStore = defineStore("bumps", {
   state: (): BumpsState => ({ bumps: [] }),
   getters: {
     hasSelectedBumps: (state: BumpsState) =>

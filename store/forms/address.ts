@@ -1,6 +1,6 @@
 import { Address, AddressState } from "@/types";
 
-export const useAddressStore = definePiniaStore("address", {
+export const useAddressStore = defineStore("address", {
   state: (): AddressState => ({
     sameAddress: true,
     shipping: {

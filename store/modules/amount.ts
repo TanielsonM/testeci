@@ -1,6 +1,6 @@
 import { AmountState } from "~~/types";
 
-export const useAmountStore = definePiniaStore("Amount", {
+export const useAmountStore = defineStore("Amount", {
   state: (): AmountState => ({
     amount: 0,
     originalAmount: 0,
