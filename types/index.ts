@@ -326,18 +326,33 @@ export type CouponState = {
 
 export type leadsState = {
   step: number;
-  id: string;
-  uuid: string;
-  personal: {};
-  address: {};
-  payment: {
-    offer_hash: any;
-    proposal_id: any;
-    product_id: any;
-    seller_id: any;
-    affiliate_id: any;
+  uuid: any;
+  personal: {
+    name: any;
+    email: any;
+    cellphone: any;
+    document: any;
   };
-  purchase: {};
+  address: {
+    zip_code: any;
+    state: any;
+    city: any;
+    street: any;
+    number: any;
+    neighborhood: any;
+    complement: any;
+    country_code: any;
+  };
+  payment: {
+    offer_id: number;
+    proposal_id: number;
+    product_id: number;
+    seller_id: number;
+    affiliate_id: number;
+  };
+  purchase: {
+    status: string;
+  };
 };
 
 export type InstallmentsState = {

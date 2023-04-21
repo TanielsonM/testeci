@@ -5,12 +5,18 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
+import { useLeadsStore } from "@/store/modules/leads";
+
 // Stores
 const custom_checkout = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
+const leadStore = useLeadsStore();
+
+// Syncronize Lead
+leadStore.syncLead();
 
 /* Variables */
 const { t, locale } = useI18n();
@@ -201,7 +207,7 @@ await checkout.init();
 
         <!-- Bumps -->
         <template v-if="checkout.getBumpList.length">
-          <p class="text-txt-color w-full">
+          <p class="w-full text-txt-color">
             {{
               custom_checkout.hasCustomBump
                 ? custom_checkout.bump_options.title
@@ -226,7 +232,7 @@ await checkout.init();
 
         <span class="flex items-center gap-3">
           <Icon name="fa6-solid:lock" class="text-main-color" />
-          <p class="text-txt-color text-[13px] font-normal">
+          <p class="text-[13px] font-normal text-txt-color">
             {{ $t("checkout.footer.info_seguranca") }}
           </p>
         </span>
@@ -256,6 +262,9 @@ await checkout.init();
       />
       <!-- End side Thumb -->
     </section>
-    <Leads />
+
+    <ClientOnly>
+      <Leads />
+    </ClientOnly>
   </NuxtLayout>
 </template>

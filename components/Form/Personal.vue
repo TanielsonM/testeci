@@ -93,20 +93,6 @@ const confirmation_mail = ref("");
 
     <BaseInput
       class="col-span-12"
-      :label="$t('forms.personal.inputs.mail.label')"
-      :placeholder="$t('forms.personal.inputs.mail.placeholder')"
-      type="email"
-      input-name="email-field"
-      v-model="email"
-      rules="required|email"
-    >
-      <template #error>
-        {{ $t("checkout.dados_pessoais.feedbacks.email") }}
-      </template>
-    </BaseInput>
-
-    <BaseInput
-      class="col-span-12"
       :label="$t('forms.personal.inputs.confirmation_mail.label')"
       :placeholder="$t('forms.personal.inputs.confirmation_mail.placeholder')"
       type="email"

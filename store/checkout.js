@@ -1,11 +1,10 @@
 // Core
-import { v4 as uuidv4 } from "uuid";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
-    uuid: uuidv4(),
+    uuid: "",
     global_loading: true,
     global_settings: {
       captcha: "",
@@ -184,6 +183,9 @@ export const useCheckoutStore = defineStore("checkout", {
       this.setCoupon(true);
       if (this.hasBump) this.getBumps();
       this.setLoading();
+    },
+    setUUID(uuid) {
+      return (this.uuid = uuid);
     },
     async getGlobalSettings() {
       const keys = [
