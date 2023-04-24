@@ -66,6 +66,7 @@ export const useCheckoutStore = defineStore("checkout", {
     checkoutPayment: null,
     /* UUID */
     uuid: uuidv4(),
+    sales: {},
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -523,6 +524,17 @@ export const useCheckoutStore = defineStore("checkout", {
         return;
       }
       this.allowed_methods = allowed_methods;
+    },
+    async getSale(id) {
+      if (!!id) {
+        try {
+          const sales = await useApi().read(`/sale-checkout/${id}`);
+          if (!!sales) this.sales = sales;
+        } catch (error) {
+          this.setError(error.message);
+          throw error;
+        }
+      }
     },
   },
 });
