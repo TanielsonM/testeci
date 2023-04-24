@@ -105,7 +105,7 @@ const months = [
       </p>
     </BaseButton>
   </section>
-  <section class="flex justify-between gap-5">
+  <section class="flex flex-wrap lg:flex-nowrap justify-between gap-5">
     <!-- First credit card -->
     <form class="grid w-full grid-cols-12 gap-3">
       <span
@@ -139,14 +139,14 @@ const months = [
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
-        class="col-span-4"
+        class="col-span-6 sm:col-span-4"
         :data="months"
         v-model="first.month"
       />
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
-        class="col-span-4"
+        class="col-span-6 sm:col-span-4"
         :data="years"
         v-model="first.year"
       />
@@ -154,7 +154,7 @@ const months = [
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         mask="###"
-        class="col-span-4"
+        class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
       />
     </form>
@@ -193,14 +193,14 @@ const months = [
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
-        class="col-span-4"
+        class="col-span-6 sm:col-span-4"
         :data="months"
         v-model="second.month"
       />
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
-        class="col-span-4"
+        class="col-span-6 sm:col-span-4"
         :data="years"
         v-model="second.year"
       />
@@ -208,7 +208,7 @@ const months = [
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         mask="###"
-        class="col-span-4"
+        class="col-span-12 sm:col-span-4"
         v-model="second.cvv"
       />
     </form>
