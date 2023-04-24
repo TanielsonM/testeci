@@ -390,6 +390,7 @@ export type SaleElement = {
   product: SaleProduct;
   upsell: any;
   local_currency: SaleLocalCurrency;
+  success: boolean;
 };
 
 export type SaleLocalCurrency = {

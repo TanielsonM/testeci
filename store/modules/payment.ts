@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
 // Types
-import { Payment, Product, PaymentError } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement } from "~~/types";
 // Stores
 import { usePersonalStore } from "../forms/personal";
 import { useAddressStore } from "../forms/address";
@@ -163,7 +163,7 @@ export const usePaymentStore = defineStore("Payment", {
           if (
             res.sales !== undefined &&
             Array.isArray(res.sales) &&
-            res.sales.every((item: any) => item.success)
+            res.sales.every((item: SaleElement) => item.success)
           ) {
             GreennLogs.logger.info("🟢 Success Compra", {
               name: "Compra concluída com sucesso",
