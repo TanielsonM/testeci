@@ -30,6 +30,7 @@ const {
   product_list,
   products_client_statistics,
   hasAffiliateId,
+  installments,
 } = storeToRefs(checkoutStore);
 const {
   is_gift,
@@ -44,7 +45,9 @@ const { first, second } = storeToRefs(purchaseStore);
 const { getInstallments } = storeToRefs(installmentsStore);
 
 export const usePaymentStore = defineStore("Payment", {
-  state: () => ({}),
+  state: () => ({
+    error: false,
+  }),
   getters: {},
   actions: {
     async payment(language: string) {
@@ -129,8 +132,28 @@ export const usePaymentStore = defineStore("Payment", {
       }
 
       /* When method is Credit card */
-      if (["CREDIT_CARD", "TWO_CREDIT_CARD"].includes(method.value)) {
-        data.cards = [];
+      if (
+        ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
+      ) {
+        let cards = [];
+        cards.push({
+          amount: first.value.amount,
+          card_cvv: first.value.cvv,
+          card_expiration_date: `${first.value.month}${first.value.year}`,
+          card_holder_name: first.value.holder_name,
+          card_number: first.value.number,
+        });
+        if (method.value === "TWO_CREDIT_CARDS") {
+          cards.push({
+            amount: second.value.amount,
+            card_cvv: second.value.cvv,
+            card_expiration_date: `${second.value.month}${second.value.year}`,
+            card_holder_name: second.value.holder_name,
+            card_number: second.value.number,
+          });
+        }
+
+        data.cards = cards;
       }
 
       // Payment request

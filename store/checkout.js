@@ -102,7 +102,7 @@ export const useCheckoutStore = defineStore("checkout", {
      */
     hasFees: (state) => {
       const product = useProductStore();
-      return ["CREDIT_CARD", "TWO_CREDIT_CARD"].includes(state.method)
+      return ["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(state.method)
         ? product.hasFees
         : false;
     },
@@ -437,8 +437,9 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setMethod(method = "") {
       this.method = method;
-      if (this.method !== "CREDIT_CARD") this.setInstallments();
-      else if (this.method === "TWO_CREDIT_CARD") {
+      if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method))
+        this.setInstallments();
+      else if (this.method === "TWO_CREDIT_CARDS") {
         purchaseStore.first.amount = this.amount / 2;
         purchaseStore.second.amount = this.amount / 2;
       } else {

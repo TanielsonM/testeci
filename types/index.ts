@@ -39,11 +39,10 @@ export type Coupon = {
 
 export type PurcharseCard = {
   amount: number;
-  number: string;
-  holder_name: string;
-  month: string;
-  year: string;
-  cvv: string;
+  card_cvv: string;
+  card_expiration_date: string;
+  card_holder_name: string;
+  card_number: string;
 };
 
 export type GlobalSettings = {

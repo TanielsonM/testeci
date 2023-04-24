@@ -23,7 +23,7 @@ const tabs = computed(() => {
     switch (item) {
       case "CREDIT_CARD":
         return {
-          value: [item, "TWO_CREDIT_CARD"],
+          value: [item, "TWO_CREDIT_CARDS"],
           label: t("checkout.pagamento.metodos.cartao_credito"),
           icon: "bi:credit-card-fill",
         };

@@ -74,7 +74,7 @@ function getImg(type) {
 <template>
   <section class="flex w-full justify-start">
     <section
-      class="card border-main-color bg-main-transparent flex h-[208px] w-full flex-col justify-between rounded-lg border p-5"
+      class="card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5"
     >
       <header class="flex h-10 w-full justify-end">
         <Transition name="slide-fade-up" mode="out-in">
@@ -90,8 +90,8 @@ function getImg(type) {
       <CreditCardLabel
         :label="$t('checkout.pagamento.metodos.um_cartao.card.numero')"
       >
-        <p class="text-txt-color w-full" v-if="getCardType === 'amex'"></p>
-        <span v-else class="text-txt-color flex w-full">
+        <p class="w-full text-txt-color" v-if="getCardType === 'amex'"></p>
+        <span v-else class="flex w-full text-txt-color">
           <p
             v-for="(n, index) in defaultCardMask.replaceAll(' ', '').length"
             :key="index"
@@ -117,14 +117,14 @@ function getImg(type) {
         >
           <Transition name="slide-fade-up" mode="out-in">
             <p
-              class="text-txt-color text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none"
+              class="text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none text-txt-color"
               v-if="card_holder_name"
             >
               {{ card_holder_name }}
             </p>
             <p
               v-else
-              class="text-txt-color text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none"
+              class="text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none text-txt-color"
             >
               {{ $t("checkout.pagamento.metodos.um_cartao.card.nome_holder") }}
             </p>
@@ -135,7 +135,7 @@ function getImg(type) {
         >
           <Transition name="slide-fade-up" mode="out-in">
             <span v-if="card_month" v-bind:key="card_month">{{
-              parseInt(card_month) < 10 ? `0${card_month}` : card_month
+              card_month
             }}</span>
             <span v-else key="2">••</span>
           </Transition>

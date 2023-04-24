@@ -1,22 +1,17 @@
 <script setup>
 import moment from "moment";
-import { formatMoney } from "@/utils/money";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
-import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const product = useProductStore();
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
-const installmentsStore = useInstallmentsStore();
-const { method, installments, max_installments, hasFees, fixed_installments } =
-  storeToRefs(checkout);
+const { method } = storeToRefs(checkout);
 const { first, second } = storeToRefs(purchase);
 const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
-const { getInstallments } = storeToRefs(installmentsStore);
 
 const years = [
   { value: moment().year(), label: moment().year() },
@@ -66,27 +61,19 @@ const years = [
   },
 ];
 const months = [
-  { value: 1, label: "01" },
-  { value: 2, label: "02" },
-  { value: 3, label: "03" },
-  { value: 4, label: "04" },
-  { value: 5, label: "05" },
-  { value: 6, label: "06" },
-  { value: 7, label: "07" },
-  { value: 8, label: "08" },
-  { value: 9, label: "09" },
-  { value: 10, label: "10" },
-  { value: 11, label: "11" },
-  { value: 12, label: "12" },
+  { value: "01", label: "01" },
+  { value: "02", label: "02" },
+  { value: "03", label: "03" },
+  { value: "04", label: "04" },
+  { value: "05", label: "05" },
+  { value: "06", label: "06" },
+  { value: "07", label: "07" },
+  { value: "08", label: "08" },
+  { value: "09", label: "09" },
+  { value: "10", label: "10" },
+  { value: "11", label: "11" },
+  { value: "12", label: "12" },
 ];
-
-const showInstallments = computed(() => {
-  if (productType.value === "SUBSCRIPTION") {
-    return hasSubscriptionInstallments.value && getPeriod.value > 30;
-  }
-
-  return true;
-});
 </script>
 
 <template>
@@ -98,28 +85,44 @@ const showInstallments = computed(() => {
       color="info"
       class="pulse flex gap-1"
       :class="{ active: method === 'CREDIT_CARD' }"
-      @click="method = 'CREDIT_CARD'"
+      @click="checkout.setMethod('CREDIT_CARD')"
     >
       <Icon name="bi:credit-card-fill" />
-      <p class="text-[80%] font-semibold">
+      <p class="text-[90%] font-semibold">
         {{ $t("checkout.pagamento.metodos.um_cartao.title") }}
       </p>
     </BaseButton>
     <BaseButton
       color="info"
       class="pulse flex gap-1"
-      :class="{ active: method === 'TWO_CREDIT_CARD' }"
-      @click="method = 'TWO_CREDIT_CARD'"
+      :class="{ active: method === 'TWO_CREDIT_CARDS' }"
+      @click="checkout.setMethod('TWO_CREDIT_CARDS')"
     >
       <Icon name="bi:credit-card-fill" />
       <Icon name="bi:credit-card-fill" />
-      <p class="text-[80%] font-semibold">
+      <p class="text-[90%] font-semibold">
         {{ $t("checkout.pagamento.metodos.dois_cartoes.title") }}
       </p>
     </BaseButton>
   </section>
   <section class="flex justify-between gap-5">
+    <!-- First credit card -->
     <form class="grid w-full grid-cols-12 gap-3">
+      <span
+        v-if="method == 'TWO_CREDIT_CARDS'"
+        class="card-tag col-span-12"
+        data-anima="bottom"
+      >
+        {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
+        01
+      </span>
+      <BaseInput
+        v-if="method == 'TWO_CREDIT_CARDS'"
+        :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
+        :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+        class="col-span-12"
+        v-model="first.amount"
+      />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
@@ -154,51 +157,65 @@ const showInstallments = computed(() => {
         class="col-span-4"
         v-model="first.cvv"
       />
-      <ClientOnly>
-        <BaseSelect
-          :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
-          class="col-span-12"
-          v-model="installments"
-          v-if="showInstallments"
-        >
-          <!-- Fixed installment -->
-          <option
-            :value="fixed_installments"
-            v-if="!!fixed_installments"
-            class="cursor-pointer select-none rounded hover:bg-main-color"
-          >
-            {{
-              `${fixed_installments}x ${$t("order.de")} ${formatMoney(
-                getInstallments()
-              )}`
-            }}
-          </option>
-          <!--  -->
-          <!-- Installments -->
-          <option
-            v-else
-            v-for="(d, index) in max_installments"
-            :key="index"
-            :value="d"
-            class="cursor-pointer select-none rounded hover:bg-main-color"
-          >
-            {{
-              index + 1 > 1
-                ? `${index + 1}x ${hasFees ? "" : "(Sem juros)"} ${$t(
-                    "order.de"
-                  )} ${formatMoney(getInstallments(index + 1))}${
-                    hasFees ? "*" : ""
-                  }`
-                : `${index + 1}x ${$t("order.de")} ${formatMoney(
-                    getInstallments(1)
-                  )}`
-            }}
-          </option>
-        </BaseSelect>
-      </ClientOnly>
+    </form>
+    <!-- Second credit card -->
+    <form
+      class="grid w-full grid-cols-12 gap-3"
+      v-if="method === 'TWO_CREDIT_CARDS'"
+    >
+      <span
+        v-if="method == 'TWO_CREDIT_CARDS'"
+        class="card-tag col-span-12"
+        data-anima="bottom"
+      >
+        {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
+        02
+      </span>
+      <BaseInput
+        :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
+        :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+        class="col-span-12"
+        v-model="second.amount"
+      />
+      <BaseInput
+        :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
+        :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+        mask="#### #### #### ####"
+        class="col-span-12"
+        v-model="second.number"
+      />
+      <BaseInput
+        :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
+        :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
+        class="col-span-12"
+        v-model="second.holder_name"
+      />
+      <BaseSelect
+        :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
+        :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
+        class="col-span-4"
+        :data="months"
+        v-model="second.month"
+      />
+      <BaseSelect
+        :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
+        :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
+        class="col-span-4"
+        :data="years"
+        v-model="second.year"
+      />
+      <BaseInput
+        :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
+        :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
+        mask="###"
+        class="col-span-4"
+        v-model="second.cvv"
+      />
     </form>
     <CreditCard
+      v-if="method !== 'TWO_CREDIT_CARDS'"
       class="hidden md:block"
+      data-anima="bottom"
       :card_cvv="first.cvv"
       :card_year="first.year"
       :card_month="first.month"
