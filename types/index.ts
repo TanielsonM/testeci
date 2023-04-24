@@ -120,6 +120,14 @@ export type Payment = {
   affiliate_id?: number;
 };
 
+export type PaymentError = {
+  status: string;
+  code: string;
+  sales: {
+    success: boolean;
+  };
+};
+
 export type Paypal = {
   amount: number;
   currency: string;

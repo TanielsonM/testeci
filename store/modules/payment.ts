@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
 // Types
-import { Payment, Product } from "~~/types";
+import { Payment, Product, PaymentError } from "~~/types";
 // Stores
 import { usePersonalStore } from "../forms/personal";
 import { useAddressStore } from "../forms/address";
@@ -160,16 +160,118 @@ export const usePaymentStore = defineStore("Payment", {
       await useApi()
         .create("/payment", data)
         .then((res) => {
-          GreennLogs.logger.info("🟢 Success Compra", {
-            name: "Compra concluída com sucesso",
-            product_id: product_id.value,
-          });
-          const router = useRouter();
-          router.push(`/${product_id.value}/obrigado`);
+          if (
+            res.sales !== undefined &&
+            Array.isArray(res.sales) &&
+            res.sales.every((item: any) => item.success)
+          ) {
+            GreennLogs.logger.info("🟢 Success Compra", {
+              name: "Compra concluída com sucesso",
+              product_id: product_id.value,
+            });
+            const router = useRouter();
+            router.push({
+              path: `/${product_id.value}/obrigado`,
+              query: {
+                s_id: res.sales[0].sale_id,
+              },
+            });
+
+            return;
+          }
+          if (res.status === "error" && !res.sales?.success) {
+            this.validateError(res);
+            return;
+          }
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    validateError(error: PaymentError) {
+      const { t } = useI18n();
+      let error_message = "";
+      switch (error.code) {
+        case "0001":
+          error_message = t("error.0001");
+          // this.resetCheckout("CARD");
+          break;
+        case "BANK":
+          error_message = t("error.BANK");
+          // this.resetCheckout("ALL");
+          break;
+        case "BLACKLIST_PURCHASE":
+          error_message = t("error.BLACKLIST_PURCHASE");
+          // this.resetCheckout("ALL");
+          break;
+        case "INVALID_CVV":
+          error_message = t("error.INVALID_CVV");
+          // this.resetCheckout("CVV");
+          break;
+        case "INVALID_CLIENT_DATA":
+          error_message = t("error.INVALID_CLIENT_DATA");
+          // this.resetCheckout("ALL");
+          break;
+        case "DUPLICATE_PURCHASE":
+          error_message = t("error.DUPLICATE_PURCHASE");
+          // this.resetCheckout("ALL");
+          break;
+        case "PRODUCT_OUT_OF_STOCK":
+          error_message = t("error.PRODUCT_OUT_OF_STOCK");
+          // this.resetCheckout("ALL");
+          break;
+        case "CREDIT_CARD_OPERATOR":
+          error_message = t("error.CREDIT_CARD_OPERATOR");
+          // this.resetCheckout("ALL");
+          break;
+        case "INVALID_DATA":
+          error_message = t("error.INVALID_DATA");
+          // this.resetCheckout("CARD");
+          break;
+        case "INVALID_CREDIT_CARD":
+          error_message = t("error.INVALID_CREDIT_CARD");
+          // this.resetCheckout("ALL");
+          break;
+        case "INSUFFICIENT_FUNDS":
+          error_message = t("error.INSUFFICIENT_FUNDS");
+          // this.resetCheckout("CARD");
+          break;
+        case "INVALID_PAYMENT_TYPE":
+          error_message = t("error.INVALID_PAYMENT_TYPE");
+          // this.resetCheckout("ALL");
+          break;
+        case "INVALID_INSTALLMENTS":
+          error_message = t("error.INVALID_INSTALLMENTS");
+          // this.resetCheckout("CARD");
+          break;
+        case "INVALID_INSTALLMENTS_BUMP":
+          error_message = t("error.INVALID_INSTALLMENTS_BUMP");
+          // this.resetCheckout("CARD");
+          break;
+        case "CURRENCY_NOT_SUPPORTED":
+          error_message = t("error.CURRENCY_NOT_SUPPORTED");
+          // this.resetCheckout("CARD");
+          break;
+        case "SUSPECTED_FRAUD":
+          error_message = t("error.SUSPECTED_FRAUD");
+          // this.resetCheckout("ALL");
+          break;
+        case "EXPIRED_RATE_TOKEN":
+          error_message = t("error.EXPIRED_RATE_TOKEN");
+          break;
+        case "GENERIC":
+          error_message = t("error.GENERIC");
+        // this.resetCheckout("ALL");
+        default:
+          break;
+      }
+
+      GreennLogs.logger.info("🔴  Error Compra", {
+        name: "Erro na Compra",
+        product_id: product_id.value,
+        error_code: error ? error.code : null,
+        error_mensage: error_message,
+      });
     },
   },
 });
