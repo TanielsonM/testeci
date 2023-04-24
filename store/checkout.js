@@ -102,7 +102,9 @@ export const useCheckoutStore = defineStore("checkout", {
      */
     hasFees: (state) => {
       const product = useProductStore();
-      return state.method === "CREDIT_CARD" ? product.hasFees : false;
+      return ["CREDIT_CARD", "TWO_CREDIT_CARD"].includes(state.method)
+        ? product.hasFees
+        : false;
     },
     isHeaven: (state) => state.is_heaven,
     /**
