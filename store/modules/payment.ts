@@ -53,7 +53,7 @@ export const usePaymentStore = defineStore("Payment", {
         method: method.value,
         amount: getInstallments.value(1),
         total: original_amount.value,
-        installments: 1,
+        installments: installments.value,
         // product infos
         product_id: product_id.value,
         products: product_list.value.map((item: Product) => ({
