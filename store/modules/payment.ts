@@ -141,6 +141,8 @@ export const usePaymentStore = defineStore("Payment", {
             name: "Compra concluída com sucesso",
             product_id: product_id.value,
           });
+          const router = useRouter();
+          router.push(`/${product_id.value}/obrigado`);
         })
         .catch((error) => {
           console.log(error);
