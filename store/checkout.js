@@ -2,6 +2,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
+import { usePurchaseStore } from "./forms/purchase";
+
+const purchaseStore = usePurchaseStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -433,6 +436,12 @@ export const useCheckoutStore = defineStore("checkout", {
     setMethod(method = "") {
       this.method = method;
       if (this.method !== "CREDIT_CARD") this.setInstallments();
+      else if (this.method === "TWO_CREDIT_CARD") {
+        purchaseStore.first.amount = this.amount / 2;
+        purchaseStore.second.amount = this.amount / 2;
+      } else {
+        purchaseStore.first.amount = this.amount;
+      }
     },
     setOriginalAmount(amount = 0) {
       this.original_amount = amount;

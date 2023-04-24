@@ -37,6 +37,15 @@ export type Coupon = {
   name: string;
 };
 
+export type PurcharseCard = {
+  amount: number;
+  number: string;
+  holder_name: string;
+  month: string;
+  year: string;
+  cvv: string;
+};
+
 export type GlobalSettings = {
   captcha: boolean;
   antifraud: boolean;
@@ -70,7 +79,7 @@ export type Payment = {
     proposal_id?: number;
     coupon?: string;
   }[];
-  cards?: any;
+  cards?: PurcharseCard[];
 
   name: string;
   email: string;
