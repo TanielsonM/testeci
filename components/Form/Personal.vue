@@ -37,7 +37,7 @@ const documentText = computed(() => {
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
-        mask: ["###.###.###-##", "##.###.###/####-##"],
+        mask: document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
       };
   }
 });
