@@ -108,9 +108,9 @@ const showInstallments = computed(() => {
           class="cursor-pointer select-none rounded hover:bg-main-color"
         >
           {{
-            `${fixed_installments}x ${$t("order.de")} ${formatMoney(
-              getInstallments()
-            )}`
+            `${fixed_installments}x ${hasFees ? "" : "(Sem juros)"} ${$t(
+              "order.de"
+            )} ${formatMoney(getInstallments())}${hasFees ? "*" : ""}`
           }}
         </option>
         <!--  -->
