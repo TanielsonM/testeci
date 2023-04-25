@@ -10,6 +10,11 @@ defineProps({
     default: "",
     required: true,
   },
+  name: {
+    type: String,
+    default: "",
+    required: true,
+  },
 });
 </script>
 <template>
@@ -20,7 +25,7 @@ defineProps({
       <p>#{{ id }}</p>
     </div>
     <div class="item">
-      <p>Venda</p>
+      <p>{{ name }}</p>
       <p>{{ amount }}</p>
     </div>
   </div>

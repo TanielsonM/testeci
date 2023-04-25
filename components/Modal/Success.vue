@@ -19,18 +19,18 @@ defineProps({
   },
 });
 
-const data = {
+const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
   bump: {} as Sale,
   chc: "",
-};
+});
 
 if (!!route.query.s_id && !route.query.chc) {
   const saleId = route.query.s_id;
   await checkout.getSale(saleId);
   const sale: Sale = sales.value as Sale;
-  data.sale = sale;
+  data.value.sale = sale;
 
   switch (sale.sales[0].method) {
     case "BOLETO":
@@ -54,30 +54,30 @@ if (!!route.query.s_id && !route.query.chc) {
   modal.setIframe(sale.sales[0].product.thank_you_page);
 } else {
   const chc = route.query.chc;
-  if (!!chc) data.chc = chc.toString();
+  if (!!chc) data.value.chc = chc.toString();
 
   const offer = route.query.offer;
 
   await checkout.getProductOffer(route.params.product_id, offer);
   const pdtOffer: ProductOffer = productOffer.value as ProductOffer;
-  data.productOffer = pdtOffer;
+  data.value.productOffer = pdtOffer;
 
   modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
 
   const closeAction = () => {
     window.location.href =
-      data.productOffer.data.thank_you_page || "https://greenn.com.br";
+      data.value.productOffer.data.thank_you_page || "https://greenn.com.br";
   };
 
   modal.setAction(closeAction);
-  modal.setIframe(data.productOffer.data.thank_you_page);
+  modal.setIframe(data.value.productOffer.data.thank_you_page);
 
   const saleId = route.query.s_id;
   if (!!saleId) {
     await checkout.getSale(saleId);
     const sale: Sale = sales.value as Sale;
-    data.productOffer.data.amount = sale.sales[0].amount;
-    data.chc = sale.sales[0].id.toString();
+    data.value.productOffer.data.amount = sale.sales[0].amount;
+    data.value.chc = sale.sales[0].id.toString();
   }
 
   const queryKeys = Object.keys(route.query);
@@ -89,7 +89,7 @@ if (!!route.query.s_id && !route.query.chc) {
           const saleId = query.split("-s_id_")[1];
           await checkout.getSale(saleId);
           const bump: Sale = sales.value as Sale;
-          data.bump = bump;
+          data.value.bump = bump;
         }
       }
     })
@@ -134,7 +134,7 @@ if (!!route.query.s_id && !route.query.chc) {
         :amount="formatMoney(sale.amount)"
         :last="i + 1 == data.sale.sales.length"
         :only-buttons="data.sale.sales.length == 1"
-        :length="data.sale.sales.length"
+        :sales-length="data.sale.sales.length"
         :created-at="sale.created_at.toString()"
         :shipping-amount="formatMoney(sale.shipping_amount)"
         :shipping-selected="sale.shipping_selected"

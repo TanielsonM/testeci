@@ -54,7 +54,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  length: {
+  salesLength: {
     type: Number,
     required: true,
   },
@@ -70,28 +70,32 @@ const copy = async (code: string) => {
   );
 };
 
-let data = {
+const data = ref({
   shippingSelected: JSON.parse(props.shippingSelected) as ShippingSelected,
   showCode: false,
-};
+});
 
 const displayCode = () => {
-  data.showCode = !data.showCode;
+  data.value.showCode = !data.value.showCode;
 };
+
+watch(data, () => {
+  console.log(data.value.showCode);
+});
 </script>
 <template>
   <div v-if="!modal.expiredPix">
-    <p class="paragraph" v-if="(!onlyButtons && !last) || length == 1">
+    <p class="paragraph" v-if="(!onlyButtons && !last) || salesLength == 1">
       {{ $t("pg_obrigado.pix.efetuando") }} GD Marketing e Tecnologia LTDA
       {{ $t("pg_obrigado.pix.ref") }};
     </p>
-    <hr class="my-5" v-if="(!onlyButtons && !last) || length == 1" />
+    <hr class="my-5" v-if="(!onlyButtons && !last) || salesLength == 1" />
     <p class="paragraph" v-if="onlyButtons || !last">
       {{ $t("pg_obrigado.pix.cole") }}
     </p>
     <div class="pix-data my-5 grid grid-cols-3 gap-3">
       <div
-        v-if="length == 1"
+        v-if="salesLength == 1"
         class="col-span-3 flex h-full flex-col items-center md:col-span-1 md:max-w-[200px]"
       >
         <img :src="url" v-if="!modal.expiredPix" />
@@ -115,12 +119,16 @@ const displayCode = () => {
           animation="pulse"
           @click="displayCode"
           class="col-span-2 mt-3 block w-full md:hidden lg:col-span-1 lg:max-w-[180px]"
-          >{{ $t("pg_obrigado.pix.ver_codigo") }}</BaseButton
+          >{{
+            !data.showCode
+              ? $t("pg_obrigado.pix.ver_codigo")
+              : $t("pg_obrigado.pix.fechar_codigo")
+          }}</BaseButton
         >
       </div>
       <div
         class="col-span-3 flex h-full flex-col content-between justify-between"
-        :class="length > 1 ? 'md:col-span-3' : 'md:col-span-2'"
+        :class="salesLength > 1 ? 'md:col-span-3' : 'md:col-span-2'"
         v-if="!modal.expiredPix"
       >
         <div v-if="!last || onlyButtons">
@@ -173,7 +181,9 @@ const displayCode = () => {
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_visualizar_qr")
-                : $t("pg_obrigado.pix.ver_codigo")
+                : !data.showCode
+                ? $t("pg_obrigado.pix.ver_codigo")
+                : $t("pg_obrigado.pix.fechar_codigo")
             }}</BaseButton
           >
           <BaseButton
@@ -191,7 +201,7 @@ const displayCode = () => {
         </div>
       </div>
     </div>
-    <div v-if="data.showCode">
+    <div v-if="data.showCode && salesLength == 1">
       <BaseTextarea
         class="w-full"
         :input-id="`ticket_${id}`"
@@ -199,6 +209,10 @@ const displayCode = () => {
         :model-value="code"
         custom-class="readonly-button"
       />
+    </div>
+
+    <div v-if="data.showCode && salesLength > 1" class="w-full flex items-center justify-center">
+      <img :src="url" />
     </div>
     <hr v-if="!last" />
     <div class="details py-5" v-if="onlyButtons">
