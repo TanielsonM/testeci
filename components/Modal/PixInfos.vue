@@ -201,7 +201,7 @@ const displayCode = () => {
       />
     </div>
     <hr v-if="!last" />
-    <div class="details py-5" v-if="!!shippingAmount">
+    <div class="details py-5" v-if="onlyButtons">
       <h6 class="title">
         {{ $t("pg_obrigado.modal.detalhes_compra") }}
       </h6>
@@ -214,12 +214,12 @@ const displayCode = () => {
         <p>{{ name }}</p>
         <p>{{ amount }}</p>
       </div>
-      <div class="item">
+      <div class="item" v-if="!!shippingAmount">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ shippingAmount }}</p>
       </div>
     </div>
-    <div class="details py-5" v-if="!!shippingAmount">
+    <div class="details py-5" v-if="!!shippingAmount && onlyButtons">
       <h6 class="title">
         {{ $t("pg_obrigado.modal.frete_selecionado") }}
       </h6>
