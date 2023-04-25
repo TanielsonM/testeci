@@ -48,3 +48,28 @@ textarea {
   color: #00af7b;
   fill: #00af7b;
 }
+.card-tag {
+  padding: 8px 16px;
+  color: #fff;
+  background: #3483fa;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 12px;
+  display: block;
+  max-width: 100px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.card-tag::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -8px;
+  left: 8px;
+  width: 0px;
+  height: 0px;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #3483fa;
+}

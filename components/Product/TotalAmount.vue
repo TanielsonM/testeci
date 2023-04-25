@@ -24,6 +24,7 @@ const { getInstallments } = storeToRefs(installmentsStore);
 /* computeds */
 const amountText = computed(() => {
   switch (method.value) {
+    case "TWO_CREDIT_CARDS":
     case "CREDIT_CARD":
       return `${installments.value}x de ${formatMoney(
         getInstallments.value()

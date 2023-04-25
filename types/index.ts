@@ -37,6 +37,14 @@ export type Coupon = {
   name: string;
 };
 
+export type PurcharseCard = {
+  amount: number;
+  card_cvv: string;
+  card_expiration_date: string;
+  card_holder_name: string;
+  card_number: string;
+};
+
 export type GlobalSettings = {
   captcha: boolean;
   antifraud: boolean;
@@ -62,7 +70,7 @@ export type Payment = {
     proposal_id?: number;
     coupon?: string;
   }[];
-  cards?: any;
+  cards?: PurcharseCard[];
 
   name: string;
   email: string;
@@ -102,6 +110,14 @@ export type Payment = {
   gift_message?: string;
   // Affiliate
   affiliate_id?: number;
+};
+
+export type PaymentError = {
+  status: string;
+  code: string;
+  sales: {
+    success: boolean;
+  };
 };
 
 export type Paypal = {
@@ -374,6 +390,7 @@ export type SaleElement = {
   product: SaleProduct;
   upsell: any;
   local_currency: SaleLocalCurrency;
+  success: boolean;
 };
 
 export type SaleLocalCurrency = {

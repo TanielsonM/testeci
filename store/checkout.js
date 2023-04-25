@@ -2,6 +2,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
+import { usePurchaseStore } from "./forms/purchase";
+
+const purchaseStore = usePurchaseStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -101,7 +104,9 @@ export const useCheckoutStore = defineStore("checkout", {
      */
     hasFees: (state) => {
       const product = useProductStore();
-      return state.method === "CREDIT_CARD" ? product.hasFees : false;
+      return ["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(state.method)
+        ? product.hasFees
+        : false;
     },
     isHeaven: (state) => state.is_heaven,
     /**
@@ -434,7 +439,14 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setMethod(method = "") {
       this.method = method;
-      if (this.method !== "CREDIT_CARD") this.setInstallments();
+      if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method))
+        this.setInstallments();
+      else if (this.method === "TWO_CREDIT_CARDS") {
+        purchaseStore.first.amount = this.amount / 2;
+        purchaseStore.second.amount = this.amount / 2;
+      } else {
+        purchaseStore.first.amount = this.amount;
+      }
     },
     setOriginalAmount(amount = 0) {
       this.original_amount = amount;
