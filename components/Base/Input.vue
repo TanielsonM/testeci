@@ -124,40 +124,40 @@ const onInput = (event) => {
         class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
         @click="emit('prepend-click')"
       />
-      <VeeField
-        v-if="!mask"
-        :name="inputName"
-        :id="inputId"
-        :type="type"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :autocomplete="autocomplete"
-        :disabled="disabled"
-        :readonly="readonly"
-        class="h-full w-full bg-checkout outline-none"
-        :class="customClass"
-        :rules="rules"
-        @input="onInput"
-        @blur="blur"
-      />
-      <VeeField
-        v-else
-        :name="inputName"
-        :id="inputId"
-        :type="type"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :autocomplete="autocomplete"
-        :disabled="disabled"
-        :readonly="readonly"
-        class="h-full w-full bg-checkout outline-none"
-        :class="customClass"
-        v-maska
-        :data-maska="mask"
-        :rules="rules"
-        @input="onInput"
-        @blur="blur"
-      />
+      <VeeField :name="inputName" :rules="rules" v-slot="{ field }">
+        <input
+          v-if="!mask"
+          @blur="blur"
+          v-bind="field"
+          :type="type"
+          :id="inputId"
+          :value="modelValue"
+          :class="customClass"
+          :disabled="disabled"
+          :readonly="readonly"
+          :placeholder="placeholder"
+          :autocomplete="autocomplete"
+          class="h-full w-full bg-checkout outline-none"
+          @input="onInput"
+        />
+        <input
+          v-else
+          v-maska
+          v-bind="field"
+          @blur="blur"
+          :type="type"
+          :id="inputId"
+          :value="modelValue"
+          :class="customClass"
+          :disabled="disabled"
+          :readonly="readonly"
+          :placeholder="placeholder"
+          :autocomplete="autocomplete"
+          class="h-full w-full bg-checkout outline-none"
+          :data-maska="mask"
+          @input="onInput"
+        />
+      </VeeField>
       <Icon
         :name="icon"
         v-if="icon && iconPosition === 'end'"
