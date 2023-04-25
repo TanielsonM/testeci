@@ -26,8 +26,6 @@ const data = {
   chc: "",
 };
 
-const redirect = () => {};
-
 if (!!route.query.s_id && !route.query.chc) {
   const saleId = route.query.s_id;
   await checkout.getSale(saleId);
@@ -53,6 +51,7 @@ if (!!route.query.s_id && !route.query.chc) {
   };
 
   modal.setAction(closeAction);
+  modal.setIframe(sale.sales[0].product.thank_you_page);
 } else {
   const chc = route.query.chc;
   if (!!chc) data.chc = chc.toString();
@@ -71,6 +70,7 @@ if (!!route.query.s_id && !route.query.chc) {
   };
 
   modal.setAction(closeAction);
+  modal.setIframe(data.productOffer.data.thank_you_page);
 
   const saleId = route.query.s_id;
   if (!!saleId) {

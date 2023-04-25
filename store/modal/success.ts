@@ -3,6 +3,7 @@ export const useModalStore = defineStore("modal", {
     title: "",
     expiredPix: false,
     closeAtion: () => {},
+    iframe: "https://greenn.com.br/checkout-obrigado",
   }),
   getters: {},
   actions: {
@@ -14,6 +15,9 @@ export const useModalStore = defineStore("modal", {
     },
     setAction(action: () => void) {
       this.closeAtion = action;
+    },
+    setIframe(url?: string) {
+      if (!!url) this.iframe = url;
     },
   },
 });
