@@ -117,7 +117,7 @@ function getImg(type) {
         >
           <Transition name="slide-fade-up" mode="out-in">
             <p
-              class="text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none text-txt-color"
+              class="max-w-[220px] overflow-hidden text-ellipsis whitespace-nowrap text-[13px] font-semibold uppercase leading-none text-txt-color"
               v-if="card_holder_name"
             >
               {{ card_holder_name }}
@@ -149,7 +149,6 @@ function getImg(type) {
         </CreditCardLabel>
       </section>
     </section>
-    <section class="back"></section>
   </section>
 </template>
 
