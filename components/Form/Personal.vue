@@ -92,7 +92,6 @@ const confirmation_mail = ref("");
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       v-model="cellphone"
-      :mask="numberMask.mask"
       :rules="{
         required: true,
         regex: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,

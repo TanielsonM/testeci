@@ -15,9 +15,6 @@ const address = useAddressStore();
 const payment = usePaymentStore();
 const leadStore = useLeadsStore();
 
-// Syncronize Lead
-leadStore.syncLead();
-
 /* Variables */
 const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
@@ -262,5 +259,12 @@ await checkout.init();
       />
       <!-- End side Thumb -->
     </section>
+
+    <!-- Lead section -->
+    <ClientOnly>
+      <LeadsClient />
+    </ClientOnly>
+    <LeadsServer />
+    <!-- End Lead section -->
   </NuxtLayout>
 </template>

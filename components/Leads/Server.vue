@@ -9,9 +9,14 @@ const leadStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
 
 onMounted(() => {
-  const leadTimer = setInterval(() => {
-    leadStore.updateLead();
-  }, 1000 * 240);
+  if (leadStore.uuid) {
+    console.log("test" + leadStore.uuid);
+    leadStore.syncLead();
+
+    const leadTimer = setInterval(() => {
+      leadStore.updateLead();
+    }, 1000 * 240);
+  }
 });
 
 onBeforeUnmount(() => {

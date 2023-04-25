@@ -10,9 +10,7 @@ const checkoutStore = useCheckoutStore();
 
 onMounted(() => {
   if (process.client) {
-    const setUUID = ref(
-      useLocalStorage("uuid", checkoutStore.uuid ?? uuidv4())
-    );
+    const setUUID = useLocalStorage("uuid", uuidv4());
 
     // Set all UUID here to a clean code.
     if (!checkoutStore.uuid) {
@@ -23,8 +21,6 @@ onMounted(() => {
       leadStore.setUUID(setUUID.value);
     }
   }
-
-  console.log("test");
 });
 </script>
-<template></template>
+<template>xx</template>

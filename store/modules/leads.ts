@@ -64,7 +64,6 @@ export const useLeadsStore = defineStore("Leads", {
         .read("/lead", { query })
         .then((response) => {
           if (response) {
-            checkoutStore.setUUID(response.uuid ?? this.uuid);
             this.uuid = response.uuid ?? this.uuid;
 
             this.personal = {
@@ -84,14 +83,6 @@ export const useLeadsStore = defineStore("Leads", {
               complement: response.complement,
               country_code: response.country_code,
             };
-
-            this.payment = {
-              offer_id: response.offer_id,
-              proposal_id: response.proposal_id,
-              product_id: response.product_id,
-              seller_id: response.seller_id,
-              affiliate_id: response.affiliate_id,
-            };
           }
         })
         .catch((error) => {
@@ -99,7 +90,7 @@ export const useLeadsStore = defineStore("Leads", {
         });
 
       if (!lead) {
-        //this.createLead();
+        this.createLead();
       }
     },
     async createLead(): Promise<void> {
