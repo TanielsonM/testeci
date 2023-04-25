@@ -262,9 +262,5 @@ await checkout.init();
       />
       <!-- End side Thumb -->
     </section>
-
-    <ClientOnly>
-      <Leads />
-    </ClientOnly>
   </NuxtLayout>
 </template>

@@ -2,8 +2,10 @@
 import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
+import { useLeadsStore } from "@/store/modules/leads";
 
 /* Variables */
+const leadsStore = useLeadsStore();
 const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
@@ -74,6 +76,8 @@ const numberMask = computed(() => {
 
 const { name, email, cellphone, document } = storeToRefs(personalStore);
 const confirmation_mail = ref("");
+
+leadsStore.personal = {};
 </script>
 
 <template>

@@ -4,7 +4,7 @@ import { useProductStore } from "~/store/product";
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
-    uuid: "",
+    uuid: null,
     global_loading: true,
     global_settings: {
       captcha: "",

@@ -1,3 +1,4 @@
+import { Product } from "./../../types/index";
 import { storeToRefs } from "pinia";
 import { leadsState } from "@/types";
 import { useCheckoutStore } from "../checkout";
@@ -6,13 +7,10 @@ import { useProductStore } from "../product";
 const productStore = useProductStore();
 const checkoutStore = useCheckoutStore();
 
-const { seller_id } = storeToRefs(productStore);
-const { product_id } = storeToRefs(checkoutStore);
-
 export const useLeadsStore = defineStore("Leads", {
   state: (): leadsState => ({
     step: 0,
-    uuid: "",
+    uuid: null,
     personal: {
       name: "",
       email: "",
@@ -27,13 +25,13 @@ export const useLeadsStore = defineStore("Leads", {
       number: "",
       neighborhood: "",
       complement: "",
-      country_code: "",
+      country_code: "BR",
     },
     payment: {
       offer_id: 0,
       proposal_id: 0,
-      product_id: 0,
-      seller_id: 0,
+      product_id: productStore.product_id,
+      seller_id: productStore.seller_id,
       affiliate_id: 0,
     },
     purchase: {
@@ -53,11 +51,16 @@ export const useLeadsStore = defineStore("Leads", {
     },
     async syncLead(): Promise<void> {
       const query = {
-        product_id: 672,
-        uuid: "e6763d33-a2ec-44f0-a305-48bcf471e3f5",
+        uuid: this.uuid,
+        product_id: 673,
       };
 
-      await useApi()
+      console.log({
+        function: "syncLead",
+        data: query,
+      });
+
+      const lead = await useApi()
         .read("/lead", { query })
         .then((response) => {
           if (response) {
@@ -94,42 +97,75 @@ export const useLeadsStore = defineStore("Leads", {
         .catch((error) => {
           return error;
         });
+
+      if (!lead) {
+        //this.createLead();
+      }
     },
-
-    async sendLead(): Promise<void> {
+    async createLead(): Promise<void> {
       const data = {
-        step: this.step,
+        product_id: 673,
+        seller_id: 278,
+        country_code: "BR",
         uuid: this.uuid,
-        id: this.uuid,
+      };
 
+      console.log({
+        function: "createLead",
+        data: data,
+      });
+
+      await useApi()
+        .create("/lead", data)
+        .then((res) => {
+          GreennLogs.logger.info("🟢 Lead criado com sucesso", {
+            name: "Um lead foi adicionado",
+            uuid: this.uuid,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async updateLead(): Promise<void> {
+      const data = {
         product_id: this.payment.product_id,
         proposal_id: this.payment.proposal_id,
         seller_id: this.payment.seller_id,
         affiliate_id: this.payment.affiliate_id,
-
         name: this.personal.name,
         email: this.personal.email,
         cpf: this.personal.document,
-        cellphone: this.personal.cellphone,
-
-        city: this.address.city,
-        state: this.address.state,
         zip_code: this.address.zip_code,
         street: this.address.street,
         number: this.address.number,
         neighborhood: this.address.neighborhood,
-        complement: this.address.city,
+        city: this.address.city,
+        state: this.address.state,
+        step: this.step,
+        uuid: this.uuid,
+        complement: this.address.complement,
+        id: this.uuid,
         country_code: this.address.country_code,
+        status: this.purchase.status,
       };
 
-      const api = useApi();
-      const query = { product_id: this.payment.product_id, uuid: this.uuid };
+      console.log({
+        function: "updateLead",
+        data: data,
+      });
 
-      try {
-        const getLead = await api.read("/lead", { query }).then((res) => {
-          return res.data;
-        });
-      } catch (error) {}
+      if (this.uuid) {
+        try {
+          await useApi()
+            .update("lead/" + this.uuid, { data })
+            .then((res) => {
+              console.log(res);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      }
     },
   },
 });

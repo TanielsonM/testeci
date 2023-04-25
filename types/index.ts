@@ -346,8 +346,8 @@ export type leadsState = {
   payment: {
     offer_id: number;
     proposal_id: number;
-    product_id: number;
-    seller_id: number;
+    product_id: any;
+    seller_id: any;
     affiliate_id: number;
   };
   purchase: {
