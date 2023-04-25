@@ -106,6 +106,7 @@ if (!!route.query.s_id && !route.query.chc) {
         :id="sale.id.toString()"
         :amount="formatMoney(sale.amount)"
         :last="i + 1 == data.sale.sales.length"
+        :index="i"
         :name="sale.product.name"
         :shipping-amount="formatMoney(sale.shipping_amount)"
       />
