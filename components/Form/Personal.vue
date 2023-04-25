@@ -50,15 +50,23 @@ const documentText = computed(() => {
 });
 
 const { name, email, cellphone, document } = storeToRefs(personalStore);
+const confirmation_mail = ref("");
 
 watch([name, email, cellphone, document], (value) => {
   leadsStore.syncPersonal();
 });
+
+function updateLead() {
+  setTimeout(function () {
+    leadsStore.updateLead();
+  }, 10000);
+}
 </script>
 
 <template>
   <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form">
     <BaseInput
+      :blur="updateLead"
       class="col-span-12"
       :label="$t('forms.personal.inputs.name.label')"
       :placeholder="$t('forms.personal.inputs.name.placeholder')"
@@ -70,9 +78,22 @@ watch([name, email, cellphone, document], (value) => {
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
       </template>
     </BaseInput>
-
     <BaseInput
       class="col-span-12"
+      :blur="updateLead"
+      :label="$t('forms.personal.inputs.email.label')"
+      :placeholder="$t('forms.personal.inputs.email.placeholder')"
+      input-name="email-field"
+      v-model="email"
+      rules="required|email"
+    >
+      <template #error>
+        {{ $t("checkout.dados_pessoais.feedbacks.email") }}
+      </template>
+    </BaseInput>
+    <BaseInput
+      class="col-span-12"
+      :blur="updateLead"
       :label="$t('forms.personal.inputs.confirmation_mail.label')"
       :placeholder="$t('forms.personal.inputs.confirmation_mail.placeholder')"
       type="email"
@@ -89,6 +110,7 @@ watch([name, email, cellphone, document], (value) => {
 
     <BaseInput
       class="col-span-12"
+      :blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
@@ -107,6 +129,7 @@ watch([name, email, cellphone, document], (value) => {
 
     <BaseInput
       class="col-span-12"
+      :blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"

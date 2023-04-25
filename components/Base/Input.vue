@@ -11,6 +11,10 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  blur: {
+    required: false,
+    default: () => "",
+  },
   label: {
     type: String,
     required: false,
@@ -134,6 +138,7 @@ const onInput = (event) => {
         :class="customClass"
         :rules="rules"
         @input="onInput"
+        @blur="blur"
       />
       <VeeField
         v-else
@@ -151,6 +156,7 @@ const onInput = (event) => {
         :data-maska="mask"
         :rules="rules"
         @input="onInput"
+        @blur="blur"
       />
       <Icon
         :name="icon"
