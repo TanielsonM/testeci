@@ -1,4 +1,7 @@
 <script setup>
+import { useModalStore } from "~~/store/modal/success";
+const modal = useModalStore();
+
 const props = defineProps({
   offer: {
     type: String,
@@ -63,7 +66,7 @@ const props = defineProps({
   <Modal>
     <ModalSuccess />
   </Modal>
-  <iframe src="https://greenn.com.br"></iframe>
+  <iframe :src="modal.iframe"></iframe>
 </template>
 <style>
 .body {
