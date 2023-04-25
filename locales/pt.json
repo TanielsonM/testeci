@@ -367,7 +367,8 @@
       "prazo_expirado": "Prazo para o pagamento expirado!",
       "expirado_1": "Estamos verificando o seu pagamento, assim que recebermos a confirmação do mesmo, você receberá um e-mail com mais informações.",
       "expirado_2": "Caso ainda não tenha feito o pagamento, clique no botão abaixo para gerar novamente.",
-      "gerar_novo": "Quero gerar um novo código"
+      "gerar_novo": "Quero gerar um novo código",
+      "pix_expirado": "Seu código de pagamento via Pix expirou, veja maiores detalhes abaixo"
     },
     "modal": {
       "text_header": {

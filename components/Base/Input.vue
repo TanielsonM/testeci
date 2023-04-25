@@ -1,5 +1,5 @@
 <script setup>
-import { vMaska } from "maska"
+import { vMaska } from "maska";
 const props = defineProps({
   type: {
     type: String,
@@ -62,6 +62,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  readonly: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   customClass: {
     type: String,
     required: false,
@@ -94,20 +99,23 @@ const onInput = (event) => {
 </script>
 
 <template>
-  <label
-    for="input"
-    class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
-    :data-anima="animation"
-  >
-    {{ label }}
+  <div class="default-input w-full" :data-anima="animation">
+    <label
+      v-if="!!label"
+      for="input"
+      class="text-txt-color flex w-full flex-col items-start gap-2 font-semibold"
+    >
+      {{ label }}
+    </label>
     <section
-      class="w-full items-center gap-5 rounded border border-bd-color bg-checkout p-4 transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
+      class="border-bd-color bg-checkout focus-within:border-main-color hover:border-main-color focus:border-main-color w-full items-center gap-5 rounded border p-4 transition-colors duration-300"
+      :class="readonly ? customClass : null"
     >
       <Icon
         :name="icon"
         v-if="icon && iconPosition === 'start'"
         size="24"
-        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
+        class="text-txt-color hover:text-main-color focus:text-main-color cursor-pointer"
         @click="emit('prepend-click')"
       />
       <VeeField
@@ -119,7 +127,8 @@ const onInput = (event) => {
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         :disabled="disabled"
-        class="h-full w-full bg-checkout outline-none"
+        :readonly="readonly"
+        class="bg-checkout h-full w-full outline-none"
         :class="customClass"
         :rules="rules"
         @input="onInput"
@@ -133,7 +142,8 @@ const onInput = (event) => {
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         :disabled="disabled"
-        class="h-full w-full bg-checkout outline-none"
+        :readonly="readonly"
+        class="bg-checkout h-full w-full outline-none"
         :class="customClass"
         v-maska
         :data-maska="mask"
@@ -144,16 +154,18 @@ const onInput = (event) => {
         :name="icon"
         v-if="icon && iconPosition === 'end'"
         size="24"
-        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
+        class="text-txt-color hover:text-main-color focus:text-main-color cursor-pointer"
         @click="emit('append-click')"
       />
     </section>
+
     <small data-anima="top" v-if="!error">{{ hint }}</small>
     <small class="text-red-400" v-if="error">
       <slot name="error">
         {{ error }}
       </slot>
     </small>
+
     <VeeErrorMessage
       v-else-if="!!rules"
       as="p"
@@ -167,5 +179,14 @@ const onInput = (event) => {
         </slot>
       </small>
     </VeeErrorMessage>
-  </label>
+  </div>
 </template>
+<style lang="scss">
+.readonly-button {
+  background: #f0f0f0 !important;
+  border: none !important;
+  color: #000 !important;
+  font-weight: 400 !important;
+  font-size: 0.95rem;
+}
+</style>
