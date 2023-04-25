@@ -103,19 +103,19 @@ const onInput = (event) => {
     <label
       v-if="!!label"
       for="input"
-      class="text-txt-color flex w-full flex-col items-start gap-2 font-semibold"
+      class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
     >
       {{ label }}
     </label>
     <section
-      class="border-bd-color bg-checkout focus-within:border-main-color hover:border-main-color focus:border-main-color w-full items-center gap-5 rounded border p-4 transition-colors duration-300"
+      class="w-full items-center gap-5 rounded border border-bd-color bg-checkout p-4 transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
       :class="readonly ? customClass : null"
     >
       <Icon
         :name="icon"
         v-if="icon && iconPosition === 'start'"
         size="24"
-        class="text-txt-color hover:text-main-color focus:text-main-color cursor-pointer"
+        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
         @click="emit('prepend-click')"
       />
       <VeeField
@@ -128,7 +128,7 @@ const onInput = (event) => {
         :autocomplete="autocomplete"
         :disabled="disabled"
         :readonly="readonly"
-        class="bg-checkout h-full w-full outline-none"
+        class="h-full w-full bg-checkout outline-none"
         :class="customClass"
         :rules="rules"
         @input="onInput"
@@ -143,7 +143,7 @@ const onInput = (event) => {
         :autocomplete="autocomplete"
         :disabled="disabled"
         :readonly="readonly"
-        class="bg-checkout h-full w-full outline-none"
+        class="h-full w-full bg-checkout outline-none"
         :class="customClass"
         v-maska
         :data-maska="mask"
@@ -154,7 +154,7 @@ const onInput = (event) => {
         :name="icon"
         v-if="icon && iconPosition === 'end'"
         size="24"
-        class="text-txt-color hover:text-main-color focus:text-main-color cursor-pointer"
+        class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
         @click="emit('append-click')"
       />
     </section>
@@ -182,6 +182,16 @@ const onInput = (event) => {
   </div>
 </template>
 <style lang="scss">
+.default-input {
+  label {
+    padding-bottom: 0.5rem;
+  }
+
+  section {
+    padding-bottom: .8rem;
+  }
+}
+
 .readonly-button {
   background: #f0f0f0 !important;
   border: none !important;
