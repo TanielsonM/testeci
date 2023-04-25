@@ -156,6 +156,14 @@ export const usePaymentStore = defineStore("Payment", {
         data.cards = cards;
       }
 
+      // Registrando log boleto
+      let dataLog = Object.assign({}, data);
+
+      GreennLogs.logger.info("🟡 Dados da Compra", {
+        name: `Enviando objeto da compra [${method.value}]`,
+        objetoCompra: JSON.stringify(dataLog),
+      });
+
       // Payment request
       await useApi()
         .create("/payment", data)
@@ -260,9 +268,9 @@ export const usePaymentStore = defineStore("Payment", {
           error_message = t("error.EXPIRED_RATE_TOKEN");
           break;
         case "GENERIC":
-          error_message = t("error.GENERIC");
-        // this.resetCheckout("ALL");
         default:
+          error_message = t("error.GENERIC");
+          // this.resetCheckout("ALL");
           break;
       }
 
