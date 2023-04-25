@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch } from "vue";
 import { useModalStore } from "~~/store/modal/success";
 import { ShippingSelected } from "@/types";
 const modal = useModalStore();
