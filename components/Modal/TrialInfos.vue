@@ -33,10 +33,9 @@ const props = defineProps({
   },
 });
 
-let data = {
+const data = ref({
   bump: props.bump as Sale,
-};
-
+});
 </script>
 <template>
   <h6 class="subtitle">

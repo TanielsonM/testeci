@@ -105,7 +105,7 @@ const months = [
       </p>
     </BaseButton>
   </section>
-  <section class="flex flex-wrap xl:flex-nowrap justify-between gap-5">
+  <section class="flex flex-wrap xl:flex-nowrap justify-center xl:justify-between gap-5">
     <!-- First credit card -->
     <form class="grid w-full grid-cols-12 gap-3">
       <span

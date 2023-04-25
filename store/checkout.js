@@ -546,7 +546,9 @@ export const useCheckoutStore = defineStore("checkout", {
       if (!!productId) {
         try {
           const productOffer = await useApi().read(
-            `/product/${productId}/offer/${offer}`
+            !!offer
+              ? `/product/${productId}/offer/${offer}`
+              : `/product/${productId}`
           );
           if (!!productOffer) this.productOffer = productOffer;
         } catch (e) {

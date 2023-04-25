@@ -24,7 +24,7 @@ const amountText = computed(() => {
     case "CREDIT_CARD":
       return `${installments.value}x de ${formatMoney(
         getInstallments.value()
-      )} ${hasFees.value ? "(Sem juros)" : ""}`;
+      )} ${hasFees.value ? "" : "(Sem juros)"}`;
     default:
       return `${formatMoney(getInstallments.value())}`;
   }
