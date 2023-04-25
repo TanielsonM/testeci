@@ -65,7 +65,7 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
       title: state.custom_checkout?.ob_title,
     }),
     trial_info: (state) => state.custom_checkout.trial_info ?? null,
-    trial_position: (state) => state?.custom_checkout?.trial_position ?? null,
+    trial_position: (state) => state?.custom_checkout?.trial_position ?? "top",
     purchase_text: (state) => state?.custom_checkout?.button_text,
   },
   actions: {
