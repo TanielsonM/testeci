@@ -97,7 +97,7 @@ const showInstallments = computed(() => {
     <ClientOnly>
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
-        class="w-full md:w-1/2"
+        class="w-full lg:w-1/2"
         v-model="installments"
         v-if="showInstallments"
       >

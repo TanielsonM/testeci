@@ -398,7 +398,9 @@
       "compra_parcelada": "Purchase in installments in",
       "detalhes_compra": "Purchase Details",
       "codigo_transacao": "Transaction Code",
-      "id_assinatura": "Subscription ID"
+      "id_assinatura": "Subscription ID",
+      "frete": "Shipping",
+      "frete_selecionado": "Chosen shipping"
     }
   },
   "locales": {

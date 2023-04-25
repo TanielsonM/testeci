@@ -66,6 +66,7 @@ export const useCheckoutStore = defineStore("checkout", {
     checkoutPayment: null,
 
     sales: {},
+    productOffer: {},
   }),
   persist: {
     paths: ["uuid"],
@@ -538,6 +539,19 @@ export const useCheckoutStore = defineStore("checkout", {
         } catch (error) {
           this.setError(error.message);
           throw error;
+        }
+      }
+    },
+    async getProductOffer(productId, offer) {
+      if (!!productId) {
+        try {
+          const productOffer = await useApi().read(
+            `/product/${productId}/offer/${offer}`
+          );
+          if (!!productOffer) this.productOffer = productOffer;
+        } catch (e) {
+          this.setError(e.message);
+          throw e;
         }
       }
     },

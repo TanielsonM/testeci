@@ -6,7 +6,7 @@ const props = defineProps({
   },
   type: {
     type: String,
-    default: "button",
+    default: "default",
   },
   color: {
     type: String,
@@ -39,11 +39,14 @@ const colorClasses = computed(() => {
     success: "border-transparent text-white bg-green-500",
     danger: "border-transparent text-white bg-red-500",
     info: "border-transparent text-[#3483fa] bg-[rgba(65,137,230,.15)]",
+    blue: "border-transparent text-white bg-[#3483fa]",
+    bordered: "border-[#3483fa] text-[#3483fa] bg-transparent",
   };
   return colors[props.color] || colors.primary;
 });
 const sizeClasses = computed(() => {
   const sizes = {
+    vsm: "sm:px-4 sm:py-2 small leading-5",
     sm: "sm:px-4 sm:py-2 text-sm leading-5",
     md: "sm:px-5 sm:py-3 text-base leading-6",
     lg: "sm:px-6 sm:py-4 text-lg leading-7",
@@ -76,6 +79,10 @@ const sizeClasses = computed(() => {
     background: #f7f7f7 !important;
     color: #333 !important;
     opacity: 0.4 !important;
+  }
+
+  &.small {
+    font-size: 13px;
   }
 }
 </style>
