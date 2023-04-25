@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as Toast from "vue-toastification";
 const { t } = useI18n();
-defineProps({
+const props = defineProps({
   name: {
     type: String,
     required: true,
@@ -26,7 +26,16 @@ defineProps({
     default: "",
     required: true,
   },
+  shippingAmount: {
+    type: String,
+    default: null,
+    required: false,
+  },
   last: {
+    type: Boolean,
+    default: false,
+  },
+  onlyCode: {
     type: Boolean,
     default: false,
   },
@@ -43,32 +52,40 @@ const copy = (id: string) => {
 
   const toast = Toast.useToast();
   toast.info(
-    `${t("pg_obrigado.modal.copiado")}\n${t("pg_obrigado.modal.codigo_copiado")}`
+    `${t("pg_obrigado.modal.copiado")}\n${t(
+      "pg_obrigado.modal.codigo_copiado"
+    )}`
   );
 };
 </script>
 <template>
-  <h6 class="subtitle">
-    {{ $t("pg_obrigado.modal.agradecemos") }}
-  </h6>
-  <p class="paragraph">
-    {{ $t("pg_obrigado.modal.vc_adquiriu") }}
-    {{ name ?? "produto" }}
-  </p>
-  <p class="paragraph">
-    {{ $t("pg_obrigado.modal.detalhes_email") }}
-  </p>
-  <div class="details py-5">
-    <h6 class="title" v-if="!last">
-      {{ $t("pg_obrigado.modal.detalhes_compra") }}
+  <div v-if="!onlyCode">
+    <h6 class="subtitle">
+      {{ $t("pg_obrigado.modal.agradecemos") }}
     </h6>
-    <div class="item">
-      <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
-      <p>#{{ id }}</p>
-    </div>
-    <div class="item">
-      <p>Venda</p>
-      <p>{{ amount }}</p>
+    <p class="paragraph">
+      {{ $t("pg_obrigado.modal.vc_adquiriu") }}
+      {{ name ?? "produto" }}
+    </p>
+    <p class="paragraph">
+      {{ $t("pg_obrigado.modal.detalhes_email") }}
+    </p>
+    <div class="details py-5">
+      <h6 class="title" v-if="!last">
+        {{ $t("pg_obrigado.modal.detalhes_compra") }}
+      </h6>
+      <div class="item">
+        <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
+        <p>#{{ id }}</p>
+      </div>
+      <div class="item">
+        <p>{{ name }}</p>
+        <p>{{ amount }}</p>
+      </div>
+      <div class="item" v-if="!!shippingAmount">
+        <p>{{ $t("pg_obrigado.modal.frete") }}</p>
+        <p>{{ shippingAmount }}</p>
+      </div>
     </div>
   </div>
 
@@ -100,7 +117,7 @@ const copy = (id: string) => {
       >{{ $t("pg_obrigado.modal.imprimir_boleto") }}</BaseButton
     >
   </div>
-  <hr v-if="!last" class="my-5" />
+  <hr v-if="!last && !onlyCode" class="my-5" />
 </template>
 <style lang="scss">
 .item {

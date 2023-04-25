@@ -399,7 +399,9 @@
       "compra_parcelada": "Compra parcelada em ",
       "detalhes_compra": "Detalhes da compra",
       "codigo_transacao": "Código da Transação",
-      "id_assinatura": "ID da Assinatura"
+      "id_assinatura": "ID da Assinatura",
+      "frete": "Frete",
+      "frete_selecionado": "Frete escolhido"
     }
   },
   "locales": {

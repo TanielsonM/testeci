@@ -1,8 +1,15 @@
 <script setup lang="ts">
+import { watch } from "vue";
 import { useModalStore } from "~~/store/modal/success";
+import { ShippingSelected } from "@/types";
 const modal = useModalStore();
 
-defineProps({
+const props = defineProps({
+  name: {
+    type: String,
+    default: "",
+    required: true,
+  },
   code: {
     type: String,
     default: "",
@@ -23,6 +30,16 @@ defineProps({
     default: "",
     required: true,
   },
+  shippingAmount: {
+    type: String,
+    default: null,
+    required: false,
+  },
+  shippingSelected: {
+    type: String,
+    default: null,
+    required: false,
+  },
   last: {
     type: Boolean,
     default: false,
@@ -41,13 +58,26 @@ defineProps({
   },
 });
 
-const openTicket = (url: any) => {
-  window.open(url);
-};
-
 const copy = async (code: string) => {
   await navigator.clipboard.writeText(code);
 };
+
+let data = {
+  shippingSelected: JSON.parse(props.shippingSelected) as ShippingSelected,
+  showCode: false,
+};
+
+const displayCode = () => {
+  data.showCode = !data.showCode
+  console.log(data.showCode);
+};
+
+watch(
+  () => data.showCode,
+  (showCode) => {
+    console.log(showCode);
+  }
+);
 </script>
 <template>
   <div v-if="!modal.expiredPix">
@@ -75,7 +105,7 @@ const copy = async (code: string) => {
           size="md"
           animation="pulse"
           class="col-span-2 mt-3 w-full lg:col-span-1 lg:max-w-[180px]"
-          @click="($event) => copy(code)"
+          @click="copy(code)"
           >{{ $t("pg_obrigado.pix.btn_text") }}</BaseButton
         >
         <BaseButton
@@ -83,6 +113,7 @@ const copy = async (code: string) => {
           color="bordered"
           size="md"
           animation="pulse"
+          @click="displayCode"
           class="col-span-2 mt-3 block w-full md:hidden lg:col-span-1 lg:max-w-[180px]"
           >{{ $t("pg_obrigado.pix.ver_codigo") }}</BaseButton
         >
@@ -119,8 +150,12 @@ const copy = async (code: string) => {
             <p>#{{ id }}</p>
           </div>
           <div class="item">
-            <p>Venda</p>
+            <p>{{ name }}</p>
             <p>{{ amount }}</p>
+          </div>
+          <div class="item" v-if="!!shippingAmount">
+            <p>{{ $t("pg_obrigado.modal.frete") }}</p>
+            <p>{{ shippingAmount }}</p>
           </div>
         </div>
 
@@ -134,6 +169,7 @@ const copy = async (code: string) => {
             :size="!onlyButtons ? 'vsm' : 'md'"
             animation="pulse"
             class="col-span-2 hidden md:col-span-1 md:block"
+            @click="($event) => displayCode()"
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_visualizar_qr")
@@ -155,9 +191,62 @@ const copy = async (code: string) => {
         </div>
       </div>
     </div>
+    <div v-if="data.showCode">oi</div>
     <hr v-if="!last" />
+    <div class="details py-5" v-if="!!shippingAmount">
+      <h6 class="title">
+        {{ $t("pg_obrigado.modal.detalhes_compra") }}
+      </h6>
+
+      <div class="item">
+        <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
+        <p>#{{ id }}</p>
+      </div>
+      <div class="item">
+        <p>{{ name }}</p>
+        <p>{{ amount }}</p>
+      </div>
+      <div class="item">
+        <p>{{ $t("pg_obrigado.modal.frete") }}</p>
+        <p>{{ shippingAmount }}</p>
+      </div>
+    </div>
+    <div class="details py-5" v-if="!!shippingAmount">
+      <h6 class="title">
+        {{ $t("pg_obrigado.modal.frete_selecionado") }}
+      </h6>
+
+      <div class="item frete">
+        <div class="grid grid-cols-12 items-center gap-3">
+          <div class="col-span-4">
+            <img
+              :src="data.shippingSelected.frete.company.picture"
+              width="80"
+            />
+          </div>
+          <div class="col-span-4">
+            {{ data.shippingSelected.frete.name }}
+          </div>
+          <div class="col-span-4">
+            {{ data.shippingSelected.frete.delivery_range.min }}
+            {{ $t("checkout.address.at") }}
+            {{ data.shippingSelected.frete.delivery_range.max }}
+            {{ $t("checkout.address.working_days") }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <ModalPixExpired
-    v-if="modal.expiredPix"
-  />
+  <ModalPixExpired v-if="modal.expiredPix" />
 </template>
+<style lang="scss">
+.frete {
+  background: #f7f7f7;
+  border-radius: 5px;
+  padding: 15px;
+
+  div {
+    font-size: 0.93rem;
+  }
+}
+</style>

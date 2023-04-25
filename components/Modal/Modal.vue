@@ -1,7 +1,7 @@
 <script setup>
 import { useModalStore } from "~~/store/modal/success";
-
 const modal = useModalStore();
+
 </script>
 <template>
   <div class="default-modal">
@@ -14,7 +14,7 @@ const modal = useModalStore();
           <h2 class="title">
             {{ modal.title }}
           </h2>
-          <button class="close"></button>
+          <button @click="modal.closeAtion" class="close"></button>
         </header>
         <slot />
       </div>

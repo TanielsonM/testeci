@@ -2,6 +2,7 @@ export const useModalStore = defineStore("modal", {
   state: () => ({
     title: "",
     expiredPix: false,
+    closeAtion: () => {},
   }),
   getters: {},
   actions: {
@@ -10,6 +11,9 @@ export const useModalStore = defineStore("modal", {
     },
     setExpiredPix(isExpired: boolean) {
       this.expiredPix = isExpired;
+    },
+    setAction(action: () => void) {
+      this.closeAtion = action;
     },
   },
 });

@@ -631,3 +631,61 @@ export type Meta = {
   updated_at: Date;
   proposal_id: any;
 };
+
+export type ShippingSelected = {
+  address: Address;
+  service_name: string;
+  service_id: number;
+  amount: number;
+  old_amount: number;
+  frete: Frete;
+  frete_anterior: number;
+};
+
+export type Frete = {
+  id: number;
+  name: string;
+  price: string;
+  custom_price: string;
+  discount: string;
+  currency: string;
+  delivery_time: number;
+  delivery_range: DeliveryRange;
+  custom_delivery_time: number;
+  custom_delivery_range: DeliveryRange;
+  packages: Package[];
+  additional_services: AdditionalServices;
+  company: CompanyShipping;
+};
+
+export type AdditionalServices = {
+  receipt: boolean;
+  own_hand: boolean;
+  collect: boolean;
+};
+
+export type CompanyShipping = {
+  id: number;
+  name: string;
+  picture: string;
+};
+
+export type DeliveryRange = {
+  min: number;
+  max: number;
+};
+
+export type Package = {
+  price: string;
+  discount: string;
+  format: string;
+  weight: string;
+  insurance_value: string;
+  dimensions: Dimensions;
+};
+
+export type Dimensions = {
+  height: number;
+  width: number;
+  length: number;
+};

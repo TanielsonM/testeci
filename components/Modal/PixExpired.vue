@@ -3,6 +3,10 @@ import { useModalStore } from "~~/store/modal/success";
 import timer from "~~/assets/modal/timer.svg";
 
 const modal = useModalStore();
+const newCode = () => {
+  let path = window.location.href.replace("obrigado", "");
+  window.location.href = path;
+};
 </script>
 <template>
   <p class="paragraph">
@@ -21,7 +25,12 @@ const modal = useModalStore();
       <p class="paragraph py-2">{{ $t("pg_obrigado.pix.expirado_1") }}</p>
       <p class="paragraph py-2">{{ $t("pg_obrigado.pix.expirado_2") }}</p>
 
-      <BaseButton color="blue" size="vsm" class="my-5 md:max-w-[300px]">
+      <BaseButton
+        @click="newCode"
+        color="blue"
+        size="vsm"
+        class="my-5 md:max-w-[300px]"
+      >
         {{ $t("pg_obrigado.pix.gerar_novo") }}
       </BaseButton>
     </div>
@@ -57,8 +66,8 @@ const modal = useModalStore();
 }
 .paragraph {
   &.bold {
-    font-size: .8rem!important;
-    color: #3483fa!important;
+    font-size: 0.8rem !important;
+    color: #3483fa !important;
   }
 }
 </style>

@@ -22,10 +22,13 @@ defineProps({
 const data = {
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
+  bump: {} as Sale,
   chc: "",
 };
 
-if (!!route.query.s_id) {
+const redirect = () => {};
+
+if (!!route.query.s_id && !route.query.chc) {
   const saleId = route.query.s_id;
   await checkout.getSale(saleId);
   const sale: Sale = sales.value as Sale;
@@ -38,10 +41,18 @@ if (!!route.query.s_id) {
     case "PIX":
       modal.setTitle(t("pg_obrigado.pix.text_header.info_completa"));
       break;
+    case "PAYPAL":
     case "CREDIT_CARD":
       modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
       break;
   }
+
+  const closeAction = () => {
+    window.location.href =
+      sale.sales[0].product.thank_you_page || "https://greenn.com.br";
+  };
+
+  modal.setAction(closeAction);
 } else {
   const chc = route.query.chc;
   if (!!chc) data.chc = chc.toString();
@@ -53,7 +64,36 @@ if (!!route.query.s_id) {
   data.productOffer = pdtOffer;
 
   modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
-  console.log(data.productOffer);
+
+  const closeAction = () => {
+    window.location.href =
+      data.productOffer.data.thank_you_page || "https://greenn.com.br";
+  };
+
+  modal.setAction(closeAction);
+
+  const saleId = route.query.s_id;
+  if (!!saleId) {
+    await checkout.getSale(saleId);
+    const sale: Sale = sales.value as Sale;
+    data.productOffer.data.amount = sale.sales[0].amount;
+    data.chc = sale.sales[0].id.toString();
+  }
+
+  const queryKeys = Object.keys(route.query);
+  await Promise.all(
+    queryKeys.map(async (x) => {
+      if (x.substr(0, 4) === "b_id") {
+        if (route.query[x]?.includes("-s_id_")) {
+          const query = route.query[x] as String;
+          const saleId = query.split("-s_id_")[1];
+          await checkout.getSale(saleId);
+          const bump: Sale = sales.value as Sale;
+          data.bump = bump;
+        }
+      }
+    })
+  );
 }
 </script>
 <template>
@@ -67,6 +107,7 @@ if (!!route.query.s_id) {
         :amount="formatMoney(sale.amount)"
         :last="i + 1 == data.sale.sales.length"
         :name="sale.product.name"
+        :shipping-amount="formatMoney(sale.shipping_amount)"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
@@ -76,6 +117,7 @@ if (!!route.query.s_id) {
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
+            @click="modal.closeAtion"
             >{{ $t("pg_obrigado.modal.entendido") }}</BaseButton
           >
         </div>
@@ -84,6 +126,7 @@ if (!!route.query.s_id) {
     <div class="container" v-if="data.sale.sales[0].method == 'PIX'">
       <ModalPixInfos
         v-for="(sale, i) in data.sale.sales"
+        :name="sale.product.name"
         :code="sale.qrcode!"
         :url="sale.imgQrcode!"
         :id="sale.id.toString()"
@@ -92,14 +135,23 @@ if (!!route.query.s_id) {
         :only-buttons="data.sale.sales.length == 1"
         :length="data.sale.sales.length"
         :created-at="sale.created_at.toString()"
+        :shipping-amount="formatMoney(sale.shipping_amount)"
+        :shipping-selected="sale.shipping_selected"
       />
     </div>
-    <div class="container" v-if="data.sale.sales[0].method == 'CREDIT_CARD'">
+    <div
+      class="container"
+      v-if="
+        data.sale.sales[0].method == 'CREDIT_CARD' ||
+        data.sale.sales[0].method == 'PAYPAL'
+      "
+    >
       <ModalCardInfos
         :id="data.sale.sales[0].id.toString()"
         :amount="formatMoney(data.sale.sales[0].amount)"
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
+        :shipping-amount="formatMoney(data.sale.sales[0].shipping_amount)"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
@@ -109,19 +161,24 @@ if (!!route.query.s_id) {
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
+            @click="modal.closeAtion"
             >{{ $t("pg_obrigado.modal.entendido") }}</BaseButton
           >
         </div>
       </div>
     </div>
   </div>
-  <div v-if="!!data.productOffer">
+  <div v-if="!!data.productOffer?.data?.name">
     <div class="container">
       <ModalTrialInfos
         :name="data.productOffer.data.name"
         :amount="formatMoney(data.productOffer.data.amount)"
+        :shipping-amount="
+          formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
+        "
         :id="data.chc"
         :period="data.productOffer.data.trial"
+        :bump="data.bump"
       />
     </div>
     <div class="actions mt-12 flex content-end justify-end">
@@ -131,6 +188,7 @@ if (!!route.query.s_id) {
           size="md"
           animation="pulse"
           class="col-span-12 lg:col-span-4"
+          @click="modal.closeAtion"
           >{{ $t("pg_obrigado.modal.entendido") }}</BaseButton
         >
       </div>

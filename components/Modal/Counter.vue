@@ -42,7 +42,6 @@ onMounted(() => {
       modal.setTitle(t("pg_obrigado.pix.prazo_expirado"));
       modal.setExpiredPix(true);
     }
-    console.log(remainingTime.value );
   }, 1000);
 });
 </script>

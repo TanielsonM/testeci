@@ -61,7 +61,7 @@ const props = defineProps({
     <Meta name="description" :content="'teste'" />
   </Head>
   <Modal>
-    <ModalSuccess type="ticket"/>
+    <ModalSuccess />
   </Modal>
   <iframe src="https://greenn.com.br"></iframe>
 </template>

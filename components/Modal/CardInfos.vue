@@ -14,6 +14,11 @@ defineProps({
     default: "",
     required: true,
   },
+  shippingAmount: {
+    type: String,
+    default: null,
+    required: false,
+  },
   installments: {
     type: Number,
     required: false,
@@ -31,7 +36,7 @@ defineProps({
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.detalhes_email") }}
   </p>
-  <p class="paragraph py-4" v-if="!!installments">
+  <p class="paragraph py-4" v-if="!!installments && installments > 1">
     ✨ {{ $t("pg_obrigado.modal.compra_parcelada") }} {{ installments }}x
   </p>
   <div class="details">
@@ -51,6 +56,10 @@ defineProps({
         </div>
       </div>
       <p>{{ amount }}</p>
+    </div>
+    <div class="item" v-if="!!shippingAmount">
+      <p>{{ $t("pg_obrigado.modal.frete") }}</p>
+      <p>{{ shippingAmount }}</p>
     </div>
   </div>
 </template>
