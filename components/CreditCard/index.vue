@@ -72,7 +72,7 @@ function getImg(type) {
 </script>
 
 <template>
-  <section class="flex w-full justify-start">
+  <section class="flex w-full max-w-[430px] justify-start">
     <section
       class="card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5"
     >
