@@ -69,15 +69,7 @@ let data = {
 
 const displayCode = () => {
   data.showCode = !data.showCode
-  console.log(data.showCode);
 };
-
-watch(
-  () => data.showCode,
-  (showCode) => {
-    console.log(showCode);
-  }
-);
 </script>
 <template>
   <div v-if="!modal.expiredPix">
