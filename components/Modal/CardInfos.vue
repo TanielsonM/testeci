@@ -49,7 +49,7 @@ defineProps({
     </div>
     <div class="item">
       <div class="flex items-start">
-        <div class="icon icon-success"></div>
+        <div class="check-icon icon-success"></div>
         <div class="transaction">
           <p>{{ name }}</p>
           <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
@@ -64,7 +64,7 @@ defineProps({
   </div>
 </template>
 <style lang="scss">
-.icon {
+.check-icon {
   width: 1rem;
   height: 1rem;
   margin-right: 10px;
