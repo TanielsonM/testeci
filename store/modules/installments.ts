@@ -44,7 +44,7 @@ export const useInstallmentsStore = defineStore("installments", {
             value -= coupon.value.amount;
           }
           // Cliente não paga juros
-          if (!item.no_interest_installments) {
+          if (!!item.no_interest_installments) {
             amount += value;
           }
           // Cliente paga juros

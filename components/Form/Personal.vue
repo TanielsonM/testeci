@@ -44,40 +44,14 @@ const documentText = computed(() => {
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
-        documentMask: ["###.###.###-##", "##.###.###/####-##"],
-      };
-  }
-});
-
-const numberMask = computed(() => {
-  switch (currentCountry.value) {
-    case "AR":
-      return {
-        mask: ["+54 # ### ####"],
-      };
-    case "MX":
-      return {
-        mask: ["+52 ###-###-####"],
-      };
-    case "UY":
-      return {
-        mask: ["+598 ####-####"],
-      };
-    case "CL":
-      return {
-        mask: ["+56 (##) ###-####"],
-      };
-    default:
-      return {
-        mask: ["+55 (##) ####-####", "+55 (##) #####-####"],
+        mask:
+          document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
       };
   }
 });
 
 const { name, email, cellphone, document } = storeToRefs(personalStore);
 const confirmation_mail = ref("");
-
-leadsStore.personal = {};
 </script>
 
 <template>

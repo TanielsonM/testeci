@@ -27,7 +27,7 @@ export const useProductStore = defineStore("product", {
         );
       };
     },
-    hasFees: (state) => !!state.product.no_interest_installments, // 0 = sem juros | 1 = com juros
+    hasFees: (state) => !state.product.no_interest_installments, // 0 = sem juros | 1 = com juros
     isPhysicalProduct: (state) => state.product.format == "PHYSICALPRODUCT",
     productType: (state) => state.product.type,
     hasFixedInstallments: (state) => state.product.fixed_installments ?? null,

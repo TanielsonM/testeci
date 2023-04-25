@@ -37,19 +37,19 @@ export type Coupon = {
   name: string;
 };
 
+export type PurcharseCard = {
+  amount: number;
+  card_cvv: string;
+  card_expiration_date: string;
+  card_holder_name: string;
+  card_number: string;
+};
+
 export type GlobalSettings = {
   captcha: boolean;
   antifraud: boolean;
   monthly_interest: number;
   country: string;
-};
-
-export type Image = {
-  id: number;
-  product_id: number;
-  path: string;
-  created_at: Date;
-  updated_at: Date;
 };
 
 export type Installment = {
@@ -70,7 +70,7 @@ export type Payment = {
     proposal_id?: number;
     coupon?: string;
   }[];
-  cards?: any;
+  cards?: PurcharseCard[];
 
   name: string;
   email: string;
@@ -85,7 +85,7 @@ export type Payment = {
   /* Optionals */
   client_statistic?: any[];
   // Address
-  zipcode?: string | null;
+  zipcode?: string | any;
   street?: string;
   number?: number;
   complement?: string;
@@ -112,6 +112,14 @@ export type Payment = {
   affiliate_id?: number;
 };
 
+export type PaymentError = {
+  status: string;
+  code: string;
+  sales: {
+    success: boolean;
+  };
+};
+
 export type Paypal = {
   amount: number;
   currency: string;
@@ -131,10 +139,10 @@ export type Pixel = {
   token: string;
   api: number;
   optimization: number;
-  domain_id: number | null;
+  domain_id: number | any;
   confirmed_only: number;
   user_id: number;
-  label: null;
+  label: any;
   amount: number;
   host: string;
 };
@@ -147,7 +155,7 @@ export type Product = {
   stock: number;
   type: string;
   amount: number;
-  period: null;
+  period: any;
   thank_you_page: string;
   affiliation: number;
   comission: number;
@@ -157,32 +165,32 @@ export type Product = {
   slug: string;
   method: string;
   warranty: number;
-  url_callback: null;
-  trial: null;
+  url_callback: any;
+  trial: any;
   is_checkout_address: number;
-  bump_description: null;
-  social_prove_id: null;
+  bump_description: any;
+  social_prove_id: any;
   proposal_minimum: number;
-  banner_checkout: null;
+  banner_checkout: any;
   allow_proposal: number;
   affiliation_approbation: number;
   affiliation_public: number;
-  pending_motive: null;
+  pending_motive: any;
   is_active: number;
-  deleted_at: null;
+  deleted_at: any;
   affiliation_proposal: number;
   max_boleto_installments: number;
   status: string;
-  max_subscription_installments: null;
+  max_subscription_installments: any;
   max_installments: number;
-  max_comission: null;
+  max_comission: any;
   category_fiscal: string;
-  fiscal_code: null;
+  fiscal_code: any;
   allowed_coupon: number;
   format: string;
-  instructions: null;
+  instructions: any;
   smart_sale: number;
-  fixed_installments: null;
+  fixed_installments: any;
   smart_sale_installments: number;
   has_stock: number;
   can_be_gifted: number;
@@ -192,16 +200,16 @@ export type Product = {
   width: number;
   length: number;
   weight: number;
-  address_product_id: null;
-  co_seller_display_id: null;
+  address_product_id: any;
+  co_seller_display_id: any;
   is_public_allowed: boolean;
-  charges: null;
+  charges: any;
   no_interest_installments: number;
   seller_fee: number;
-  affiliate_fee: null;
+  affiliate_fee: any;
   warranty_checkout: number;
   smart_sale_dynamic_installments: number;
-  pre_selected_installment: null;
+  pre_selected_installment: any;
   is_heaven: number;
   type_shipping_fee: string;
   amount_fixed_shipping_fee: number;
@@ -209,7 +217,7 @@ export type Product = {
   lead_affiliation: number;
   affiliation_lead: number;
   show_link_global_affiliate: number;
-  high_ticket_fee: null;
+  high_ticket_fee: any;
   in_stock: boolean;
   status_product: string;
   images: Image[];
@@ -219,12 +227,12 @@ export type Product = {
   product_id: number;
   hash: string;
   default: number;
-  reason: null;
+  reason: any;
   analised: number;
   currency_id: number;
   allow_offer_link: number;
-  amount_first_charges: null;
-  different_amount_quantity_charges: null;
+  amount_first_charges: any;
+  different_amount_quantity_charges: any;
   has_different_amount_first_charges: number;
   status_offer: string;
   custom_charges: any[];
@@ -370,4 +378,304 @@ export type MethodsState = {
 export type StepState = {
   step: number;
   format: "one_step" | "default";
+};
+
+export type Sale = {
+  sales: SaleElement[];
+  order: any;
+};
+
+export type SaleElement = {
+  id: number;
+  product_id: number;
+  contract_id: any;
+  type: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  installments: number;
+  method: string;
+  client_id: number;
+  total: number;
+  amount: number;
+  proposal_id: any;
+  subscription_id: any;
+  boleto_url: any;
+  boleto_barcode: any;
+  boleto_expiration_date: any;
+  qrcode: string;
+  imgQrcode: string;
+  paid_at: any;
+  country_code: string;
+  coupon_id: any;
+  is_gift: number;
+  gift_message: any;
+  shipping_amount: any;
+  shipping_selected: any;
+  offer_id: number;
+  base_currency_id: number;
+  local_currency_id: number;
+  original_amount: number;
+  trial_with_shipping: number;
+  offer: SaleOffer;
+  product: SaleProduct;
+  upsell: any;
+  local_currency: SaleLocalCurrency;
+  success: boolean;
+};
+
+export type SaleLocalCurrency = {
+  id: number;
+  name: string;
+  currency: string;
+  currency_symbol: string;
+};
+
+export type SaleOffer = {
+  id: number;
+  product_id: number;
+  hash: string;
+  amount: number;
+  method: string;
+  name: string;
+  allowed_coupon: number;
+  fixed_installments: any;
+  max_boleto_installments: number;
+  no_interest_installments: number;
+  max_installments: number;
+  period: any;
+  trial: any;
+  charges: any;
+  default: number;
+  status: string;
+  reason: any;
+  analised: number;
+  created_at: Date;
+  updated_at: Date;
+  max_subscription_installments: any;
+  deleted_at: any;
+  pre_selected_installment: number;
+  currency_id: number;
+  allow_offer_link: number;
+  status_offer: string;
+};
+
+export type SaleProduct = {
+  id: number;
+  name: string;
+  thank_you_page: string;
+  trial: number;
+  amount: number;
+  in_stock: boolean;
+  status_product: any;
+  custom_thank_you_pages: any[];
+};
+
+export type ProductOffer = {
+  data: ProductOfferData;
+  type: string;
+  custom_checkout: CustomCheckout;
+  checkout_payment: CheckoutPayment;
+};
+
+export type CheckoutPayment = {
+  price: Price;
+  data: CheckoutPaymentData;
+  token: string;
+  conversion: boolean;
+  base_currency: string;
+  seller_id: number;
+};
+
+export type CheckoutPaymentData = {
+  symbol_currency: string;
+  rate: number;
+  from: string;
+  to: string;
+  base_amount: number;
+  amount: number;
+};
+
+export type Price = {
+  payable_tax: number;
+  tax: any[];
+};
+
+export type CustomCheckout = {
+  theme: string;
+  theme_color: string;
+  top_thumb: any;
+  bottom_thumb: any;
+  side_thumb: any;
+  logotipo: any;
+  theme_color_bg: string;
+  button_text: any;
+  trial_position: any;
+  trial_info: any;
+  jivochat_id: any;
+  step_checkout: string;
+  purchase_notification: string;
+  maximum_purchase_notification_interval: any;
+  minimum_purchase_notification_interval: any;
+  scarcity: string;
+  scarcity_title: any;
+  scarcity_subtitle: any;
+  scarcity_time: any;
+  scarcity_background_color: any;
+  how_get_purchase_notification: any;
+  quantity_purchase_notification: any;
+  type_purchase_notification: any;
+  ob_custom: any;
+  ob_title: any;
+  ob_subtitle: any;
+  ob_description: any;
+  ob_border: any;
+  ob_border_px: any;
+  ob_background_color: any;
+  warranty_checkout: any;
+  whatsapp_number: any;
+  whatsapp_msg: any;
+  zopim_id: any;
+  whatsapp_button: any;
+  confirmation_email: any;
+};
+
+export type ProductOfferData = {
+  id: number;
+  name: string;
+  description: string;
+  category_id: number;
+  stock: number;
+  type: string;
+  amount: number;
+  period: number;
+  thank_you_page: any;
+  affiliation: number;
+  comission: number;
+  created_at: Date;
+  updated_at: Date;
+  seller_id: number;
+  slug: string;
+  method: string;
+  warranty: number;
+  url_callback: any;
+  trial: number;
+  is_checkout_address: number;
+  bump_description: any;
+  social_prove_id: any;
+  proposal_minimum: number;
+  banner_checkout: any;
+  allow_proposal: number;
+  affiliation_approbation: number;
+  affiliation_public: number;
+  pending_motive: any;
+  is_active: number;
+  deleted_at: any;
+  affiliation_proposal: number;
+  max_boleto_installments: number;
+  status: string;
+  max_subscription_installments: number;
+  max_installments: any;
+  max_comission: any;
+  category_fiscal: string;
+  fiscal_code: any;
+  allowed_coupon: number;
+  format: string;
+  instructions: any;
+  smart_sale: number;
+  fixed_installments: any;
+  smart_sale_installments: any;
+  has_stock: number;
+  can_be_gifted: number;
+  has_shipping_fee: number;
+  has_custom_shipping_address: number;
+  height: number;
+  width: number;
+  length: number;
+  weight: number;
+  address_product_id: any;
+  co_seller_display_id: any;
+  is_public_allowed: boolean;
+  charges: any;
+  no_interest_installments: number;
+  seller_fee: any;
+  affiliate_fee: any;
+  warranty_checkout: number;
+  smart_sale_dynamic_installments: number;
+  pre_selected_installment: any;
+  is_heaven: number;
+  type_shipping_fee: string;
+  amount_fixed_shipping_fee: any;
+  shipping_fee_is_recurring: number;
+  affiliation_lead: number;
+  high_ticket_fee: any;
+  rating_avg: any;
+  rating_max: any;
+  rating_low: any;
+  rating_count: number;
+  sales: number;
+  affiliates: number;
+  in_stock: boolean;
+  status_product: string;
+  fiscal_center_setting: FiscalCenterSetting[];
+  images: Image[];
+  seller: Seller;
+  co_sellers: any[];
+  co_seller_display: any;
+  links: Link[];
+  metas: Meta[];
+  pixels: Pixel[];
+  statistics: any;
+  category: Category;
+  attachments: any[];
+  custom_thank_you_pages: any[];
+  product_id: number;
+  hash: string;
+  default: number;
+  reason: string;
+  analised: number;
+  currency_id: number;
+  allow_offer_link: number;
+  status_offer: string;
+  custom_charges: any[];
+};
+
+export type FiscalCenterSetting = {
+  id: number;
+  key: string;
+  value: number;
+  user_id: number;
+  product_id: number;
+  created_at: Date;
+  updated_at: Date;
+};
+
+export type Image = {
+  id: number;
+  product_id: number;
+  path: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
+export type Link = {
+  id: number;
+  product_id: number;
+  url: string;
+  name: string;
+  source: any;
+  medium: any;
+  created_at: Date;
+  updated_at: Date;
+  is_bump: number;
+};
+
+export type Meta = {
+  id: number;
+  key: string;
+  value: string;
+  product_id: number;
+  created_at: Date;
+  updated_at: Date;
+  proposal_id: any;
 };
