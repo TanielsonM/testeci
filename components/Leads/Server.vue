@@ -10,6 +10,9 @@ const productStore = useProductStore();
 
 const { uuid, payment } = storeToRefs(leadStore);
 
+// remove before finish it, just to debug
+const debug = false;
+
 onMounted(() => {
   watch(uuid, () => {
     const syncPayment = leadStore.syncPayment();
@@ -26,8 +29,10 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
+<div v-if="debug">
   lead uuid: {{ leadStore.uuid }}<br />
   checkout uuid: {{ checkoutStore.uuid }}<br />
   product id: {{ productStore.product_id }}<br />
   seller id: {{ productStore.seller_id }}<br />
+  </div>
 </template>

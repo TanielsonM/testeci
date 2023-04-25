@@ -76,7 +76,7 @@ export type Payment = {
   email: string;
   document: string;
   cellphone: string;
-  uuid: string;
+  uuid: any;
 
   captcha: string;
   country_code: string;

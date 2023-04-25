@@ -1,5 +1,3 @@
-// Core
-import { storeToRefs } from "pinia";
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
 // Types
@@ -8,9 +6,11 @@ import { Payment, Product, PaymentError, SaleElement } from "~~/types";
 import { usePersonalStore } from "../forms/personal";
 import { useAddressStore } from "../forms/address";
 import { usePurchaseStore } from "../forms/purchase";
+import { useLeadsStore } from "../modules/leads";
 import { useCheckoutStore } from "../checkout";
 import { useInstallmentsStore } from "./installments";
 
+const leadsStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
 const productStore = useProductStore();
 const personalStore = usePersonalStore();
@@ -39,6 +39,7 @@ const {
   hasShippingFee,
   FixedShippingAmount,
 } = storeToRefs(productStore);
+
 const { name, email, document, cellphone } = storeToRefs(personalStore);
 const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
@@ -51,6 +52,8 @@ export const usePaymentStore = defineStore("Payment", {
   getters: {},
   actions: {
     async payment(language: string) {
+      leadsStore.changeStep(3);
+
       let data: Payment = {
         // Purchase infos
         method: method.value,
