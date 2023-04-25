@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useModalStore } from "~~/store/modal/success";
 import { ShippingSelected } from "@/types";
+import * as Toast from "vue-toastification";
+
+const { t } = useI18n();
 const modal = useModalStore();
 
 const props = defineProps({
@@ -59,6 +62,12 @@ const props = defineProps({
 
 const copy = async (code: string) => {
   await navigator.clipboard.writeText(code);
+  const toast = Toast.useToast();
+  toast.info(
+    `${t("pg_obrigado.modal.copiado")}\n${t(
+      "pg_obrigado.modal.codigo_copiado"
+    )}`
+  );
 };
 
 let data = {
@@ -67,7 +76,7 @@ let data = {
 };
 
 const displayCode = () => {
-  data.showCode = !data.showCode
+  data.showCode = !data.showCode;
 };
 </script>
 <template>
@@ -160,7 +169,7 @@ const displayCode = () => {
             :size="!onlyButtons ? 'vsm' : 'md'"
             animation="pulse"
             class="col-span-2 hidden md:col-span-1 md:block"
-            @click="($event) => displayCode()"
+            @click="displayCode()"
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_visualizar_qr")
@@ -172,7 +181,7 @@ const displayCode = () => {
             :size="!onlyButtons ? 'vsm' : 'md'"
             animation="pulse"
             class="col-span-2 md:col-span-1"
-            @click="($event) => copy(code)"
+            @click="!onlyButtons ? copy(code) : modal.closeAtion()"
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_text")
@@ -182,7 +191,15 @@ const displayCode = () => {
         </div>
       </div>
     </div>
-    <div v-if="data.showCode">oi</div>
+    <div v-if="data.showCode">
+      <BaseTextarea
+        class="w-full"
+        :input-id="`ticket_${id}`"
+        :readonly="true"
+        :model-value="code"
+        custom-class="readonly-button"
+      />
+    </div>
     <hr v-if="!last" />
     <div class="details py-5" v-if="!!shippingAmount">
       <h6 class="title">
