@@ -1,5 +1,4 @@
-<script setup>
-import { storeToRefs } from "pinia";
+<script lang="ts" setup>
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
@@ -51,7 +50,10 @@ const documentText = computed(() => {
 });
 
 const { name, email, cellphone, document } = storeToRefs(personalStore);
-const confirmation_mail = ref("");
+
+watch([name, email, cellphone, document], (value) => {
+  leadsStore.syncPersonal();
+});
 </script>
 
 <template>

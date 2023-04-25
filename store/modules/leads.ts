@@ -1,21 +1,26 @@
-import { Product } from "./../../types/index";
-import { storeToRefs } from "pinia";
 import { leadsState } from "@/types";
-import { useCheckoutStore } from "../checkout";
+import { usePersonalStore } from "./../forms/personal";
 import { useProductStore } from "../product";
+import { useCheckoutStore } from "../checkout";
+import { storeToRefs } from "pinia";
 
+const personalStore = usePersonalStore();
 const productStore = useProductStore();
 const checkoutStore = useCheckoutStore();
+const { product_id, hasAffiliateId, product_offer } =
+  storeToRefs(checkoutStore);
+
+const { seller_id } = storeToRefs(productStore);
 
 export const useLeadsStore = defineStore("Leads", {
   state: (): leadsState => ({
     step: 0,
     uuid: null,
     personal: {
-      name: "",
-      email: "",
-      cellphone: "",
-      document: "",
+      name: null,
+      email: null,
+      cellphone: null,
+      document: null,
     },
     address: {
       zip_code: "",
@@ -28,10 +33,10 @@ export const useLeadsStore = defineStore("Leads", {
       country_code: "BR",
     },
     payment: {
-      offer_id: 0,
+      offer_hash: 0,
       proposal_id: 0,
-      product_id: productStore.product_id,
-      seller_id: productStore.seller_id,
+      product_id: 0,
+      seller_id: 0,
       affiliate_id: 0,
     },
     purchase: {
@@ -49,10 +54,27 @@ export const useLeadsStore = defineStore("Leads", {
     setUUID(uuid: string) {
       return (this.uuid = uuid);
     },
+    syncPersonal() {
+      this.personal = {
+        name: personalStore.name,
+        email: personalStore.email,
+        cellphone: personalStore.cellphone,
+        document: personalStore.document,
+      };
+    },
+    syncPayment() {
+      this.payment = {
+        offer_hash: product_offer,
+        proposal_id: 0,
+        product_id: product_id,
+        seller_id: seller_id,
+        affiliate_id: hasAffiliateId,
+      };
+    },
     async syncLead(): Promise<void> {
       const query = {
         uuid: this.uuid,
-        product_id: 673,
+        product_id: this.payment.product_id,
       };
 
       console.log({
@@ -60,10 +82,11 @@ export const useLeadsStore = defineStore("Leads", {
         data: query,
       });
 
-      const lead = await useApi()
+      await useApi()
         .read("/lead", { query })
         .then((response) => {
-          if (response) {
+          console.log({ response });
+          if (response.uuid) {
             this.uuid = response.uuid ?? this.uuid;
 
             this.personal = {
@@ -83,22 +106,21 @@ export const useLeadsStore = defineStore("Leads", {
               complement: response.complement,
               country_code: response.country_code,
             };
+          } else {
+            this.createLead();
           }
         })
         .catch((error) => {
-          return error;
+          console.log(error);
         });
-
-      if (!lead) {
-        this.createLead();
-      }
     },
     async createLead(): Promise<void> {
       const data = {
-        product_id: 673,
-        seller_id: 278,
-        country_code: "BR",
+        product_id: this.payment.product_id,
+        seller_id: this.payment.seller_id,
+        country_code: this.address.country_code ?? "BR",
         uuid: this.uuid,
+        step: 0,
       };
 
       console.log({
@@ -108,7 +130,7 @@ export const useLeadsStore = defineStore("Leads", {
 
       await useApi()
         .create("/lead", data)
-        .then((res) => {
+        .then((response) => {
           GreennLogs.logger.info("🟢 Lead criado com sucesso", {
             name: "Um lead foi adicionado",
             uuid: this.uuid,

@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
@@ -260,11 +260,13 @@ await checkout.init();
       <!-- End side Thumb -->
     </section>
 
-    <!-- Lead section -->
-    <ClientOnly>
-      <LeadsClient />
-    </ClientOnly>
-    <LeadsServer />
-    <!-- End Lead section -->
+    <section>
+      <!-- Lead section -->
+      <ClientOnly>
+        <LeadsClient />
+      </ClientOnly>
+      <LeadsServer />
+      <!-- End Lead section -->
+    </section>
   </NuxtLayout>
 </template>

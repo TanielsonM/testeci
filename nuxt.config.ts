@@ -8,7 +8,7 @@ import en from "./locales/en.json";
 import es from "./locales/es.json";
 
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   image: {
     presets: {
       default: {
@@ -31,7 +31,7 @@ export default defineNuxtConfig({
     [
       "@pinia/nuxt",
       {
-        autoImports: ["defineStore"],
+        autoImports: ["defineStore", "storeToRefs"],
       },
     ],
   ],
@@ -39,7 +39,7 @@ export default defineNuxtConfig({
     cookieOptions: {
       sameSite: "strict",
     },
-    debug: false,
+    debug: true,
     storage: "localStorage",
   },
   imports: {

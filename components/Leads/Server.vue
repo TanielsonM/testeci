@@ -1,26 +1,33 @@
 <script lang="ts" setup>
-import { useLocalStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { v4 as uuidv4 } from "uuid";
 import { useLeadsStore } from "@/store/modules/leads";
 import { useCheckoutStore } from "@/store/checkout";
+import { useProductStore } from "@/store/product";
 
 const leadStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
+const productStore = useProductStore();
+
+const { uuid, payment } = storeToRefs(leadStore);
 
 onMounted(() => {
-  if (leadStore.uuid) {
-    console.log("test" + leadStore.uuid);
-    leadStore.syncLead();
+  watch(uuid, () => {
+    const syncPayment = leadStore.syncPayment();
+    const syncLead = leadStore.syncLead();
 
     const leadTimer = setInterval(() => {
       leadStore.updateLead();
-    }, 1000 * 240);
-  }
+    }, 60000);
+  });
 });
 
 onBeforeUnmount(() => {
   clearInterval(leadTimer);
 });
 </script>
-<template></template>
+<template>
+  lead uuid: {{ leadStore.uuid }}<br />
+  checkout uuid: {{ checkoutStore.uuid }}<br />
+  product id: {{ productStore.product_id }}<br />
+  seller id: {{ productStore.seller_id }}<br />
+</template>

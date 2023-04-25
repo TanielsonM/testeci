@@ -352,11 +352,11 @@ export type leadsState = {
     country_code: any;
   };
   payment: {
-    offer_id: number;
-    proposal_id: number;
+    offer_hash: any;
+    proposal_id: any;
     product_id: any;
     seller_id: any;
-    affiliate_id: number;
+    affiliate_id: any;
   };
   purchase: {
     status: string;
