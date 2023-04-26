@@ -70,7 +70,7 @@ export const useProductStore = defineStore("product", {
               )}`;
             } else {
               return `${formatMoney(
-                state.product.amount + state.product.shipping.amount
+                state.product.amount + state.product.shipping?.amount || 0
               )}`;
             }
           } else {
