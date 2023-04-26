@@ -68,6 +68,7 @@ export const useCheckoutStore = defineStore("checkout", {
     uuid: uuidv4(),
     sales: {},
     productOffer: {},
+    deliveryOptions: {},
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -547,6 +548,19 @@ export const useCheckoutStore = defineStore("checkout", {
               : `/product/${productId}`
           );
           if (!!productOffer) this.productOffer = productOffer;
+        } catch (e) {
+          this.setError(e.message);
+          throw e;
+        }
+      }
+    },
+    async calculateShipping(zip, id) {
+      if (!!zip) {
+        try {
+          const calculate = await useApi().create(`envios/calculate/${id}`, {
+            shipping_address_zip_code: zip,
+          });
+          if (!!calculate) this.deliveryOptions = calculate;
         } catch (e) {
           this.setError(e.message);
           throw e;
