@@ -167,6 +167,7 @@ export const usePaymentStore = defineStore("Payment", {
         objetoCompra: JSON.stringify(dataLog),
       });
 
+      checkoutStore.setLoading(true);
       // Payment request
       await useApi()
         .create("/payment", data)
@@ -181,9 +182,13 @@ export const usePaymentStore = defineStore("Payment", {
               product_id: product_id.value,
             });
             const query: any = {};
-            if (res.sales[0]?.sale_id) query.s_id = res.sales[0].sale_id;
             if (res.sales[0]?.chc) query.chc = res.sales[0].chc;
             if (res.sales[0]?.token) query.token = res.sales[0].token;
+            if (res.sales[0]?.sale_id) {
+              delete query.chc;
+              delete query.token;
+              query.s_id = res.sales[0].sale_id;
+            }
             if (!!product_offer.value) query.offer = product_offer.value;
 
             const router = useRouter();
@@ -201,6 +206,9 @@ export const usePaymentStore = defineStore("Payment", {
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+          checkoutStore.setLoading(false);
         });
     },
     validateError(error: PaymentError) {

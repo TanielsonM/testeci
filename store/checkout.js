@@ -67,6 +67,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
     sales: {},
     productOffer: {},
+    deliveryOptions: {},
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -278,7 +279,8 @@ export const useCheckoutStore = defineStore("checkout", {
             }
           });
       } catch (error) {
-        this.setError("Ocorreu um erro ao processar a sua solicitação");
+        if (!isBump)
+          this.setError("Ocorreu um erro ao processar a sua solicitação");
         this.setLoading();
       }
     },
@@ -548,6 +550,19 @@ export const useCheckoutStore = defineStore("checkout", {
               : `/product/${productId}`
           );
           if (!!productOffer) this.productOffer = productOffer;
+        } catch (e) {
+          this.setError(e.message);
+          throw e;
+        }
+      }
+    },
+    async calculateShipping(zip, id) {
+      if (!!zip) {
+        try {
+          const calculate = await useApi().create(`envios/calculate/${id}`, {
+            shipping_address_zip_code: zip,
+          });
+          if (!!calculate) this.deliveryOptions = calculate;
         } catch (e) {
           this.setError(e.message);
           throw e;
