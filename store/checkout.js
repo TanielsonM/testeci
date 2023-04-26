@@ -68,9 +68,6 @@ export const useCheckoutStore = defineStore("checkout", {
     sales: {},
     productOffer: {},
   }),
-  persist: {
-    paths: ["uuid"],
-  },
   getters: {
     isLoading: (state) => state.global_loading,
     /**

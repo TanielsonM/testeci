@@ -19,7 +19,7 @@ const leadStore = useLeadsStore();
 const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
-const { method, allowed_methods } = storeToRefs(checkout);
+const { method, allowed_methods, amount } = storeToRefs(checkout);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -135,7 +135,6 @@ const tabs = computed(() => {
     }
   });
 });
-
 await checkout.init();
 </script>
 
@@ -267,6 +266,29 @@ await checkout.init();
       </ClientOnly>
       <LeadsServer />
       <!-- End Lead section -->
+
+      <!--- Pixel Section -->
+      <ClientOnly>
+        <PixelFacebookHandleEvent
+          :event="'view'"
+          :product_id="productStore.product_id"
+          :affiliate_id="checkout.hasAffiliateId ?? ''"
+          :method="checkout.method"
+          :amount="amount"
+          :original_amount="checkout.original_amount"
+        />
+      </ClientOnly>
+      <!--- End Pixel Section -->
+      <!---
+        "view",
+        this.id_product,
+        this.affiliate_id,
+        this.method,
+        amount,
+        this.sale && this.sale[0].offer ? this.sale[0].offer.amount : null,
+        sale_id,
+        chc_id
+      -->
     </section>
   </NuxtLayout>
 </template>
