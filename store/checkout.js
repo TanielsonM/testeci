@@ -276,7 +276,8 @@ export const useCheckoutStore = defineStore("checkout", {
             }
           });
       } catch (error) {
-        this.setError("Ocorreu um erro ao processar a sua solicitação");
+        if (!isBump)
+          this.setError("Ocorreu um erro ao processar a sua solicitação");
         this.setLoading();
       }
     },
