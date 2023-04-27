@@ -210,7 +210,7 @@ const trialMessage = computed({
         </a>
       </p>
       <!-- Coupon -->
-      <ProductCoupon v-if="productStore.allowedCoupon()" />
+      <ProductCoupon v-if="productStore.allowedCoupon" />
     </section>
   </BaseCard>
 </template>

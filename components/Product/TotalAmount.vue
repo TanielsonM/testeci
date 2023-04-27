@@ -6,16 +6,17 @@ import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
+import { useAmountStore } from "~~/store/modules/amount";
 
 const checkout = useCheckoutStore();
 const product = useProductStore();
+const amountStore = useAmountStore();
 const installmentsStore = useInstallmentsStore();
 const {
   method,
   installments,
   hasFees,
   coupon,
-  original_amount,
   checkoutPayment,
 } = storeToRefs(checkout);
 
@@ -42,7 +43,7 @@ const amountText = computed(() => {
       <LoadingShimmer width="120px" height="20px" />
     </template>
     <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
-      {{ formatMoney(original_amount) }}
+      {{ formatMoney(amountStore.getOriginalAmount) }}
     </p>
     <small v-if="installments < 2" class="d-block small-text">
       {{ $t("order.vc_pagara") }}
