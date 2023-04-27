@@ -372,7 +372,7 @@ export const useCheckoutStore = defineStore("checkout", {
       );
     },
     setAmount(amount = 0) {
-      this.amount = amount;
+      this.amount += amount;
     },
     async setCoupon(initial = false, remove = false) {
       const store = useProductStore();
@@ -451,7 +451,7 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     setOriginalAmount(amount = 0) {
-      this.original_amount = amount;
+      this.original_amount += amount;
     },
     setLoading(value = false) {
       this.global_loading = value;
@@ -475,7 +475,11 @@ export const useCheckoutStore = defineStore("checkout", {
       this.checkAllowedMethods();
       if (index === -1) {
         this.product_list.push(product);
-        this.setAmount(product.amount);
+        this.setAmount(
+          !!product.custom_charges.length
+            ? product.custom_charges.amount
+            : product.amount
+        );
         this.setOriginalAmount(product.amount);
         return;
       }

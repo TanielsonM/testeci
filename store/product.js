@@ -101,6 +101,7 @@ export const useProductStore = defineStore("product", {
       };
     },
     productName: (state) => state.product.name,
+    seller_id: (state) => state.product.seller_id,
   },
   actions: {
     setProduct(product) {
@@ -120,12 +121,6 @@ export const useProductStore = defineStore("product", {
         this.product.max_installments || 12,
         this.hasFixedInstallments,
         this.hasTicketInstallments
-      );
-      checkout.setOriginalAmount(product.amount);
-      checkout.setAmount(
-        !!this.hasCustomCharges.length
-          ? this.hasCustomCharges[0].amount
-          : product.amount
       );
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);

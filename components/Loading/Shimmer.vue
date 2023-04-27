@@ -18,7 +18,8 @@ const items = Array.from({ length: props.quantity }, (_, index) => index + 1);
 </script>
 <template>
   <div
-    v-for="item in items"
+    v-for="(item, index) in items"
+    :key="index"
     class="shimmer"
     :style="{ width: width, height: height }"
   >
