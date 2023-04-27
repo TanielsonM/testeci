@@ -4,6 +4,7 @@ import { InstallmentsState, Product } from "@/types";
 import { storeToRefs } from "pinia";
 // States
 import { useCheckoutStore } from "../checkout";
+import { useAmountStore } from "./amount";
 
 export const useInstallmentsStore = defineStore("installments", {
   state: (): InstallmentsState => ({
@@ -13,18 +14,19 @@ export const useInstallmentsStore = defineStore("installments", {
   }),
   getters: {
     getInstallments(state: InstallmentsState) {
+      const amountStore = useAmountStore();
       const checkout = useCheckoutStore();
       const {
-        amount,
         monthly_interest,
         product_list,
         product_id,
         coupon,
         installments,
       } = storeToRefs(checkout);
+      const { getAmount } = storeToRefs(amountStore);
       return (n: number = installments.value) => {
         if (typeof n === "string") n = parseInt(n);
-        let total = amount.value;
+        let total = getAmount.value;
 
         if (n === 1) return total;
         else total = 0;

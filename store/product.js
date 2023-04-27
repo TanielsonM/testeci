@@ -2,6 +2,8 @@ import { useCheckoutStore } from "@/store/checkout";
 import { useCustomCheckoutStore } from "@/store/customCheckout";
 import { formatMoney } from "~~/utils/money";
 import { useInstallmentsStore } from "./modules/installments";
+import { useAmountStore } from "./modules/amount";
+const amountStore = useAmountStore();
 
 export const useProductStore = defineStore("product", {
   state: () => ({
@@ -33,15 +35,9 @@ export const useProductStore = defineStore("product", {
     hasPreSelectedInstallments: (state) =>
       state.product.pre_selected_installment ?? null,
     hasShippingFee: (state) => !!state.product.has_shipping_fee,
-    allowedCoupon(state) {
-      return () => {
-        const store = useProductStore();
-        return (
-          state.product.allowed_coupon &&
-          store.product.format !== "PHYSICALPRODUCT"
-        );
-      };
-    },
+    allowedCoupon: (state) =>
+      state.product.allowed_coupon &&
+      state.product.format !== "PHYSICALPRODUCT",
     isHeaven: (state) => !!state.product.is_heaven,
     isFixedShipping: (state) => state.product.type_shipping_fee === "FIXED",
     FixedShippingAmount: (state) => state.product.amount_fixed_shipping_fee,
@@ -126,9 +122,17 @@ export const useProductStore = defineStore("product", {
       checkout.setProductList(this.product);
     },
     setProductShipping(amount) {
+      // Subtrai o valor do frete anterior quando existir
+      if (this.product?.shipping?.amount) {
+        amountStore.setAmount(this.product?.shipping?.amount * -1);
+        amountStore.setOriginalAmount(this.product?.shipping?.amount * -1);
+      }
       this.product.shipping = {
         amount: parseFloat(amount),
       };
+      // Soma o valor do frete atual;
+      amountStore.setAmount(parseFloat(amount));
+      amountStore.setOriginalAmount(parseFloat(amount));
     },
   },
 });

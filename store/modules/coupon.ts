@@ -2,6 +2,7 @@
 import { CheckoutState, CouponState, Coupon } from "@/types";
 // Stores
 import { useCheckoutStore } from "@/store/checkout";
+import { useAmountStore } from "./amount";
 
 export const useCouponStore = defineStore("Coupon", {
   state: (): CouponState => ({
@@ -40,7 +41,7 @@ export const useCouponStore = defineStore("Coupon", {
     async setCoupon(coupon: string, initial = false): Promise<void> {
       if (initial && !!coupon) this.coupon.name = coupon;
       if (!!this.coupon.name) {
-        const store: CheckoutState = useCheckoutStore();
+        const store = useAmountStore();
         await this.getCoupon()
           .then(({ amount, available, due_date }) => {
             this.coupon.amount = Math.abs(store.amount - amount);

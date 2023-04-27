@@ -87,7 +87,7 @@ export type Payment = {
   // Address
   zipcode?: string | any;
   street?: string;
-  number?: number;
+  number?: number | string;
   complement?: string;
   neighborhood?: string;
   city?: string;
@@ -95,7 +95,7 @@ export type Payment = {
   // Shipping Address
   shipping_address_zip_code?: string;
   shipping_address_street?: string;
-  shipping_address_number?: number;
+  shipping_address_number?: number | string;
   shipping_address_complement?: string;
   shipping_address_neighborhood?: string;
   shipping_address_city?: string;
