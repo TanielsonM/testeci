@@ -260,35 +260,19 @@ await checkout.init();
     </section>
 
     <section>
-      <!-- Lead section -->
+      <!-- Client Only section -->
       <ClientOnly>
         <LeadsClient />
-      </ClientOnly>
-      <LeadsServer />
-      <!-- End Lead section -->
-
-      <!--- Pixel Section -->
-      <ClientOnly>
-        <PixelFacebookHandleEvent
+        <PixelClient
           :event="'view'"
           :product_id="productStore.product_id"
-          :affiliate_id="checkout.hasAffiliateId ?? ''"
+          :affiliate_id="productStore.hasAffiliateId"
           :method="checkout.method"
-          :amount="amount"
+          :amount="checkout.amount"
           :original_amount="checkout.original_amount"
         />
       </ClientOnly>
-      <!--- End Pixel Section -->
-      <!---
-        "view",
-        this.id_product,
-        this.affiliate_id,
-        this.method,
-        amount,
-        this.sale && this.sale[0].offer ? this.sale[0].offer.amount : null,
-        sale_id,
-        chc_id
-      -->
+      <LeadsServer />
     </section>
   </NuxtLayout>
 </template>

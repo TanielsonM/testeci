@@ -74,6 +74,7 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Query getters
      */
+    getAmount: (state) => state.amount,
     hasAffiliateId: (state) => state.url.query?.a_id,
     hasBusiness: (state) => state.url.query?.b, // Jivochat
     hasBump: (state) => state.url.fullPath.includes("b_id"),

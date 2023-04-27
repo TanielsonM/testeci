@@ -25,6 +25,19 @@ export type Company = {
   support_telephone: string;
 };
 
+export type pixelState = {
+  event: String;
+  product_id: number;
+  event_id: String;
+  method: String;
+  affiliate_id: any;
+  amount: Number;
+  sale_id: Number;
+  client_has_contract: any;
+  email: any;
+  cellphone: any;
+};
+
 export type Coupon = {
   amount: number;
   applied: boolean;

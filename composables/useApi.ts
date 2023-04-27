@@ -29,6 +29,7 @@ export default function () {
   }
 
   async function read<T>(url: string, config?: any) {
+    console.log(config, "get", url);
     return await instance<T>(url, "get", config);
   }
 
