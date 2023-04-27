@@ -560,14 +560,19 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     async calculateShipping(zip, id) {
       if (!!zip) {
-        try {
-          const calculate = await useApi().create(`envios/calculate/${id}`, {
+        const calculate = await useApi().create(
+          `envios/calculate/${this.product_id}`,
+          {
             shipping_address_zip_code: zip,
+          }
+        );
+        console.log(this.bump_list);
+        if (!!calculate) this.deliveryOptions = calculate;
+
+        if (this.bump_list.length > 0) {
+          this.bump_list.map((bump) => {
+            console.log(bump);
           });
-          if (!!calculate) this.deliveryOptions = calculate;
-        } catch (e) {
-          this.setError(e.message);
-          throw e;
         }
       }
     },

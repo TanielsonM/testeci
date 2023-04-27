@@ -94,7 +94,7 @@ async function getShippingOptions() {
     return;
   }
   if (props.bump.checkbox && hasShippingFee.value && address.charge.zipcode) {
-    shippingLoading = true;
+    shippingLoading.value = true;
     await useApi()
       .create(`/calculate/${props.bump.id}`, {
         shipping_address_zip_code: address.sameAddress
