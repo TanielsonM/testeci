@@ -79,9 +79,7 @@ const displayCode = () => {
   data.value.showCode = !data.value.showCode;
 };
 
-watch(data, () => {
-  console.log(data.value.showCode);
-});
+watch(data, () => {});
 </script>
 <template>
   <div v-if="!modal.expiredPix">
@@ -211,7 +209,10 @@ watch(data, () => {
       />
     </div>
 
-    <div v-if="data.showCode && salesLength > 1" class="w-full flex items-center justify-center">
+    <div
+      v-if="data.showCode && salesLength > 1"
+      class="flex w-full items-center justify-center"
+    >
       <img :src="url" />
     </div>
     <hr v-if="!last" />

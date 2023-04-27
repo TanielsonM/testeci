@@ -130,5 +130,10 @@ export const useProductStore = defineStore("product", {
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);
     },
+    setProductShipping(amount) {
+      this.product.shipping = {
+        amount: parseFloat(amount),
+      };
+    },
   },
 });
