@@ -1,3 +1,6 @@
+import { useLoadingStore } from "@/store/loading/loading";
+const loading = useLoadingStore();
+
 export default function () {
   async function instance<T>(
     url: string,
@@ -6,6 +9,8 @@ export default function () {
     body: any = null
   ): Promise<T | any> {
     if (body) config = { body };
+    loading.changeLoading();
+
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
@@ -16,14 +21,20 @@ export default function () {
     });
 
     if (error.value?.statusCode === 500) {
+      loading.changeLoading();
+
       throw showError({
         statusCode: error.value.statusCode,
         message: `Ocorreu um erro ao processar a sua solicitação`,
       });
     }
     if (error.value) {
+      loading.changeLoading();
       throw error;
     }
+
+    loading.changeLoading();
+
     const retorno: T | any = data.value;
     return retorno;
   }

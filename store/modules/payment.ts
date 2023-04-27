@@ -9,6 +9,7 @@ import { usePurchaseStore } from "../forms/purchase";
 import { useLeadsStore } from "../modules/leads";
 import { useCheckoutStore } from "../checkout";
 import { useInstallmentsStore } from "./installments";
+import { useAmountStore } from "./amount";
 
 const leadsStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
@@ -17,10 +18,10 @@ const personalStore = usePersonalStore();
 const addressStore = useAddressStore();
 const purchaseStore = usePurchaseStore();
 const installmentsStore = useInstallmentsStore();
+const amountStore = useAmountStore();
 
 const {
   method,
-  original_amount,
   product_id,
   product_offer,
   uuid,
@@ -44,6 +45,7 @@ const { name, email, document, cellphone } = storeToRefs(personalStore);
 const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
 const { getInstallments } = storeToRefs(installmentsStore);
+const { getOriginalAmount } = storeToRefs(amountStore);
 
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
@@ -58,7 +60,7 @@ export const usePaymentStore = defineStore("Payment", {
         // Purchase infos
         method: method.value,
         amount: getInstallments.value(1),
-        total: original_amount.value,
+        total: getOriginalAmount.value,
         installments: installments.value,
         // product infos
         product_id: product_id.value,

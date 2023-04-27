@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
 // Data
 import states from "@/data/states";
+import { Frete, Address, ShippingAddress } from "@/types";
 // Store
 import { useCheckoutStore } from "@/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
@@ -16,12 +17,12 @@ const props = defineProps({
     type: String,
     required: false,
     default: () => "charge",
-    validator: (value) => ["charge", "shipping"].includes(value),
+    validator: (value: string) => ["charge", "shipping"].includes(value),
   },
 });
 
 // Variables
-const form = ref({
+const form = ref<Address>({
   zipcode: "",
   street: "",
   number: "",
@@ -31,26 +32,42 @@ const form = ref({
   state: "",
 });
 
+const deliveryOptions = ref<Frete[] | undefined>();
+
 // Watches
 watch(form.value, async () => {
   await store.setFields(form.value, props.type);
   leadsStore.syncAddress();
 });
+watch(deliveryOptions, () => {});
 
 // methods
 async function getAddress(cep = "") {
-  if (cep.length < 8) return;
+  if (cep.length < 8) {
+    if (!!checkout.deliveryOptions) checkout.resetShipping();
+    return;
+  }
+
   await useFetch(`https://viacep.com.br/ws/${cep}/json`)
-    .then(({ data }) => {
-      form.value.number = "";
-      form.value.street = data.value.logradouro;
-      form.value.city = data.value.localidade;
-      form.value.neighborhood = data.value.bairro;
-      form.value.complement = data.value.complemento;
-      form.value.state = data.value.uf;
+    .then(async ({ data }) => {
+      if (!!data) {
+        let value: ShippingAddress = data.value as ShippingAddress;
+
+        form.value.number = "";
+        form.value.street = value.logradouro;
+        form.value.city = value.localidade;
+        form.value.neighborhood = value.bairro;
+        form.value.complement = value.complemento;
+        form.value.state = value.uf;
+
+        const productId = checkout.product_id;
+        await checkout.calculateShipping(cep, productId);
+      }
     })
     .then(() => {
-      document.querySelector(`#number-address-${props.type}`).focus();
+      document
+        .querySelector<HTMLInputElement>(`#number-address-${props.type}`)
+        ?.focus();
     });
 }
 

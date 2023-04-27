@@ -2,8 +2,10 @@
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
+import { useAmountStore } from "./modules/amount";
 
 const purchaseStore = usePurchaseStore();
+const amountStore = useAmountStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -142,25 +144,6 @@ export const useCheckoutStore = defineStore("checkout", {
       };
     },
     getBumpList: (state) => state.bump_list,
-    totalAmount(state) {
-      return () => {
-        const product = useProductStore();
-        const productAmount = this.coupon.applied
-          ? this.coupon.discount
-          : product.amount;
-        const initial = 0;
-        const amountBumps = this.bump_list
-          .filter((item) => item.checkbox)
-          .reduce(function (accumulator, current) {
-            const amount = current.amount;
-            if (current?.shipping?.amount) {
-              amount += current?.shipping?.amount;
-            }
-            return accumulator + amount;
-          }, initial);
-        return productAmount + amountBumps;
-      };
-    },
     shippingProducts(state) {
       return () => {
         return this.product_list.filter(
@@ -264,12 +247,15 @@ export const useCheckoutStore = defineStore("checkout", {
               response.data.paypal = response.checkout_payment.paypal;
             }
 
-            if (response.data.format === "PHYSICALPRODUCT") {
+            if (
+              response.data.format === "PHYSICALPRODUCT" &&
+              !!response.data.has_shipping_fee
+            ) {
+              const shipping = { amount: undefined };
               if (response.data.type_shipping_fee === "FIXED") {
-                const shipping = {};
                 shipping.amount = response.data.amount_fixed_shipping_fee;
-                response.data = { ...response.data, shipping };
               }
+              response.data = { ...response.data, shipping };
             }
 
             if (response?.data && !isBump) {
@@ -378,9 +364,10 @@ export const useCheckoutStore = defineStore("checkout", {
       this.amount = amount;
     },
     async setCoupon(initial = false, remove = false) {
-      const store = useProductStore();
+      const store = useAmountStore();
       if (remove) {
-        store.amount = store.original_amount;
+        store.setAmount(store.getAmount * -1);
+        store.setAmount(store.original_amount);
         this.coupon = {
           amount: 0,
           applied: false,
@@ -399,17 +386,15 @@ export const useCheckoutStore = defineStore("checkout", {
       }
       if (!!this.coupon.name) {
         this.coupon.loading = true;
-        const current_amount = this.amount;
 
         await this.getCoupon()
           .then(({ amount, available, due_date }) => {
-            this.coupon.amount = Math.abs(store.amount - amount);
+            this.coupon.amount = Math.abs(store.getAmount - amount);
             this.coupon.available = available;
             this.coupon.due_date = due_date;
             this.coupon.discount = amount;
 
-            store.amount -= this.coupon.amount;
-            this.amount -= this.coupon.amount;
+            store.setAmount(-this.coupon.amount);
 
             this.coupon.error = false;
             this.coupon.applied = true;
@@ -478,11 +463,42 @@ export const useCheckoutStore = defineStore("checkout", {
       this.checkAllowedMethods();
       if (index === -1) {
         this.product_list.push(product);
-        this.setAmount(product.amount);
-        this.setOriginalAmount(product.amount);
+        amountStore.setAmount(
+          !!product.custom_charges.length
+            ? product.custom_charges.amount
+            : product.amount
+        );
+        amountStore.setOriginalAmount(
+          !!product.custom_charges.length
+            ? product.custom_charges.amount
+            : product.amount
+        );
+
+        if (
+          product.format === "PHYSICALPRODUCT" &&
+          !!product.has_shipping_fee
+        ) {
+          amountStore.setAmount(product?.shipping?.amount || 0);
+          amountStore.setOriginalAmount(product?.shipping?.amount || 0);
+        }
         return;
       }
       this.product_list.splice(index, 1);
+      amountStore.setAmount(
+        !!product.custom_charges.length
+          ? product.custom_charges.amount * -1
+          : product.amount * -1
+      );
+      amountStore.setOriginalAmount(
+        !!product.custom_charges.length
+          ? product.custom_charges.amount * -1
+          : product.amount * -1
+      );
+
+      if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee) {
+        amountStore.setAmount(product.shipping.amount * -1);
+        amountStore.setOriginalAmount(product.shipping.amount * -1);
+      }
     },
     resetProducts() {
       this.product_list = [];
@@ -569,6 +585,9 @@ export const useCheckoutStore = defineStore("checkout", {
           throw e;
         }
       }
+    },
+    async resetShipping() {
+      this.deliveryOptions = {};
     },
   },
 });

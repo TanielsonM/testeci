@@ -6,16 +6,17 @@ import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
+import { useAmountStore } from "~~/store/modules/amount";
 
 const checkout = useCheckoutStore();
 const product = useProductStore();
+const amountStore = useAmountStore();
 const installmentsStore = useInstallmentsStore();
 const {
   method,
   installments,
   hasFees,
   coupon,
-  original_amount,
   checkoutPayment,
 } = storeToRefs(checkout);
 
@@ -36,32 +37,38 @@ const amountText = computed(() => {
 </script>
 
 <template>
-  <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
-    {{ formatMoney(original_amount) }}
-  </p>
-  <small v-if="installments < 2" class="d-block small-text">
-    {{ $t("order.vc_pagara") }}
-  </small>
-  <p class="text-lg font-semibold text-txt-color">
-    {{ amountText }}
-  </p>
-  <small
-    v-if="
-      installments > 1 &&
-      !product.hasFixedInstallments &&
-      !product.hasPreSelectedInstallments
-    "
-    class="small-text"
-  >
-    {{ $t("order.a_vista") }}
-    {{ formatMoney(getInstallments(1)) }}
-    <br />
-    {{
-      checkoutPayment &&
-      checkoutPayment.price &&
-      checkoutPayment.price.payable_tax
-        ? $t("order.impostos")
-        : ""
-    }}
-  </small>
+  <ClientOnly>
+    <template #fallback>
+      <LoadingShimmer width="150px" height="30px" />
+      <LoadingShimmer width="120px" height="20px" />
+    </template>
+    <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
+      {{ formatMoney(amountStore.getOriginalAmount) }}
+    </p>
+    <small v-if="installments < 2" class="d-block small-text">
+      {{ $t("order.vc_pagara") }}
+    </small>
+    <p class="text-lg font-semibold text-txt-color">
+      {{ amountText }}
+    </p>
+    <small
+      v-if="
+        installments > 1 &&
+        !product.hasFixedInstallments &&
+        !product.hasPreSelectedInstallments
+      "
+      class="small-text"
+    >
+      {{ $t("order.a_vista") }}
+      {{ formatMoney(getInstallments(1)) }}
+      <br />
+      {{
+        checkoutPayment &&
+        checkoutPayment.price &&
+        checkoutPayment.price.payable_tax
+          ? $t("order.impostos")
+          : ""
+      }}
+    </small>
+  </ClientOnly>
 </template>
