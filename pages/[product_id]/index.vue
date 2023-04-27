@@ -182,6 +182,7 @@ await checkout.init();
                 <FormAddress type="shipping" />
               </template>
             </Steps>
+            <FormShippingOption />
           </template>
         </Steps>
         <!-- Purchase Form -->

@@ -567,5 +567,8 @@ export const useCheckoutStore = defineStore("checkout", {
         }
       }
     },
+    async resetShipping() {
+      this.deliveryOptions = {};
+    },
   },
 });

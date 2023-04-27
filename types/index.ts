@@ -1,7 +1,7 @@
 /* Alphabetical order */
 export type Address = {
   zipcode: string;
-  number: number;
+  number: number | string;
   street: string;
   neighborhood: string;
   city: string;
@@ -692,17 +692,30 @@ export type DeliveryRange = {
   max: number;
 };
 
-export type Package = {
-  price: string;
-  discount: string;
-  format: string;
-  weight: string;
-  insurance_value: string;
-  dimensions: Dimensions;
-};
-
 export type Dimensions = {
   height: number;
   width: number;
   length: number;
+};
+
+export type ShippingAddress = {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
+};
+
+export type Package = {
+  price?: string;
+  discount?: string;
+  format: string;
+  weight: string;
+  insurance_value: string;
+  dimensions: Dimensions;
 };
