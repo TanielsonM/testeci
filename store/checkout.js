@@ -1,4 +1,5 @@
 // Core
+import { storeToRefs } from "pinia";
 import { v4 as uuidv4 } from "uuid";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
@@ -571,19 +572,26 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     async calculateShipping(zip) {
-      if (!!zip) {
+      if (zip) {
         try {
-          let calculate = await useApi().create(
-            `envios/calculate/${this.product_id}`,
-            {
-              shipping_address_zip_code: zip,
-            }
-          );
+          const productStore = useProductStore();
+          const { product } = storeToRefs(productStore);
 
-          if (!!calculate) {
-            const product = useProductStore();
-            this.deliveryOptions = calculate;
-            product.product.shipping_options = calculate;
+          if (
+            product.value.has_shipping_fee === 1 &&
+            product.value.type_shipping_fee === "DYNAMIC"
+          ) {
+            let calculate = await useApi().create(
+              `envios/calculate/${this.product_id}`,
+              {
+                shipping_address_zip_code: zip,
+              }
+            );
+
+            if (!!calculate) {
+              this.deliveryOptions = calculate;
+              product.value.shipping_options = calculate;
+            }
           }
 
           await this.calculateBumpsShipping(zip);
