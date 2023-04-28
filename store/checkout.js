@@ -496,8 +496,8 @@ export const useCheckoutStore = defineStore("checkout", {
       );
 
       if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee) {
-        amountStore.setAmount(product.shipping.amount * -1);
-        amountStore.setOriginalAmount(product.shipping.amount * -1);
+        amountStore.setAmount(product?.shipping?.amount * -1 || 0);
+        amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
       }
     },
     resetProducts() {
