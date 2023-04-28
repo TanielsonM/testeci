@@ -122,6 +122,7 @@ export const useProductStore = defineStore("product", {
       checkout.setProductList(this.product);
     },
     setProductShipping(amount, isBump = false, bump = null) {
+      // Verifica se o produto a ser modificado é um Bump
       if (!isBump) {
         // Subtrai o valor do frete anterior quando existir
         if (this.product?.shipping?.amount) {
@@ -134,6 +135,7 @@ export const useProductStore = defineStore("product", {
         amountStore.setOriginalAmount(parseFloat(amount));
       } else {
         const checkout = useCheckoutStore();
+        // Altero o shipping de um bump expecifico
         checkout.changeBumpShippingAmount(bump, amount);
       }
     },

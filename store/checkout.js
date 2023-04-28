@@ -572,32 +572,23 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     async calculateShipping(zip) {
       if (!!zip) {
-        let calculate = await useApi().create(
-          `envios/calculate/${this.product_id}`,
-          {
-            shipping_address_zip_code: zip,
-          }
-        );
-
-        if (!!calculate) {
-          const product = useProductStore();
-          this.deliveryOptions = calculate;
-          product.product.shipping_options = calculate;
-        }
-
-        if (!!this.bump_list.length) {
-          await Promise.all(
-            this.bump_list.map(async (bump) => {
-              let calculateBump = await useApi().create(
-                `envios/calculate/${bump.id}`,
-                {
-                  shipping_address_zip_code: zip,
-                }
-              );
-
-              if (!!calculateBump) bump.shipping_options = calculateBump;
-            })
+        try {
+          let calculate = await useApi().create(
+            `envios/calculate/${this.product_id}`,
+            {
+              shipping_address_zip_code: zip,
+            }
           );
+
+          if (!!calculate) {
+            const product = useProductStore();
+            this.deliveryOptions = calculate;
+            product.product.shipping_options = calculate;
+          }
+
+          await this.calculateBumpsShipping(zip);
+        } catch (e) {
+          await this.calculateBumpsShipping(zip);
         }
       }
     },
@@ -605,11 +596,27 @@ export const useCheckoutStore = defineStore("checkout", {
       this.deliveryOptions = {};
     },
     async changeBumpShippingAmount(id, amount) {
-      for (let i = 0; i < this.bump_list.length; i++) {
-        if (this.bump_list[i].id === id) {
-          this.bump_list[i].shipping.amount = parseFloat(amount);
-          break;
-        }
+      const pdt = this.product_list.find((product) => product.id === id);
+      if (pdt) {
+        const oldAmount = pdt.shipping?.amount || 0;
+        amountStore.setAmount(parseFloat(amount) - oldAmount);
+        amountStore.setOriginalAmount(parseFloat(amount) - oldAmount);
+        pdt.shipping = { ...pdt.shipping, amount: parseFloat(amount) };
+      }
+    },
+    async calculateBumpsShipping(zip) {
+      if (this.bump_list.length) {
+        const promises = this.bump_list.map((bump) =>
+          useApi().create(`envios/calculate/${bump.id}`, {
+            shipping_address_zip_code: zip,
+          })
+        );
+        const results = await Promise.all(promises);
+        this.bump_list.forEach((bump, index) => {
+          if (results[index]) {
+            bump.shipping_options = results[index];
+          }
+        });
       }
     },
   },

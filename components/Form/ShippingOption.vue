@@ -26,6 +26,8 @@ const selectOption = (index, amount) => {
   isActive.value = index;
   product.setProductShipping(amount, props.isBump, props.bump);
 };
+
+console.log(product.product);
 </script>
 
 <template>
@@ -33,14 +35,17 @@ const selectOption = (index, amount) => {
     <LoadingShimmer width="30%" height="30px" />
     <LoadingShimmer height="50px" :quantity="4" />
   </div>
-  <p class="flex-nowrap py-3 font-semibold text-txt-color" v-if="!isLoading">
+  <p
+    class="flex-nowrap py-3 font-semibold text-txt-color"
+    v-if="!isLoading && !!options[0]?.price"
+  >
     {{ $t("checkout.address.select_shipping") }}
   </p>
   <div
     class="item frete"
     :class="{ selected: isActive == index }"
     @click="selectOption(index, option?.price)"
-    v-if="!isLoading"
+    v-if="!isLoading && !!options[0]?.price"
     v-for="(option, index) in options.sort(
       (a, b) => parseFloat(a.price) - parseFloat(b.price)
     )"
