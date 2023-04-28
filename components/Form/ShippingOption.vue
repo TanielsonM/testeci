@@ -26,8 +26,6 @@ const selectOption = (index, amount) => {
   isActive.value = index;
   product.setProductShipping(amount, props.isBump, props.bump);
 };
-
-console.log(product.product);
 </script>
 
 <template>
