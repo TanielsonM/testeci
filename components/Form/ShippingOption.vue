@@ -1,18 +1,30 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { useCheckoutStore } from "~~/store/checkout";
 import { useProductStore } from "~~/store/product";
 import { useLoadingStore } from "~~/store/loading/loading";
-const checkout = useCheckoutStore();
+
 const loading = useLoadingStore();
 const product = useProductStore();
+
 const { isLoading } = storeToRefs(loading);
 
-const isActive = ref(-1);
+const props = defineProps({
+  options: {
+    required: true,
+  },
+  isBump: {
+    type: Boolean,
+    default: false,
+  },
+  bump: {
+    type: Number,
+  },
+});
+const isActive = ref(0);
 
 const selectOption = (index, amount) => {
   isActive.value = index;
-  product.setProductShipping(amount);
+  product.setProductShipping(amount, props.isBump, props.bump);
 };
 </script>
 
@@ -21,18 +33,15 @@ const selectOption = (index, amount) => {
     <LoadingShimmer width="30%" height="30px" />
     <LoadingShimmer height="50px" :quantity="4" />
   </div>
-  <p
-    class="flex-nowrap py-3 font-semibold text-txt-color"
-    v-if="!!checkout.deliveryOptions[0]?.price && !isLoading"
-  >
+  <p class="flex-nowrap py-3 font-semibold text-txt-color" v-if="!isLoading">
     {{ $t("checkout.address.select_shipping") }}
   </p>
   <div
     class="item frete"
     :class="{ selected: isActive == index }"
     @click="selectOption(index, option?.price)"
-    v-if="!!checkout.deliveryOptions[0]?.price && !isLoading"
-    v-for="(option, index) in checkout.deliveryOptions.sort(
+    v-if="!isLoading"
+    v-for="(option, index) in options.sort(
       (a, b) => parseFloat(a.price) - parseFloat(b.price)
     )"
   >

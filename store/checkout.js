@@ -570,26 +570,47 @@ export const useCheckoutStore = defineStore("checkout", {
         }
       }
     },
-    async calculateShipping(zip, id) {
+    async calculateShipping(zip) {
       if (!!zip) {
-        const calculate = await useApi().create(
+        let calculate = await useApi().create(
           `envios/calculate/${this.product_id}`,
           {
             shipping_address_zip_code: zip,
           }
         );
-        console.log(this.bump_list);
-        if (!!calculate) this.deliveryOptions = calculate;
 
-        if (this.bump_list.length > 0) {
-          this.bump_list.map((bump) => {
-            console.log(bump);
-          });
+        if (!!calculate) {
+          const product = useProductStore();
+          this.deliveryOptions = calculate;
+          product.product.shipping_options = calculate;
+        }
+
+        if (!!this.bump_list.length) {
+          await Promise.all(
+            this.bump_list.map(async (bump) => {
+              let calculateBump = await useApi().create(
+                `envios/calculate/${bump.id}`,
+                {
+                  shipping_address_zip_code: zip,
+                }
+              );
+
+              if (!!calculateBump) bump.shipping_options = calculateBump;
+            })
+          );
         }
       }
     },
     async resetShipping() {
       this.deliveryOptions = {};
+    },
+    async changeBumpShippingAmount(id, amount) {
+      for (let i = 0; i < this.bump_list.length; i++) {
+        if (this.bump_list[i].id === id) {
+          this.bump_list[i].shipping.amount = parseFloat(amount);
+          break;
+        }
+      }
     },
   },
 });

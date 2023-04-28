@@ -2,7 +2,6 @@
 // Core
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
-import { useAddressStore } from "~~/store/forms/address";
 // Utils
 import { formatMoney } from "~/utils/money";
 
@@ -16,7 +15,6 @@ const props = defineProps({
 });
 const checkoutStore = useCheckoutStore();
 const checkout = useCustomCheckoutStore();
-const address = useAddressStore();
 
 const shipping = ref({});
 const shippingOptions = ref([]);
@@ -85,37 +83,10 @@ const isFixedShipping = computed(
   () => props.bump.type_shipping_fee === "FIXED"
 );
 
-// Methods
-async function getShippingOptions() {
-  if (hasShippingFee.value && isFixedShipping.value) {
-    shipping.value = {
-      price: props.bump.amount_fixed_shipping_fee,
-    };
-    return;
-  }
-  if (props.bump.checkbox && hasShippingFee.value && address.charge.zipcode) {
-    shippingLoading.value = true;
-    await useApi()
-      .create(`/calculate/${props.bump.id}`, {
-        shipping_address_zip_code: address.sameAddress
-          ? address.charge.zipcode.replace(/[-]/g, "")
-          : address.shipping.zipcode.replace(/[-]/g, ""),
-      })
-      .then((res) => {
-        shippingOptions.value = res;
-        shipping.value = res[0] ? res[0] : {};
-      })
-      .finally(() => {
-        shippingLoading.value = false;
-      });
-  }
-}
-
 // Watches
 watch(
   () => props.bump.checkbox,
   (isChecked) => {
-    if (isChecked) getShippingOptions();
     checkoutStore.setProductList(props.bump);
   }
 );

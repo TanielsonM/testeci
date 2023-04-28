@@ -76,7 +76,7 @@ function getType(type = "") {
 </script>
 
 <template>
-  <section class="body flex h-full w-full flex-col lg:flex-row">
+  <section class="body h-full w-full">
     <section class="content flex flex-col md:flex-row">
       <!-- Image, type and detail button -->
       <section class="left__side">
@@ -196,6 +196,13 @@ function getType(type = "") {
           {{ bump.description }}
         </span>
       </section>
+    </section>
+    <section class="mt-5 !block w-full" v-if="bump.checkbox">
+      <FormShippingOption
+        :options="bump.shipping_options ?? []"
+        :is-bump="true"
+        :bump="bump.id"
+      />
     </section>
   </section>
 </template>

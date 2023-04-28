@@ -121,18 +121,21 @@ export const useProductStore = defineStore("product", {
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);
     },
-    setProductShipping(amount) {
-      // Subtrai o valor do frete anterior quando existir
-      if (this.product?.shipping?.amount) {
-        amountStore.setAmount(this.product?.shipping?.amount * -1);
-        amountStore.setOriginalAmount(this.product?.shipping?.amount * -1);
+    setProductShipping(amount, isBump = false, bump = null) {
+      if (!isBump) {
+        // Subtrai o valor do frete anterior quando existir
+        if (this.product?.shipping?.amount) {
+          amountStore.setAmount(this.product?.shipping?.amount * -1);
+          amountStore.setOriginalAmount(this.product?.shipping?.amount * -1);
+        }
+        this.product.shipping.amount = parseFloat(amount);
+        // Soma o valor do frete atual;
+        amountStore.setAmount(parseFloat(amount));
+        amountStore.setOriginalAmount(parseFloat(amount));
+      } else {
+        const checkout = useCheckoutStore();
+        checkout.changeBumpShippingAmount(bump, amount);
       }
-      this.product.shipping = {
-        amount: parseFloat(amount),
-      };
-      // Soma o valor do frete atual;
-      amountStore.setAmount(parseFloat(amount));
-      amountStore.setOriginalAmount(parseFloat(amount));
     },
   },
 });
