@@ -81,8 +81,8 @@ function updateLead() {
     <BaseInput
       class="col-span-12"
       :blur="updateLead"
-      :label="$t('forms.personal.inputs.email.label')"
-      :placeholder="$t('forms.personal.inputs.email.placeholder')"
+      :label="$t('forms.personal.inputs.mail.label')"
+      :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
       v-model="email"
       rules="required|email"
