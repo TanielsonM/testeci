@@ -1,4 +1,4 @@
-import { pixelState } from "@/types";
+import { pixelState, Pixel } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
@@ -33,18 +33,23 @@ export const usePixelStore = defineStore("Pixel", {
       this.email = "wladi@wladi.com";
       this.cellphone = "21969098986";
     },
-    async getPixels(): Promise<void> {
-      const url = `/api/lexip?product_id=${this.product_id}&event=${this.event}&event_id=${this.event_id}&method=${this.method}&sale_id=${this.sale_id}&chc_id=${this.client_has_contract}&em=${this.email}&ph=${this.cellphone}`;
+    async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
+      const url = "/lexip";
 
-      console.log({
-        function: "getPixels",
-        query: url,
-      });
+      const query = {
+        product_id: this.product_id,
+        event: this.event,
+        event_id: this.event_id,
+        method: this.method,
+        sale_id: this.sale_id,
+        chc_id: this.client_has_contract,
+        em: this.email,
+        ph: this.cellphone,
+      };
 
-      await useApi()
-        .read(url)
+      return await useApi()
+        .read(url, { query })
         .then((response) => {
-          console.log("xd:" + response);
           return response;
         });
     },

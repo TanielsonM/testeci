@@ -3,123 +3,83 @@ import { useProductStore } from "@/store/product";
 import { useCheckoutStore } from "@/store/checkout";
 import { usePixelStore } from "~~/store/modules/pixel";
 
+// Props interface
+interface Props {
+  event: string;
+  product_id: number;
+  affiliate_id: number;
+  method: string;
+  amount: number;
+  original_amount: number;
+  email: string;
+  cellphone: string;
+  sale_id: number;
+  chc_id: number;
+}
+
 // Stores
 const productStore = useProductStore();
 const checkoutStore = useCheckoutStore();
 const pixelStore = usePixelStore();
 
-const props = defineProps({
-  event: {
-    required: false,
-  },
-  product_id: {
-    required: false,
-  },
-  affiliate_id: {
-    required: false,
-  },
-  method: {
-    required: false,
-  },
-  amount: {
-    required: false,
-  },
-  original_amount: {
-    required: false,
-  },
-  email: {
-    required: false,
-  },
-  cellphone: {
-    required: false,
-  },
-  sale_id: {
-    required: false,
-  },
-  chc_id: {
-    required: false,
-  },
-});
+const props = defineProps<Props>();
 
-onMounted(() => {
+onMounted(async () => {
   if (process.client) {
-    handleEvent(
-      props.event,
-      props.product_id,
-      props.affiliate_id,
-      props.method,
-      props.amount,
-      props.sale,
-      props.sale_id,
-      props.chc_id
-    );
-
-    function handleIframe(
-      product_id,
-      pixel_id,
-      host,
-      event,
-      event_id,
-      affiliate_id,
-      amount,
-      method,
-      sale_id,
-      original_amount
-    ) {
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://${host}/${product_id}?event=${event}&event_id=${event_id}&pixel_id=${pixel_id}&method=${method}&amount=${amount}&a_id=${affiliate_id}&s_id=${sale_id}&original_amount=${original_amount}`;
-      iframe.width = 1;
-      iframe.height = 1;
-      iframe.style.display = "none";
-      document.querySelector("body").appendChild(iframe);
-    }
-
-    function handleEvent(
-      event,
-      product_id,
-      affiliate_id,
-      method,
-      amount,
-      original_amount,
-      em,
-      ph,
-      sale_id,
-      chc_id
-    ) {
-      pixelStore.syncPixels();
-
-      const pixels = pixelStore.getPixels(
-        event,
-        product_id,
-        pixelStore.event_id,
-        method,
-        affiliate_id,
-        amount,
-        sale_id,
-        chc_id,
-        em,
-        ph
-      );
-
+    await pixelStore.syncPixels(props.event);
+    await pixelStore.getPixels().then((res) => {
+      const { event_id, pixels } = res;
       if (pixels && pixels.length) {
         pixels.forEach((pixel) => {
-          this.handleIframe(
-            product_id,
-            pixel.id,
+          handleIframe(
             pixel.host,
-            event,
-            pixelStore.event_id,
-            affiliate_id,
-            amount,
-            method,
-            sale_id,
-            original_amount
+            pixel.product_id,
+            props.event,
+            event_id,
+            pixel.id,
+            props.method,
+            props.amount,
+            props.affiliate_id,
+            props.sale_id,
+            props.original_amount
           );
         });
       }
+    });
+
+    function handleIframe(
+      host: string,
+      product_id: number,
+      event: string,
+      event_id: string,
+      pixel_id: number | string,
+      method: string,
+      amount: number,
+      affiliate_id: number,
+      sale_id: number,
+      original_amount: number
+    ) {
+      const url = `https://${host}/${product_id}`;
+      const query = new URLSearchParams();
+      if (!!event) query.append("event", event);
+      if (!!event_id) query.append("event_id", event_id);
+      if (!!pixel_id) query.append("pixel_id", pixel_id.toString());
+      if (!!method) query.append("method", method);
+      if (!!amount) query.append("amount", amount.toString());
+      if (!!affiliate_id) query.append("affiliate_id", affiliate_id.toString());
+      if (!!sale_id) query.append("sale_id", sale_id.toString());
+      if (!!original_amount)
+        query.append("original_amount", original_amount.toString());
+
+      const iframe = document.createElement("iframe");
+      iframe.src = `${url}?${query.toString()}`;
+      iframe.width = "1px";
+      iframe.height = "1px";
+      iframe.style.display = "none";
+
+      const body = document.querySelector("body") as HTMLElement;
+      body.appendChild(iframe);
     }
   }
 });
 </script>
-
-<template></template>
