@@ -142,7 +142,7 @@ await checkout.init();
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>
-    <section class="flex w-full flex-col gap-10 max-w-[780px] xl:min-w-[780px]">
+    <section class="flex w-full max-w-[780px] flex-col gap-10 xl:min-w-[780px]">
       <!-- Purchase card -->
       <BaseCard
         class="w-full p-5 md:px-[60px] md:py-[50px]"
@@ -182,7 +182,13 @@ await checkout.init();
                 <FormAddress type="shipping" />
               </template>
             </Steps>
-            <FormShippingOption />
+            <FormShippingOption
+              v-if="
+                product?.has_shipping_fee === 1 &&
+                product?.type_shipping_fee == 'DYNAMIC'
+              "
+              :options="product.shipping_options ?? []"
+            />
           </template>
         </Steps>
         <!-- Purchase Form -->
@@ -213,7 +219,11 @@ await checkout.init();
           />
         </template>
         <!-- Purchase button -->
-        <BaseButton class="mt-10" @click="payment.payment(locale)" v-if="method !== 'PAYPAL'">
+        <BaseButton
+          class="mt-10"
+          @click="payment.payment(locale)"
+          v-if="method !== 'PAYPAL'"
+        >
           <span class="text-[15px] font-semibold">
             {{
               custom_checkout.purchase_text || $t("checkout.footer.btn_compra")
@@ -239,7 +249,9 @@ await checkout.init();
       <FooterSafe />
     </section>
     <!-- Product Card -->
-    <section class="flex w-full flex-col gap-10 lg:max-w-[380px] xl:min-w-[380px]">
+    <section
+      class="flex w-full flex-col gap-10 lg:max-w-[380px] xl:min-w-[380px]"
+    >
       <ProductCard :product="product" data-anima="bottom" />
       <!-- Side Thumb -->
       <img
