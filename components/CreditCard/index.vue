@@ -74,7 +74,7 @@ function getImg(type) {
 <template>
   <section class="flex w-full max-w-[430px] justify-start">
     <section
-      class="card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5"
+      class="card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-greenn-transparent-color p-5"
     >
       <header class="flex h-10 w-full justify-end">
         <Transition name="slide-fade-up" mode="out-in">
