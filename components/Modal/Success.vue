@@ -12,10 +12,6 @@ const route = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
 
-interface Props {
-  type: {};
-}
-
 defineProps({
   type: {
     type: String,
