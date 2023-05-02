@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import { formatMoney } from "@/utils/money";
+import { Sale, ProductOffer } from "@/types";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useModalStore } from "~~/store/modal/success";
-import { useI18n } from "vue-i18n";
-import { Sale, ProductOffer } from "@/types";
+
+const checkoutStore = useCheckoutStore();
+const { sales, productOffer } = storeToRefs(checkoutStore);
 
 const route = useRoute();
-const checkout = useCheckoutStore();
 const modal = useModalStore();
-const { sales, productOffer } = storeToRefs(checkout);
 const { t } = useI18n();
+
+interface Props {
+  type: {};
+}
 
 defineProps({
   type: {
@@ -28,7 +32,7 @@ const data = ref({
 
 if (!!route.query.s_id && !route.query.chc) {
   const saleId = route.query.s_id;
-  await checkout.getSale(saleId);
+  await checkoutStore.getSale(saleId);
   const sale: Sale = sales.value as Sale;
   data.value.sale = sale;
 
@@ -58,7 +62,7 @@ if (!!route.query.s_id && !route.query.chc) {
 
   const offer = route.query.offer;
 
-  await checkout.getProductOffer(route.params.product_id, offer);
+  await checkoutStore.getProductOffer(route.params.product_id, offer);
   const pdtOffer: ProductOffer = productOffer.value as ProductOffer;
   data.value.productOffer = pdtOffer;
 
@@ -74,20 +78,21 @@ if (!!route.query.s_id && !route.query.chc) {
 
   const saleId = route.query.s_id;
   if (!!saleId) {
-    await checkout.getSale(saleId);
+    await checkoutStore.getSale(saleId);
     const sale: Sale = sales.value as Sale;
     data.value.productOffer.data.amount = sale.sales[0].amount;
     data.value.chc = sale.sales[0].id.toString();
   }
 
   const queryKeys = Object.keys(route.query);
+
   await Promise.all(
     queryKeys.map(async (x) => {
       if (x.substr(0, 4) === "b_id") {
         if (route.query[x]?.includes("-s_id_")) {
           const query = route.query[x] as String;
           const saleId = query.split("-s_id_")[1];
-          await checkout.getSale(saleId);
+          await checkoutStore.getSale(saleId);
           const bump: Sale = sales.value as Sale;
           data.value.bump = bump;
         }
@@ -96,6 +101,7 @@ if (!!route.query.s_id && !route.query.chc) {
   );
 }
 </script>
+
 <template>
   <div v-if="!!data.sale?.sales?.length">
     <div class="container" v-if="data.sale.sales[0].method == 'BOLETO'">
@@ -119,8 +125,9 @@ if (!!route.query.s_id && !route.query.chc) {
             animation="pulse"
             class="col-span-12 lg:col-span-4"
             @click="modal.closeAtion"
-            >{{ $t("pg_obrigado.modal.entendido") }}</BaseButton
           >
+            {{ $t("pg_obrigado.modal.entendido") }}
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -173,7 +180,7 @@ if (!!route.query.s_id && !route.query.chc) {
     <div class="container">
       <ModalTrialInfos
         :name="data.productOffer.data.name"
-        :amount="formatMoney(data.productOffer.data.amount)"
+        :amount="formatMoney(data.sale.sales[0].amount)"
         :shipping-amount="
           formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
         "
@@ -190,10 +197,23 @@ if (!!route.query.s_id && !route.query.chc) {
           animation="pulse"
           class="col-span-12 lg:col-span-4"
           @click="modal.closeAtion"
-          >{{ $t("pg_obrigado.modal.entendido") }}</BaseButton
         >
+          {{ $t("pg_obrigado.modal.entendido") }}
+        </BaseButton>
       </div>
     </div>
+    <ClientOnly>
+      <PixelClient
+        :event="'conversion'"
+        :product_id="productStore.product_id"
+        :affiliate_id="checkoutStore.hasAffiliateId"
+        :method="checkout.method"
+        :amount="data.productOffer.data.amount"
+        :original_amount="checkout.original_amount"
+        :sale_id="saleId"
+        :chc_id="chc"
+      />
+    </ClientOnly>
   </div>
 </template>
 

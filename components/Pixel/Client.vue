@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { useProductStore } from "@/store/product";
-import { useCheckoutStore } from "@/store/checkout";
 import { usePixelStore } from "~~/store/modules/pixel";
 
 // Props interface
@@ -17,18 +15,21 @@ interface Props {
   chc_id: number;
 }
 
-// Stores
-const productStore = useProductStore();
-const checkoutStore = useCheckoutStore();
 const pixelStore = usePixelStore();
-
 const props = defineProps<Props>();
 
 onMounted(async () => {
   if (process.client) {
-    await pixelStore.syncPixels(props.event);
+    pixelStore.amount = props?.amount;
+    pixelStore.original_amount = props?.original_amount;
+    pixelStore.sale_id = props?.sale_id;
+    pixelStore.client_has_contract = props?.chc_id;
+
+    pixelStore.syncPixels(props.event);
+
     await pixelStore.getPixels().then((res) => {
       const { event_id, pixels } = res;
+
       if (pixels && pixels.length) {
         pixels.forEach((pixel) => {
           handleIframe(
@@ -61,6 +62,7 @@ onMounted(async () => {
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
+
       if (!!event) query.append("event", event);
       if (!!event_id) query.append("event_id", event_id);
       if (!!pixel_id) query.append("pixel_id", pixel_id.toString());

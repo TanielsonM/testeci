@@ -11,31 +11,28 @@ const personalStore = usePersonalStore();
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
     event: "view",
-    product_id: productStore.product_id,
+    product_id: 0,
     event_id: uuidv4(),
-    method: checkoutStore.method,
-    affiliate_id: checkoutStore.hasAffiliateId,
-    amount: productStore.amount,
+    method: "",
+    affiliate_id: 0,
+    amount: 0,
+    original_amount: 0,
     sale_id: 0,
     client_has_contract: 0,
-    email: personalStore.email,
-    cellphone: personalStore.cellphone,
+    email: "",
+    cellphone: "",
   }),
   getters: {},
   actions: {
     syncPixels(event: string) {
       this.event = event;
+      this.product_id = productStore.product_id;
       this.method = checkoutStore.method;
       this.affiliate_id = checkoutStore.hasAffiliateId;
-      this.amount = checkoutStore.amount;
-      this.sale_id = 0;
-      this.client_has_contract = 0;
-      this.email = "wladi@wladi.com";
-      this.cellphone = "21969098986";
+      this.email = personalStore.name;
+      this.cellphone = personalStore.cellphone;
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
-      const url = "/lexip";
-
       const query = {
         product_id: this.product_id,
         event: this.event,
@@ -48,7 +45,7 @@ export const usePixelStore = defineStore("Pixel", {
       };
 
       return await useApi()
-        .read(url, { query })
+        .read("/lexip", { query })
         .then((response) => {
           return response;
         });
