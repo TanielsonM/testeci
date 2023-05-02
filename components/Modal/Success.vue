@@ -41,6 +41,7 @@ if (!!route.query.s_id && !route.query.chc) {
       break;
     case "PAYPAL":
     case "CREDIT_CARD":
+    case "TWO_CREDIT_CARDS":
       modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
       break;
   }
@@ -97,8 +98,8 @@ if (!!route.query.s_id && !route.query.chc) {
 }
 </script>
 <template>
-  <div v-if="!!data.sale?.sales?.length">
-    <div class="container" v-if="data.sale.sales[0].method == 'BOLETO'">
+  <div v-if="data.sale?.sales?.length">
+    <div class="container" v-if="data.sale.sales[0].method === 'BOLETO'">
       <ModalTicketInfos
         v-for="(sale, i) in data.sale.sales"
         :code="sale.boleto_barcode!"
@@ -124,7 +125,7 @@ if (!!route.query.s_id && !route.query.chc) {
         </div>
       </div>
     </div>
-    <div class="container" v-if="data.sale.sales[0].method == 'PIX'">
+    <div class="container" v-if="data.sale.sales[0].method === 'PIX'">
       <ModalPixInfos
         v-for="(sale, i) in data.sale.sales"
         :name="sale.product.name"
@@ -143,8 +144,9 @@ if (!!route.query.s_id && !route.query.chc) {
     <div
       class="container"
       v-if="
-        data.sale.sales[0].method == 'CREDIT_CARD' ||
-        data.sale.sales[0].method == 'PAYPAL'
+        data.sale.sales[0].method === 'CREDIT_CARD' ||
+        data.sale.sales[0].method === 'TWO_CREDIT_CARDS' ||
+        data.sale.sales[0].method === 'PAYPAL'
       "
     >
       <ModalCardInfos
