@@ -137,7 +137,7 @@ const onInput = (event) => {
           :readonly="readonly"
           :placeholder="placeholder"
           :autocomplete="autocomplete"
-          class="h-full w-full bg-checkout outline-none"
+          class="h-full w-full bg-checkout outline-none text-txt-color"
           @input="onInput"
         />
         <input
@@ -153,7 +153,7 @@ const onInput = (event) => {
           :readonly="readonly"
           :placeholder="placeholder"
           :autocomplete="autocomplete"
-          class="h-full w-full bg-checkout outline-none"
+          class="h-full w-full bg-checkout outline-none text-txt-color"
           :data-maska="mask"
           @input="onInput"
         />

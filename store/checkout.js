@@ -1,4 +1,3 @@
-// Core
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
@@ -366,8 +365,7 @@ export const useCheckoutStore = defineStore("checkout", {
     async setCoupon(initial = false, remove = false) {
       const store = useAmountStore();
       if (remove) {
-        store.setAmount(store.getAmount * -1);
-        store.setAmount(store.original_amount);
+        store.setAmount(store.getOriginalAmount - store.getAmount);
         this.coupon = {
           amount: 0,
           applied: false,
@@ -573,21 +571,61 @@ export const useCheckoutStore = defineStore("checkout", {
         }
       }
     },
-    async calculateShipping(zip, id) {
-      if (!!zip) {
+    async calculateShipping(zip) {
+      if (zip) {
         try {
-          const calculate = await useApi().create(`envios/calculate/${id}`, {
-            shipping_address_zip_code: zip,
-          });
-          if (!!calculate) this.deliveryOptions = calculate;
+          const productStore = useProductStore();
+          const { product } = storeToRefs(productStore);
+
+          if (
+            product.value.has_shipping_fee === 1 &&
+            product.value.type_shipping_fee === "DYNAMIC"
+          ) {
+            let calculate = await useApi().create(
+              `envios/calculate/${this.product_id}`,
+              {
+                shipping_address_zip_code: zip,
+              }
+            );
+
+            if (!!calculate) {
+              this.deliveryOptions = calculate;
+              product.value.shipping_options = calculate;
+            }
+          }
+
+          await this.calculateBumpsShipping(zip);
         } catch (e) {
-          this.setError(e.message);
-          throw e;
+          await this.calculateBumpsShipping(zip);
         }
       }
     },
     async resetShipping() {
       this.deliveryOptions = {};
+    },
+    async changeBumpShippingAmount(id, amount) {
+      const pdt = this.product_list.find((product) => product.id === id);
+      if (pdt) {
+        const oldAmount = pdt.shipping?.amount || 0;
+        amountStore.setAmount(parseFloat(amount) - oldAmount);
+        amountStore.setOriginalAmount(parseFloat(amount) - oldAmount);
+        pdt.shipping = { ...pdt.shipping, amount: parseFloat(amount) };
+      }
+    },
+    async calculateBumpsShipping(zip) {
+      if (this.bump_list.length) {
+        const promises = this.bump_list.map((bump) =>
+          useApi().create(`envios/calculate/${bump.id}`, {
+            shipping_address_zip_code: zip,
+          })
+        );
+        const results = await Promise.all(promises);
+        this.bump_list.forEach((bump, index) => {
+          if (results[index]) {
+            bump.shipping_options = results[index];
+          }
+        });
+      }
     },
   },
 });

@@ -59,9 +59,7 @@ async function getAddress(cep = "") {
         form.value.neighborhood = value.bairro;
         form.value.complement = value.complemento;
         form.value.state = value.uf;
-
-        const productId = checkout.product_id;
-        await checkout.calculateShipping(cep, productId);
+        await checkout.calculateShipping(cep);
       }
     })
     .then(() => {

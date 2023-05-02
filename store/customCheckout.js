@@ -80,7 +80,7 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
           .read(url)
           .then((response) => {
             if (response?.custom_checkout) {
-              this.custom_checkout = checkout;
+              this.custom_checkout = response?.custom_checkout;
               if (this.hasJivochatId) {
                 this.setJivochat(this.hasJivochatId);
               }

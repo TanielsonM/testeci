@@ -183,7 +183,13 @@ await checkout.init();
                 <FormAddress type="shipping" />
               </template>
             </Steps>
-            <FormShippingOption />
+            <FormShippingOption
+              v-if="
+                product?.has_shipping_fee === 1 &&
+                product?.type_shipping_fee == 'DYNAMIC'
+              "
+              :options="product.shipping_options ?? []"
+            />
           </template>
         </Steps>
 
