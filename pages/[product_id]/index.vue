@@ -16,7 +16,7 @@ const payment = usePaymentStore();
 const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
-const { method, allowed_methods, amount } = storeToRefs(checkout);
+const { method, allowed_methods } = storeToRefs(checkout);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
