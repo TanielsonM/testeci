@@ -26,8 +26,8 @@ onMounted(async () => {
     pixelStore.client_has_contract = props.chc_id;
 
     await pixelStore.syncPixels(props.event);
-    await pixelStore.getPixels().then((res) => {
-      const { event_id, pixels } = res;
+    await pixelStore.getPixels().then((response) => {
+      const { event_id, pixels } = response;
 
       if (pixels && pixels.length) {
         pixels.forEach((pixel) => {
