@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
