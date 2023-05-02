@@ -3,7 +3,6 @@ import { usePersonalStore } from "./../forms/personal";
 import { useAddressStore } from "./../forms/address";
 import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
-import { storeToRefs } from "pinia";
 
 const personalStore = usePersonalStore();
 const addressStore = useAddressStore();

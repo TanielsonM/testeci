@@ -6,17 +6,17 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 
 // Stores
-const custom_checkout = useCustomCheckoutStore();
+const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
-const checkout = useCheckoutStore();
-const address = useAddressStore();
-const payment = usePaymentStore();
+const checkoutStore = useCheckoutStore();
+const addressStore = useAddressStore();
+const paymentStore = usePaymentStore();
 
 /* Variables */
 const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
-const { sameAddress } = storeToRefs(address);
-const { method, allowed_methods } = storeToRefs(checkout);
+const { sameAddress } = storeToRefs(addressStore);
+const { method, allowed_methods } = storeToRefs(checkoutStore);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -132,7 +132,7 @@ const tabs = computed(() => {
     }
   });
 });
-await checkout.init();
+await checkoutStore.init();
 </script>
 
 <template>
@@ -161,12 +161,12 @@ await checkout.init();
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          v-if="checkout.showAddressStep()"
+          v-if="checkoutStore.showAddressStep()"
         >
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct()"
+              v-if="checkoutStore.hasPhysicalProduct()"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -195,7 +195,7 @@ await checkout.init();
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
-          :step="checkout.showAddressStep() ? '03' : '02'"
+          :step="checkoutStore.showAddressStep() ? '03' : '02'"
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
@@ -206,16 +206,16 @@ await checkout.init();
         </Steps>
 
         <!-- Bumps -->
-        <template v-if="checkout.getBumpList.length">
+        <template v-if="checkoutStore.getBumpList.length">
           <p class="w-full text-txt-color">
             {{
-              custom_checkout.hasCustomBump
-                ? custom_checkout.bump_options.title
+              customCheckoutStore.hasCustomBump
+                ? customCheckoutStore.bump_options.title
                 : `${$t("checkout.pagamento.bump.title")} 🔥`
             }}
           </p>
           <OrderBumps
-            v-for="(bump, index) in checkout.getBumpList"
+            v-for="(bump, index) in checkoutStore.getBumpList"
             :key="index"
             :bump="bump"
           />
@@ -224,12 +224,13 @@ await checkout.init();
         <!-- Purchase button -->
         <BaseButton
           class="mt-10"
-          @click="payment.payment(locale)"
+          @click="paymentStore.payment(locale)"
           v-if="method !== 'PAYPAL'"
         >
           <span class="text-[15px] font-semibold">
             {{
-              custom_checkout.purchase_text || $t("checkout.footer.btn_compra")
+              customCheckoutStore.purchase_text ||
+              $t("checkout.footer.btn_compra")
             }}
           </span>
         </BaseButton>
@@ -245,8 +246,8 @@ await checkout.init();
 
       <!-- Bottom thumb (custom checkout) -->
       <img
-        v-if="custom_checkout.bottomThumb"
-        :src="custom_checkout.bottomThumb"
+        v-if="customCheckoutStore.bottomThumb"
+        :src="customCheckoutStore.bottomThumb"
         alt="Thumb inferior"
         class="w-full object-contain"
       />
@@ -261,8 +262,8 @@ await checkout.init();
       <ProductCard :product="product" data-anima="bottom" />
       <!-- Side Thumb -->
       <img
-        v-if="custom_checkout.sideThumb"
-        :src="custom_checkout.sideThumb"
+        v-if="customCheckoutStore.sideThumb"
+        :src="customCheckoutStore.sideThumb"
         alt="Thumb lateral"
         class="hidden w-full lg:block"
       />
@@ -277,9 +278,9 @@ await checkout.init();
           :event="'view'"
           :product_id="productStore.product_id"
           :affiliate_id="checkoutStore.hasAffiliateId"
-          :method="checkout.method"
-          :amount="checkout.amount"
-          :original_amount="checkout.original_amount"
+          :method="checkoutStore.method"
+          :amount="checkoutStore.amount"
+          :original_amount="checkoutStore.original_amount"
         />
       </ClientOnly>
       <!-- End Client Only section -->
