@@ -5,7 +5,7 @@ import { usePixelStore } from "~~/store/modules/pixel";
 interface Props {
   event: string;
   product_id: number;
-  affiliate_id: number;
+  affiliate_id: any;
   method: string;
   amount: number;
   original_amount: number;
