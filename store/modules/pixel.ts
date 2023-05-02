@@ -17,14 +17,14 @@ export const usePixelStore = defineStore("Pixel", {
     affiliate_id: 0,
     amount: 0,
     original_amount: 0,
-    sale_id: 0,
-    client_has_contract: 0,
-    email: "",
-    cellphone: "",
+    sale_id: undefined,
+    client_has_contract: undefined,
+    email: undefined,
+    cellphone: undefined,
   }),
   getters: {},
   actions: {
-    syncPixels(event: string) {
+    async syncPixels(event: string) {
       this.event = event;
       this.product_id = productStore.product_id;
       this.method = checkoutStore.method;
@@ -45,9 +45,14 @@ export const usePixelStore = defineStore("Pixel", {
       };
 
       return await useApi()
-        .read("/lexip", { query })
+        .read("lexip", { query })
         .then((response) => {
-          return response;
+          console.log({ test: response });
+          if (response) {
+            return response;
+          }
+
+          return {};
         });
     },
   },

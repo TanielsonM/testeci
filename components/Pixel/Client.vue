@@ -25,8 +25,7 @@ onMounted(async () => {
     pixelStore.sale_id = props.sale_id;
     pixelStore.client_has_contract = props.chc_id;
 
-    pixelStore.syncPixels(props.event);
-
+    await pixelStore.syncPixels(props.event);
     await pixelStore.getPixels().then((res) => {
       const { event_id, pixels } = res;
 
@@ -56,7 +55,7 @@ onMounted(async () => {
       pixel_id: number | string,
       method: string,
       amount: number,
-      affiliate_id: number | undefined,
+      affiliate_id: number,
       sale_id: number | undefined,
       original_amount: number
     ) {
