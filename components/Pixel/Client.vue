@@ -5,14 +5,14 @@ import { usePixelStore } from "~~/store/modules/pixel";
 interface Props {
   event: string;
   product_id: number;
-  affiliate_id: any;
+  affiliate_id: number;
   method: string;
   amount: number;
   original_amount: number;
-  email: string;
-  cellphone: string;
-  sale_id: number;
-  chc_id: number;
+  email?: string;
+  cellphone?: string;
+  sale_id?: number;
+  chc_id?: number;
 }
 
 const pixelStore = usePixelStore();
@@ -20,10 +20,10 @@ const props = defineProps<Props>();
 
 onMounted(async () => {
   if (process.client) {
-    pixelStore.amount = props?.amount;
-    pixelStore.original_amount = props?.original_amount;
-    pixelStore.sale_id = props?.sale_id;
-    pixelStore.client_has_contract = props?.chc_id;
+    pixelStore.amount = props.amount;
+    pixelStore.original_amount = props.original_amount;
+    pixelStore.sale_id = props.sale_id;
+    pixelStore.client_has_contract = props.chc_id;
 
     pixelStore.syncPixels(props.event);
 
@@ -56,8 +56,8 @@ onMounted(async () => {
       pixel_id: number | string,
       method: string,
       amount: number,
-      affiliate_id: number,
-      sale_id: number,
+      affiliate_id: number | undefined,
+      sale_id: number | undefined,
       original_amount: number
     ) {
       const url = `https://${host}/${product_id}`;

@@ -30,13 +30,13 @@ export type pixelState = {
   product_id: number;
   event_id: String;
   method: String;
-  affiliate_id: any;
   amount: Number;
   original_amount: Number;
-  sale_id: Number;
-  client_has_contract: Number;
-  email: string;
-  cellphone: string;
+  affiliate_id?: Number;
+  sale_id?: Number;
+  client_has_contract?: Number;
+  email?: string;
+  cellphone?: string;
 };
 
 export type Coupon = {
