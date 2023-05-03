@@ -77,12 +77,14 @@ export type Payment = {
 
   method: string;
   language: string;
+
   products: {
     product_id: number;
     product_offer?: string;
     proposal_id?: number;
     coupon?: string;
   }[];
+
   cards?: PurcharseCard[];
 
   name: string;

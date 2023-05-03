@@ -1,7 +1,9 @@
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
+
 // Types
 import { Payment, Product, PaymentError, SaleElement } from "~~/types";
+
 // Stores
 import { usePersonalStore } from "../forms/personal";
 import { useAddressStore } from "../forms/address";
