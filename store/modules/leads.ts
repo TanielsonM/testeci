@@ -112,11 +112,6 @@ export const useLeadsStore = defineStore("Leads", {
         product_id: this.payment.product_id,
       };
 
-      console.log({
-        function: "syncLead",
-        data: query,
-      });
-
       await useApi()
         .read("/lead", { query })
         .then((response) => {
@@ -158,11 +153,6 @@ export const useLeadsStore = defineStore("Leads", {
         step: 0,
       };
 
-      console.log({
-        function: "createLead",
-        data: data,
-      });
-
       await useApi()
         .create("/lead", data)
         .then((response) => {
@@ -176,10 +166,6 @@ export const useLeadsStore = defineStore("Leads", {
         });
     },
     async updateLead(): Promise<void> {
-      console.log({
-        function: "updateLead",
-      });
-
       if (this.uuid) {
         try {
           await useApi()
@@ -205,7 +191,7 @@ export const useLeadsStore = defineStore("Leads", {
               status: this.purchase.status,
             })
             .then((res) => {
-              console.log(res);
+              return res;
             });
         } catch (error) {
           console.log(error);
