@@ -1,17 +1,18 @@
 <script setup>
 import moment from "moment";
+import { formatMoney } from "@/utils/money";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
-import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
+import { useAmountStore } from "~~/store/modules/amount";
 
-const product = useProductStore();
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
+const amountStore = useAmountStore();
+
+const { getAmount } = storeToRefs(amountStore);
 const { method } = storeToRefs(checkout);
 const { first, second } = storeToRefs(purchase);
-const { hasSubscriptionInstallments, productType, getPeriod } =
-  storeToRefs(product);
 
 const years = [
   { value: moment().year(), label: moment().year() },
@@ -74,6 +75,48 @@ const months = [
   { value: "11", label: "11" },
   { value: "12", label: "12" },
 ];
+
+function clearValue(value) {
+  return value.toString().replace("R$ ", "").replace(",", ".").replace("-", "");
+}
+
+function changeAmount(from) {
+  // When method is diff of two credit cards, stop function
+  if (method.value !== "TWO_CREDIT_CARDS") return;
+
+  // when user change amount of first card, set amount of second card
+  if (from === "first") {
+    let value = parseFloat(clearValue(first.value.amount));
+    // if the value of the card is greater than the total value, set the card with the entire value
+    if (value >= parseFloat(getAmount.value)) {
+      value = parseFloat(getAmount.value);
+    }
+    second.value.amount = parseFloat(getAmount.value - value).toFixed(2);
+    first.value.amount = value;
+
+    formatAmount("first");
+    formatAmount("second");
+    return;
+  }
+  let value = parseFloat(clearValue(second.value.amount));
+  // if the value of the card is greater than the total value, set the card with the entire value
+  if (value >= parseFloat(getAmount.value)) {
+    value = parseFloat(getAmount.value);
+  }
+  first.value.amount = parseFloat(getAmount.value - value).toFixed(2);
+  second.value.amount = value;
+  formatAmount("first");
+  formatAmount("second");
+  return;
+}
+
+function formatAmount(from) {
+  if (from === "first") {
+    first.value.amount = formatMoney(clearValue(first.value.amount));
+    return;
+  }
+  second.value.amount = formatMoney(clearValue(second.value.amount));
+}
 </script>
 
 <template>
@@ -105,7 +148,9 @@ const months = [
       </p>
     </BaseButton>
   </section>
-  <section class="flex flex-wrap xl:flex-nowrap justify-center xl:justify-between gap-5">
+  <section
+    class="flex flex-wrap justify-center gap-5 xl:flex-nowrap xl:justify-between"
+  >
     <!-- First credit card -->
     <form class="grid w-full grid-cols-12 gap-3">
       <span
@@ -122,6 +167,9 @@ const months = [
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         class="col-span-12"
         v-model="first.amount"
+        @blur="changeAmount('first')"
+        @input="formatAmount('first')"
+        @vnode-before-mount="formatAmount('first')"
       />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
@@ -176,6 +224,9 @@ const months = [
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         class="col-span-12"
         v-model="second.amount"
+        @blur="changeAmount('second')"
+        @input="formatAmount('second')"
+        @vnode-before-mount="formatAmount('second')"
       />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
