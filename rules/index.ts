@@ -61,9 +61,6 @@ function valideCNPJ(document: string): boolean {
     return r > 9 ? 0 : r;
   };
 
-  console.log(calc(t) === d1);
-  console.log(calc(t + 1) === d2);
-
   return calc(t) === d1 && calc(t + 1) === d2;
 }
 
