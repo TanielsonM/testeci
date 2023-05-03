@@ -12,6 +12,7 @@ export default <Partial<Config>>{
       colors: {
         greenn: "var(--greenn)",
         "greenn-transparent-color": "var(--greenn-transparent-color)",
+        "greenn-transparent": "var(--greenn-transparent)",
         background: "var(--background)",
         checkout: "var(--checkout)",
         error: "var(--error)",
