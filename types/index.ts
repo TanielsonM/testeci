@@ -25,6 +25,20 @@ export type Company = {
   support_telephone: string;
 };
 
+export type pixelState = {
+  event: String;
+  product_id: number;
+  event_id: String;
+  method: String;
+  amount: Number;
+  original_amount: Number;
+  affiliate_id?: Number;
+  sale_id?: Number;
+  client_has_contract?: Number;
+  email?: string;
+  cellphone?: string;
+};
+
 export type Coupon = {
   amount: number;
   applied: boolean;
@@ -75,7 +89,7 @@ export type Payment = {
   email: string;
   document: string;
   cellphone: string;
-  uuid: string;
+  uuid: any;
 
   captcha: string;
   country_code: string;
@@ -335,6 +349,37 @@ export type CheckoutState = {
 
 export type CouponState = {
   coupon: Coupon;
+};
+
+export type leadsState = {
+  step: number;
+  uuid: any;
+  personal: {
+    name: any;
+    email: any;
+    cellphone: any;
+    document: any;
+  };
+  address: {
+    zip_code: any;
+    state: any;
+    city: any;
+    street: any;
+    number: any;
+    neighborhood: any;
+    complement: any;
+    country_code: any;
+  };
+  payment: {
+    offer_hash: any;
+    proposal_id: any;
+    product_id: any;
+    seller_id: any;
+    affiliate_id: any;
+  };
+  purchase: {
+    status: string;
+  };
 };
 
 export type InstallmentsState = {

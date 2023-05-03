@@ -11,6 +11,10 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  blur: {
+    required: false,
+    default: () => "",
+  },
   label: {
     type: String,
     required: false,
@@ -83,11 +87,12 @@ const props = defineProps({
     default: () => "",
   },
   rules: {
-    type: String,
+    type: [String, Object],
     required: false,
     default: () => "",
   },
 });
+
 const emit = defineEmits([
   "update:modelValue",
   "prepend-click",
@@ -95,6 +100,7 @@ const emit = defineEmits([
   "blur",
   "input"
 ]);
+
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
   emit("input", event.target.value)
@@ -121,13 +127,10 @@ const onInput = (event) => {
         class="cursor-pointer text-txt-color hover:text-main-color focus:text-main-color"
         @click="emit('prepend-click')"
       />
-      <VeeField
-        :name="inputName"
-        :rules="rules"
-        v-slot="{ field }"
-      >
+      <VeeField :name="inputName" :rules="rules" v-slot="{ field }">
         <input
           v-if="!mask"
+          @blur="blur"
           v-bind="field"
           :type="type"
           :id="inputId"
@@ -145,6 +148,7 @@ const onInput = (event) => {
           v-else
           v-maska
           v-bind="field"
+          @blur="blur"
           :type="type"
           :id="inputId"
           :value="modelValue"

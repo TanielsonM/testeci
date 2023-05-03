@@ -17,6 +17,10 @@
         "cellphone": {
           "label": "Celular",
           "placeholder": "Número de telefone"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Preencha com seu email"
         }
       }
     },
@@ -125,7 +129,8 @@
         "email": "Este email é inválido.",
         "confirmation_email": "Os emails digitados devem ser iguais.",
         "celular": "Este celular é inválido.",
-        "gift_message": "Preencha a mensagem"
+        "gift_message": "Preencha a mensagem",
+        "document": "Seu documento está invalido."
       }
     },
     "address": {
@@ -410,6 +415,8 @@
     "placeholder": "Buscar País"
   },
   "error": {
+    "1404": "Esse produto não é uma assinatura.",
+    "1405": "Não há nenhuma assinatura vinculada a este CPF/CNPJ.",
     "0001": "Este cupom que está utilizando não é mais válido.",
     "BANK": "Algo deu errado com sua compra, por favor, entre em contato com o banco ou emissor do seu cartão.",
     "BLACKLIST_PURCHASE": "Após inúmeras tentativas de pagamento o banco retornou que seu cartão foi bloqueado, entre em contato com sua operadora de cartão solicitando o desbloqueio e caso já tenha feito, nos avise em greenn.com.br para liberarmos aqui.",
@@ -426,9 +433,7 @@
     "CURRENCY_NOT_SUPPORTED": "Moeda não suportada.",
     "SUSPECTED_FRAUD": "Transação não permitida - Entre em contato com o banco ou tente outra forma de pagamento.",
     "GENERIC": "Ocorreu um erro durante o processamento da compra, verifique os dados e tente novamente, em caso de falhas, faça contato conosco para maiores orientações.",
-    "0404": "Nenhuma assinatura foi efetuada com este CPF/CNPJ.",
-    "1404": "Esse produto não é uma assinatura.",
-    "1405": "Não há nenhuma assinatura vinculada a este CPF/CNPJ."
+    "0404": "Nenhuma assinatura foi efetuada com este CPF/CNPJ."
   },
   "general": {
     "close": "Fechar",

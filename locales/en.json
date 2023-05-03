@@ -17,6 +17,10 @@
         "cellphone": {
           "label": "Cellphone",
           "placeholder": "Phone number"
+        },
+        "email": {
+          "placeholder": "Type with your email",
+          "label": "Email"
         }
       }
     },
@@ -125,7 +129,8 @@
         "email": "Fill in your email.",
         "confirmation_email": "The emails entered must be the same.",
         "celular": "Fill your cell phone.",
-        "gift_message": "Fill a message"
+        "gift_message": "Fill a message",
+        "document": "Your document is invalid"
       }
     },
     "address": {
@@ -408,6 +413,8 @@
     "placeholder": "Search country"
   },
   "error": {
+    "1404": "This product is not a subscription.",
+    "1405": "There is no signature linked to this document.",
     "0001": "This coupon you are using is no longer valid.",
     "BANK": "Something went wrong with your purchase, please contact your bank or card issuer.",
     "BLACKLIST_PURCHASE": "After numerous payment attempts, the bank returned that your card was blocked, contact your card operator asking to unblock it and if you have already done so, let us know at greenn.com.br to release here.",
@@ -424,9 +431,7 @@
     "CURRENCY_NOT_SUPPORTED": "Currency not supported.",
     "SUSPECTED_FRAUD": "Transaction not allowed - Contact your bank or try another payment method",
     "GENERIC": "An error occurred while processing the purchase, please check the data and try again, in case of failures, please contact us for further guidance.",
-    "0404": "No signature has been made with this document.",
-    "1404": "This product is not a subscription.",
-    "1405": "There is no signature linked to this document."
+    "0404": "No signature has been made with this document."
   },
   "general": {
     "close": "Close",

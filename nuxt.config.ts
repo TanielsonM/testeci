@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { createCommonJS } from "mlly";
 const { __dirname } = createCommonJS(import.meta.url);
+
 // Locales
 import pt from "./locales/pt.json";
 import en from "./locales/en.json";
@@ -24,21 +25,20 @@ export default defineNuxtConfig({
     "@nuxt/image-edge",
     "@nuxtjs/robots",
     "@nuxt/devtools",
+    "@vue-macros/nuxt",
+    "@vueuse/nuxt",
     [
       "@pinia/nuxt",
       {
-        autoImports: ["defineStore"],
+        autoImports: ["defineStore", "storeToRefs"],
       },
     ],
   ],
+  devtools: { componentInspector: false },
   imports: {
     dirs: ["store"],
   },
-  plugins: [
-    "~/plugins/vue-toast.ts",
-    "~/plugins/veevalidate-components.ts",
-    "~/plugins/veevalidate-rules.ts",
-  ],
+  plugins: [],
   css: ["~/assets/scss/_global.scss"],
   app: {
     head: {
@@ -62,6 +62,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      apiBase: process.env.API_HOST,
       API_BASE_URL: process.env.API_HOST,
       CHECKOUT_PAGE: process.env.VUE_CHECKOUT_PAGE,
       HEAVEN_CHECKOUT_PAGE: process.env.VUE_CHECKOUT_HEAVEN_PAGE,

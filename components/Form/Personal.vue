@@ -1,12 +1,18 @@
-<script setup>
-import { storeToRefs } from "pinia";
+<script lang="ts" setup>
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
+import { useLeadsStore } from "@/store/modules/leads";
 
 /* Variables */
+const leadsStore = useLeadsStore();
 const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
+
+const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+  currentCountry.value
+);
+
 const documentText = computed(() => {
   switch (currentCountry.value) {
     case "AR":
@@ -19,41 +25,48 @@ const documentText = computed(() => {
       return {
         label: "Número RFC",
         placeholder: "Número RFC",
-        mask: ["########################"],
+        documentMask: ["########################"],
       };
     case "UY":
       return {
         label: "Número CI",
         placeholder: "Número CI",
-        mask: ["########################"],
+        documentMask: ["########################"],
       };
     case "CL":
       return {
         label: "Añadir RUT",
         placeholder: "Añadir RUT",
-        mask: ["#####################"],
+        documentMask: ["#####################"],
       };
     default:
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
-        mask: document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
+        mask:
+          document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
       };
   }
 });
 
 const { name, email, cellphone, document } = storeToRefs(personalStore);
-
 const confirmation_mail = ref("");
 
-const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
-  currentCountry.value
-);
+watch([name, email, cellphone, document], (value) => {
+  leadsStore.syncPersonal();
+});
+
+function updateLead() {
+  setTimeout(function () {
+    leadsStore.updateLead();
+  }, 10000);
+}
 </script>
 
 <template>
   <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form">
     <BaseInput
+      :blur="updateLead"
       class="col-span-12"
       :label="$t('forms.personal.inputs.name.label')"
       :placeholder="$t('forms.personal.inputs.name.placeholder')"
@@ -67,9 +80,9 @@ const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
     </BaseInput>
     <BaseInput
       class="col-span-12"
+      :blur="updateLead"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
-      type="email"
       input-name="email-field"
       v-model="email"
       rules="required|email"
@@ -80,6 +93,7 @@ const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
     </BaseInput>
     <BaseInput
       class="col-span-12"
+      :blur="updateLead"
       :label="$t('forms.personal.inputs.confirmation_mail.label')"
       :placeholder="$t('forms.personal.inputs.confirmation_mail.placeholder')"
       type="email"
@@ -93,27 +107,41 @@ const showPhoneInput = ["BR", "MX", "UY", "AR", "CL"].includes(
         {{ $t("checkout.dados_pessoais.feedbacks.confirmation_email") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
-      :class="{ 'xl:col-span-6': showPhoneInput }"
+      :blur="updateLead"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       v-model="cellphone"
+      :rules="{
+        required: true,
+        regex: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+      }"
       type="tel"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
       </template>
     </BaseInput>
+
     <BaseInput
-      class="col-span-12 xl:col-span-6"
-      v-if="showPhoneInput"
+      class="col-span-12"
+      :blur="updateLead"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
+      v-if="showDocumentInput"
       input-name="document-field"
       v-model="document"
-      :mask="documentText.mask"
-    />
+      :mask="documentText.documentMask"
+      rules="required|number"
+    >
+      <template #error>
+        {{ $t("checkout.dados_pessoais.feedbacks.document") }}
+      </template>
+    </BaseInput>
   </VeeForm>
 </template>

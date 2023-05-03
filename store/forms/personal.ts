@@ -5,6 +5,7 @@ export const usePersonalStore = defineStore("personal", {
     cellphone: "",
     document: "",
   }),
+
   getters: {},
   actions: {},
 });

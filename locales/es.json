@@ -17,6 +17,10 @@
         "cellphone": {
           "label": "Teléfono",
           "placeholder": "Número de teléfono"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Complete su correo email"
         }
       }
     },
@@ -125,7 +129,8 @@
         "email": "Este email no es válido.",
         "confirmation_email": "Los correos ingresados ​​deben ser los mismos.",
         "celular": "Este celular no es válido.",
-        "gift_message": "Rellena tu mensaje"
+        "gift_message": "Rellena tu mensaje",
+        "document": "Su documento no es válido."
       }
     },
     "address": {
@@ -410,6 +415,8 @@
     "placeholder": "Buscar pais"
   },
   "error": {
+    "1404": "Este producto no es una suscripción.",
+    "1405": "No hay ninguna firma vinculada a este documento.",
     "0001": "Este cupón que está utilizando ya no es válido.",
     "BANK": "Algo salió mal con su compra, comuníquese con su banco o emisor de la tarjeta.",
     "BLACKLIST_PURCHASE": "Después de numerosos intentos de pago, el banco devolvió que su tarjeta estaba bloqueada, comuníquese con el operador de su tarjeta para solicitar el desbloqueo y, si ya lo hizo, infórmenos en greenn.com.br para publicar aquí.",
@@ -426,9 +433,7 @@
     "CURRENCY_NOT_SUPPORTED": "Moneda no admitida.",
     "SUSPECTED_FRAUD": "Transacción no permitida: comuníquese con su banco o pruebe con otro método de pago",
     "GENERIC": "Ocurrió un error al procesar la compra, verifique los datos e intente nuevamente, en caso de fallas, contáctenos para obtener más orientación.",
-    "0404": "No se ha realizado ninguna firma con este documento.",
-    "1404": "Este producto no es una suscripción.",
-    "1405": "No hay ninguna firma vinculada a este documento."
+    "0404": "No se ha realizado ninguna firma con este documento."
   },
   "general": {
     "close": "Cerrar",

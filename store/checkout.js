@@ -1,6 +1,3 @@
-// Core
-import { storeToRefs } from "pinia";
-import { v4 as uuidv4 } from "uuid";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
@@ -11,6 +8,7 @@ const amountStore = useAmountStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
+    uuid: null,
     global_loading: true,
     global_settings: {
       captcha: "",
@@ -67,8 +65,7 @@ export const useCheckoutStore = defineStore("checkout", {
     bump_list: [],
     /* Payment details */
     checkoutPayment: null,
-    /* UUID */
-    uuid: uuidv4(),
+
     sales: {},
     productOffer: {},
     deliveryOptions: {},
@@ -78,6 +75,7 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Query getters
      */
+    getAmount: (state) => state.amount,
     hasAffiliateId: (state) => state.url.query?.a_id,
     hasBusiness: (state) => state.url.query?.b, // Jivochat
     hasBump: (state) => state.url.fullPath.includes("b_id"),
@@ -173,6 +171,9 @@ export const useCheckoutStore = defineStore("checkout", {
       this.setCoupon(true);
       if (this.hasBump) this.getBumps();
       this.setLoading();
+    },
+    setUUID(uuid) {
+      return (this.uuid = uuid);
     },
     async getGlobalSettings() {
       const keys = [
