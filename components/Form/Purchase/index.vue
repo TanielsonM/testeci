@@ -20,7 +20,7 @@ const { getInstallments } = storeToRefs(installmentsStore);
 const CREDIT_CARD = resolveComponent("FormPurchaseCreditCard");
 const BOLETO = resolveComponent("FormPurchaseBoleto");
 const PIX = resolveComponent("FormPurchasePix");
-// const PAYPAL = resolveComponent("FormPurchasePaypal");
+const PAYPAL = resolveComponent("FormPurchasePaypal");
 // const SAFETYPAY_CASH = resolveComponent("FormPurchaseSafetypayCash");
 // const EFT = resolveComponent("FormPurchaseEFT");
 // const BANKTRANSFER = resolveComponent("FormPurchaseBankTransfes");
@@ -44,8 +44,8 @@ const selectedForm = computed(() => {
       return CREDIT_CARD;
     case "BOLETO":
       return BOLETO;
-    // case "PAYPAL":
-    //   return PAYPAL;
+    case "PAYPAL":
+      return PAYPAL;
     // case "SAFETYPAY-CASH":
     //   return SAFETYPAY_CASH;
     // case "EFT":
@@ -88,6 +88,16 @@ const showInstallments = computed(() => {
   }
 
   return false;
+});
+
+const config = useRuntimeConfig();
+useHead({
+  script: [
+    {
+      id: "paypal_id",
+      src: `https://www.paypal.com/sdk/js?client-id=${config.public.PAYPAL_CLIENT_ID_NATIONAL}&currency=BRL&disable-funding=credit,card,mercadopago`,
+    },
+  ],
 });
 </script>
 
