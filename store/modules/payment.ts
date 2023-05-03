@@ -32,6 +32,8 @@ const {
   products_client_statistics,
   hasAffiliateId,
   installments,
+  coupon,
+  hasUpsell,
 } = storeToRefs(checkoutStore);
 const {
   is_gift,
@@ -52,7 +54,7 @@ export const usePaymentStore = defineStore("Payment", {
   }),
   getters: {},
   actions: {
-    async payment(language: string) {
+    async payment(language: string, paypal: any) {
       let data: Payment = {
         // Purchase infos
         method: method.value,
@@ -88,8 +90,13 @@ export const usePaymentStore = defineStore("Payment", {
           selectedCountry.value === "US" ? document.value : charge.value.state,
         // Others
         language,
-        // upsell_id: this.upsell_id,
+        upsell_id: hasUpsell.value,
       };
+
+      if (method.value === "PAYPAL") {
+        data.paypal = paypal;
+      }
+
       // Gift
       if (is_gift.value) {
         data.is_gift = is_gift.value;
@@ -133,13 +140,24 @@ export const usePaymentStore = defineStore("Payment", {
         data.affiliate_id = hasAffiliateId.value;
       }
 
+      // Coupon
+      if (coupon.value.applied && !!coupon.value.name) {
+        data.products[0].coupon = coupon.value.name.toUpperCase();
+      }
+
       /* When method is Credit card */
       if (
         ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
       ) {
         let cards = [];
         cards.push({
-          amount: first.value.amount,
+          amount: parseFloat(
+            first.value.amount
+              .toString()
+              .replace("R$ ", "")
+              .replace(",", ".")
+              .replace("-", "")
+          ),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
           card_holder_name: first.value.holder_name,
@@ -147,7 +165,13 @@ export const usePaymentStore = defineStore("Payment", {
         });
         if (method.value === "TWO_CREDIT_CARDS") {
           cards.push({
-            amount: second.value.amount,
+            amount: parseFloat(
+              second.value.amount
+                .toString()
+                .replace("R$ ", "")
+                .replace(",", ".")
+                .replace("-", "")
+            ),
             card_cvv: second.value.cvv,
             card_expiration_date: `${second.value.month}${second.value.year}`,
             card_holder_name: second.value.holder_name,
@@ -156,6 +180,11 @@ export const usePaymentStore = defineStore("Payment", {
         }
 
         data.cards = cards;
+      }
+
+      const allowed_installments = ["CREDIT_CARD", "TWO_CREDIT_CARD"];
+      if (!allowed_installments.includes(method.value)) {
+        delete data.installments;
       }
 
       // Registrando log boleto
