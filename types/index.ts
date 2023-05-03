@@ -38,7 +38,7 @@ export type Coupon = {
 };
 
 export type PurcharseCard = {
-  amount: number;
+  amount: string | number;
   card_cvv: string;
   card_expiration_date: string;
   card_holder_name: string;
@@ -60,7 +60,6 @@ export type Installment = {
 export type Payment = {
   amount: number;
   total: number;
-  installments: number;
 
   method: string;
   language: string;
@@ -110,6 +109,12 @@ export type Payment = {
   gift_message?: string;
   // Affiliate
   affiliate_id?: number;
+  // Paypal
+  paypal?: any;
+  // Upsell
+  upsell_id?: number;
+  // Installments
+  installments?: number;
 };
 
 export type PaymentError = {

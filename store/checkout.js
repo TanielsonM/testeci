@@ -429,10 +429,10 @@ export const useCheckoutStore = defineStore("checkout", {
       if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method))
         this.setInstallments();
       else if (this.method === "TWO_CREDIT_CARDS") {
-        purchaseStore.first.amount = this.amount / 2;
-        purchaseStore.second.amount = this.amount / 2;
+        purchaseStore.first.amount = amountStore.getAmount / 2;
+        purchaseStore.second.amount = amountStore.getAmount / 2;
       } else {
-        purchaseStore.first.amount = this.amount;
+        purchaseStore.first.amount = amountStore.getAmount;
       }
     },
     setOriginalAmount(amount = 0) {
