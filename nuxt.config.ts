@@ -65,6 +65,9 @@ export default defineNuxtConfig({
       API_BASE_URL: process.env.API_HOST,
       CHECKOUT_PAGE: process.env.VUE_CHECKOUT_PAGE,
       HEAVEN_CHECKOUT_PAGE: process.env.VUE_CHECKOUT_HEAVEN_PAGE,
+      PAYPAL_CLIENT_ID_NATIONAL: process.env.PAYPAL_CLIENT_ID_NATIONAL,
+      PAYPAL_CLIENT_ID_INTERNATIONAL:
+        process.env.PAYPAL_CLIENT_ID_INTERNATIONAL,
     },
   },
   i18n: {
