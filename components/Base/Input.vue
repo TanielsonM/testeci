@@ -92,9 +92,12 @@ const emit = defineEmits([
   "update:modelValue",
   "prepend-click",
   "append-click",
+  "blur",
+  "input"
 ]);
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
+  emit("input", event.target.value)
 };
 </script>
 
@@ -136,6 +139,7 @@ const onInput = (event) => {
           :autocomplete="autocomplete"
           class="h-full w-full bg-checkout outline-none text-txt-color"
           @input="onInput"
+          @blur="emit('blur')"
         />
         <input
           v-else
@@ -152,6 +156,7 @@ const onInput = (event) => {
           class="h-full w-full bg-checkout outline-none text-txt-color"
           :data-maska="mask"
           @input="onInput"
+          @blur="emit('blur')"
         />
       </VeeField>
       <Icon
