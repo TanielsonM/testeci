@@ -5,10 +5,12 @@ import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useAmountStore } from "~~/store/modules/amount";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
 const amountStore = useAmountStore();
+const instStore = useInstallmentsStore();
 
 const { getAmount } = storeToRefs(amountStore);
 const { method, installments } = storeToRefs(checkout);
@@ -85,15 +87,16 @@ function clearValue(value) {
 function changeAmount(from) {
   // When method is diff of two credit cards, stop function
   if (method.value !== "TWO_CREDIT_CARDS") return;
+  const amount = instStore.getInstallments() * installments.value;
 
   // when user change amount of first card, set amount of second card
   if (from === "first") {
     let value = clearValue(first.value.amount);
     // if the value of the card is greater than the total value, set the card with the entire value
-    if (value >= parseFloat(getAmount.value)) {
-      value = parseFloat(getAmount.value);
+    if (value >= parseFloat(amount)) {
+      value = parseFloat(amount);
     }
-    second.value.amount = parseFloat(getAmount.value - value).toFixed(2);
+    second.value.amount = parseFloat(amount - value).toFixed(2);
     first.value.amount = value;
 
     formatAmount("first");
@@ -102,10 +105,10 @@ function changeAmount(from) {
   }
   let value = clearValue(second.value.amount);
   // if the value of the card is greater than the total value, set the card with the entire value
-  if (value >= parseFloat(getAmount.value)) {
-    value = parseFloat(getAmount.value);
+  if (value >= parseFloat(amount)) {
+    value = parseFloat(amount);
   }
-  first.value.amount = parseFloat(getAmount.value - value).toFixed(2);
+  first.value.amount = parseFloat(amount - value).toFixed(2);
   second.value.amount = value;
   formatAmount("first");
   formatAmount("second");
@@ -114,10 +117,12 @@ function changeAmount(from) {
 
 function formatAmount(from) {
   if (from === "first") {
-    first.value.amount = formatMoney(clearValue(first.value.amount));
+    const value = parseFloat(first.value.amount.toString().replace("R$ ", ""));
+    first.value.amount = formatMoney(value);
     return;
   }
-  second.value.amount = formatMoney(clearValue(second.value.amount));
+  const value = parseFloat(second.value.amount.toString().replace("R$ ", ""));
+  second.value.amount = formatMoney(value);
 }
 
 watch(installments, () => {
@@ -174,7 +179,6 @@ watch(installments, () => {
         class="col-span-12"
         v-model="first.amount"
         @blur="changeAmount('first')"
-        @input="formatAmount('first')"
         @vnode-before-mount="formatAmount('first')"
       />
       <BaseInput
@@ -231,7 +235,6 @@ watch(installments, () => {
         class="col-span-12"
         v-model="second.amount"
         @blur="changeAmount('second')"
-        @input="formatAmount('second')"
         @vnode-before-mount="formatAmount('second')"
       />
       <BaseInput
