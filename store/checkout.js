@@ -156,6 +156,7 @@ export const useCheckoutStore = defineStore("checkout", {
   actions: {
     async init() {
       this.resetProducts();
+      amountStore.reset();
       this.setLoading(true);
       await this.getGlobalSettings();
 

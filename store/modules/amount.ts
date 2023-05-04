@@ -16,5 +16,9 @@ export const useAmountStore = defineStore("Amount", {
     setOriginalAmount(value: number) {
       this.originalAmount += value;
     },
+    reset() {
+      this.amount = 0;
+      this.originalAmount = 0;
+    },
   },
 });
