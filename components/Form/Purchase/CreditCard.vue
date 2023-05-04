@@ -91,7 +91,7 @@ function changeAmount(from) {
 
   // when user change amount of first card, set amount of second card
   if (from === "first") {
-    let value = clearValue(first.value.amount);
+    let value = first.value.amount ? clearValue(first.value.amount) : 0;
     // if the value of the card is greater than the total value, set the card with the entire value
     if (value >= parseFloat(amount)) {
       value = parseFloat(amount);
@@ -103,7 +103,7 @@ function changeAmount(from) {
     formatAmount("second");
     return;
   }
-  let value = clearValue(second.value.amount);
+  let value = second.value.amount ? clearValue(second.value.amount) : 0;
   // if the value of the card is greater than the total value, set the card with the entire value
   if (value >= parseFloat(amount)) {
     value = parseFloat(amount);
