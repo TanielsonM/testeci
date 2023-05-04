@@ -139,9 +139,6 @@ export const useLeadsStore = defineStore("Leads", {
           } else {
             this.createLead();
           }
-        })
-        .catch((error) => {
-          console.log(error);
         });
     },
     async createLead(): Promise<void> {
@@ -155,48 +152,37 @@ export const useLeadsStore = defineStore("Leads", {
 
       await useApi()
         .create("/lead", data)
-        .then((response) => {
+        .then(() => {
           GreennLogs.logger.info("🟢 Lead criado com sucesso", {
             name: "Um lead foi adicionado",
             uuid: this.uuid,
           });
-        })
-        .catch((error) => {
-          console.log(error);
         });
     },
     async updateLead(): Promise<void> {
-      console.log({
-        function: "updateLead",
-      });
-
       if (this.uuid) {
         try {
-          await useApi()
-            .update("lead/" + this.uuid, {
-              product_id: this.payment.product_id,
-              proposal_id: this.payment.proposal_id,
-              seller_id: this.payment.seller_id,
-              affiliate_id: this.payment.affiliate_id,
-              name: this.personal.name,
-              email: this.personal.email,
-              cpf: this.personal.document,
-              zip_code: this.address.zip_code,
-              street: this.address.street,
-              number: this.address.number,
-              neighborhood: this.address.neighborhood,
-              city: this.address.city,
-              state: this.address.state,
-              step: this.step,
-              uuid: this.uuid,
-              complement: this.address.complement,
-              id: this.uuid,
-              country_code: this.address.country_code,
-              status: this.purchase.status,
-            })
-            .then((res) => {
-              console.log(res);
-            });
+          await useApi().update("lead/" + this.uuid, {
+            product_id: this.payment.product_id,
+            proposal_id: this.payment.proposal_id,
+            seller_id: this.payment.seller_id,
+            affiliate_id: this.payment.affiliate_id,
+            name: this.personal.name,
+            email: this.personal.email,
+            cpf: this.personal.document,
+            zip_code: this.address.zip_code,
+            street: this.address.street,
+            number: this.address.number,
+            neighborhood: this.address.neighborhood,
+            city: this.address.city,
+            state: this.address.state,
+            step: this.step,
+            uuid: this.uuid,
+            complement: this.address.complement,
+            id: this.uuid,
+            country_code: this.address.country_code,
+            status: this.purchase.status,
+          });
         } catch (error) {
           console.log(error);
         }
