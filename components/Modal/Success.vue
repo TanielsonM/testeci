@@ -104,8 +104,9 @@ if (!!route.query.s_id && !route.query.chc) {
     <div class="container" v-if="data.sale.sales[0].method === 'BOLETO'">
       <ModalTicketInfos
         v-for="(sale, i) in data.sale.sales"
-        :code="sale.boleto_barcode!"
-        :url="sale.boleto_url!"
+        :key="i"
+        :code="sale.boleto_barcode"
+        :url="sale.boleto_url"
         :id="sale.id.toString()"
         :amount="formatMoney(sale.amount)"
         :last="i + 1 == data.sale.sales.length"
@@ -131,9 +132,10 @@ if (!!route.query.s_id && !route.query.chc) {
     <div class="container" v-if="data.sale.sales[0].method === 'PIX'">
       <ModalPixInfos
         v-for="(sale, i) in data.sale.sales"
+        :key="i"
         :name="sale.product.name"
-        :code="sale.qrcode!"
-        :url="sale.imgQrcode!"
+        :code="sale.qrcode"
+        :url="sale.imgQrcode"
         :id="sale.id.toString()"
         :amount="formatMoney(sale.amount)"
         :last="i + 1 == data.sale.sales.length"
@@ -178,7 +180,7 @@ if (!!route.query.s_id && !route.query.chc) {
     <div class="container">
       <ModalTrialInfos
         :name="data.productOffer.data.name"
-        :amount="formatMoney(data.sale.sales[0].amount)"
+        :amount="formatMoney(data.productOffer.data.amount)"
         :shipping-amount="
           formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
         "
