@@ -80,14 +80,7 @@ const selectedForm = computed(() => {
 });
 
 const showInstallments = computed(() => {
-  if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-    return true;
-  }
-  if (productType.value === "SUBSCRIPTION") {
-    return hasSubscriptionInstallments.value && getPeriod.value > 30;
-  }
-
-  return false;
+  return method.value === "CREDIT_CARD" && hasSubscriptionInstallments.value && productType.value === "SUBSCRIPTION" && getPeriod.value > 30;
 });
 
 const config = useRuntimeConfig();
