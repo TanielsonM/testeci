@@ -18,21 +18,29 @@ const {
   hasFees,
   coupon,
   checkoutPayment,
+  ticket_installments,
 } = storeToRefs(checkout);
 
 const { getInstallments } = storeToRefs(installmentsStore);
+const { hasTicketInstallments } = storeToRefs(product);
+
+function formatAmountText(installments = 1) {
+  return `${installments}x de ${formatMoney(
+    getInstallments.value(installments)
+  )} ${hasFees.value ? "" : "(Sem juros)"}`;
+}
 
 /* computeds */
 const amountText = computed(() => {
-  switch (method.value) {
-    case "TWO_CREDIT_CARDS":
-    case "CREDIT_CARD":
-      return `${installments.value}x de ${formatMoney(
-        getInstallments.value()
-      )} ${hasFees.value ? "" : "(Sem juros)"}`;
-    default:
-      return `${formatMoney(getInstallments.value(1))}`;
+  if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
+    return formatAmountText(ticket_installments.value);
   }
+
+  if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
+    return formatAmountText(installments.value);
+  }
+
+  return `${formatMoney(getInstallments.value(1))}`;
 });
 </script>
 

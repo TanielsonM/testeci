@@ -119,7 +119,7 @@ export const useProductStore = defineStore("product", {
           this.product.max_subscription_installments ||
           12,
         this.hasFixedInstallments,
-        this.hasTicketInstallments
+        this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);

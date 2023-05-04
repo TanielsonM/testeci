@@ -108,7 +108,9 @@ export const useCheckoutStore = defineStore("checkout", {
      */
     hasFees: (state) => {
       const product = useProductStore();
-      return ["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(state.method)
+      return ["CREDIT_CARD", "TWO_CREDIT_CARDS", "BOLETO"].includes(
+        state.method
+      )
         ? product.hasFees
         : false;
     },
@@ -426,20 +428,34 @@ export const useCheckoutStore = defineStore("checkout", {
       this.installments = fixed ?? installments ?? 1;
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
-      if (ticket) this.ticket_installments = 1;
+      if (ticket) this.ticket_installments = ticket;
     },
     setMethod(method = "") {
       this.method = method;
-      if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method)) {
+
+      const can_pay_in_installments = [
+        "CREDIT_CARD",
+        "TWO_CREDIT_CARDS",
+        "BOLETO",
+      ];
+      if (!can_pay_in_installments.includes(this.method)) {
         this.setInstallments(1);
-      } else if (this.method === "TWO_CREDIT_CARDS") {
+        return;
+      }
+
+      /* credit card */
+      if (method === "CREDIT_CARD") {
+        purchaseStore.first.amount =
+          installmentsStore.getInstallments() * this.installments;
+        return;
+      }
+      /* two credit card */
+      if (method === "TWO_CREDIT_CARDS") {
         purchaseStore.first.amount =
           (installmentsStore.getInstallments() * this.installments) / 2;
         purchaseStore.second.amount =
           (installmentsStore.getInstallments() * this.installments) / 2;
-      } else {
-        purchaseStore.first.amount =
-          installmentsStore.getInstallments() * this.installments;
+        return;
       }
     },
     setOriginalAmount(amount = 0) {
