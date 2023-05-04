@@ -39,7 +39,7 @@ const tabs = computed(() => {
           label: "Paypal",
           icon: "mdi:paypal",
         };
-      case "SAFETYPAY-CASH":
+      /* case "SAFETYPAY-CASH":
         return {
           value: item,
           label: "SAFETYPAY-CASH",
@@ -122,7 +122,7 @@ const tabs = computed(() => {
           value: item,
           label: "SPEI",
           icon: "bi:credit-card-fill",
-        };
+        }; */
       case "PIX":
         return {
           value: item,
