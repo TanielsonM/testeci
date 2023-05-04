@@ -95,7 +95,7 @@ useHead({
 </script>
 
 <template>
-  <span data-anima="top" class="flex w-full flex-col gap-8">
+  <span data-anima="top" class="flex w-full flex-col gap-5">
     <component :is="selectedForm" />
     <ClientOnly>
       <BaseSelect

@@ -63,8 +63,8 @@ export const usePaymentStore = defineStore("Payment", {
       let data: Payment = {
         // Purchase infos
         method: method.value,
-        amount: getInstallments.value(1),
-        total: getOriginalAmount.value,
+        amount: getOriginalAmount.value,
+        total: getInstallments.value() * installments.value,
         installments: installments.value,
         // product infos
         product_id: product_id.value,

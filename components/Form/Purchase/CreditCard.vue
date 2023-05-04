@@ -146,13 +146,13 @@ watch(installments, () => {
   <section
     class="flex w-full items-center justify-between gap-5"
     data-anima="top"
+    v-if="showCreditCardsTabs"
   >
     <BaseButton
       color="info"
       class="pulse flex gap-1"
       :class="{ active: method === 'CREDIT_CARD' }"
       @click="checkout.setMethod('CREDIT_CARD')"
-      v-if="showCreditCardsTabs"
     >
       <Icon name="bi:credit-card-fill" />
       <p class="text-[90%] font-semibold">
@@ -164,7 +164,6 @@ watch(installments, () => {
       class="pulse flex gap-1"
       :class="{ active: method === 'TWO_CREDIT_CARDS' }"
       @click="checkout.setMethod('TWO_CREDIT_CARDS')"
-      v-if="showCreditCardsTabs"
     >
       <Icon name="bi:credit-card-fill" />
       <Icon name="bi:credit-card-fill" />
