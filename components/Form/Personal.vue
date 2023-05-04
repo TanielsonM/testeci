@@ -78,6 +78,7 @@ function updateLead() {
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
       :blur="updateLead"
@@ -91,6 +92,7 @@ function updateLead() {
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
       :blur="updateLead"
@@ -108,7 +110,7 @@ function updateLead() {
       </template>
     </BaseInput>
 
-    <BaseInput
+    <BasePhone
       class="col-span-12"
       :blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
@@ -118,14 +120,13 @@ function updateLead() {
       v-model="cellphone"
       :rules="{
         required: true,
-        regex: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
       }"
       type="tel"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
       </template>
-    </BaseInput>
+    </BasePhone>
 
     <BaseInput
       class="col-span-12"
