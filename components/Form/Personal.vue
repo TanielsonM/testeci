@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
@@ -43,7 +43,7 @@ const documentText = computed(() => {
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
-        mask:
+        documentMask:
           document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
       };
   }
@@ -116,10 +116,7 @@ function updateLead() {
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       v-model="cellphone"
-      :rules="{
-        required: true,
-        regex: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
-      }"
+      rules="required"
       type="tel"
     >
       <template #error>
@@ -137,7 +134,7 @@ function updateLead() {
       input-name="document-field"
       v-model="document"
       :mask="documentText.documentMask"
-      rules="required|number"
+      rules="required|document"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.document") }}
