@@ -82,8 +82,8 @@ const selectedForm = computed(() => {
 const showInstallments = computed(() => {
   if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
     if (productType.value === "SUBSCRIPTION") {
-    return hasSubscriptionInstallments.value && getPeriod.value > 30;
-  }
+      return hasSubscriptionInstallments.value && getPeriod.value > 30;
+    }
     return true;
   }
   return false;
@@ -104,6 +104,9 @@ useHead({
   <span data-anima="top" class="flex w-full flex-col gap-5">
     <component :is="selectedForm" />
     <ClientOnly>
+      <template #fallback>
+        <LoadingShimmer width="50%" height="55px" />
+      </template>
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="w-full lg:w-1/2"
