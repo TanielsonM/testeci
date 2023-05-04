@@ -223,7 +223,6 @@ await checkoutStore.init();
 
         <!-- Purchase button -->
         <BaseButton
-          class="mt-10"
           @click="paymentStore.payment(locale)"
           v-if="method !== 'PAYPAL'"
         >
