@@ -469,12 +469,12 @@ export const useCheckoutStore = defineStore("checkout", {
         this.product_list.push(product);
         amountStore.setAmount(
           !!product.custom_charges.length
-            ? product.custom_charges.amount
+            ? product.custom_charges[0].amount
             : product.amount
         );
         amountStore.setOriginalAmount(
           !!product.custom_charges.length
-            ? product.custom_charges.amount
+            ? product.custom_charges[0].amount
             : product.amount
         );
 
@@ -490,12 +490,12 @@ export const useCheckoutStore = defineStore("checkout", {
       this.product_list.splice(index, 1);
       amountStore.setAmount(
         !!product.custom_charges.length
-          ? product.custom_charges.amount * -1
+          ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
       amountStore.setOriginalAmount(
         !!product.custom_charges.length
-          ? product.custom_charges.amount * -1
+          ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
 
