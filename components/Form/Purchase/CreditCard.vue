@@ -3,15 +3,21 @@ import moment from "moment";
 import { formatMoney } from "@/utils/money";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
+import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useAmountStore } from "~~/store/modules/amount";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
 const amountStore = useAmountStore();
+const prodStore = useProductStore();
+const instStore = useInstallmentsStore();
 
 const { getAmount } = storeToRefs(amountStore);
-const { method } = storeToRefs(checkout);
+const { method, installments, selectedCountry, allowed_methods } =
+  storeToRefs(checkout);
+const { productType } = storeToRefs(prodStore);
 const { first, second } = storeToRefs(purchase);
 
 const years = [
@@ -77,33 +83,36 @@ const months = [
 ];
 
 function clearValue(value) {
-  return value.toString().replace("R$ ", "").replace(",", ".").replace("-", "");
+  return parseFloat(
+    value.toString().replace("R$ ", "").replace(",", ".").replace("-", "")
+  ).toFixed(2);
 }
 
 function changeAmount(from) {
   // When method is diff of two credit cards, stop function
   if (method.value !== "TWO_CREDIT_CARDS") return;
+  const amount = instStore.getInstallments() * installments.value;
 
   // when user change amount of first card, set amount of second card
   if (from === "first") {
-    let value = parseFloat(clearValue(first.value.amount));
+    let value = first.value.amount ? clearValue(first.value.amount) : 0;
     // if the value of the card is greater than the total value, set the card with the entire value
-    if (value >= parseFloat(getAmount.value)) {
-      value = parseFloat(getAmount.value);
+    if (value >= parseFloat(amount)) {
+      value = parseFloat(amount);
     }
-    second.value.amount = parseFloat(getAmount.value - value).toFixed(2);
+    second.value.amount = parseFloat(amount - value).toFixed(2);
     first.value.amount = value;
 
     formatAmount("first");
     formatAmount("second");
     return;
   }
-  let value = parseFloat(clearValue(second.value.amount));
+  let value = second.value.amount ? clearValue(second.value.amount) : 0;
   // if the value of the card is greater than the total value, set the card with the entire value
-  if (value >= parseFloat(getAmount.value)) {
-    value = parseFloat(getAmount.value);
+  if (value >= parseFloat(amount)) {
+    value = parseFloat(amount);
   }
-  first.value.amount = parseFloat(getAmount.value - value).toFixed(2);
+  first.value.amount = parseFloat(amount - value).toFixed(2);
   second.value.amount = value;
   formatAmount("first");
   formatAmount("second");
@@ -112,17 +121,32 @@ function changeAmount(from) {
 
 function formatAmount(from) {
   if (from === "first") {
-    first.value.amount = formatMoney(clearValue(first.value.amount));
+    const value = parseFloat(first.value.amount.toString().replace("R$ ", ""));
+    first.value.amount = formatMoney(value);
     return;
   }
-  second.value.amount = formatMoney(clearValue(second.value.amount));
+  const value = parseFloat(second.value.amount.toString().replace("R$ ", ""));
+  second.value.amount = formatMoney(value);
 }
+
+const showCreditCardsTabs = computed(() => {
+  return (
+    allowed_methods.value.includes("TWO_CREDIT_CARDS") &&
+    productType.value !== "SUBSCRIPTION" &&
+    selectedCountry.value === "BR"
+  );
+});
+
+watch(installments, () => {
+  purchase.setCardsAmount();
+});
 </script>
 
 <template>
   <section
     class="flex w-full items-center justify-between gap-5"
     data-anima="top"
+    v-if="showCreditCardsTabs"
   >
     <BaseButton
       color="info"
@@ -168,7 +192,6 @@ function formatAmount(from) {
         class="col-span-12"
         v-model="first.amount"
         @blur="changeAmount('first')"
-        @input="formatAmount('first')"
         @vnode-before-mount="formatAmount('first')"
       />
       <BaseInput
@@ -225,7 +248,6 @@ function formatAmount(from) {
         class="col-span-12"
         v-model="second.amount"
         @blur="changeAmount('second')"
-        @input="formatAmount('second')"
         @vnode-before-mount="formatAmount('second')"
       />
       <BaseInput

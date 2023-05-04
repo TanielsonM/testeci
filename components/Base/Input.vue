@@ -11,10 +11,6 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
-  blur: {
-    required: false,
-    default: () => "",
-  },
   label: {
     type: String,
     required: false,

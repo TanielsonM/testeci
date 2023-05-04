@@ -139,9 +139,6 @@ export const useLeadsStore = defineStore("Leads", {
           } else {
             this.createLead();
           }
-        })
-        .catch((error) => {
-          console.log(error);
         });
     },
     async createLead(): Promise<void> {
@@ -155,14 +152,11 @@ export const useLeadsStore = defineStore("Leads", {
 
       await useApi()
         .create("/lead", data)
-        .then((response) => {
+        .then(() => {
           GreennLogs.logger.info("🟢 Lead criado com sucesso", {
             name: "Um lead foi adicionado",
             uuid: this.uuid,
           });
-        })
-        .catch((error) => {
-          console.log(error);
         });
     },
     async updateLead(): Promise<void> {

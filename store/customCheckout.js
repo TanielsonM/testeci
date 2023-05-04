@@ -48,10 +48,7 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     /* whatsapp_options */
     whatsapp_options: (state) =>
       ({
-        number:
-          state.custom_checkout?.whatsapp_number
-            .substring(3)
-            .replace(".", "") ?? null,
+        number: state.custom_checkout?.whatsapp_number ?? null,
         message: state.custom_checkout?.whatsapp_msg ?? null,
       } || null),
     /* Order bump */

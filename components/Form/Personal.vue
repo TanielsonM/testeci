@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
@@ -43,7 +43,7 @@ const documentText = computed(() => {
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
-        mask:
+        documentMask:
           document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
       };
   }
@@ -66,7 +66,7 @@ function updateLead() {
 <template>
   <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form">
     <BaseInput
-      :blur="updateLead"
+      @blur="updateLead"
       class="col-span-12"
       :label="$t('forms.personal.inputs.name.label')"
       :placeholder="$t('forms.personal.inputs.name.placeholder')"
@@ -81,7 +81,7 @@ function updateLead() {
 
     <BaseInput
       class="col-span-12"
-      :blur="updateLead"
+      @blur="updateLead"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
@@ -95,7 +95,7 @@ function updateLead() {
 
     <BaseInput
       class="col-span-12"
-      :blur="updateLead"
+      @blur="updateLead"
       :label="$t('forms.personal.inputs.confirmation_mail.label')"
       :placeholder="$t('forms.personal.inputs.confirmation_mail.placeholder')"
       type="email"
@@ -112,15 +112,13 @@ function updateLead() {
 
     <BasePhone
       class="col-span-12"
-      :blur="updateLead"
+      @blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       v-model="cellphone"
-      :rules="{
-        required: true,
-      }"
+      rules="required"
       type="tel"
     >
       <template #error>
@@ -130,7 +128,7 @@ function updateLead() {
 
     <BaseInput
       class="col-span-12"
-      :blur="updateLead"
+      @blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
@@ -138,7 +136,7 @@ function updateLead() {
       input-name="document-field"
       v-model="document"
       :mask="documentText.documentMask"
-      rules="required|number"
+      rules="required|document"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.document") }}

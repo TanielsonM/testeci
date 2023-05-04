@@ -63,8 +63,8 @@ export const usePaymentStore = defineStore("Payment", {
       let data: Payment = {
         // Purchase infos
         method: method.value,
-        amount: getInstallments.value(1),
-        total: getOriginalAmount.value,
+        amount: getOriginalAmount.value,
+        total: getInstallments.value() * installments.value,
         installments: installments.value,
         // product infos
         product_id: product_id.value,
@@ -187,7 +187,12 @@ export const usePaymentStore = defineStore("Payment", {
         data.cards = cards;
       }
 
-      const allowed_installments = ["CREDIT_CARD", "TWO_CREDIT_CARD"];
+      const allowed_installments = [
+        "CREDIT_CARD",
+        "TWO_CREDIT_CARD",
+        "DEBIT_CARD",
+        "BOLETO",
+      ];
       if (!allowed_installments.includes(method.value)) {
         delete data.installments;
       }
@@ -239,12 +244,11 @@ export const usePaymentStore = defineStore("Payment", {
         })
         .catch((error) => {
           console.log(error);
-        })
-        .finally(() => {
           checkoutStore.setLoading(false);
         });
     },
     validateError(error: PaymentError) {
+      checkoutStore.setLoading(false);
       const { t } = useI18n();
       let error_message = "";
       switch (error.code) {

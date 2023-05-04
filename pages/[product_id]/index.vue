@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
@@ -61,7 +61,7 @@ const tabs = computed(() => {
           label: "Paypal",
           icon: "mdi:paypal",
         };
-      case "SAFETYPAY-CASH":
+      /* case "SAFETYPAY-CASH":
         return {
           value: item,
           label: "SAFETYPAY-CASH",
@@ -144,7 +144,7 @@ const tabs = computed(() => {
           value: item,
           label: "SPEI",
           icon: "bi:credit-card-fill",
-        };
+        }; */
       case "PIX":
         return {
           value: item,

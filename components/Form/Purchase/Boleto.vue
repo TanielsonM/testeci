@@ -21,26 +21,33 @@ const showInstallments = computed(() => {
     Pagamentos com Boleto Bancário levam até 3 dias úteis para serem compensados
     e então terem os produtos liberados.
   </p>
-  <BaseSelect
-    label="Parcelas do boleto"
-    class="w-1/2"
-    v-model="ticket_installments"
-    v-if="showInstallments"
-  >
-    <!-- Installments -->
-    <option
-      v-for="(d, index) in hasTicketInstallments"
-      :key="index"
-      :value="index + 1"
-      class="cursor-pointer select-none rounded hover:bg-main-color"
+  <ClientOnly>
+    <template #fallback>
+      <LoadingShimmer width="50%" height="55px" />
+    </template>
+    <BaseSelect
+      label="Parcelas do boleto"
+      class="w-1/2"
+      v-model="ticket_installments"
+      v-if="showInstallments"
     >
-      {{
-        index + 1 > 1
-          ? `${index + 1}x ${$t("order.de")} ${formatMoney(
-              getInstallments(index + 1)
-            )}*`
-          : `${index + 1}x ${$t("order.de")} ${formatMoney(getInstallments(1))}`
-      }}
-    </option>
-  </BaseSelect>
+      <!-- Installments -->
+      <option
+        v-for="(d, index) in hasTicketInstallments"
+        :key="index"
+        :value="index + 1"
+        class="cursor-pointer select-none rounded hover:bg-main-color"
+      >
+        {{
+          index + 1 > 1
+            ? `${index + 1}x ${$t("order.de")} ${formatMoney(
+                getInstallments(index + 1)
+              )}*`
+            : `${index + 1}x ${$t("order.de")} ${formatMoney(
+                getInstallments(1)
+              )}`
+        }}
+      </option>
+    </BaseSelect>
+  </ClientOnly>
 </template>
