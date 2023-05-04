@@ -7,5 +7,6 @@ export function formatMoney(amount) {
     store.checkoutPayment?.data.symbol_currency || "R$"
   } ${amount.toLocaleString("pt-BR", {
     minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   })}`;
 }

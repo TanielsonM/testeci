@@ -2,9 +2,11 @@ import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
+import { useInstallmentsStore } from "./modules/installments";
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
+const installmentsStore = useInstallmentsStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -430,10 +432,13 @@ export const useCheckoutStore = defineStore("checkout", {
       if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method))
         this.setInstallments();
       else if (this.method === "TWO_CREDIT_CARDS") {
-        purchaseStore.first.amount = amountStore.getAmount / 2;
-        purchaseStore.second.amount = amountStore.getAmount / 2;
+        purchaseStore.first.amount =
+          (installmentsStore.getInstallments() * this.installments) / 2;
+        purchaseStore.second.amount =
+          (installmentsStore.getInstallments() * this.installments) / 2;
       } else {
-        purchaseStore.first.amount = amountStore.getAmount;
+        purchaseStore.first.amount =
+          installmentsStore.getInstallments() * this.installments;
       }
     },
     setOriginalAmount(amount = 0) {

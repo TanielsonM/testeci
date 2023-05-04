@@ -11,7 +11,7 @@ const purchase = usePurchaseStore();
 const amountStore = useAmountStore();
 
 const { getAmount } = storeToRefs(amountStore);
-const { method } = storeToRefs(checkout);
+const { method, installments } = storeToRefs(checkout);
 const { first, second } = storeToRefs(purchase);
 
 const years = [
@@ -77,7 +77,9 @@ const months = [
 ];
 
 function clearValue(value) {
-  return value.toString().replace("R$ ", "").replace(",", ".").replace("-", "");
+  return parseFloat(
+    value.toString().replace("R$ ", "").replace(",", ".").replace("-", "")
+  ).toFixed(2);
 }
 
 function changeAmount(from) {
@@ -86,7 +88,7 @@ function changeAmount(from) {
 
   // when user change amount of first card, set amount of second card
   if (from === "first") {
-    let value = parseFloat(clearValue(first.value.amount));
+    let value = clearValue(first.value.amount);
     // if the value of the card is greater than the total value, set the card with the entire value
     if (value >= parseFloat(getAmount.value)) {
       value = parseFloat(getAmount.value);
@@ -98,7 +100,7 @@ function changeAmount(from) {
     formatAmount("second");
     return;
   }
-  let value = parseFloat(clearValue(second.value.amount));
+  let value = clearValue(second.value.amount);
   // if the value of the card is greater than the total value, set the card with the entire value
   if (value >= parseFloat(getAmount.value)) {
     value = parseFloat(getAmount.value);
@@ -117,6 +119,10 @@ function formatAmount(from) {
   }
   second.value.amount = formatMoney(clearValue(second.value.amount));
 }
+
+watch(installments, () => {
+  purchase.setCardsAmount();
+});
 </script>
 
 <template>
