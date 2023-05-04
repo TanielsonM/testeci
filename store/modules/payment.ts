@@ -36,6 +36,7 @@ const {
   installments,
   coupon,
   hasUpsell,
+  ticket_installments,
 } = storeToRefs(checkoutStore);
 const {
   is_gift,
@@ -65,7 +66,10 @@ export const usePaymentStore = defineStore("Payment", {
         method: method.value,
         amount: getOriginalAmount.value,
         total: getInstallments.value() * installments.value,
-        installments: installments.value,
+        installments:
+          method.value === "BOLETO"
+            ? ticket_installments.value
+            : installments.value,
         // product infos
         product_id: product_id.value,
         products: product_list.value.map((item: Product) => ({
