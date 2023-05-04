@@ -369,6 +369,7 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     async setCoupon(initial = false, remove = false) {
       const store = useAmountStore();
+      const prodStore = useProductStore();
       if (remove) {
         store.setAmount(store.getOriginalAmount - store.getAmount);
         this.coupon = {
@@ -384,6 +385,7 @@ export const useCheckoutStore = defineStore("checkout", {
         };
         return;
       }
+      if (!prodStore.allowedCoupon) return false;
       if (!!this.hasCoupon && initial) {
         this.coupon.name = this.hasCoupon;
       }
