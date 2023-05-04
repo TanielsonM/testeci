@@ -115,7 +115,9 @@ export const useProductStore = defineStore("product", {
       const checkout = useCheckoutStore();
       checkout.setInstallments(
         this.product.pre_selected_installment ?? this.resolveInstallments(),
-        this.product.max_installments || 12,
+        this.product.max_installments ||
+          this.product.max_subscription_installments ||
+          12,
         this.hasFixedInstallments,
         this.hasTicketInstallments
       );
