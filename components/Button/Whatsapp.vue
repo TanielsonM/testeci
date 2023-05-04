@@ -3,9 +3,12 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 const { showWhatsappButton, whatsapp_options } = useCustomCheckoutStore();
 const openWhatsapp = () => {
   window.open(
-    `https://wa.me/${
-      whatsapp_options.value.number
-    }?text=${whatsapp_options.value.message.replace(" ", "%20")}`,
+    `https://wa.me/${whatsapp_options.value.number
+      .substring(3)
+      .replace(".", "")}?text=${whatsapp_options.value.message.replace(
+      " ",
+      "%20"
+    )}`,
     "blank"
   );
 };
