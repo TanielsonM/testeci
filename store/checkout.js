@@ -430,9 +430,9 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setMethod(method = "") {
       this.method = method;
-      if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method))
-        this.setInstallments();
-      else if (this.method === "TWO_CREDIT_CARDS") {
+      if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method)) {
+        this.setInstallments(1);
+      } else if (this.method === "TWO_CREDIT_CARDS") {
         purchaseStore.first.amount =
           (installmentsStore.getInstallments() * this.installments) / 2;
         purchaseStore.second.amount =
