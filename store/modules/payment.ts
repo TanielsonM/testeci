@@ -239,12 +239,11 @@ export const usePaymentStore = defineStore("Payment", {
         })
         .catch((error) => {
           console.log(error);
-        })
-        .finally(() => {
           checkoutStore.setLoading(false);
         });
     },
     validateError(error: PaymentError) {
+      checkoutStore.setLoading(false);
       const { t } = useI18n();
       let error_message = "";
       switch (error.code) {
