@@ -3,6 +3,7 @@ import moment from "moment";
 import { formatMoney } from "@/utils/money";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
+import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useAmountStore } from "~~/store/modules/amount";
 import { useInstallmentsStore } from "~~/store/modules/installments";
@@ -10,10 +11,13 @@ import { useInstallmentsStore } from "~~/store/modules/installments";
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
 const amountStore = useAmountStore();
+const prodStore = useProductStore();
 const instStore = useInstallmentsStore();
 
 const { getAmount } = storeToRefs(amountStore);
-const { method, installments } = storeToRefs(checkout);
+const { method, installments, selectedCountry, allowed_methods } =
+  storeToRefs(checkout);
+const { productType } = storeToRefs(prodStore);
 const { first, second } = storeToRefs(purchase);
 
 const years = [
@@ -125,6 +129,14 @@ function formatAmount(from) {
   second.value.amount = formatMoney(value);
 }
 
+const showCreditCardsTabs = computed(() => {
+  return (
+    allowed_methods.value.includes("TWO_CREDIT_CARDS") &&
+    productType.value !== "SUBSCRIPTION" &&
+    selectedCountry.value === "BR"
+  );
+});
+
 watch(installments, () => {
   purchase.setCardsAmount();
 });
@@ -140,6 +152,7 @@ watch(installments, () => {
       class="pulse flex gap-1"
       :class="{ active: method === 'CREDIT_CARD' }"
       @click="checkout.setMethod('CREDIT_CARD')"
+      v-if="showCreditCardsTabs"
     >
       <Icon name="bi:credit-card-fill" />
       <p class="text-[90%] font-semibold">
@@ -151,6 +164,7 @@ watch(installments, () => {
       class="pulse flex gap-1"
       :class="{ active: method === 'TWO_CREDIT_CARDS' }"
       @click="checkout.setMethod('TWO_CREDIT_CARDS')"
+      v-if="showCreditCardsTabs"
     >
       <Icon name="bi:credit-card-fill" />
       <Icon name="bi:credit-card-fill" />
