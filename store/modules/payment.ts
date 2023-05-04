@@ -57,7 +57,7 @@ export const usePaymentStore = defineStore("Payment", {
   }),
   getters: {},
   actions: {
-    async payment(language: string, paypal: any) {
+    async payment(language: string, paypal?: any) {
       leadsStore.changeStep(3);
 
       let data: Payment = {

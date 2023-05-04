@@ -4,6 +4,7 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
+import { z } from "zod";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -17,6 +18,27 @@ const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(addressStore);
 const { method, allowed_methods } = storeToRefs(checkoutStore);
+
+const schema = z.object({
+  email: z.string().email("Invalid email").nonempty("Email is required"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .nonempty("Password is required"),
+});
+
+const onSubmit = () => {
+  const data: FormData = {
+    email: email.value,
+  };
+
+  try {
+    schema.parse(data);
+    paymentStore.payment(locale.value);
+  } catch (error) {
+    console.log(error.formErrors.fieldErrors);
+  }
+};
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -222,11 +244,7 @@ await checkoutStore.init();
         </template>
 
         <!-- Purchase button -->
-        <BaseButton
-          class="mt-10"
-          @click="paymentStore.payment(locale)"
-          v-if="method !== 'PAYPAL'"
-        >
+        <BaseButton class="mt-10" @click="onSubmit" v-if="method !== 'PAYPAL'">
           <span class="text-[15px] font-semibold">
             {{
               customCheckoutStore.purchase_text ||
