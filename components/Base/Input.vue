@@ -94,12 +94,12 @@ const emit = defineEmits([
   "prepend-click",
   "append-click",
   "blur",
-  "input"
+  "input",
 ]);
 
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
-  emit("input", event.target.value)
+  emit("input", event.target.value);
 };
 </script>
 
@@ -135,7 +135,7 @@ const onInput = (event) => {
           :readonly="readonly"
           :placeholder="placeholder"
           :autocomplete="autocomplete"
-          class="h-full w-full bg-checkout outline-none text-txt-color"
+          class="h-full w-full bg-checkout text-txt-color outline-none"
           @input="onInput"
           @blur="emit('blur')"
         />
@@ -151,7 +151,7 @@ const onInput = (event) => {
           :readonly="readonly"
           :placeholder="placeholder"
           :autocomplete="autocomplete"
-          class="h-full w-full bg-checkout outline-none text-txt-color"
+          class="h-full w-full bg-checkout text-txt-color outline-none"
           :data-maska="mask"
           @input="onInput"
           @blur="emit('blur')"

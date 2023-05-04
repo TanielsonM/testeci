@@ -55,7 +55,7 @@ onMounted(async () => {
       pixel_id: number | string,
       method: string,
       amount: number,
-      affiliate_id: number,
+      affiliate_id: number | undefined,
       sale_id: number | undefined,
       original_amount: number
     ) {

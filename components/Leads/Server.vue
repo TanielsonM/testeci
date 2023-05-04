@@ -1,38 +1,26 @@
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
 import { useLeadsStore } from "@/store/modules/leads";
-import { useCheckoutStore } from "@/store/checkout";
-import { useProductStore } from "@/store/product";
 
 const leadStore = useLeadsStore();
-const checkoutStore = useCheckoutStore();
-const productStore = useProductStore();
+const { uuid } = storeToRefs(leadStore);
 
-const { uuid, payment } = storeToRefs(leadStore);
+let leadTimer: NodeJS.Timer | undefined = undefined;
 
-// remove before finish it, just to debug
-const debug = false;
+function unsetTimer(timer: NodeJS.Timer | undefined) {
+  clearInterval(timer);
+}
 
-onMounted(() => {
-  watch(uuid, () => {
-    const syncPayment = leadStore.syncPayment();
-    const syncLead = leadStore.syncLead();
+watch(uuid, () => {
+  leadStore.syncPayment();
+  leadStore.syncLead();
 
-    const leadTimer = setInterval(() => {
-      leadStore.updateLead();
-    }, 60000);
-  });
+  leadTimer = setInterval(() => {
+    leadStore.updateLead();
+  }, 60000);
 });
 
 onBeforeUnmount(() => {
-  clearInterval(leadTimer);
+  unsetTimer(leadTimer);
 });
 </script>
-<template>
-<div v-if="debug">
-  lead uuid: {{ leadStore.uuid }}<br />
-  checkout uuid: {{ checkoutStore.uuid }}<br />
-  product id: {{ productStore.product_id }}<br />
-  seller id: {{ productStore.seller_id }}<br />
-  </div>
-</template>
+<template></template>
