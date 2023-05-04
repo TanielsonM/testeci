@@ -47,7 +47,6 @@ export const usePixelStore = defineStore("Pixel", {
       return await useApi()
         .read("lexip", { query })
         .then((response) => {
-          console.log({ test: response });
           if (response) {
             return response;
           }
