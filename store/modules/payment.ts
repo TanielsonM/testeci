@@ -187,7 +187,12 @@ export const usePaymentStore = defineStore("Payment", {
         data.cards = cards;
       }
 
-      const allowed_installments = ["CREDIT_CARD", "TWO_CREDIT_CARD"];
+      const allowed_installments = [
+        "CREDIT_CARD",
+        "TWO_CREDIT_CARD",
+        "DEBIT_CARD",
+        "BOLETO",
+      ];
       if (!allowed_installments.includes(method.value)) {
         delete data.installments;
       }
