@@ -112,11 +112,6 @@ export const useLeadsStore = defineStore("Leads", {
         product_id: this.payment.product_id,
       };
 
-      console.log({
-        function: "syncLead",
-        data: query,
-      });
-
       await useApi()
         .read("/lead", { query })
         .then((response) => {
@@ -157,11 +152,6 @@ export const useLeadsStore = defineStore("Leads", {
         uuid: this.uuid,
         step: 0,
       };
-
-      console.log({
-        function: "createLead",
-        data: data,
-      });
 
       await useApi()
         .create("/lead", data)
