@@ -1,4 +1,10 @@
 <script setup>
+import { storeToRefs } from "pinia";
+import { useStepStore } from "~~/store/modules/steps";
+
+const stepStore = useStepStore();
+const { currentStep, format } = storeToRefs(stepStore);
+
 defineProps({
   title: String,
   step: {
@@ -19,13 +25,13 @@ defineProps({
     <span
       class="flex flex-nowrap items-center gap-5 text-base font-semibold text-black"
     >
-      <p class="text-main-color text-2xl" v-if="step">
+      <p class="text-2xl text-main-color" v-if="step">
         {{ step }}
       </p>
-      <p class="text-main-color text-2xl" v-if="icon">
+      <p class="text-2xl text-main-color" v-if="icon">
         <Icon :name="icon" />
       </p>
-      <p class="text-txt-color flex-nowrap">
+      <p class="flex-nowrap text-txt-color">
         {{ title }}
       </p>
     </span>

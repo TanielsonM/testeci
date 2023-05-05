@@ -5,18 +5,23 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
+import { useStepStore } from "~~/store/modules/steps";
 // Stores
 const custom_checkout = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
+const stepsStore = useStepStore();
 
 /* Variables */
 const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);
+const { currentStep } = storeToRefs(stepsStore);
+
+const isMobile = ref(null);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -134,6 +139,19 @@ const tabs = computed(() => {
 });
 
 await checkout.init();
+
+const handleResize = () => {
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
+};
+
+onMounted(() => {
+  handleResize();
+  window.addEventListener("resize", handleResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", handleResize);
+});
 </script>
 
 <template>
@@ -148,8 +166,25 @@ await checkout.init();
         class="w-full p-5 md:px-[60px] md:py-[50px]"
         data-anima="bottom"
       >
+        <BaseButton
+          color="transparent"
+          size="sm"
+          v-if="currentStep > 1 && currentStep <= 3"
+          @click="stepsStore.setStep(currentStep - 1)"
+        >
+          <div class="flex items-start justify-start text-left">
+            <Icon name="mdi:arrow-left" class="mr-4" size="20" />
+            <p class="text-left">{{ $t("checkout.steps.back") }}</p>
+          </div>
+        </BaseButton>
         <!-- Personal form -->
-        <Steps :title="$t('components.steps.personal_data')" step="01">
+        <Steps
+          :title="$t('components.steps.personal_data')"
+          step="01"
+          v-if="
+            currentStep === 1 && ((isMobile && currentStep == 1) || !isMobile)
+          "
+        >
           <template #end-line>
             <LocaleSelect />
           </template>
@@ -161,7 +196,11 @@ await checkout.init();
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          v-if="checkout.showAddressStep()"
+          v-if="
+            checkout.showAddressStep() &&
+            currentStep === 2 &&
+            ((isMobile && currentStep == 2) || !isMobile)
+          "
         >
           <template #content>
             <FormAddress />
@@ -195,6 +234,9 @@ await checkout.init();
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep() ? '03' : '02'"
+          v-if="
+            currentStep === 3 && ((isMobile && currentStep == 3) || !isMobile)
+          "
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
@@ -221,8 +263,20 @@ await checkout.init();
         <!-- Purchase button -->
         <BaseButton
           class="mt-10"
+          @click="stepsStore.setStep(currentStep + 1)"
+          v-if="isMobile && currentStep < 3"
+        >
+          <span class="text-[15px] font-semibold">
+            {{ $t("checkout.steps.next_step") }}
+          </span>
+        </BaseButton>
+
+        <BaseButton
+          class="mt-10"
           @click="payment.payment(locale)"
-          v-if="method !== 'PAYPAL'"
+          v-if="
+            method !== 'PAYPAL' && ((isMobile && currentStep == 3) || !isMobile)
+          "
         >
           <span class="text-[15px] font-semibold">
             {{

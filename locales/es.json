@@ -284,6 +284,10 @@
     "mobile": {
       "proxima_etapa": "Próximo paso"
     },
+    "steps": {
+      "next_step": "Siguiente paso",
+      "back": "Volver"
+    },
     "erro_compra": "Compra no completada",
     "sucesso_compra": "¡Su compra se ha completado con éxito!",
     "feedbacks": {
