@@ -151,6 +151,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 });
+
+watch(method, (method) => {
+  checkout.setMethod(method);
+});
 </script>
 
 <template>
