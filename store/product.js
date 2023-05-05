@@ -60,7 +60,7 @@ export const useProductStore = defineStore("product", {
             store.getInstallments(this.hasFixedInstallments)
           )}`;
         } else {
-          if (state.product.shipping_fee_is_recurring) {
+          if (state.product.shipping_fee_is_recurring && this.hasShippingFee) {
             if (state.product.type_shipping_fee === "FIXED") {
               return `${formatMoney(
                 state.product.amount + state.product.amount_fixed_shipping_fee
