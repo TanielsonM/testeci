@@ -66,7 +66,7 @@ export const usePaymentStore = defineStore("Payment", {
         if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
           return getInstallments.value() * ticket_installments.value;
         }
-        if (["CREDIT_CARDS", "TWO_CREDIT_CARDS"].includes(method.value)) {
+        if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
           return getInstallments.value() * installments.value;
         }
         return getInstallments.value(1);
