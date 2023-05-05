@@ -397,7 +397,7 @@ export type MethodsState = {
 };
 
 export type StepState = {
-  step: number;
+  currentStep: number;
   format: "one_step" | "default";
 };
 

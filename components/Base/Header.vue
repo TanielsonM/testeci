@@ -24,7 +24,7 @@ const product = useProductStore();
       !custom_checkout.topThumb ||
       !product.isValid()
     "
-    class="bg-checkout sticky top-0 z-50 flex min-h-[60px] w-full items-center px-4 shadow-lg"
+    class="sticky top-0 z-50 flex min-h-[60px] w-full items-center bg-checkout px-4 shadow-lg"
   >
     <img
       :src="

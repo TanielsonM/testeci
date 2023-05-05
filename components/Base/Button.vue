@@ -41,6 +41,8 @@ const colorClasses = computed(() => {
     info: "border-transparent text-[#3483fa] bg-[rgba(65,137,230,.15)]",
     blue: "border-transparent text-white bg-[#3483fa]",
     bordered: "border-[#3483fa] text-[#3483fa] bg-transparent",
+    transparent:
+      "border-transparent bg-transparent text-txt-color !items-start !justify-start !p-0",
   };
   return colors[props.color] || colors.primary;
 });
@@ -58,7 +60,7 @@ const sizeClasses = computed(() => {
 <template>
   <button
     :data-anima="animation"
-    class="button w-full py-2 px-3"
+    class="button w-full px-3 py-2"
     :class="[baseClasses, colorClasses, sizeClasses]"
     :disabled="disabled"
   >

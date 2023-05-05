@@ -288,6 +288,10 @@
     "mobile": {
       "proxima_etapa": "Next step"
     },
+    "steps": {
+      "next_step": "Next Step",
+      "back": "Back "
+    },
     "erro_compra": "Purchase not completed",
     "sucesso_compra": "Your purchase was successful!",
     "feedbacks": {

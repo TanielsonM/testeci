@@ -67,7 +67,7 @@ const actual_year = computed(() => new Date().getFullYear());
       class="flex w-full flex-wrap items-center justify-center gap-5 px-10"
     >
       <p
-        class="text-txt-color relative flex flex-nowrap text-[10px] font-normal"
+        class="relative flex flex-nowrap text-[10px] font-normal text-txt-color"
       >
         {{ $t("components.footer.annual_fee") }}
       </p>
@@ -83,7 +83,7 @@ const actual_year = computed(() => new Date().getFullYear());
         />
       </span>
     </section>
-    <p class="text-txt-color text-[10px] font-normal">
+    <p class="text-[10px] font-normal text-txt-color">
       Greenn © {{ actual_year }} - {{ $t("components.footer.reverved_text") }}
     </p>
   </footer>
