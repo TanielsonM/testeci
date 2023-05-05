@@ -44,6 +44,7 @@ const {
   isFixedShipping,
   hasShippingFee,
   FixedShippingAmount,
+  hasTicketInstallments,
 } = storeToRefs(productStore);
 
 const { name, email, document, cellphone } = storeToRefs(personalStore);
@@ -61,11 +62,21 @@ export const usePaymentStore = defineStore("Payment", {
     async payment(language: string, paypal: any) {
       leadsStore.changeStep(3);
 
+      const total = computed(() => {
+        if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
+          return getInstallments.value() * ticket_installments.value;
+        }
+        if (["CREDIT_CARDS", "TWO_CREDIT_CARDS"].includes(method.value)) {
+          return getInstallments.value() * installments.value;
+        }
+        return getInstallments.value(1);
+      });
+
       let data: Payment = {
         // Purchase infos
         method: method.value,
         amount: getOriginalAmount.value,
-        total: getInstallments.value() * installments.value,
+        total: total.value,
         installments:
           method.value === "BOLETO"
             ? ticket_installments.value
