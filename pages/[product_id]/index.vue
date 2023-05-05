@@ -181,7 +181,7 @@ onBeforeUnmount(() => {
           :title="$t('components.steps.personal_data')"
           step="01"
           v-if="
-            currentStep === 1 && ((isMobile && currentStep == 1) || !isMobile)
+            currentStep === 1 || (isMobile && currentStep == 1) || !isMobile
           "
         >
           <template #end-line>
@@ -197,9 +197,9 @@ onBeforeUnmount(() => {
           :title="$t('components.steps.address')"
           step="02"
           v-if="
-            checkout.showAddressStep() &&
-            currentStep === 2 &&
-            ((isMobile && currentStep == 2) || !isMobile)
+            (checkout.showAddressStep() && currentStep === 2) ||
+            (isMobile && currentStep == 2) ||
+            !isMobile
           "
         >
           <template #content>
@@ -236,7 +236,7 @@ onBeforeUnmount(() => {
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep() ? '03' : '02'"
           v-if="
-            currentStep === 3 && ((isMobile && currentStep == 3) || !isMobile)
+            currentStep === 3 || (isMobile && currentStep == 3) || !isMobile
           "
         >
           <template #content>
@@ -278,7 +278,7 @@ onBeforeUnmount(() => {
           class="mt-10"
           @click="payment.payment(locale)"
           v-if="
-            method !== 'PAYPAL' && ((isMobile && currentStep == 3) || !isMobile)
+            method !== 'PAYPAL' || (isMobile && currentStep >= 3) || !isMobile
           "
         >
           <span class="text-[15px] font-semibold">
