@@ -264,9 +264,7 @@ onBeforeUnmount(() => {
         <BaseButton
           class="mt-10"
           @click="payment.payment(locale)"
-          v-if="
-            method !== 'PAYPAL' || (isMobile && currentStep >= 3) || !isMobile
-          "
+          v-if="method !== 'PAYPAL'"
         >
           <span class="text-[15px] font-semibold">
             {{
