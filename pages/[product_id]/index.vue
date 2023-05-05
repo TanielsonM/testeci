@@ -205,7 +205,7 @@ onBeforeUnmount(() => {
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkoutStore.hasPhysicalProduct()"
+              v-if="checkout.hasPhysicalProduct()"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -248,7 +248,7 @@ onBeforeUnmount(() => {
         </Steps>
 
         <!-- Bumps -->
-        <template v-if="checkoutStore.getBumpList.length">
+        <template v-if="checkout.getBumpList.length">
           <p class="w-full text-txt-color">
             {{
               customCheckoutStore.hasCustomBump
@@ -257,7 +257,7 @@ onBeforeUnmount(() => {
             }}
           </p>
           <OrderBumps
-            v-for="(bump, index) in checkoutStore.getBumpList"
+            v-for="(bump, index) in checkout.getBumpList"
             :key="index"
             :bump="bump"
           />
@@ -331,10 +331,10 @@ onBeforeUnmount(() => {
         <PixelClient
           :event="'view'"
           :product_id="productStore.product_id"
-          :affiliate_id="checkoutStore.hasAffiliateId"
-          :method="checkoutStore.method"
-          :amount="checkoutStore.amount"
-          :original_amount="checkoutStore.original_amount"
+          :affiliate_id="checkout.hasAffiliateId"
+          :method="checkout.method"
+          :amount="checkout.amount"
+          :original_amount="checkout.original_amount"
         />
       </ClientOnly>
       <!-- End Client Only section -->
