@@ -20,9 +20,9 @@ const product = useProductStore();
   </header>
   <header
     v-if="
-      !custom_checkout.hasScarcity ||
-      !custom_checkout.topThumb ||
-      !product.isValid()
+      !custom_checkout.hasScarcity &&
+      !custom_checkout.topThumb &&
+      product.isValid()
     "
     class="sticky top-0 z-50 flex min-h-[60px] w-full items-center bg-checkout px-4 shadow-lg"
   >

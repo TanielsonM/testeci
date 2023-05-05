@@ -310,22 +310,21 @@ onBeforeUnmount(() => {
       />
       <!-- End side Thumb -->
     </section>
-
-    <section>
-      <!-- Client Only section -->
-      <ClientOnly>
-        <LeadsClient />
-        <PixelClient
-          :event="'view'"
-          :product_id="productStore.product_id"
-          :affiliate_id="checkout.hasAffiliateId"
-          :method="checkout.method"
-          :amount="checkout.amount"
-          :original_amount="checkout.original_amount"
-        />
-      </ClientOnly>
-      <!-- End Client Only section -->
-      <LeadsServer />
-    </section>
   </NuxtLayout>
+  <section>
+    <!-- Client Only section -->
+    <ClientOnly>
+      <LeadsClient />
+      <PixelClient
+        :event="'view'"
+        :product_id="productStore.product_id"
+        :affiliate_id="checkout.hasAffiliateId"
+        :method="checkout.method"
+        :amount="checkout.amount"
+        :original_amount="checkout.original_amount"
+      />
+    </ClientOnly>
+    <!-- End Client Only section -->
+    <LeadsServer />
+  </section>
 </template>
