@@ -66,9 +66,12 @@ export const useProductStore = defineStore("product", {
                 state.product.amount + state.product.amount_fixed_shipping_fee
               )}`;
             } else {
-              return `${formatMoney(
-                state.product.amount + state.product.shipping?.amount || 0
-              )}`;
+              if (state.product.shipping?.amount) {
+                return `${formatMoney(
+                  state.product.amount + state.product.shipping.amount
+                )}`;
+              }
+              return `${formatMoney(state.product.amount)}`;
             }
           } else {
             return `${formatMoney(state.product.amount)}`;
