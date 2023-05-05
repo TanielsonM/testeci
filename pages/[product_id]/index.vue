@@ -312,10 +312,9 @@ watch(method, (method) => {
       />
       <!-- End side Thumb -->
     </section>
-  </NuxtLayout>
-  <section>
+
     <!-- Client Only section -->
-    <ClientOnly>
+    <ClientOnly class="hidden">
       <LeadsClient />
       <PixelClient
         :event="'view'"
@@ -328,5 +327,5 @@ watch(method, (method) => {
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />
-  </section>
+  </NuxtLayout>
 </template>

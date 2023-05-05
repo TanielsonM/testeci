@@ -5,7 +5,7 @@ import { usePixelStore } from "~~/store/modules/pixel";
 interface Props {
   event: string;
   product_id: number;
-  affiliate_id: number;
+  affiliate_id: number | null;
   method: string;
   amount: number;
   original_amount: number;
@@ -55,7 +55,7 @@ onMounted(async () => {
       pixel_id: number | string,
       method: string,
       amount: number,
-      affiliate_id: number | undefined,
+      affiliate_id: number | undefined | null,
       sale_id: number | undefined,
       original_amount: number
     ) {
@@ -84,3 +84,5 @@ onMounted(async () => {
   }
 });
 </script>
+
+<template></template>
