@@ -427,7 +427,6 @@ export const useCheckoutStore = defineStore("checkout", {
       fixed = null,
       ticket = null
     ) {
-      console.log(fixed);
       this.installments = fixed ?? installments ?? 1;
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
