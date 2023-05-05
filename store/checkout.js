@@ -427,6 +427,7 @@ export const useCheckoutStore = defineStore("checkout", {
       fixed = null,
       ticket = null
     ) {
+      console.log(fixed);
       this.installments = fixed ?? installments ?? 1;
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
@@ -447,7 +448,12 @@ export const useCheckoutStore = defineStore("checkout", {
       const store = useProductStore();
 
       this.setInstallments(
-        store.hasPreSelectedInstallments ?? store.resolveInstallments()
+        store.hasPreSelectedInstallments ?? store.resolveInstallments(),
+        store.product.max_installments ||
+          store.product.max_subscription_installments ||
+          12,
+        store.hasFixedInstallments,
+        store.hasTicketInstallments > 1 ? store.hasTicketInstallments : 1
       );
       /* credit card */
       if (method === "CREDIT_CARD") {
