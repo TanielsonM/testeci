@@ -177,13 +177,7 @@ onBeforeUnmount(() => {
           </div>
         </BaseButton>
         <!-- Personal form -->
-        <Steps
-          :title="$t('components.steps.personal_data')"
-          step="01"
-          v-if="
-            currentStep === 1 || (isMobile && currentStep == 1) || !isMobile
-          "
-        >
+        <Steps :title="$t('components.steps.personal_data')" step="01">
           <template #end-line>
             <LocaleSelect />
           </template>
@@ -196,11 +190,7 @@ onBeforeUnmount(() => {
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          v-if="
-            (checkout.showAddressStep() && currentStep === 2) ||
-            (isMobile && currentStep == 2) ||
-            !isMobile
-          "
+          v-if="checkout.showAddressStep()"
         >
           <template #content>
             <FormAddress />
@@ -235,9 +225,6 @@ onBeforeUnmount(() => {
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep() ? '03' : '02'"
-          v-if="
-            currentStep === 3 || (isMobile && currentStep == 3) || !isMobile
-          "
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
