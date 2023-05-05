@@ -444,7 +444,11 @@ export const useCheckoutStore = defineStore("checkout", {
         this.setInstallments(1);
         return;
       }
-      this.setInstallments(this.max_installments);
+      const store = useProductStore();
+
+      this.setInstallments(
+        store.hasPreSelectedInstallments ?? store.resolveInstallments()
+      );
       /* credit card */
       if (method === "CREDIT_CARD") {
         purchaseStore.first.amount =
