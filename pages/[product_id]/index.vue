@@ -5,6 +5,7 @@ import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
+
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
@@ -18,9 +19,7 @@ const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);
-const { currentStep } = storeToRefs(stepsStore);
-
-const isMobile = ref(null);
+const { currentStep, isMobile } = storeToRefs(stepsStore);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -140,7 +139,7 @@ const tabs = computed(() => {
 await checkout.init();
 
 const handleResize = () => {
-  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
+  stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
 };
 
 onMounted(() => {
@@ -232,7 +231,7 @@ watch(method, (method) => {
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseTabs v-model="method" :tabs="tabs" />
+              <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <FormPurchase />
             </section>
           </template>
@@ -255,11 +254,7 @@ watch(method, (method) => {
         </template>
 
         <!-- Purchase button -->
-        <BaseButton
-          class="mt-10"
-          @click="stepsStore.setStep(currentStep + 1)"
-          v-if="isMobile && currentStep < 3"
-        >
+        <BaseButton class="mt-10" @click="stepsStore.setStep(currentStep + 1)" v-if="isMobile">
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>

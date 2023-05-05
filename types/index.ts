@@ -399,6 +399,7 @@ export type MethodsState = {
 export type StepState = {
   currentStep: number;
   format: "one_step" | "default";
+  isMobile: boolean;
 };
 
 export type Sale = {
