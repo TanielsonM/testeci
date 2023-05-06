@@ -1,5 +1,9 @@
+// Types
+import { HeadersState } from "@/types";
+
 import { useLoadingStore } from "@/store/loading/loading";
 const loading = useLoadingStore();
+const headStore = useHeadersStore();
 
 export default function () {
   async function instance<T>(
@@ -15,8 +19,50 @@ export default function () {
       ...config,
       method,
       baseURL: useRuntimeConfig().public.API_BASE_URL,
-      headers: {
-        "Content-type": "application/json",
+      onRequest({ request, options }) {
+        const headers: HeadersInit = new Headers();
+        headers.set("Content-type", "application/json");
+        if (request === "/payment") {
+          // controller-token-
+          if (headStore["controller-token-"]) {
+            headers.set("Controller-Token-", headStore["controller-token-"]);
+          }
+          // requestray-token-
+          if (headStore["requestray-token-"]) {
+            headers.set("RequestRay-Token-", headStore["requestray-token-"]);
+          }
+          // firewall-token-
+          if (headStore["firewall-token-"]) {
+            headers.set("Firewall-Token-", headStore["firewall-token-"]);
+          }
+          // cache-token-
+          if (headStore["cache-token-"]) {
+            headers.set("Cache-Token-", headStore["cache-token-"]);
+          }
+          // trans-token-
+          if (headStore["trans-token-"]) {
+            headers.set("Trans-Token-", headStore["trans-token-"]);
+          }
+          // wd-token-
+          if (headStore["wd-token-"]) {
+            headers.set("Wd-Token-", headStore["wd-token-"]);
+          }
+        }
+        options.headers = headers;
+      },
+      onResponse({ request, response }) {
+        if (request.toString().includes("/api/product")) {
+          const headers: HeadersState = {
+            "controller-token-": response.headers.get("controller-token-"),
+            "requestray-token-": response.headers.get("requestray-token-"),
+            "firewall-token-": response.headers.get("firewall-token-"),
+            "cache-token-": response.headers.get("cache-token-"),
+            "trans-token-": response.headers.get("trans-token-"),
+            "wd-token-": "",
+          };
+
+          headStore.updateHeaders(headers);
+        }
       },
     });
 
