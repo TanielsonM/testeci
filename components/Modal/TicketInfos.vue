@@ -42,7 +42,11 @@ const props = defineProps({
   index: {
     type: Number,
     default: 0,
-  }
+  },
+  installments: {
+    type: Number,
+    default: () => 0,
+  },
 });
 
 const openTicket = (url: any) => {
@@ -61,7 +65,6 @@ const copy = (id: string) => {
     )}`
   );
 };
-
 </script>
 <template>
   <div v-if="!onlyCode">
@@ -76,6 +79,9 @@ const copy = (id: string) => {
       {{ $t("pg_obrigado.modal.detalhes_email") }}
     </p>
     <div class="details py-5">
+      <p class="paragraph" v-if="!!installments && installments > 1">
+        ✨ {{ $t("pg_obrigado.modal.compra_parcelada") }} {{ installments }}x
+      </p>
       <h6 class="title" v-if="index == 0">
         {{ $t("pg_obrigado.modal.detalhes_compra") }}
       </h6>
