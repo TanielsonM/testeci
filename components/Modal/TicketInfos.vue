@@ -78,10 +78,10 @@ const copy = (id: string) => {
     <p class="paragraph">
       {{ $t("pg_obrigado.modal.detalhes_email") }}
     </p>
-    <div class="details py-5">
-      <p class="paragraph" v-if="!!installments && installments > 1">
+    <p class="paragraph" v-if="!!installments && installments > 1">
         ✨ {{ $t("pg_obrigado.modal.compra_parcelada") }} {{ installments }}x
       </p>
+    <div class="details py-5">
       <h6 class="title" v-if="index == 0">
         {{ $t("pg_obrigado.modal.detalhes_compra") }}
       </h6>
