@@ -20,6 +20,9 @@ const { product } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);
 const { currentStep, isMobile } = storeToRefs(stepsStore);
+const { error_message } = storeToRefs(payment);
+// Refs
+const alert_modal = ref(false);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -154,6 +157,15 @@ onBeforeUnmount(() => {
 watch(method, (method) => {
   checkout.setMethod(method);
 });
+
+watch(error_message, (val) => {
+  if (val) alert_modal.value = true;
+});
+
+function closeModal() {
+  alert_modal.value = false;
+  error_message.value = "";
+}
 </script>
 
 <template>
@@ -254,7 +266,11 @@ watch(method, (method) => {
         </template>
 
         <!-- Purchase button -->
-        <BaseButton class="mt-10" @click="stepsStore.setStep(currentStep + 1)" v-if="isMobile">
+        <BaseButton
+          class="mt-10"
+          @click="stepsStore.setStep(currentStep + 1)"
+          v-if="isMobile"
+        >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>
@@ -307,6 +323,25 @@ watch(method, (method) => {
       />
       <!-- End side Thumb -->
     </section>
+
+    <!-- Alert modal -->
+    <BaseModal
+      :title="product.name"
+      :is-open="alert_modal"
+      @close="closeModal"
+    >
+      <section class="flex w-full max-w-[400px] flex-col gap-5">
+        <h6 class="text-[15px] font-semibold">
+          {{ $t("checkout.dados_pessoais.title_error") }}
+        </h6>
+        <p>{{ $t(error_message) }}</p>
+        <section class="mt-10 flex w-full justify-end">
+          <BaseButton color="blue" class="w-[40%]" @click="closeModal">
+            {{ $t("checkout.dados_pessoais.btn_error") }}
+          </BaseButton>
+        </section>
+      </section>
+    </BaseModal>
 
     <!-- Client Only section -->
     <ClientOnly class="hidden">
