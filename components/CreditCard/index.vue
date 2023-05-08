@@ -74,7 +74,7 @@ function getImg(type) {
 <template>
   <section class="flex w-full max-w-[430px] justify-start">
     <section
-      class="card flex h-[208px] w-full flex-col justify-between rounded-lg border border-greenn bg-main-transparent p-5"
+      class="card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5"
     >
       <header class="flex h-10 w-full justify-end">
         <Transition name="slide-fade-up" mode="out-in">
@@ -134,17 +134,17 @@ function getImg(type) {
           :label="$t('checkout.pagamento.metodos.um_cartao.card.validade')"
         >
           <Transition name="slide-fade-up" mode="out-in">
-            <span v-if="card_month" v-bind:key="card_month">{{
+            <span class="text-txt-color" v-if="card_month" v-bind:key="card_month">{{
               card_month
             }}</span>
-            <span v-else key="2">••</span>
+            <span class="text-txt-color" v-else key="2">••</span>
           </Transition>
-          /
+          <span class="text-txt-color">/</span>
           <Transition name="slide-fade-up" mode="out-in">
-            <span v-if="card_year" v-bind:key="card_year">{{
+            <span class="text-txt-color" v-if="card_year" v-bind:key="card_year">{{
               String(card_year).slice(2, 4)
             }}</span>
-            <span v-else key="2">••</span>
+            <span class="text-txt-color" v-else key="2">••</span>
           </Transition>
         </CreditCardLabel>
       </section>

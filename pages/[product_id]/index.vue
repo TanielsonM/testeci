@@ -4,41 +4,26 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
-import { z } from "zod";
+import { useStepStore } from "~~/store/modules/steps";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
-const checkoutStore = useCheckoutStore();
-const addressStore = useAddressStore();
-const paymentStore = usePaymentStore();
+const checkout = useCheckoutStore();
+const address = useAddressStore();
+const payment = usePaymentStore();
+const stepsStore = useStepStore();
 
 /* Variables */
 const { t, locale } = useI18n();
 const { product } = storeToRefs(productStore);
-const { sameAddress } = storeToRefs(addressStore);
-const { method, allowed_methods } = storeToRefs(checkoutStore);
+const { sameAddress } = storeToRefs(address);
+const { method, allowed_methods } = storeToRefs(checkout);
+const { currentStep, isMobile } = storeToRefs(stepsStore);
+const { error_message } = storeToRefs(payment);
 
-const schema = z.object({
-  email: z.string().email("Invalid email").nonempty("Email is required"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .nonempty("Password is required"),
-});
-
-const onSubmit = () => {
-  const data: FormData = {
-    email: email.value,
-  };
-
-  try {
-    schema.parse(data);
-    paymentStore.payment(locale.value);
-  } catch (error) {
-    console.log(error.formErrors.fieldErrors);
-  }
-};
+// Refs
+const alert_modal = ref(false);
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -154,7 +139,34 @@ const tabs = computed(() => {
     }
   });
 });
-await checkoutStore.init();
+
+await checkout.init();
+
+const handleResize = () => {
+  stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
+};
+
+onMounted(() => {
+  handleResize();
+  window.addEventListener("resize", handleResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", handleResize);
+});
+
+watch(method, (method) => {
+  checkout.setMethod(method);
+});
+
+watch(error_message, (val) => {
+  if (val) alert_modal.value = true;
+});
+
+function closeModal() {
+  alert_modal.value = false;
+  error_message.value = "";
+}
 </script>
 
 <template>
@@ -169,6 +181,17 @@ await checkoutStore.init();
         class="w-full p-5 md:px-[60px] md:py-[50px]"
         data-anima="bottom"
       >
+        <BaseButton
+          color="transparent"
+          size="sm"
+          v-if="currentStep > 1 && currentStep <= 3"
+          @click="stepsStore.setStep(currentStep - 1)"
+        >
+          <div class="flex items-start justify-start text-left">
+            <Icon name="mdi:arrow-left" class="mr-4" size="20" />
+            <p class="text-left">{{ $t("checkout.steps.back") }}</p>
+          </div>
+        </BaseButton>
         <!-- Personal form -->
         <Steps :title="$t('components.steps.personal_data')" step="01">
           <template #end-line>
@@ -183,12 +206,12 @@ await checkoutStore.init();
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          v-if="checkoutStore.showAddressStep()"
+          v-if="checkout.showAddressStep()"
         >
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkoutStore.hasPhysicalProduct()"
+              v-if="checkout.hasPhysicalProduct()"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -217,18 +240,18 @@ await checkoutStore.init();
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
-          :step="checkoutStore.showAddressStep() ? '03' : '02'"
+          :step="checkout.showAddressStep() ? '03' : '02'"
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseTabs v-model="method" :tabs="tabs" />
+              <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <FormPurchase />
             </section>
           </template>
         </Steps>
 
         <!-- Bumps -->
-        <template v-if="checkoutStore.getBumpList.length">
+        <template v-if="checkout.getBumpList.length">
           <p class="w-full text-txt-color">
             {{
               customCheckoutStore.hasCustomBump
@@ -237,14 +260,28 @@ await checkoutStore.init();
             }}
           </p>
           <OrderBumps
-            v-for="(bump, index) in checkoutStore.getBumpList"
+            v-for="(bump, index) in checkout.getBumpList"
             :key="index"
             :bump="bump"
           />
         </template>
 
         <!-- Purchase button -->
-        <BaseButton class="mt-10" @click="onSubmit" v-if="method !== 'PAYPAL'">
+        <BaseButton
+          class="mt-10"
+          @click="stepsStore.setStep(currentStep + 1)"
+          v-if="isMobile"
+        >
+          <span class="text-[15px] font-semibold">
+            {{ $t("checkout.steps.next_step") }}
+          </span>
+        </BaseButton>
+
+        <BaseButton
+          class="mt-10"
+          @click="payment.payment(locale)"
+          v-if="method !== 'PAYPAL'"
+        >
           <span class="text-[15px] font-semibold">
             {{
               customCheckoutStore.purchase_text ||
@@ -288,21 +325,34 @@ await checkoutStore.init();
       <!-- End side Thumb -->
     </section>
 
-    <section>
-      <!-- Client Only section -->
-      <ClientOnly>
-        <LeadsClient />
-        <PixelClient
-          :event="'view'"
-          :product_id="productStore.product_id"
-          :affiliate_id="checkoutStore.hasAffiliateId"
-          :method="checkoutStore.method"
-          :amount="checkoutStore.amount"
-          :original_amount="checkoutStore.original_amount"
-        />
-      </ClientOnly>
-      <!-- End Client Only section -->
-      <LeadsServer />
-    </section>
+    <!-- Alert modal -->
+    <BaseModal :title="product.name" :is-open="alert_modal" @close="closeModal">
+      <section class="flex w-full max-w-[400px] flex-col gap-5">
+        <h6 class="text-[15px] font-semibold">
+          {{ $t("checkout.dados_pessoais.title_error") }}
+        </h6>
+        <p>{{ $t(error_message) }}</p>
+        <section class="mt-10 flex w-full justify-end">
+          <BaseButton color="blue" class="w-[40%]" @click="closeModal">
+            {{ $t("checkout.dados_pessoais.btn_error") }}
+          </BaseButton>
+        </section>
+      </section>
+    </BaseModal>
+
+    <!-- Client Only section -->
+    <ClientOnly class="hidden">
+      <LeadsClient />
+      <PixelClient
+        :event="'view'"
+        :product_id="productStore.product_id"
+        :affiliate_id="checkout.hasAffiliateId"
+        :method="checkout.method"
+        :amount="checkout.amount"
+        :original_amount="checkout.original_amount"
+      />
+    </ClientOnly>
+    <!-- End Client Only section -->
+    <LeadsServer />
   </NuxtLayout>
 </template>

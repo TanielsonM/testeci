@@ -60,15 +60,18 @@ export const useProductStore = defineStore("product", {
             store.getInstallments(this.hasFixedInstallments)
           )}`;
         } else {
-          if (state.product.shipping_fee_is_recurring) {
+          if (state.product.shipping_fee_is_recurring && this.hasShippingFee) {
             if (state.product.type_shipping_fee === "FIXED") {
               return `${formatMoney(
                 state.product.amount + state.product.amount_fixed_shipping_fee
               )}`;
             } else {
-              return `${formatMoney(
-                state.product.amount + state.product.shipping?.amount || 0
-              )}`;
+              if (state.product.shipping?.amount) {
+                return `${formatMoney(
+                  state.product.amount + state.product.shipping.amount
+                )}`;
+              }
+              return `${formatMoney(state.product.amount)}`;
             }
           } else {
             return `${formatMoney(state.product.amount)}`;
@@ -119,7 +122,7 @@ export const useProductStore = defineStore("product", {
           this.product.max_subscription_installments ||
           12,
         this.hasFixedInstallments,
-        this.hasTicketInstallments
+        this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);

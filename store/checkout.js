@@ -78,7 +78,7 @@ export const useCheckoutStore = defineStore("checkout", {
      * Query getters
      */
     getAmount: (state) => state.amount,
-    hasAffiliateId: (state) => state.url.query?.a_id,
+    hasAffiliateId: (state) => state.url.query?.a_id ?? null,
     hasBusiness: (state) => state.url.query?.b, // Jivochat
     hasBump: (state) => state.url.fullPath.includes("b_id"),
     hasNewBump: (state) => state.url.fullPath.includes("b_id_1"),
@@ -108,7 +108,9 @@ export const useCheckoutStore = defineStore("checkout", {
      */
     hasFees: (state) => {
       const product = useProductStore();
-      return ["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(state.method)
+      return ["CREDIT_CARD", "TWO_CREDIT_CARDS", "BOLETO"].includes(
+        state.method
+      )
         ? product.hasFees
         : false;
     },
@@ -367,6 +369,7 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     async setCoupon(initial = false, remove = false) {
       const store = useAmountStore();
+      const prodStore = useProductStore();
       if (remove) {
         store.setAmount(store.getOriginalAmount - store.getAmount);
         this.coupon = {
@@ -382,6 +385,7 @@ export const useCheckoutStore = defineStore("checkout", {
         };
         return;
       }
+      if (!prodStore.allowedCoupon) return false;
       if (!!this.hasCoupon && initial) {
         this.coupon.name = this.hasCoupon;
       }
@@ -426,20 +430,43 @@ export const useCheckoutStore = defineStore("checkout", {
       this.installments = fixed ?? installments ?? 1;
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
-      if (ticket) this.ticket_installments = 1;
+      if (ticket) this.ticket_installments = ticket;
     },
     setMethod(method = "") {
       this.method = method;
-      if (!["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method)) {
+
+      const can_pay_in_installments = [
+        "CREDIT_CARD",
+        "TWO_CREDIT_CARDS",
+        "BOLETO",
+      ];
+      if (!can_pay_in_installments.includes(this.method)) {
         this.setInstallments(1);
-      } else if (this.method === "TWO_CREDIT_CARDS") {
+        return;
+      }
+      const store = useProductStore();
+
+      this.setInstallments(
+        store.hasPreSelectedInstallments ?? store.resolveInstallments(),
+        store.product.max_installments ||
+          store.product.max_subscription_installments ||
+          12,
+        store.hasFixedInstallments,
+        store.hasTicketInstallments > 1 ? store.hasTicketInstallments : 1
+      );
+      /* credit card */
+      if (method === "CREDIT_CARD") {
+        purchaseStore.first.amount =
+          installmentsStore.getInstallments() * this.installments;
+        return;
+      }
+      /* two credit card */
+      if (method === "TWO_CREDIT_CARDS") {
         purchaseStore.first.amount =
           (installmentsStore.getInstallments() * this.installments) / 2;
         purchaseStore.second.amount =
           (installmentsStore.getInstallments() * this.installments) / 2;
-      } else {
-        purchaseStore.first.amount =
-          installmentsStore.getInstallments() * this.installments;
+        return;
       }
     },
     setOriginalAmount(amount = 0) {

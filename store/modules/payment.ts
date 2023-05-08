@@ -36,6 +36,7 @@ const {
   installments,
   coupon,
   hasUpsell,
+  ticket_installments,
 } = storeToRefs(checkoutStore);
 const {
   is_gift,
@@ -43,6 +44,7 @@ const {
   isFixedShipping,
   hasShippingFee,
   FixedShippingAmount,
+  hasTicketInstallments,
 } = storeToRefs(productStore);
 
 const { name, email, document, cellphone } = storeToRefs(personalStore);
@@ -54,18 +56,32 @@ const { getOriginalAmount } = storeToRefs(amountStore);
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
+    error_message: "",
   }),
   getters: {},
   actions: {
     async payment(language: string, paypal?: any) {
       leadsStore.changeStep(3);
 
+      const total = computed(() => {
+        if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
+          return getInstallments.value() * ticket_installments.value;
+        }
+        if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
+          return getInstallments.value() * installments.value;
+        }
+        return getInstallments.value(1);
+      });
+
       let data: Payment = {
         // Purchase infos
         method: method.value,
         amount: getOriginalAmount.value,
-        total: getInstallments.value() * installments.value,
-        installments: installments.value,
+        total: total.value,
+        installments:
+          method.value === "BOLETO"
+            ? ticket_installments.value
+            : installments.value,
         // product infos
         product_id: product_id.value,
         products: product_list.value.map((item: Product) => ({
@@ -249,79 +265,77 @@ export const usePaymentStore = defineStore("Payment", {
     },
     validateError(error: PaymentError) {
       checkoutStore.setLoading(false);
-      const { t } = useI18n();
-      let error_message = "";
       switch (error.code) {
         case "0001":
-          error_message = t("error.0001");
+          this.error_message = "error.0001";
           // this.resetCheckout("CARD");
           break;
         case "BANK":
-          error_message = t("error.BANK");
+          this.error_message = "error.BANK";
           // this.resetCheckout("ALL");
           break;
         case "BLACKLIST_PURCHASE":
-          error_message = t("error.BLACKLIST_PURCHASE");
+          this.error_message = "error.BLACKLIST_PURCHASE";
           // this.resetCheckout("ALL");
           break;
         case "INVALID_CVV":
-          error_message = t("error.INVALID_CVV");
+          this.error_message = "error.INVALID_CVV";
           // this.resetCheckout("CVV");
           break;
         case "INVALID_CLIENT_DATA":
-          error_message = t("error.INVALID_CLIENT_DATA");
+          this.error_message = "error.INVALID_CLIENT_DATA";
           // this.resetCheckout("ALL");
           break;
         case "DUPLICATE_PURCHASE":
-          error_message = t("error.DUPLICATE_PURCHASE");
+          this.error_message = "error.DUPLICATE_PURCHASE";
           // this.resetCheckout("ALL");
           break;
         case "PRODUCT_OUT_OF_STOCK":
-          error_message = t("error.PRODUCT_OUT_OF_STOCK");
+          this.error_message = "error.PRODUCT_OUT_OF_STOCK";
           // this.resetCheckout("ALL");
           break;
         case "CREDIT_CARD_OPERATOR":
-          error_message = t("error.CREDIT_CARD_OPERATOR");
+          this.error_message = "error.CREDIT_CARD_OPERATOR";
           // this.resetCheckout("ALL");
           break;
         case "INVALID_DATA":
-          error_message = t("error.INVALID_DATA");
+          this.error_message = "error.INVALID_DATA";
           // this.resetCheckout("CARD");
           break;
         case "INVALID_CREDIT_CARD":
-          error_message = t("error.INVALID_CREDIT_CARD");
+          this.error_message = "error.INVALID_CREDIT_CARD";
           // this.resetCheckout("ALL");
           break;
         case "INSUFFICIENT_FUNDS":
-          error_message = t("error.INSUFFICIENT_FUNDS");
+          this.error_message = "error.INSUFFICIENT_FUNDS";
           // this.resetCheckout("CARD");
           break;
         case "INVALID_PAYMENT_TYPE":
-          error_message = t("error.INVALID_PAYMENT_TYPE");
+          this.error_message = "error.INVALID_PAYMENT_TYPE";
           // this.resetCheckout("ALL");
           break;
         case "INVALID_INSTALLMENTS":
-          error_message = t("error.INVALID_INSTALLMENTS");
+          this.error_message = "error.INVALID_INSTALLMENTS";
           // this.resetCheckout("CARD");
           break;
         case "INVALID_INSTALLMENTS_BUMP":
-          error_message = t("error.INVALID_INSTALLMENTS_BUMP");
+          this.error_message = "error.INVALID_INSTALLMENTS_BUMP";
           // this.resetCheckout("CARD");
           break;
         case "CURRENCY_NOT_SUPPORTED":
-          error_message = t("error.CURRENCY_NOT_SUPPORTED");
+          this.error_message = "error.CURRENCY_NOT_SUPPORTED";
           // this.resetCheckout("CARD");
           break;
         case "SUSPECTED_FRAUD":
-          error_message = t("error.SUSPECTED_FRAUD");
+          this.error_message = "error.SUSPECTED_FRAUD";
           // this.resetCheckout("ALL");
           break;
         case "EXPIRED_RATE_TOKEN":
-          error_message = t("error.EXPIRED_RATE_TOKEN");
+          this.error_message = "error.EXPIRED_RATE_TOKEN";
           break;
         case "GENERIC":
         default:
-          error_message = t("error.GENERIC");
+          this.error_message = "error.GENERIC";
           // this.resetCheckout("ALL");
           break;
       }
@@ -330,7 +344,7 @@ export const usePaymentStore = defineStore("Payment", {
         name: "Erro na Compra",
         product_id: product_id.value,
         error_code: error ? error.code : null,
-        error_mensage: error_message,
+        error_mensage: this.error_message,
       });
     },
   },

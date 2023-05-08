@@ -353,6 +353,15 @@ export type CouponState = {
   coupon: Coupon;
 };
 
+export type HeadersState = {
+  "controller-token-": string | null;
+  "requestray-token-": string | null;
+  "firewall-token-": string | null;
+  "cache-token-": string | null;
+  "trans-token-": string | null;
+  "wd-token-": string;
+};
+
 export type leadsState = {
   step: number;
   uuid: any;
@@ -397,8 +406,9 @@ export type MethodsState = {
 };
 
 export type StepState = {
-  step: number;
+  currentStep: number;
   format: "one_step" | "default";
+  isMobile: boolean;
 };
 
 export type Sale = {

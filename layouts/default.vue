@@ -13,7 +13,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
 <template>
   <main
     v-if="checkout.isLoading"
-    class="bg-background flex h-screen w-screen flex-col items-center justify-center gap-8"
+    class="flex h-screen w-screen flex-col items-center justify-center gap-8 bg-background"
   >
     <img
       v-if="logo === 'Heaven'"
@@ -32,14 +32,14 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
   </main>
   <main
     v-else
-    class="bg-background flex min-h-screen w-full flex-col items-center gap-10"
+    class="flex min-h-screen w-full flex-col items-center gap-10 bg-background"
     :data-theme="custom_checkout.theme"
-    :data-theme_color="custom_checkout.themeColor()"
+    :data-theme_color="custom_checkout.themeColor"
   >
     <BaseHeader />
-    <section class="w-full max-w-[1300px] px-5 flex justify-center">
+    <section class="flex w-full max-w-[1300px] justify-center px-5">
       <BaseCard
-        class="border-b-error mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-b-4 border-gray-200 py-10 px-5 md:px-20"
+        class="mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-b-4 border-gray-200 border-b-error px-5 py-10 md:px-20"
         v-if="!product.isValid()"
       >
         <Icon name="mdi:close-circle" size="120" class="text-error" />
@@ -47,7 +47,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
       </BaseCard>
       <section
         v-else
-        class="flex flex-col-reverse gap-10 md:items-start md:gap-16 lg:flex-row"
+        class="flex flex-col-reverse gap-10 overflow-x-hidden md:items-start md:gap-16 lg:flex-row"
       >
         <slot />
       </section>

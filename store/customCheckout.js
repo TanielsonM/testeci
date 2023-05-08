@@ -1,21 +1,17 @@
 import { useCheckoutStore } from "~/store/checkout.js";
+import Notifications from "~/components/Notifications";
+import * as Toast from "vue-toastification";
 
 export const useCustomCheckoutStore = defineStore("customCheckout", {
   state: () => ({
     custom_checkout: null,
+    notifications: null,
   }),
   getters: {
     /* theme */
     theme: (state) => state.custom_checkout?.theme || "light",
     /* themeColor */
-    themeColor(state) {
-      return () => {
-        const checkout = useCheckoutStore();
-        return state.custom_checkout?.theme_color || checkout.isHeaven
-          ? "heaven"
-          : "#00E4A0";
-      };
-    },
+    themeColor: (state) => state.custom_checkout?.theme_color || "#00E4A0",
     /* hasCustomLogo */
     hasCustomLogo: (state) => state.custom_checkout?.logotipo || null,
     /* topThumb */
@@ -61,9 +57,11 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
       subtitle: state.custom_checkout?.ob_subtitle,
       title: state.custom_checkout?.ob_title,
     }),
-    trial_info: (state) => state.custom_checkout.trial_info ?? null,
+    trial_info: (state) => state.custom_checkout?.trial_info ?? null,
     trial_position: (state) => state?.custom_checkout?.trial_position ?? "top",
     purchase_text: (state) => state?.custom_checkout?.button_text,
+    hasNotifications: (state) =>
+      state?.custom_checkout?.purchase_notification === "on",
   },
   actions: {
     async getCustomCheckout() {
@@ -81,6 +79,16 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
               if (this.hasJivochatId) {
                 this.setJivochat(this.hasJivochatId);
               }
+
+              if (this.hasNotifications) {
+                this.notifications = response?.purchase_notification;
+                this.setNotifications(
+                  `${this.custom_checkout?.maximum_purchase_notification_interval}, ${this.custom_checkout?.minimum_purchase_notification_interval}`,
+                  this.custom_checkout?.how_get_purchase_notification,
+                  this.custom_checkout?.quantity_purchase_notification,
+                  this.custom_checkout?.type_purchase_notification
+                );
+              }
             }
           });
       } catch (error) {}
@@ -93,6 +101,70 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
         jivoScript.async = true;
         document.head.appendChild(jivoScript);
       }
+    },
+    setNotifications(interval, howGet, quantity, type) {
+      const toast = Toast.useToast();
+      if (!!this.notifications) {
+        for (let i = 0; i < this.notifications.length; i++) {
+          let notification = this.notifications[i];
+
+          const content = {
+            component: Notifications,
+            props: {
+              title: `Nova venda realizada!`,
+              name: `${notification?.name}`,
+            },
+          };
+
+          let position;
+          switch (type) {
+            case "b-toaster-top-right":
+              position = "top-right";
+              break;
+            case "b-toaster-top-left":
+              position = "top-left";
+              break;
+            case "b-toaster-top-center":
+              position = "top-center";
+              break;
+            case "b-toaster-bottom-right":
+              position = "bottom-right";
+              break;
+            case "b-toaster-bottom-left":
+              position = "bottom-left";
+              break;
+            case "b-toaster-bottom-center":
+              position = "bottom-center";
+              break;
+          }
+
+          if (localStorage.getItem(`notification${notification.id}`) === null) {
+            let time =
+              this.getRandomInt(
+                interval.split(",")[0],
+                interval.split(",")[1]
+              ) + "000";
+
+            setTimeout(() => {
+              localStorage.setItem(`notification${notification.id}`, "true");
+              toast.success(content, {
+                timeout: 5000,
+                icon: false,
+                appendChild: true,
+                position: position,
+                toastClassName: "custom",
+                bodyClassName: ["custom"],
+              });
+            }, parseInt(time));
+          }
+          if (i == quantity) break;
+        }
+      }
+    },
+    getRandomInt(min, max) {
+      min = Math.ceil(5);
+      max = Math.floor(10);
+      return Math.floor(Math.random() * (max - min)) + min;
     },
   },
 });

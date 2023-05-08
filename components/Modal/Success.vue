@@ -108,6 +108,7 @@ if (!!route.query.s_id && !route.query.chc) {
         :code="sale.boleto_barcode"
         :url="sale.boleto_url"
         :id="sale.id.toString()"
+        :installments="sale?.installments"
         :amount="formatMoney(sale.amount)"
         :last="i + 1 == data.sale.sales.length"
         :index="i"
