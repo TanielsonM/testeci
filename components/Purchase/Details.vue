@@ -2,11 +2,14 @@
 // Stores
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
+import { useInstallmentsStore } from "~~/store/modules/installments";
+import { useAmountStore } from "~~/store/modules/amount";
+
 // Utils
 import { formatMoney } from "~~/utils/money";
-import { useInstallmentsStore } from "~~/store/modules/installments";
 
 const checkout = useCheckoutStore();
+const product = useProductStore();
 const installmentsStore = useInstallmentsStore();
 const {
   coupon,
@@ -18,16 +21,25 @@ const {
   checkoutPayment,
 } = storeToRefs(checkout);
 const { getInstallments } = storeToRefs(installmentsStore);
+const { hasTicketInstallments } = storeToRefs(product);
 
+function formatAmountText(installments = 1) {
+  return `${installments}x de ${formatMoney(
+    getInstallments.value(installments)
+  )} ${hasFees.value ? "" : "(Sem juros)"}`;
+}
+
+/* computeds */
 const amountText = computed(() => {
-  switch (method.value) {
-    case "CREDIT_CARD":
-      return `${installments.value}x de ${formatMoney(
-        getInstallments.value()
-      )} ${hasFees.value ? "" : "(Sem juros)"}`;
-    default:
-      return `${formatMoney(getInstallments.value())}`;
+  if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
+    return formatAmountText(ticket_installments.value);
   }
+
+  if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
+    return formatAmountText(installments.value);
+  }
+
+  return `${formatMoney(getInstallments.value(1))}`;
 });
 </script>
 
