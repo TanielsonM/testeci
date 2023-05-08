@@ -14,7 +14,7 @@ const emit = defineEmits(["close"]);
     <BaseCard class="modal__content">
       <header class="modal__content__header">
         <slot name="header">
-          {{ title }}
+          <span class="text-txt-color">{{ title }}</span>
         </slot>
         <Icon
           name="mdi:close"
