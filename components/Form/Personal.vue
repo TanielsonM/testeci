@@ -72,7 +72,7 @@ function updateLead() {
       :placeholder="$t('forms.personal.inputs.name.placeholder')"
       input-name="name-field"
       v-model="name"
-      rules="required"
+      rules="required|min:5"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
@@ -118,7 +118,7 @@ function updateLead() {
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       v-model="cellphone"
-      rules="required"
+      rules="required|min:8"
       type="tel"
     >
       <template #error>
