@@ -115,7 +115,7 @@ const onInput = (event: any) => {
   emit("input", event.target.value);
 };
 
-function validatePhone(phoneObject: Object) {
+function validatePhone(phoneObject: object|any) {
   if (phoneObject.valid == true) {
     isValid = true;
   } else {
