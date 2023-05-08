@@ -171,7 +171,7 @@ watch(method, (method) => {
         <BaseButton
           color="transparent"
           size="sm"
-          v-if="currentStep > 1 && currentStep <= 3"
+          v-if="currentStep > 1 && currentStep <= 3 && isMobile"
           @click="stepsStore.setStep(currentStep - 1)"
         >
           <div class="flex items-start justify-start text-left">
@@ -254,7 +254,11 @@ watch(method, (method) => {
         </template>
 
         <!-- Purchase button -->
-        <BaseButton class="mt-10" @click="stepsStore.setStep(currentStep + 1)" v-if="isMobile">
+        <BaseButton
+          class="mt-10"
+          @click="stepsStore.setStep(currentStep + 1)"
+          v-if="isMobile"
+        >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>
@@ -322,5 +326,6 @@ watch(method, (method) => {
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />
+    <NotificationsCustom title="oi" name="Gabriel Reis" />
   </NuxtLayout>
 </template>

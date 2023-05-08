@@ -400,6 +400,7 @@ export type StepState = {
   currentStep: number;
   format: "one_step" | "default";
   isMobile: boolean;
+  countSteps: number;
 };
 
 export type Sale = {

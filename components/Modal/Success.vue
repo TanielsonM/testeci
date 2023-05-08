@@ -4,9 +4,15 @@ import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useModalStore } from "~~/store/modal/success";
+import { useProductStore } from "~~/store/product";
+import { useAmountStore } from "~~/store/modules/amount";
 
 const checkoutStore = useCheckoutStore();
+const productStore = useProductStore();
+const amountStore = useAmountStore();
+
 const { sales, productOffer } = storeToRefs(checkoutStore);
+const { getOriginalAmount } = storeToRefs(amountStore);
 
 const route = useRoute();
 const modal = useModalStore();
@@ -182,7 +188,9 @@ if (!!route.query.s_id && !route.query.chc) {
         :name="data.productOffer.data.name"
         :amount="formatMoney(data.productOffer.data.amount)"
         :shipping-amount="
-          formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
+          formatMoney(
+            data.productOffer.data.amount_fixed_shipping_fee
+          ).toString()
         "
         :id="data.chc"
         :period="data.productOffer.data.trial"
@@ -207,11 +215,11 @@ if (!!route.query.s_id && !route.query.chc) {
         :event="'conversion'"
         :product_id="productStore.product_id"
         :affiliate_id="checkoutStore.hasAffiliateId"
-        :method="checkout.method"
+        :method="data.sale.sales[0].method"
         :amount="data.productOffer.data.amount"
-        :original_amount="checkout.original_amount"
-        :sale_id="saleId"
-        :chc_id="chc"
+        :original_amount="getOriginalAmount"
+        :sale_id="data.sale.sales[0].id"
+        :chc_id="parseInt(data.chc)"
       />
     </ClientOnly>
   </div>
