@@ -394,12 +394,11 @@ export const useCheckoutStore = defineStore("checkout", {
 
         await this.getCoupon()
           .then(({ amount, available, due_date }) => {
-            this.coupon.amount = Math.abs(store.getAmount - amount);
+            this.coupon.amount = Math.abs(prodStore.amount - amount);
             this.coupon.available = available;
             this.coupon.due_date = due_date;
             this.coupon.discount = amount;
-
-            store.setAmount(-this.coupon.amount);
+            store.setAmount(this.coupon.amount * -1);
 
             this.coupon.error = false;
             this.coupon.applied = true;
