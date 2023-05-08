@@ -60,6 +60,11 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  responsive: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 const emit = defineEmits([
   "update:modelValue",
@@ -67,14 +72,34 @@ const emit = defineEmits([
   "append-click",
 ]);
 const onInput = (event) => {
+  if (props.responsive) {
+    updateHeight();
+  }
+
   emit("update:modelValue", event.target.value);
+};
+
+onMounted(() => {
+  if (props.responsive) {
+    updateHeight();
+  }
+});
+
+const updateHeight = () => {
+  const textarea = document.querySelector(`textarea#${props.inputId}`);
+  textarea.style.setProperty("height", "auto", "important");
+  textarea.style.setProperty(
+    "height",
+    `${textarea.scrollHeight}px`,
+    "important"
+  );
 };
 </script>
 
 <template>
   <label
     for="input"
-    class="text-txt-color flex w-full flex-col items-start gap-2 font-semibold"
+    class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
     :data-anima="animation"
   >
     {{ label }}
@@ -85,7 +110,7 @@ const onInput = (event) => {
       :placeholder="placeholder"
       :autocomplete="autocomplete"
       :disabled="disabled"
-      class="border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex h-full w-full items-center gap-5 rounded border p-4 text-[13px] outline-none transition-colors duration-300"
+      class="flex w-full items-center gap-5 rounded border border-bd-color bg-checkout px-4 py-5 text-[13px] outline-none transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
       :class="customClass"
       @input="onInput"
     />
@@ -93,3 +118,10 @@ const onInput = (event) => {
     <small data-anima="right" class="text-red-400" v-else>{{ error }}</small>
   </label>
 </template>
+
+<style scoped>
+textarea {
+  resize: none !important;
+  overflow-y: hidden;
+}
+</style>
