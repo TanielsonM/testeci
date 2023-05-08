@@ -51,7 +51,6 @@ const props = defineProps({
     required: false,
     default: () => true,
   },
-
   disabled: {
     type: Boolean,
     required: false,
@@ -118,10 +117,9 @@ const onInput = (event: any) => {
 function validatePhone(phoneObject: Object) {
   if (phoneObject.valid == true) {
     isValid = true;
-  }else{
-  isValid = false;
-}
-
+  } else {
+    isValid = false;
+  }
 }
 </script>
 
