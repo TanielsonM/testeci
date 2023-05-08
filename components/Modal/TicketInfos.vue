@@ -42,7 +42,11 @@ const props = defineProps({
   index: {
     type: Number,
     default: 0,
-  }
+  },
+  status: {
+    type: String,
+    default: "",
+  },
 });
 
 const openTicket = (url: any) => {
@@ -62,17 +66,18 @@ const copy = (id: string) => {
   );
 };
 
+console.log(props.status);
 </script>
 <template>
   <div v-if="!onlyCode">
-    <h6 class="subtitle">
+    <h6 class="subtitle" v-if="index == 0">
       {{ $t("pg_obrigado.modal.agradecemos") }}
     </h6>
-    <p class="paragraph">
+    <p class="paragraph" v-if="index == 0">
       {{ $t("pg_obrigado.modal.vc_adquiriu") }}
       {{ name ?? "produto" }}
     </p>
-    <p class="paragraph">
+    <p class="paragraph" v-if="index == 0">
       {{ $t("pg_obrigado.modal.detalhes_email") }}
     </p>
     <div class="details py-5">
@@ -83,7 +88,17 @@ const copy = (id: string) => {
         <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
         <p>#{{ id }}</p>
       </div>
-      <div class="item">
+      <div class="item" v-if="status == 'trialing'">
+        <div class="flex items-start">
+          <div class="check-icon icon-success"></div>
+          <div class="transaction">
+            <p>{{ name }}</p>
+            <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
+          </div>
+        </div>
+        <p>{{ amount }}</p>
+      </div>
+      <div class="item" v-if="status != 'trialing'">
         <p>{{ name }}</p>
         <p>{{ amount }}</p>
       </div>
@@ -97,6 +112,7 @@ const copy = (id: string) => {
   <div
     class="actions my-3 grid grid-cols-12 gap-3"
     :class="!last ? 'mb-5 pb-5' : ''"
+    v-if="!!code"
   >
     <BaseInput
       class="col-span-12 lg:col-span-5"

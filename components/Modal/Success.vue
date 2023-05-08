@@ -103,6 +103,8 @@ if (!!route.query.s_id && !route.query.chc) {
     })
   );
 }
+
+console.log(data.value.sale);
 </script>
 
 <template>
@@ -110,7 +112,6 @@ if (!!route.query.s_id && !route.query.chc) {
     <div class="container" v-if="data.sale.sales[0].method === 'BOLETO'">
       <ModalTicketInfos
         v-for="(sale, i) in data.sale.sales"
-        :key="i"
         :code="sale.boleto_barcode"
         :url="sale.boleto_url"
         :id="sale.id.toString()"
@@ -119,6 +120,7 @@ if (!!route.query.s_id && !route.query.chc) {
         :index="i"
         :name="sale.product.name"
         :shipping-amount="formatMoney(sale.shipping_amount)"
+        :status="sale.status"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
