@@ -72,12 +72,13 @@ function updateLead() {
       :placeholder="$t('forms.personal.inputs.name.placeholder')"
       input-name="name-field"
       v-model="name"
-      rules="required"
+      rules="required|min:5"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
       @blur="updateLead"
@@ -91,6 +92,7 @@ function updateLead() {
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}
       </template>
     </BaseInput>
+
     <BaseInput
       class="col-span-12"
       @blur="updateLead"
@@ -108,7 +110,7 @@ function updateLead() {
       </template>
     </BaseInput>
 
-    <BaseInput
+    <BasePhone
       class="col-span-12"
       @blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
@@ -116,13 +118,13 @@ function updateLead() {
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       v-model="cellphone"
-      rules="required"
+      rules="required|min:8"
       type="tel"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
       </template>
-    </BaseInput>
+    </BasePhone>
 
     <BaseInput
       class="col-span-12"
