@@ -1,5 +1,5 @@
-<script type="ts" setup>
-import { VueTelInput } from 'vue-tel-input';
+<script lang="ts" setup>
+import { VueTelInput } from "vue-tel-input";
 
 const props = defineProps({
   type: {
@@ -15,7 +15,7 @@ const props = defineProps({
   validate: {
     type: Boolean,
     required: false,
-    default: () => false,
+    default: () => true,
   },
   blur: {
     required: false,
@@ -95,22 +95,22 @@ const props = defineProps({
 });
 
 let cellphone = ref("");
+let isValid = false;
 
 const bindProps = {
   defaultCountry: "BR",
-    mode: "international",
-    placeholder: "Digite seu telefone",
-    required: true,
-    enabledCountryCode: true,
-    enabledFlags: true,
-    autocomplete: "off",
-    name: "cellphone",
-    maxLen: 25,
-    inputOptions: {
-      showDialCode: true
-    },
-
-  }
+  mode: "international",
+  placeholder: "Digite seu telefone",
+  required: true,
+  enabledCountryCode: true,
+  enabledFlags: true,
+  autocomplete: "off",
+  name: "cellphone",
+  maxLen: 25,
+  inputOptions: {
+    showDialCode: true,
+  },
+};
 
 const emit = defineEmits([
   "update:modelValue",
@@ -120,10 +120,19 @@ const emit = defineEmits([
   "input",
 ]);
 
-const onInput = (event) => {
+const onInput = (event: any) => {
   emit("update:modelValue", event.target.value);
   emit("input", event.target.value);
 };
+
+function validatePhone(phoneObject: Object) {
+  if (phoneObject.valid == true) {
+    isValid = true;
+  }else{
+  isValid = false;
+}
+
+}
 </script>
 
 <template>
@@ -137,7 +146,6 @@ const onInput = (event) => {
     </label>
     <section
       class="section w-full items-center gap-5 rounded border border-bd-color bg-checkout transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
-      :class="readonly ? customClass : null"
     >
       <VeeField :name="inputName" :rules="rules" v-slot="{ field }">
         <vue-tel-input
@@ -151,15 +159,15 @@ const onInput = (event) => {
           :placeholder="placeholder"
           :autocomplete="autocomplete"
           class="h-full w-full bg-checkout text-txt-color outline-none"
+          @validate="validatePhone"
           @input="onInput"
-          @validate="validate"
           @blur="emit('blur')"
         />
       </VeeField>
     </section>
 
-    <small data-anima="top" v-if="!error">{{ hint }}</small>
-    <small class="text-red-400" v-if="error">
+    <small data-anima="top" v-if="isValid">{{ hint }}</small>
+    <small class="text-red-400" v-if="!isValid">
       <slot name="error">
         {{ error }}
       </slot>
