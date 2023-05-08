@@ -3,7 +3,6 @@
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useInstallmentsStore } from "~~/store/modules/installments";
-import { useAmountStore } from "~~/store/modules/amount";
 
 // Utils
 import { formatMoney } from "~~/utils/money";
