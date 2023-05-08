@@ -16,7 +16,7 @@ const stepsStore = useStepStore();
 
 /* Variables */
 const { t, locale } = useI18n();
-const { product } = storeToRefs(productStore);
+const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);
 const { currentStep, isMobile } = storeToRefs(stepsStore);
@@ -251,7 +251,7 @@ function closeModal() {
         </Steps>
 
         <!-- Bumps -->
-        <template v-if="checkout.getBumpList.length">
+        <template v-if="checkout.getBumpList.length && !hasTicketInstallments">
           <p class="w-full text-txt-color">
             {{
               customCheckoutStore.hasCustomBump

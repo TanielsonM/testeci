@@ -65,7 +65,10 @@ export const usePaymentStore = defineStore("Payment", {
 
       const total = computed(() => {
         if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
-          return getInstallments.value() * ticket_installments.value;
+          return (
+            getInstallments.value(ticket_installments.value) *
+            ticket_installments.value
+          );
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
           return getInstallments.value() * installments.value;
@@ -236,6 +239,7 @@ export const usePaymentStore = defineStore("Payment", {
               product_id: product_id.value,
             });
             const query: any = {};
+            // Set principal product query
             if (res.sales[0]?.chc) query.chc = res.sales[0].chc;
             if (res.sales[0]?.token) query.token = res.sales[0].token;
             if (res.sales[0]?.sale_id) {
@@ -245,6 +249,37 @@ export const usePaymentStore = defineStore("Payment", {
             }
             if (!!product_offer.value) query.offer = product_offer.value;
 
+            // Set query bumps
+            const route = useRoute();
+            const keys = Object.keys(route.query);
+            const bumps = product_list.value.filter(
+              (item: Product) => item.id !== parseInt(product_id.value)
+            );
+
+            bumps.forEach((bump: Product) => {
+              const index = keys
+                .filter((key) => route.query[key] === bump.id.toString())
+                .pop();
+              const sale = res.sales
+                .filter((item: any) => item.product.name === bump.name)
+                .pop();
+              if (!!sale && !!index) {
+                if (bump.type === "SUBSCRIPTION") {
+                  if (sale.sale_id) {
+                    query[index] =
+                      route.query[index] +
+                      "-chc_" +
+                      sale.chc +
+                      "-s_id_" +
+                      sale.sale_id;
+                  } else {
+                    query[index] = route.query[index] + "-chc_" + sale.chc;
+                  }
+                } else {
+                  query[index] = route.query[index] + "-s_id_" + sale.sale_id;
+                }
+              }
+            });
             const router = useRouter();
             router.push({
               path: `/${product_id.value}/obrigado`,
