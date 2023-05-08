@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { useModalStore } from "~~/store/modal/success";
+import { useStepStore } from "~~/store/modules/steps";
 import { ShippingSelected } from "@/types";
 import * as Toast from "vue-toastification";
 
 const { t } = useI18n();
 const modal = useModalStore();
+const stepsStore = useStepStore();
+
+const { isMobile } = storeToRefs(stepsStore);
 
 const props = defineProps({
   name: {
@@ -79,6 +83,19 @@ const displayCode = () => {
   data.value.showCode = !data.value.showCode;
 };
 
+const handleResize = () => {
+  stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
+};
+
+onMounted(() => {
+  handleResize();
+  window.addEventListener("resize", handleResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", handleResize);
+});
+
 watch(data, () => {});
 </script>
 <template>
@@ -123,6 +140,19 @@ watch(data, () => {});
               : $t("pg_obrigado.pix.fechar_codigo")
           }}</BaseButton
         >
+
+        <div
+          class="w-full"
+          v-if="data.showCode && salesLength == 1 && isMobile"
+        >
+          <BaseTextarea
+            class="my-5 w-full"
+            :input-id="`ticket_${id}`"
+            :readonly="true"
+            :model-value="code"
+            custom-class="readonly-button"
+          />
+        </div>
       </div>
       <div
         class="col-span-3 flex h-full flex-col content-between justify-between"
@@ -199,7 +229,7 @@ watch(data, () => {});
         </div>
       </div>
     </div>
-    <div v-if="data.showCode && salesLength == 1">
+    <div class="w-full" v-if="data.showCode && salesLength == 1 && !isMobile">
       <BaseTextarea
         class="w-full"
         :input-id="`ticket_${id}`"
