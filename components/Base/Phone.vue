@@ -51,17 +51,7 @@ const props = defineProps({
     required: false,
     default: () => true,
   },
-  icon: {
-    type: [String, Boolean],
-    required: false,
-    default: () => false,
-  },
-  "icon-position": {
-    type: String,
-    required: false,
-    default: () => "end",
-    validator: (value) => ["start", "end"].includes(value),
-  },
+
   disabled: {
     type: Boolean,
     required: false,
