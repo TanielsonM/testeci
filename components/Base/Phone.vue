@@ -37,30 +37,10 @@ const props = defineProps({
     required: false,
     default: () => false,
   },
-  placeholder: {
-    type: String,
-    required: false,
-    default: () => "Digite aqui...",
-  },
   animation: {
     type: String,
     required: false,
     default: () => "bottom",
-  },
-  autocomplete: {
-    type: Boolean,
-    required: false,
-    default: () => true,
-  },
-  disabled: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  readonly: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
   customClass: {
     type: String,
@@ -115,12 +95,8 @@ const onInput = (event: any) => {
   emit("input", event.target.value);
 };
 
-function validatePhone(phoneObject: object|any) {
-  if (phoneObject.valid == true) {
-    isValid = true;
-  } else {
-    isValid = false;
-  }
+function validatePhone(phoneObject: object | any) {
+  isValid = !!phoneObject.valid;
 }
 </script>
 
@@ -136,17 +112,13 @@ function validatePhone(phoneObject: object|any) {
     <section
       class="section w-full items-center gap-5 rounded border border-bd-color bg-checkout transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
     >
-      <VeeField :name="inputName" :rules="rules" v-slot="{ field }">
+      <VeeField :name="inputName" :rules="rules">
         <vue-tel-input
           v-bind="bindProps"
           :id="inputId"
           v-model="cellphone"
           :value="modelValue"
           :class="customClass"
-          :disabled="disabled"
-          :readonly="readonly"
-          :placeholder="placeholder"
-          :autocomplete="autocomplete"
           class="h-full w-full bg-checkout text-txt-color outline-none"
           @validate="validatePhone"
           @input="onInput"
