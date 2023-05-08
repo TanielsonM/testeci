@@ -62,7 +62,7 @@ const data = ref({
     </div>
     <div class="item">
       <div class="flex items-start">
-        <div class="icon icon-success"></div>
+        <div class="check-icon icon-success"></div>
         <div class="transaction">
           <p>{{ name }}</p>
           <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
