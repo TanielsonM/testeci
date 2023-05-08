@@ -148,9 +148,10 @@ watch(data, () => {});
           <BaseTextarea
             class="my-5 w-full"
             :input-id="`ticket_${id}`"
-            :readonly="true"
+            :disabled="true"
             :model-value="code"
             custom-class="readonly-button"
+            :responsive="true"
           />
         </div>
       </div>
@@ -233,9 +234,10 @@ watch(data, () => {});
       <BaseTextarea
         class="w-full"
         :input-id="`ticket_${id}`"
-        :readonly="true"
+        :disabled="true"
         :model-value="code"
         custom-class="readonly-button"
+        :responsive="true"
       />
     </div>
 
