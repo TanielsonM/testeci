@@ -193,7 +193,8 @@
         "number": "It is necessary to inform the number",
         "city": "It is necessary to inform the city",
         "neighborhood": "It is necessary to inform the district",
-        "state": "It is necessary to inform the state"
+        "state": "It is necessary to inform the state",
+        "zipcode": "It is necessary to inform the zipcode"
       }
     },
     "pagamento": {
