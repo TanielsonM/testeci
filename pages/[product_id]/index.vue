@@ -184,7 +184,7 @@ function closeModal() {
         <BaseButton
           color="transparent"
           size="sm"
-          v-if="currentStep > 1 && currentStep <= 3"
+          v-if="currentStep > 1 && currentStep <= 3 && isMobile"
           @click="stepsStore.setStep(currentStep - 1)"
         >
           <div class="flex items-start justify-start text-left">
@@ -354,5 +354,6 @@ function closeModal() {
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />
+    <NotificationsCustom title="oi" name="Gabriel Reis" />
   </NuxtLayout>
 </template>
