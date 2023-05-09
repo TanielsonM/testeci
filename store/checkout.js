@@ -628,8 +628,12 @@ export const useCheckoutStore = defineStore("checkout", {
               });
 
             if (!!calculate) {
-              this.deliveryOptions = calculate;
-              product.value.shipping_options = calculate;
+              this.deliveryOptions = calculate.sort(
+                (a, b) => parseFloat(a.price) - parseFloat(b.price)
+              );
+              product.value.shipping_options = calculate.sort(
+                (a, b) => parseFloat(a.price) - parseFloat(b.price)
+              );
             }
           }
 
