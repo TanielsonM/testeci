@@ -21,6 +21,7 @@ const { sameAddress } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);
 const { currentStep, isMobile } = storeToRefs(stepsStore);
 const { error_message } = storeToRefs(payment);
+
 // Refs
 const alert_modal = ref(false);
 
@@ -183,7 +184,7 @@ function closeModal() {
         <BaseButton
           color="transparent"
           size="sm"
-          v-if="currentStep > 1 && currentStep <= 3"
+          v-if="currentStep > 1 && currentStep <= 3 && isMobile"
           @click="stepsStore.setStep(currentStep - 1)"
         >
           <div class="flex items-start justify-start text-left">
@@ -325,11 +326,7 @@ function closeModal() {
     </section>
 
     <!-- Alert modal -->
-    <BaseModal
-      :title="product.name"
-      :is-open="alert_modal"
-      @close="closeModal"
-    >
+    <BaseModal :title="product.name" :is-open="alert_modal" @close="closeModal">
       <section class="flex w-full max-w-[400px] flex-col gap-5">
         <h6 class="text-[15px] font-semibold">
           {{ $t("checkout.dados_pessoais.title_error") }}
