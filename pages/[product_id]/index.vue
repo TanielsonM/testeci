@@ -328,12 +328,16 @@ function closeModal() {
     <!-- Alert modal -->
     <BaseModal :title="product.name" :is-open="alert_modal" @close="closeModal">
       <section class="flex w-full max-w-[400px] flex-col gap-5">
-        <h6 class="text-txt-color text-[15px] font-semibold">
+        <h6 class="text-[15px] font-semibold text-txt-color">
           {{ $t("checkout.dados_pessoais.title_error") }}
         </h6>
         <p class="text-txt-color">{{ $t(error_message) }}</p>
         <section class="mt-10 flex w-full justify-end">
-          <BaseButton color="blue" class="text-txt-color w-[40%]" @click="closeModal">
+          <BaseButton
+            color="blue"
+            class="w-[40%] text-txt-color"
+            @click="closeModal"
+          >
             {{ $t("checkout.dados_pessoais.btn_error") }}
           </BaseButton>
         </section>
@@ -354,6 +358,6 @@ function closeModal() {
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />
-    <NotificationsCustom title="oi" name="Gabriel Reis" />
+    <!-- <NotificationsCustom title="oi" name="Gabriel Reis" /> -->
   </NuxtLayout>
 </template>
