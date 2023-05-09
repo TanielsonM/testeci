@@ -33,6 +33,7 @@ const form = ref<Address>({
 });
 
 const deliveryOptions = ref<Frete[] | undefined>();
+const isZipDissabled = ref(false);
 
 // Watches
 watch(form.value, async () => {
@@ -47,6 +48,7 @@ async function getAddress(cep = "") {
     if (!!checkout.deliveryOptions) checkout.resetShipping();
     return;
   }
+  isZipDissabled.value = true;
 
   await useFetch(`https://viacep.com.br/ws/${cep}/json`)
     .then(async ({ data }) => {
@@ -66,6 +68,9 @@ async function getAddress(cep = "") {
       document
         .querySelector<HTMLInputElement>(`#number-address-${props.type}`)
         ?.focus();
+    })
+    .finally(() => {
+      isZipDissabled.value = false;
     });
 }
 
@@ -88,6 +93,7 @@ function updateLead() {
       v-model="form.zipcode"
       @input="getAddress(form.zipcode.replace('-', ''))"
       rules="required|min:5"
+      :disabled="isZipDissabled"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.zipcode") }}
