@@ -1,5 +1,4 @@
 <script setup>
-import { vMaska } from "maska";
 const props = defineProps({
   type: {
     type: String,
@@ -94,12 +93,12 @@ const emit = defineEmits([
   "prepend-click",
   "append-click",
   "blur",
-  "input",
+  // "input",
 ]);
 
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
-  emit("input", event.target.value);
+  // emit("input", event.target.value);
 };
 </script>
 
