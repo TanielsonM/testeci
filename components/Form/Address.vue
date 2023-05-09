@@ -100,7 +100,7 @@ function updateLead() {
       input-name="street-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.street"
-      rules="required|string|min:4"
+      rules="required|min:4"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.street") }}
@@ -141,7 +141,7 @@ function updateLead() {
       input-name="neighborhood-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.neighborhood"
-      rules="required|string|min:3"
+      rules="required|min:3"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.neighborhood") }}
@@ -162,7 +162,7 @@ function updateLead() {
       input-name="state-field"
       v-model="form.state"
       v-if="checkout.selectedCountry !== 'BR'"
-      rules="required|string"
+      rules="required"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.state") }}
@@ -177,7 +177,7 @@ function updateLead() {
       class="col-span-12 xl:col-span-5"
       v-model="form.state"
       :data="states"
-      rules="required|string"
+      rules="required"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.state") }}
