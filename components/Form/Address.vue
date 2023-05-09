@@ -115,7 +115,7 @@ function updateLead() {
       input-name="number_address-field"
       class="col-span-12 xl:col-span-3"
       v-model="form.number"
-      rules="required|number"
+      rules="required"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.number") }}
