@@ -90,9 +90,8 @@ const emit = defineEmits([
   "input",
 ]);
 
-const onInput = (event: any) => {
-  emit("update:modelValue", event.target.value);
-  emit("input", event.target.value);
+const onInput = (event: any, phone: any) => {
+  emit("update:modelValue", phone.number);
 };
 
 function validatePhone(phoneObject: object | any) {
@@ -121,7 +120,7 @@ function validatePhone(phoneObject: object | any) {
           :class="customClass"
           class="h-full w-full bg-checkout text-txt-color outline-none"
           @validate="validatePhone"
-          @input="onInput"
+          @on-input="onInput"
           @blur="emit('blur')"
         />
       </VeeField>
