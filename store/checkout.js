@@ -1,3 +1,5 @@
+import * as Toast from "vue-toastification";
+
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
@@ -613,12 +615,17 @@ export const useCheckoutStore = defineStore("checkout", {
             product.value.has_shipping_fee === 1 &&
             product.value.type_shipping_fee === "DYNAMIC"
           ) {
-            let calculate = await useApi().create(
-              `envios/calculate/${this.product_id}`,
-              {
+            let calculate = await useApi()
+              .create(`envios/calculate/${this.product_id}`, {
                 shipping_address_zip_code: zip,
-              }
-            );
+              })
+              .catch((err) => {
+                // Product does not have integration with "Greenn envios"
+                if (err.value.statusCode) {
+                  const toast = Toast.useToast();
+                  toast.error("Esse produto não possue integração para envio");
+                }
+              });
 
             if (!!calculate) {
               this.deliveryOptions = calculate;
@@ -647,9 +654,17 @@ export const useCheckoutStore = defineStore("checkout", {
     async calculateBumpsShipping(zip) {
       if (this.bump_list.length) {
         const promises = this.bump_list.map((bump) =>
-          useApi().create(`envios/calculate/${bump.id}`, {
-            shipping_address_zip_code: zip,
-          })
+          useApi()
+            .create(`envios/calculate/${bump.id}`, {
+              shipping_address_zip_code: zip,
+            })
+            .catch((err) => {
+              // Product does not have integration with "Greenn envios"
+              if (err.value.statusCode) {
+                const toast = Toast.useToast();
+                toast.error("Esse produto não possue integração para envio");
+              }
+            })
         );
         const results = await Promise.all(promises);
         this.bump_list.forEach((bump, index) => {
