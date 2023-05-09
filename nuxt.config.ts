@@ -39,6 +39,7 @@ export default defineNuxtConfig({
     dirs: ["store"],
   },
   plugins: [
+    "~/plugins/maska.ts",
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
