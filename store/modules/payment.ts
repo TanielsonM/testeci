@@ -95,7 +95,7 @@ export const usePaymentStore = defineStore("Payment", {
         // User details
         name: name.value,
         email: email.value,
-        cellphone: "+55" + cellphone.value,
+        cellphone: cellphone.value,
         document: document.value,
         uuid: uuid.value,
         captcha: captcha.value,
