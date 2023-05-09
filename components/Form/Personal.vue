@@ -113,6 +113,7 @@ function updateLead() {
     <BasePhone
       class="col-span-12"
       @blur="updateLead"
+      :country="currentCountry.value"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"

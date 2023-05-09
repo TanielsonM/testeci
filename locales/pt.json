@@ -331,6 +331,14 @@
       "charge": "cobrança",
       "show_more": "Ver mais",
       "other_charges": "Demais cobranças"
+    },
+    "cards": {
+      "feedbacks": {
+        "number": "O número do cartão é inválido",
+        "holder_name": "nome no cartão é obrigatório",
+        "month": "mês é obrigatório",
+        "cvv": "cvv é obrigatório"
+      }
     }
   },
   "order": {

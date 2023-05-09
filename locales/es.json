@@ -331,6 +331,14 @@
       "charge": "cargar",
       "show_more": "Ver más",
       "other_charges": "otros cargos"
+    },
+    "cards": {
+      "feedbacks": {
+        "number": "El número de tarjeta no es válido",
+        "holder_name": "nome do titular é obrigatório",
+        "month": "se requiere mes",
+        "cvv": "se requiere cvv"
+      }
     }
   },
   "order": {
