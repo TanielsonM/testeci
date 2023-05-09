@@ -623,7 +623,7 @@ export const useCheckoutStore = defineStore("checkout", {
                 // Product does not have integration with "Greenn envios"
                 if (err.value.statusCode) {
                   const toast = Toast.useToast();
-                  toast.error("Esse produto não possue integração para envio");
+                  toast.error("Esse produto não possui integração para envio");
                 }
               });
 
@@ -662,7 +662,7 @@ export const useCheckoutStore = defineStore("checkout", {
               // Product does not have integration with "Greenn envios"
               if (err.value.statusCode) {
                 const toast = Toast.useToast();
-                toast.error("Esse produto não possue integração para envio");
+                toast.error("Esse produto não possui integração para envio");
               }
             })
         );
