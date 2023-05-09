@@ -75,7 +75,7 @@ const selectCountry = (country) => {
     <ul
       data-anima="top"
       v-if="opened"
-      class="bg-checkout absolute -left-[150px] z-10 max-h-[400px] w-max max-w-[300px] overflow-y-auto rounded p-5 shadow md:-left-[70px]"
+      class="bg-checkout absolute -left-[150px] z-50 max-h-[400px] w-max max-w-[300px] overflow-y-auto rounded p-5 shadow md:-left-[70px]"
     >
       <section
         class="mb-3 box-border flex items-center gap-4 rounded border border-gray-400 p-2 transition-colors duration-300 hover:border-gray-100"

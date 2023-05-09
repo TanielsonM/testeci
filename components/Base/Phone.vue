@@ -101,7 +101,7 @@ function validatePhone(phoneObject: object | any) {
 </script>
 
 <template>
-  <div class="default-input z-50 w-full" :data-anima="animation">
+  <div class="default-input z-40 w-full" :data-anima="animation">
     <label
       v-if="!!label"
       for="input"
