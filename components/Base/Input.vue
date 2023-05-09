@@ -93,12 +93,10 @@ const emit = defineEmits([
   "prepend-click",
   "append-click",
   "blur",
-  // "input",
 ]);
 
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
-  // emit("input", event.target.value);
 };
 </script>
 
