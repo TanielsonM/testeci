@@ -610,7 +610,7 @@ export const useCheckoutStore = defineStore("checkout", {
         try {
           const productStore = useProductStore();
           const { product } = storeToRefs(productStore);
-
+          product.value.shipping_options = [];
           if (
             product.value.has_shipping_fee === 1 &&
             product.value.type_shipping_fee === "DYNAMIC"
