@@ -60,12 +60,15 @@ export const usePaymentStore = defineStore("Payment", {
   }),
   getters: {},
   actions: {
-    async payment(language: string, paypal: any) {
+    async payment(language: string, paypal?: any) {
       leadsStore.changeStep(3);
 
       const total = computed(() => {
         if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
-          return getInstallments.value() * ticket_installments.value;
+          return (
+            getInstallments.value(ticket_installments.value) *
+            ticket_installments.value
+          );
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
           return getInstallments.value() * installments.value;

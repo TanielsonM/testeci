@@ -1,9 +1,7 @@
 <script setup>
-import { storeToRefs } from "pinia";
 import { useStepStore } from "~~/store/modules/steps";
 
 const stepStore = useStepStore();
-const { currentStep, format } = storeToRefs(stepStore);
 
 defineProps({
   title: String,
@@ -16,6 +14,8 @@ defineProps({
     default: () => false,
   },
 });
+
+stepStore.incrementCount();
 </script>
 
 <template>

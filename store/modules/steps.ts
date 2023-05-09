@@ -8,6 +8,7 @@ export const useStepStore = defineStore("Step", {
     currentStep: step.value,
     format: "default",
     isMobile: false,
+    countSteps: 0,
   }),
   actions: {
     setStep(step = 1) {
@@ -15,6 +16,9 @@ export const useStepStore = defineStore("Step", {
     },
     setFormat(format: "default" | "one_step") {
       this.format = format;
+    },
+    incrementCount() {
+      this.countSteps++;
     },
   },
 });

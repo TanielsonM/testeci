@@ -83,40 +83,70 @@ function updateLead() {
       :label="$t('forms.address.inputs.zipcode.label')"
       :placeholder="$t('forms.address.inputs.zipcode.placeholder')"
       mask="#####-###"
+      input-name="zipcode-field"
       class="col-span-12 xl:col-span-3"
       v-model="form.zipcode"
       @input="getAddress(form.zipcode.replace('-', ''))"
-    />
+      rules="required|min:5"
+    >
+      <template #error>
+        {{ $t("checkout.address.feedbacks.zipcode") }}
+      </template>
+    </BaseInput>
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.public_place.label')"
       :placeholder="$t('forms.address.inputs.public_place.placeholder')"
+      input-name="street-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.street"
-    />
+      rules="required|min:4"
+    >
+      <template #error>
+        {{ $t("checkout.address.feedbacks.street") }}
+      </template>
+    </BaseInput>
     <BaseInput
       @blur="updateLead"
       :inputId="`number-address-${type}`"
       :label="$t('forms.address.inputs.number.label')"
       :placeholder="$t('forms.address.inputs.number.placeholder')"
       mask="###########"
+      input-name="number_address-field"
       class="col-span-12 xl:col-span-3"
       v-model="form.number"
-    />
+      rules="required"
+    >
+      <template #error>
+        {{ $t("checkout.address.feedbacks.number") }}
+      </template>
+    </BaseInput>
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.city.label')"
       :placeholder="$t('forms.address.inputs.city.placeholder')"
       class="col-span-12 xl:col-span-6"
+      input-name="city-field"
       v-model="form.city"
-    />
+      rules="required|min:5"
+    >
+      <template #error>
+        {{ $t("checkout.address.feedbacks.city") }}
+      </template>
+    </BaseInput>
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.neighborhood.label')"
       :placeholder="$t('forms.address.inputs.neighborhood.placeholder')"
+      input-name="neighborhood-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.neighborhood"
-    />
+      rules="required|min:3"
+    >
+      <template #error>
+        {{ $t("checkout.address.feedbacks.neighborhood") }}
+      </template>
+    </BaseInput>
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.complement.label')"
@@ -129,17 +159,29 @@ function updateLead() {
       :label="$t('forms.address.inputs.state.label')"
       :placeholder="$t('forms.address.inputs.state.placeholder')"
       class="col-span-12 xl:col-span-5"
+      input-name="state-field"
       v-model="form.state"
       v-if="checkout.selectedCountry !== 'BR'"
-    />
-    <BaseSelect
+      rules="required"
+    >
+      <template #error>
+        {{ $t("checkout.address.feedbacks.state") }}
+      </template>
+    </BaseInput>
+    <BaseInput
       v-else
       @blur="updateLead"
       :label="$t('forms.address.inputs.state.label')"
       :placeholder="$t('forms.address.inputs.state.placeholder')"
+      input-name="district-field"
       class="col-span-12 xl:col-span-5"
       v-model="form.state"
       :data="states"
-    />
+      rules="required"
+    >
+      <template #error>
+        {{ $t("checkout.address.feedbacks.state") }}
+      </template>
+    </BaseInput>
   </form>
 </template>

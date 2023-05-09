@@ -187,7 +187,15 @@
       "district_placeholder": "Select a state/district",
       "district_search": "Search by state/district",
       "district_feedback_message": "Oops! No manager found. Search for another name",
-      "want_gift_someone": "I want to gift someone"
+      "want_gift_someone": "I want to gift someone",
+      "feedbacks": {
+        "street": "It is necessary to inform the street",
+        "number": "It is necessary to inform the number",
+        "city": "It is necessary to inform the city",
+        "neighborhood": "It is necessary to inform the district",
+        "state": "It is necessary to inform the state",
+        "zipcode": "It is necessary to inform the zipcode"
+      }
     },
     "pagamento": {
       "paypal_desabilitado_pelo_bump": "It is not possible to pay with Paypal for OrderBump products",
