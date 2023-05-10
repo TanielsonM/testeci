@@ -131,7 +131,7 @@ const copy = (id: string) => {
       size="vsm"
       animation="pulse"
       class="col-span-12 lg:col-span-4"
-      @click="($event) => copy(`ticket_${id}`)"
+      @click="() => copy(`ticket_${id}`)"
       >{{ $t("pg_obrigado.modal.btn_codigo") }}</BaseButton
     >
     <BaseButton
@@ -139,7 +139,7 @@ const copy = (id: string) => {
       size="vsm"
       animation="pulse"
       class="col-span-12 lg:col-span-3"
-      @click="($event) => openTicket(url)"
+      @click="() => openTicket(url)"
       >{{ $t("pg_obrigado.modal.imprimir_boleto") }}</BaseButton
     >
   </div>
