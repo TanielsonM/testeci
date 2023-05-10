@@ -154,10 +154,17 @@ export const usePaymentStore = defineStore("Payment", {
             : shipping.value.state,
         };
 
-        if (hasShippingFee.value && isFixedShipping.value) {
-        } else {
-          data.shipping_amount = FixedShippingAmount.value;
-        }
+        product_list.value.forEach((item: any) => {
+          if (item?.shipping) {
+            const index = data.products
+              .map((prod) => prod.product_id)
+              .indexOf(item.id);
+
+            data.products[index].shipping_amount = item.shipping.amount;
+            data.products[index].shipping_service_id = item.shipping.id;
+            data.products[index].shipping_service_name = item.shipping.name;
+          }
+        });
       }
       // Affiliate id
       if (hasAffiliateId.value) {
