@@ -8,6 +8,11 @@ const props = defineProps({
     required: false,
     default: () => "text",
   },
+  country: {
+    type: String,
+    required: false,
+    default: () => "BR",
+  },
   modelValue: {
     type: [String, Number],
     required: false,
@@ -65,20 +70,21 @@ const props = defineProps({
 });
 
 let cellphone = ref("");
-let isValid = false;
+let isValid = true;
 
 const bindProps = {
-  defaultCountry: "BR",
   mode: "international",
   placeholder: "Digite seu telefone",
   required: true,
-  enabledCountryCode: true,
+  enabledCountryCode: false,
+  autoDefaultCountry: true,
   enabledFlags: true,
   autocomplete: "off",
   name: "cellphone",
   maxLen: 25,
   inputOptions: {
-    showDialCode: true,
+    placeholder: "Digite seu telefone",
+    showDialCode: false,
   },
 };
 
@@ -95,6 +101,9 @@ const onInput = (event: any, phone: any) => {
 };
 
 function validatePhone(phoneObject: object | any) {
+  if (phoneObject.valid === undefined) {
+    return;
+  }
   isValid = !!phoneObject.valid;
 }
 </script>

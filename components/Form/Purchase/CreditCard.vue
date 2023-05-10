@@ -1,7 +1,6 @@
 <script setup>
 import moment from "moment";
 import { formatMoney } from "@/utils/money";
-import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
@@ -82,10 +81,39 @@ const months = [
   { value: "12", label: "12" },
 ];
 
-function clearValue(value) {
-  return parseFloat(
-    value.toString().replace("R$ ", "").replace(",", ".").replace("-", "")
-  ).toFixed(2);
+let cardNumberError = ref(false);
+
+function syncVerification(from) {
+  verifyCard(from);
+  changeAmount(from);
+}
+
+async function verifyCard(from) {
+  let cardNumber = String(
+    from == "first"
+      ? first.value.number.replace(/\s+/g, "")
+      : second.value.number.replace(/\s+/g, "")
+  );
+
+  const size = cardNumber.length;
+  let sum = 0;
+  let isSecond = false;
+
+  for (let i = size - 1; i >= 0; i--) {
+    let d = parseInt(cardNumber.charAt(i));
+    if (isSecond) {
+      d *= 2;
+      if (d > 9) {
+        d -= 9;
+      }
+    }
+    sum += d;
+    isSecond = !isSecond;
+  }
+
+  const result = sum % 10 == 0;
+
+  cardNumberError.value = !!result;
 }
 
 function changeAmount(from) {
@@ -136,6 +164,12 @@ const showCreditCardsTabs = computed(() => {
     selectedCountry.value === "BR"
   );
 });
+
+function clearValue(value) {
+  return parseFloat(
+    value.toString().replace("R$ ", "").replace(",", ".").replace("-", "")
+  ).toFixed(2);
+}
 
 watch(installments, () => {
   purchase.setCardsAmount();
@@ -189,52 +223,91 @@ watch(installments, () => {
         v-if="method == 'TWO_CREDIT_CARDS'"
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+        :error="!cardNumberError"
         class="col-span-12"
+        rules="required"
         v-model="first.amount"
+        @blur="syncVerification('first')"
         input-id="first-amount-field"
-        @blur="changeAmount('first')"
         @vnode-before-mount="formatAmount('first')"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.number") }}
+        </template>
+      </BaseInput>
+
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         mask="#### #### #### ####"
+        rules="required"
         class="col-span-12"
+        @blur="syncVerification('first')"
+        :error="!cardNumberError"
         v-model="first.number"
         input-id="first-number-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.number") }}
+        </template>
+      </BaseInput>
+
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
+        rules="required"
         v-model="first.holder_name"
         input-id="first-holder_name-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.holder_name") }}
+        </template>
+      </BaseInput>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
         class="col-span-6 sm:col-span-4"
+        rules="required"
         :data="months"
         v-model="first.month"
         input-id="first-month-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.month") }}
+        </template>
+      </BaseSelect>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
         class="col-span-6 sm:col-span-4"
+        rules="required"
         :data="years"
         v-model="first.year"
         input-id="first-year-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.year") }}
+        </template>
+      </BaseSelect>
+
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         mask="###"
+        rules="required"
         class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
         input-id="first-cvv-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.cvv") }}
+        </template>
+      </BaseInput>
     </form>
+
     <!-- Second credit card -->
     <form
       class="grid w-full grid-cols-12 gap-3"
@@ -251,52 +324,91 @@ watch(installments, () => {
       <BaseInput
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+        :error="!cardNumberError"
         class="col-span-12"
         v-model="second.amount"
+        rules="required"
+        @blur="syncVerification('second')"
         input-id="second-amount-field"
-        @blur="changeAmount('second')"
         @vnode-before-mount="formatAmount('second')"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.number") }}
+        </template>
+      </BaseInput>
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         mask="#### #### #### ####"
         class="col-span-12"
+        rules="required"
+        @blur="syncVerification('second')"
+        :error="!cardNumberError"
         v-model="second.number"
         input-id="second-number-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.number") }}
+        </template>
+      </BaseInput>
+
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
+        rules="required"
         v-model="second.holder_name"
         input-id="second-holder_name-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.holder_name") }}
+        </template>
+      </BaseInput>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
         class="col-span-6 sm:col-span-4"
         :data="months"
+        rules="required"
         v-model="second.month"
         input-id="second-month-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.month") }}
+        </template>
+      </BaseSelect>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
         class="col-span-6 sm:col-span-4"
         :data="years"
+        rules="required"
         v-model="second.year"
         input-id="second-year-field"
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.year") }}
+        </template>
+      </BaseSelect>
+
       />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         mask="###"
         class="col-span-12 sm:col-span-4"
+        rules="required"
         v-model="second.cvv"
         input-id="second-cvv-field"
-      />
+      >
+        <template #error>
+          {{ $t("checkout.cards.feedbacks.cvv") }}
+        </template>
+      </BaseInput>
     </form>
+
     <CreditCard
       v-if="method !== 'TWO_CREDIT_CARDS'"
       class="hidden md:block"

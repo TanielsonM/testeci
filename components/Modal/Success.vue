@@ -4,7 +4,9 @@ import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useModalStore } from "~~/store/modal/success";
+import { useAmountStore } from "~~/store/modules/amount";
 
+const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
 
@@ -209,8 +211,8 @@ if (!!route.query.s_id && !route.query.chc) {
         :product_id="productStore.product_id"
         :affiliate_id="checkoutStore.hasAffiliateId"
         :method="checkout.method"
-        :amount="data.productOffer.data.amount"
-        :original_amount="checkout.original_amount"
+        :amount="data.productOffer.data.total"
+        :original_amount="amountStore.getOriginalAmount"
         :sale_id="saleId"
         :chc_id="chc"
       />

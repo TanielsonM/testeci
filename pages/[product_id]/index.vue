@@ -5,6 +5,7 @@ import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
+import { useAmountStore } from "~~/store/modules/amount";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -13,6 +14,7 @@ const checkout = useCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
+const amountStore = useAmountStore();
 
 /* Variables */
 const { t, locale } = useI18n();
@@ -367,8 +369,8 @@ function closeModal() {
         :product_id="productStore.product_id"
         :affiliate_id="checkout.hasAffiliateId"
         :method="checkout.method"
-        :amount="checkout.amount"
-        :original_amount="checkout.original_amount"
+        :amount="amountStore.getAmount"
+        :original_amount="amountStore.getOriginalAmount"
       />
     </ClientOnly>
     <!-- End Client Only section -->

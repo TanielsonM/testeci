@@ -330,6 +330,15 @@
       "charge": "charge",
       "show_more": "View more",
       "other_charges": "Other charges"
+    },
+    "cards": {
+      "feedbacks": {
+        "cvv": "cvv is required",
+        "year": "year is required",
+        "month": "month is required",
+        "holder_name": "holder name is required",
+        "number": "Card Number is Invalid"
+      }
     }
   },
   "order": {

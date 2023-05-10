@@ -581,6 +581,7 @@ export type ProductOfferData = {
   type: string;
   amount: number;
   period: number;
+  total: number;
   thank_you_page: any;
   affiliation: number;
   comission: number;
