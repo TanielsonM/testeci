@@ -191,6 +191,7 @@ watch(installments, () => {
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         class="col-span-12"
         v-model="first.amount"
+        input-id="first-amount-field"
         @blur="changeAmount('first')"
         @vnode-before-mount="formatAmount('first')"
       />
@@ -200,12 +201,14 @@ watch(installments, () => {
         mask="#### #### #### ####"
         class="col-span-12"
         v-model="first.number"
+        input-id="first-number-field"
       />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
         v-model="first.holder_name"
+        input-id="first-holder_name-field"
       />
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
@@ -213,6 +216,7 @@ watch(installments, () => {
         class="col-span-6 sm:col-span-4"
         :data="months"
         v-model="first.month"
+        input-id="first-month-field"
       />
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
@@ -220,6 +224,7 @@ watch(installments, () => {
         class="col-span-6 sm:col-span-4"
         :data="years"
         v-model="first.year"
+        input-id="first-year-field"
       />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
@@ -227,6 +232,7 @@ watch(installments, () => {
         mask="###"
         class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
+        input-id="first-cvv-field"
       />
     </form>
     <!-- Second credit card -->
@@ -247,6 +253,7 @@ watch(installments, () => {
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         class="col-span-12"
         v-model="second.amount"
+        input-id="second-amount-field"
         @blur="changeAmount('second')"
         @vnode-before-mount="formatAmount('second')"
       />
@@ -256,12 +263,14 @@ watch(installments, () => {
         mask="#### #### #### ####"
         class="col-span-12"
         v-model="second.number"
+        input-id="second-number-field"
       />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
         v-model="second.holder_name"
+        input-id="second-holder_name-field"
       />
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
@@ -269,6 +278,7 @@ watch(installments, () => {
         class="col-span-6 sm:col-span-4"
         :data="months"
         v-model="second.month"
+        input-id="second-month-field"
       />
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
@@ -276,6 +286,7 @@ watch(installments, () => {
         class="col-span-6 sm:col-span-4"
         :data="years"
         v-model="second.year"
+        input-id="second-year-field"
       />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
@@ -283,6 +294,7 @@ watch(installments, () => {
         mask="###"
         class="col-span-12 sm:col-span-4"
         v-model="second.cvv"
+        input-id="second-cvv-field"
       />
     </form>
     <CreditCard
