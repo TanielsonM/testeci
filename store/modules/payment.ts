@@ -4,6 +4,9 @@ import { GreennLogs } from "@/utils/greenn-logs";
 // Types
 import { Payment, Product, PaymentError, SaleElement } from "~~/types";
 
+// Rules
+import { validateAll } from "@/rules/form-validations";
+
 // Stores
 import { usePersonalStore } from "../forms/personal";
 import { useAddressStore } from "../forms/address";
@@ -57,10 +60,18 @@ export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
     error_message: "",
+    hasSend: false,
   }),
   getters: {},
   actions: {
     async payment(language: string, paypal?: any) {
+      const allValid = await validateAll();
+      if (!allValid) {
+        this.hasSend = true;
+        console.log("morri aqui");
+        return;
+      }
+
       leadsStore.changeStep(3);
 
       const total = computed(() => {

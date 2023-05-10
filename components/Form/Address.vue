@@ -6,6 +6,15 @@ import { Frete, Address, ShippingAddress } from "@/types";
 import { useCheckoutStore } from "@/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useLeadsStore } from "@/store/modules/leads";
+import { usePaymentStore } from "@/store/modules/payment";
+import {
+  validateZip,
+  validateStreet,
+  validateNumber,
+  validateState,
+  validateNeighborhood,
+  validateCity,
+} from "@/rules/form-validations";
 
 const store = useAddressStore();
 const checkout = useCheckoutStore();
@@ -93,8 +102,8 @@ function updateLead() {
       class="col-span-12 xl:col-span-3"
       v-model="form.zipcode"
       @input="getAddress(form.zipcode.replace('-', ''))"
-      rules="required|min:5"
       :disabled="isZipDissabled"
+      :error="form.zipcode ? !validateZip.isValidSync(form.zipcode) : undefined"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.zipcode") }}
@@ -108,7 +117,9 @@ function updateLead() {
       input-id="street-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.street"
-      rules="required|min:4"
+      :error="
+        form.street ? !validateStreet.isValidSync(form.street) : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.street") }}
@@ -123,7 +134,9 @@ function updateLead() {
       input-name="number_address-field"
       class="col-span-12 xl:col-span-3"
       v-model="form.number"
-      rules="required"
+      :error="
+        form.number ? !validateNumber.isValidSync(form.number) : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.number") }}
@@ -137,7 +150,7 @@ function updateLead() {
       input-name="city-field"
       input-id="city-field"
       v-model="form.city"
-      rules="required|min:5"
+      :error="form.city ? !validateCity.isValidSync(form.city) : undefined"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.city") }}
@@ -151,7 +164,11 @@ function updateLead() {
       input-id="neighborhood-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.neighborhood"
-      rules="required|min:3"
+      :error="
+        form.neighborhood
+          ? !validateNeighborhood.isValidSync(form.neighborhood)
+          : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.neighborhood") }}
@@ -173,7 +190,7 @@ function updateLead() {
       input-id="state-field"
       v-model="form.state"
       v-if="checkout.selectedCountry !== 'BR'"
-      rules="required"
+      :error="form.state ? !validateState.isValidSync(form.state) : undefined"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.state") }}
@@ -189,7 +206,7 @@ function updateLead() {
       class="col-span-12 xl:col-span-5"
       v-model="form.state"
       :data="states"
-      rules="required"
+      :error="form.state ? !validateState.isValidSync(form.state) : undefined"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.state") }}
