@@ -392,8 +392,6 @@ watch(installments, () => {
           {{ $t("checkout.cards.feedbacks.year") }}
         </template>
       </BaseSelect>
-
-      />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
