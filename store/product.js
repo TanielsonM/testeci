@@ -127,23 +127,5 @@ export const useProductStore = defineStore("product", {
       checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);
     },
-    setProductShipping(amount, isBump = false, bump = null) {
-      // Verifica se o produto a ser modificado é um Bump
-      if (!isBump) {
-        // Subtrai o valor do frete anterior quando existir
-        if (this.product?.shipping?.amount) {
-          amountStore.setAmount(this.product?.shipping?.amount * -1);
-          amountStore.setOriginalAmount(this.product?.shipping?.amount * -1);
-        }
-        this.product.shipping.amount = parseFloat(amount);
-        // Soma o valor do frete atual;
-        amountStore.setAmount(parseFloat(amount));
-        amountStore.setOriginalAmount(parseFloat(amount));
-      } else {
-        const checkout = useCheckoutStore();
-        // Altero o shipping de um bump expecifico
-        checkout.changeBumpShippingAmount(bump, amount);
-      }
-    },
   },
 });
