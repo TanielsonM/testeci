@@ -33,6 +33,7 @@ const form = ref<Address>({
 });
 
 const deliveryOptions = ref<Frete[] | undefined>();
+const isZipDissabled = ref(false);
 
 // Watches
 watch(form.value, async () => {
@@ -47,6 +48,7 @@ async function getAddress(cep = "") {
     if (!!checkout.deliveryOptions) checkout.resetShipping();
     return;
   }
+  isZipDissabled.value = true;
 
   await useFetch(`https://viacep.com.br/ws/${cep}/json`)
     .then(async ({ data }) => {
@@ -66,6 +68,9 @@ async function getAddress(cep = "") {
       document
         .querySelector<HTMLInputElement>(`#number-address-${props.type}`)
         ?.focus();
+    })
+    .finally(() => {
+      isZipDissabled.value = false;
     });
 }
 
@@ -84,10 +89,12 @@ function updateLead() {
       :placeholder="$t('forms.address.inputs.zipcode.placeholder')"
       mask="#####-###"
       input-name="zipcode-field"
+      input-id="zipcode-field"
       class="col-span-12 xl:col-span-3"
       v-model="form.zipcode"
       @input="getAddress(form.zipcode.replace('-', ''))"
       rules="required|min:5"
+      :disabled="isZipDissabled"
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.zipcode") }}
@@ -98,6 +105,7 @@ function updateLead() {
       :label="$t('forms.address.inputs.public_place.label')"
       :placeholder="$t('forms.address.inputs.public_place.placeholder')"
       input-name="street-field"
+      input-id="street-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.street"
       rules="required|min:4"
@@ -127,6 +135,7 @@ function updateLead() {
       :placeholder="$t('forms.address.inputs.city.placeholder')"
       class="col-span-12 xl:col-span-6"
       input-name="city-field"
+      input-id="city-field"
       v-model="form.city"
       rules="required|min:5"
     >
@@ -139,6 +148,7 @@ function updateLead() {
       :label="$t('forms.address.inputs.neighborhood.label')"
       :placeholder="$t('forms.address.inputs.neighborhood.placeholder')"
       input-name="neighborhood-field"
+      input-id="neighborhood-field"
       class="col-span-12 xl:col-span-6"
       v-model="form.neighborhood"
       rules="required|min:3"
@@ -160,6 +170,7 @@ function updateLead() {
       :placeholder="$t('forms.address.inputs.state.placeholder')"
       class="col-span-12 xl:col-span-5"
       input-name="state-field"
+      input-id="state-field"
       v-model="form.state"
       v-if="checkout.selectedCountry !== 'BR'"
       rules="required"
@@ -174,6 +185,7 @@ function updateLead() {
       :label="$t('forms.address.inputs.state.label')"
       :placeholder="$t('forms.address.inputs.state.placeholder')"
       input-name="district-field"
+      input-id="district-field"
       class="col-span-12 xl:col-span-5"
       v-model="form.state"
       :data="states"

@@ -610,7 +610,7 @@ export const useCheckoutStore = defineStore("checkout", {
         try {
           const productStore = useProductStore();
           const { product } = storeToRefs(productStore);
-
+          product.value.shipping_options = [];
           if (
             product.value.has_shipping_fee === 1 &&
             product.value.type_shipping_fee === "DYNAMIC"
@@ -623,13 +623,17 @@ export const useCheckoutStore = defineStore("checkout", {
                 // Product does not have integration with "Greenn envios"
                 if (err.value.statusCode) {
                   const toast = Toast.useToast();
-                  toast.error("Esse produto não possue integração para envio");
+                  toast.error("Esse produto não possui integração para envio");
                 }
               });
 
             if (!!calculate) {
-              this.deliveryOptions = calculate;
-              product.value.shipping_options = calculate;
+              this.deliveryOptions = calculate.sort(
+                (a, b) => parseFloat(a.price) - parseFloat(b.price)
+              );
+              product.value.shipping_options = calculate.sort(
+                (a, b) => parseFloat(a.price) - parseFloat(b.price)
+              );
             }
           }
 
@@ -662,7 +666,7 @@ export const useCheckoutStore = defineStore("checkout", {
               // Product does not have integration with "Greenn envios"
               if (err.value.statusCode) {
                 const toast = Toast.useToast();
-                toast.error("Esse produto não possue integração para envio");
+                toast.error("Esse produto não possui integração para envio");
               }
             })
         );

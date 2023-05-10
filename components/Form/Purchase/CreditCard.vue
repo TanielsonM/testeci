@@ -228,12 +228,14 @@ watch(installments, () => {
         rules="required"
         v-model="first.amount"
         @blur="syncVerification('first')"
+        input-id="first-amount-field"
         @vnode-before-mount="formatAmount('first')"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.number") }}
         </template>
       </BaseInput>
+
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
@@ -243,6 +245,7 @@ watch(installments, () => {
         @blur="syncVerification('first')"
         :error="!cardNumberError"
         v-model="first.number"
+        input-id="first-number-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.number") }}
@@ -255,11 +258,13 @@ watch(installments, () => {
         class="col-span-12"
         rules="required"
         v-model="first.holder_name"
+        input-id="first-holder_name-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.holder_name") }}
         </template>
       </BaseInput>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
@@ -267,11 +272,13 @@ watch(installments, () => {
         rules="required"
         :data="months"
         v-model="first.month"
+        input-id="first-month-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.month") }}
         </template>
       </BaseSelect>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
@@ -279,11 +286,13 @@ watch(installments, () => {
         rules="required"
         :data="years"
         v-model="first.year"
+        input-id="first-year-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.year") }}
         </template>
       </BaseSelect>
+
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
@@ -291,6 +300,7 @@ watch(installments, () => {
         rules="required"
         class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
+        input-id="first-cvv-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.cvv") }}
@@ -319,6 +329,7 @@ watch(installments, () => {
         v-model="second.amount"
         rules="required"
         @blur="syncVerification('second')"
+        input-id="second-amount-field"
         @vnode-before-mount="formatAmount('second')"
       >
         <template #error>
@@ -334,22 +345,26 @@ watch(installments, () => {
         @blur="syncVerification('second')"
         :error="!cardNumberError"
         v-model="second.number"
+        input-id="second-number-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.number") }}
         </template>
       </BaseInput>
+
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
         rules="required"
         v-model="second.holder_name"
+        input-id="second-holder_name-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.holder_name") }}
         </template>
       </BaseInput>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
@@ -357,11 +372,13 @@ watch(installments, () => {
         :data="months"
         rules="required"
         v-model="second.month"
+        input-id="second-month-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.month") }}
         </template>
       </BaseSelect>
+
       <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
@@ -369,11 +386,14 @@ watch(installments, () => {
         :data="years"
         rules="required"
         v-model="second.year"
+        input-id="second-year-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.year") }}
         </template>
       </BaseSelect>
+
+      />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
@@ -381,12 +401,14 @@ watch(installments, () => {
         class="col-span-12 sm:col-span-4"
         rules="required"
         v-model="second.cvv"
+        input-id="second-cvv-field"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.cvv") }}
         </template>
       </BaseInput>
     </form>
+
     <CreditCard
       v-if="method !== 'TWO_CREDIT_CARDS'"
       class="hidden md:block"

@@ -13,13 +13,12 @@ export default function () {
     body: any = null
   ): Promise<T | any> {
     if (body) config = { body };
-    loading.changeLoading();
-
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
       baseURL: useRuntimeConfig().public.API_BASE_URL,
       onRequest({ request, options }) {
+        loading.changeLoading(request.toString());
         const headers: HeadersInit = new Headers();
         headers.set("Content-type", "application/json");
         if (request === "/payment") {

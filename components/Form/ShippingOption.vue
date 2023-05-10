@@ -6,7 +6,7 @@ import { useLoadingStore } from "~~/store/loading/loading";
 const loading = useLoadingStore();
 const product = useProductStore();
 
-const { isLoading } = storeToRefs(loading);
+const { isLoading, current } = storeToRefs(loading);
 
 const props = defineProps({
   options: {
@@ -27,21 +27,24 @@ const selectOption = (index, amount) => {
   product.setProductShipping(amount, props.isBump, props.bump);
 };
 
-watch(props, () => {
-  if (props.options.length) {
-    selectOption(0, props.options[0]?.price || 0);
+watch(
+  () => props.options,
+  (val) => {
+    if (props.options.length) {
+      selectOption(0, props.options[0]?.price || 0);
+    }
   }
-});
+);
 </script>
 
 <template>
-  <div v-if="isLoading">
+  <div v-if="isLoading && current.includes('envios/calculate/')">
     <LoadingShimmer width="30%" height="30px" />
     <LoadingShimmer height="50px" :quantity="4" />
   </div>
   <p
     class="flex-nowrap py-3 font-semibold text-txt-color"
-    v-if="!isLoading && !!options[0]?.price"
+    v-if="!!options[0]?.price"
   >
     {{ $t("checkout.address.select_shipping") }}
   </p>
@@ -49,12 +52,15 @@ watch(props, () => {
     class="item frete"
     :class="{ selected: isActive == index }"
     @click="selectOption(index, option?.price)"
-    v-if="!isLoading && !!options[0]?.price"
     v-for="(option, index) in options.sort(
       (a, b) => parseFloat(a.price) - parseFloat(b.price)
     )"
+    :key="index"
   >
-    <div class="grid grid-cols-12 items-center gap-3">
+    <div
+      class="grid grid-cols-12 items-center gap-3"
+      v-if="!!options[0]?.price"
+    >
       <div class="col-span-3">
         <img :src="option.company.picture" width="80" />
       </div>

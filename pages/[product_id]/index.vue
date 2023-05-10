@@ -19,7 +19,7 @@ const amountStore = useAmountStore();
 /* Variables */
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
-const { sameAddress } = storeToRefs(address);
+const { sameAddress, charge, shipping } = storeToRefs(address);
 const { method, allowed_methods } = storeToRefs(checkout);
 const { currentStep, isMobile } = storeToRefs(stepsStore);
 const { error_message } = storeToRefs(payment);
@@ -163,6 +163,21 @@ watch(method, (method) => {
 
 watch(error_message, (val) => {
   if (val) alert_modal.value = true;
+});
+
+watch(sameAddress, (val) => {
+  if (!val) {
+    shipping.value.zipcode = "";
+    shipping.value.number = "";
+    shipping.value.street = "";
+    shipping.value.neighborhood = "";
+    shipping.value.city = "";
+    shipping.value.state = "";
+    shipping.value.complement = "";
+  }
+  checkout.calculateShipping(
+    val ? charge.value.zipcode : shipping.value.zipcode
+  );
 });
 
 function closeModal() {
