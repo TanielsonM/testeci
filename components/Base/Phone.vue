@@ -72,7 +72,6 @@ const props = defineProps({
 let cellphone = ref("");
 let isValid = true;
 
-// defaultCountry: props.country,
 const bindProps = {
   mode: "international",
   placeholder: "Digite seu telefone",
