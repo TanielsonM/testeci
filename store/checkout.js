@@ -678,5 +678,33 @@ export const useCheckoutStore = defineStore("checkout", {
         });
       }
     },
+    setSelectedShipping(product_id, shipping) {
+      // Remove shipping amount
+      this.product_list.forEach((item) => {
+        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+          amountStore.setAmount(parseFloat(item.shipping?.amount) * -1);
+          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
+        }
+      });
+      // Set shipping infos in product
+      this.product_list = this.product_list.map((item) => {
+        if (item.id === parseInt(product_id)) {
+          item.shipping = {
+            amount: parseFloat(shipping.price),
+            name: shipping.name,
+            id: shipping.id,
+          };
+        }
+        return item;
+      });
+
+      // Add shipping amount
+      this.product_list.forEach((item) => {
+        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+          amountStore.setAmount(parseFloat(item.shipping?.amount));
+          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
+        }
+      });
+    },
   },
 });
