@@ -192,7 +192,7 @@ function closeModal() {
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>
-    <section class="flex w-full max-w-[780px] flex-col gap-10 xl:min-w-[780px]">
+    <section class="flex w-full max-w-[520px] lg:max-w-[780px] flex-col gap-10 xl:min-w-[780px]">
       <!-- Purchase card -->
       <BaseCard
         class="w-full p-5 md:px-[60px] md:py-[50px]"
