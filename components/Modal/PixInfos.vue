@@ -266,7 +266,7 @@ watch(data, () => {});
         <p>{{ shippingAmount }}</p>
       </div>
     </div>
-    <div class="details py-5" v-if="!!shippingAmount && onlyButtons">
+    <div class="details py-5" v-if="!!shippingAmount && onlyButtons && data?.shippingSelected">
       <h6 class="title">
         {{ $t("pg_obrigado.modal.frete_selecionado") }}
       </h6>
