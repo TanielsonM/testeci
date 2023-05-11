@@ -39,24 +39,29 @@ export const validateFirstStep = async (): Promise<boolean> => {
 export const validateSecondStep = async (): Promise<boolean> => {
   const addressStore = useAddressStore();
   const { charge, shipping, sameAddress } = storeToRefs(addressStore);
-  const validZip = await validateZip.isValid(shipping.value.zipcode);
-  const validStreet = await validateStreet.isValid(shipping.value.street);
-  const validNumber = await validateNumber.isValid(shipping.value.number);
-  const validCity = await validateCity.isValid(shipping.value.city);
-  const validNeighborhood = await validateNeighborhood.isValid(
-    shipping.value.neighborhood
-  );
-  const validState = await validateState.isValid(shipping.value.state);
 
-  if (!sameAddress) {
-    const validChargeZip = await validateZip.isValid(charge.value.zipcode);
-    const validChargeStreet = await validateStreet.isValid(charge.value.street);
-    const validChargeNumber = await validateNumber.isValid(charge.value.number);
-    const validChargeCity = await validateCity.isValid(charge.value.city);
-    const validChargeNeighborhood = await validateNeighborhood.isValid(
-      charge.value.neighborhood
+  const validZip = await validateZip.isValid(charge.value.zipcode);
+  const validStreet = await validateStreet.isValid(charge.value.street);
+  const validNumber = await validateNumber.isValid(charge.value.number);
+  const validCity = await validateCity.isValid(charge.value.city);
+  const validNeighborhood = await validateNeighborhood.isValid(
+    charge.value.neighborhood
+  );
+  const validState = await validateState.isValid(charge.value.state);
+
+  if (!sameAddress.value) {
+    const validChargeZip = await validateZip.isValid(shipping.value.zipcode);
+    const validChargeStreet = await validateStreet.isValid(
+      shipping.value.street
     );
-    const validChargeState = await validateState.isValid(charge.value.state);
+    const validChargeNumber = await validateNumber.isValid(
+      shipping.value.number
+    );
+    const validChargeCity = await validateCity.isValid(shipping.value.city);
+    const validChargeNeighborhood = await validateNeighborhood.isValid(
+      shipping.value.neighborhood
+    );
+    const validChargeState = await validateState.isValid(shipping.value.state);
 
     return (
       validZip &&
