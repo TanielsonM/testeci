@@ -673,7 +673,9 @@ export const useCheckoutStore = defineStore("checkout", {
         const results = await Promise.all(promises);
         this.bump_list.forEach((bump, index) => {
           if (results[index]) {
-            bump.shipping_options = results[index];
+            bump.shipping_options = results[index].sort(
+              (a, b) => parseFloat(a.price) - parseFloat(b.price)
+            );
           }
         });
       }
