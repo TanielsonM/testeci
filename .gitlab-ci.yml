@@ -41,5 +41,5 @@ Terraform Plan:
       # - ${TF_ROOT}/aws-club-back-php-ecr-address.txt
       # - ${TF_ROOT}/aws-club-back-nginx-ecr-address.txt
       - ${TF_ROOT}/plan.cache
-  needs:
-    - Create Secrets
+  # needs:
+  #   - Create Secrets
