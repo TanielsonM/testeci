@@ -6,7 +6,7 @@ const custom_checkout = useCustomCheckoutStore();
 <template>
   <header
     v-if="custom_checkout.hasScarcity"
-    class="sticky top-0 z-50 flex min-h-[60px] w-screen items-center justify-center px-5 py-[20px] shadow-lg"
+    class="sticky top-0 z-50 flex min-h-[60px] w-full items-center justify-center px-5 py-[20px] shadow-lg"
     :style="{ backgroundColor: custom_checkout.scarcity.background }"
   >
     <section
