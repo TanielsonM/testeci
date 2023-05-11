@@ -204,7 +204,7 @@ if (!!route.query.s_id && !route.query.chc) {
       <ModalTrialInfos
         :name="data.productOffer.data.name"
         :amount="formatMoney(data.productOffer.data.amount)"
-        :shipping-amount="
+        :shipping-amount="data.productOffer.data.has_shipping_fee ??
           formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
         "
         :id="data.chc"
