@@ -18,13 +18,15 @@ const items = computed(() => {
 </script>
 
 <template>
-  <Scarcity v-if="product.isValid()" />
-  <header
-    v-if="topThumb && product.isValid()"
-    class="-mt-8 flex max-h-[40vh] w-full items-center justify-center"
-  >
-    <img :src="topThumb" alt="Thumb superior" />
-  </header>
+  <section class="w-full flex flex-col justify-center items-center" v-if="product.isValid() && (topThumb || hasScarcity)">
+    <Scarcity v-if="product.isValid()" />
+    <header
+      v-if="topThumb && product.isValid()"
+      class="flex max-h-[40vh] w-full max-w-[1250px] items-center justify-center object-contain"
+    >
+      <img :src="topThumb" alt="Thumb superior" />
+    </header>
+  </section>
   <header
     v-if="!hasScarcity && !topThumb && product.isValid()"
     class="sticky top-0 z-50 flex min-h-[60px] w-full items-center justify-between bg-checkout px-4 shadow-lg"

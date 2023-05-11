@@ -681,6 +681,13 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     setSelectedShipping(product_id, shipping) {
+      const product = this.product_list
+        .filter((item) => item.id === parseInt(product_id))
+        .pop();
+      if (product.type_shipping_fee === "FIXED") {
+        product.shipping_options = [];
+        return;
+      }
       // Remove shipping amount
       this.product_list.forEach((item) => {
         if (item.id === parseInt(product_id) && item.shipping?.amount) {
