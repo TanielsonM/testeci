@@ -1,0 +1,45 @@
+variables:
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${CI_COMMIT_BRANCH}
+  TF_ROOT: ${CI_PROJECT_DIR}/terraform/environments/${CI_COMMIT_BRANCH}
+  ANSIBLE_ROOT: ${CI_PROJECT_DIR}/ansible/environments/${CI_COMMIT_BRANCH}
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'production' && $CI_PIPELINE_SOURCE == 'push'
+      when: always
+    - if: $CI_COMMIT_BRANCH == 'production' && $CI_PIPELINE_SOURCE == 'web'
+      when: always
+    - when: never
+
+stages:
+  # - Env
+  - Plan
+  - Build
+  - Deploy
+
+
+Terraform Plan:
+  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+  stage: Plan
+  environment: ${CI_COMMIT_BRANCH}
+  cache:
+    key: terraform-${CI_COMMIT_BRANCH}
+    paths:
+      - ${TF_ROOT}/.terraform
+  before_script:
+    - cd ${TF_ROOT}
+  script:
+    - ls -la
+    - gitlab-terraform init
+    - gitlab-terraform validate
+    - gitlab-terraform plan
+    # - gitlab-terraform output -raw aws-club-back-php-ecr-address > aws-club-back-php-ecr-address.txt
+    # - gitlab-terraform output -raw aws-club-back-nginx-ecr-address > aws-club-back-nginx-ecr-address.txt
+  artifacts:
+    name: tf-full
+    paths:
+      # - ${TF_ROOT}/aws-club-back-php-ecr-address.txt
+      # - ${TF_ROOT}/aws-club-back-nginx-ecr-address.txt
+      - ${TF_ROOT}/plan.cache
+  needs:
+    - Create Secrets
