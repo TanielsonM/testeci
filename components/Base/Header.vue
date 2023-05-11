@@ -18,7 +18,7 @@ const items = computed(() => {
 </script>
 
 <template>
-  <section class="w-full flex flex-col justify-center items-center">
+  <section class="w-full flex flex-col justify-center items-center" v-if="product.isValid() && (topThumb || hasScarcity)">
     <Scarcity v-if="product.isValid()" />
     <header
       v-if="topThumb && product.isValid()"
