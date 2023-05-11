@@ -60,7 +60,7 @@ const hasTrial = computed(() => !!props.bump.trial);
 
 const showDescription = computed(() =>
   customCheckout.hasCustomBump
-    ? customCheckout.bump_options.ob_description
+    ? customCheckout.bump_options.description
     : true
 );
 
@@ -107,7 +107,7 @@ function getType(type = "") {
       </section>
       <!-- More product infos -->
       <section class="right__side" :class="`${bump.type.toLowerCase()}`">
-        <h1 class="item-title">{{ bump.name }}</h1>
+        <h1 class="item-title text-txt-color">{{ bump.name }}</h1>
         <template v-if="hasTrial">
           <p class="info-value custom-color">
             {{ trialMessage }}
@@ -266,7 +266,7 @@ function getType(type = "") {
       font-size: 13px;
       line-height: 15px;
       text-decoration-line: underline;
-      color: var(--text-color);
+      color: var(--txt-color);
       background: transparent;
       border: none;
 
@@ -315,7 +315,7 @@ function getType(type = "") {
       font-weight: 600;
       font-size: 14px;
       line-height: 17px;
-      color: var(--text-color);
+      color: var(--txt-color);
     }
 
     .trial-info {
@@ -349,7 +349,7 @@ function getType(type = "") {
 }
 
 .info-value-400 {
-  color: var(--text-color);
+  color: var(--txt-color);
   letter-spacing: 0.2px;
   font-size: 14px;
   font-weight: 400;

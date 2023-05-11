@@ -277,7 +277,7 @@ if (!!route.query.s_id && !route.query.chc) {
 
     .paragraph {
       line-height: 1.5;
-      color: var(--text-color);
+      color: var(--txt-color);
       margin-top: 7px;
       font-size: 14px;
       font-weight: 400;
