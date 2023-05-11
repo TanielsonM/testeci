@@ -136,7 +136,7 @@ if (!!route.query.s_id && !route.query.chc) {
     <div
       class="container"
       v-if="
-        data.sale.sales[0].method === 'PIX' || data.sale?.order.method === 'PIX'
+        data.sale.sales[0].method === 'PIX' || data.sale?.order?.method === 'PIX'
       "
     >
       <ModalPixInfos
@@ -151,8 +151,6 @@ if (!!route.query.s_id && !route.query.chc) {
         :has-order="true"
         :sales="data.sale.sales"
       />
-      <!-- :shipping-amount="formatMoney(sale.shipping_amount)"
-        :shipping-selected="sale.shipping_selected" -->
       <template v-else>
         <ModalPixInfos
           v-for="(sale, i) in data.sale.sales"
