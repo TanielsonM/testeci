@@ -14,7 +14,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <section class="flex flex-col items-end">
+  <section class="flex flex-col" :class="isBack ? 'items-end' : 'items-start'">
     <label v-if="!isBack" class="mb-1 text-[10px] text-txt-color opacity-70">
       <slot name="label">
         {{ label }}
