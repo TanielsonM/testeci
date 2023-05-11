@@ -16,7 +16,7 @@
         },
         "cellphone": {
           "label": "Teléfono",
-          "placeholder": "Número de teléfono"
+          "placeholder": "Número de teléfono*"
         },
         "email": {
           "label": "Email",

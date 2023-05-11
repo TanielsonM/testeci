@@ -71,10 +71,11 @@ const props = defineProps({
 
 let cellphone = ref("");
 let isValid = true;
+const { t } = useI18n();
 
 const bindProps = {
   mode: "international",
-  placeholder: "Digite seu telefone",
+  placeholder: t("forms.personal.inputs.cellphone.placeholder"),
   required: true,
   enabledCountryCode: false,
   autoDefaultCountry: true,
@@ -83,7 +84,7 @@ const bindProps = {
   name: "cellphone",
   maxLen: 25,
   inputOptions: {
-    placeholder: "Digite seu telefone",
+    placeholder: t("forms.personal.inputs.cellphone.placeholder"),
     showDialCode: false,
   },
 };
