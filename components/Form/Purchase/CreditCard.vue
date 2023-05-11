@@ -81,14 +81,26 @@ const months = [
   { value: "12", label: "12" },
 ];
 
-let cardNumberError = ref(false);
+const isCardValid = ref(true);
+const isCardBack = ref(false);
+const creditCard = ref(null);
 
 function syncVerification(from) {
   verifyCard(from);
   changeAmount(from);
 }
 
-async function verifyCard(from) {
+function flipCard(value) {
+  isCardBack.value = value;
+
+  if (value) {
+    creditCard.style.transform = "rotateY(180deg)";
+  } else {
+    creditCard.style.transform = "rotateY(0deg)";
+  }
+}
+
+function verifyCard(from) {
   let cardNumber = String(
     from == "first"
       ? first.value.number.replace(/\s+/g, "")
@@ -113,7 +125,7 @@ async function verifyCard(from) {
 
   const result = sum % 10 == 0;
 
-  cardNumberError.value = !!result;
+  isCardValid.value = !!result;
 }
 
 function changeAmount(from) {
@@ -223,7 +235,7 @@ watch(installments, () => {
         v-if="method == 'TWO_CREDIT_CARDS'"
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        :error="!cardNumberError"
+        :error="!isCardValid"
         class="col-span-12"
         rules="required"
         v-model="first.amount"
@@ -243,7 +255,7 @@ watch(installments, () => {
         rules="required"
         class="col-span-12"
         @blur="syncVerification('first')"
-        :error="!cardNumberError"
+        :error="!isCardValid"
         v-model="first.number"
         input-id="first-number-field"
       >
@@ -301,6 +313,8 @@ watch(installments, () => {
         class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
         input-id="first-cvv-field"
+        @click="flipCard(true)"
+        @blur="flipCard(false)"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.cvv") }}
@@ -324,7 +338,7 @@ watch(installments, () => {
       <BaseInput
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        :error="!cardNumberError"
+        :error="!isCardValid"
         class="col-span-12"
         v-model="second.amount"
         rules="required"
@@ -343,7 +357,7 @@ watch(installments, () => {
         class="col-span-12"
         rules="required"
         @blur="syncVerification('second')"
-        :error="!cardNumberError"
+        :error="!isCardValid"
         v-model="second.number"
         input-id="second-number-field"
       >
@@ -408,21 +422,37 @@ watch(installments, () => {
         </template>
       </BaseInput>
     </form>
-
-    <CreditCard
-      v-if="method !== 'TWO_CREDIT_CARDS'"
-      class="hidden md:block"
-      data-anima="bottom"
-      :card_cvv="first.cvv"
-      :card_year="first.year"
-      :card_month="first.month"
-      :card_number="first.number"
-      :card_holder_name="first.holder_name"
-    />
+    <transition name="flip">
+      <CreditCard
+        v-if="method !== 'TWO_CREDIT_CARDS'"
+        class="flip-class hidden md:block"
+        ref="creditCard"
+        data-anima="bottom"
+        :flip_card="isCardBack"
+        :card_cvv="first.cvv"
+        :card_year="first.year"
+        :card_month="first.month"
+        :card_number="first.number"
+        :card_holder_name="first.holder_name"
+      />
+    </transition>
   </section>
 </template>
 
 <style lang="scss" scoped>
+.flip-enter-active {
+  transition: all 0.4s ease;
+}
+
+.flip-leave-active {
+  display: none;
+}
+
+.flip-enter,
+.flip-leave {
+  transform: rotateY(180deg);
+  opacity: 0;
+}
 .button {
   &:hover {
     background-color: rgba(65, 137, 230, 0.2) !important;

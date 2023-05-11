@@ -27,6 +27,11 @@ const props = defineProps({
     type: String,
     default: () => "",
   },
+  flip_card: {
+    type: Boolean,
+    required: false,
+    default: () => false,
+  },
 });
 
 // Variables
@@ -37,6 +42,7 @@ const defaultCardMask = ref("**** **** **** ****");
 const getCardType = computed(() => {
   let number = props.card_number;
   let re = new RegExp("^4");
+
   if (number.match(re) != null) return "visa";
 
   re = new RegExp("^(34|37)");
@@ -72,8 +78,9 @@ function getImg(type) {
 </script>
 
 <template>
-  <section class="flex w-full max-w-[430px] justify-start">
+  <section class="flip-class flex w-full max-w-[430px] justify-start">
     <section
+      v-if="!flip_card"
       class="card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5"
     >
       <header class="flex h-10 w-full justify-end">
@@ -134,22 +141,88 @@ function getImg(type) {
           :label="$t('checkout.pagamento.metodos.um_cartao.card.validade')"
         >
           <Transition name="slide-fade-up" mode="out-in">
-            <span class="text-txt-color" v-if="card_month" v-bind:key="card_month">{{
-              card_month
-            }}</span>
+            <span
+              class="text-txt-color"
+              v-if="card_month"
+              v-bind:key="card_month"
+              >{{ card_month }}</span
+            >
             <span class="text-txt-color" v-else key="2">••</span>
           </Transition>
           <span class="text-txt-color">/</span>
           <Transition name="slide-fade-up" mode="out-in">
-            <span class="text-txt-color" v-if="card_year" v-bind:key="card_year">{{
-              String(card_year).slice(2, 4)
-            }}</span>
+            <span
+              class="text-txt-color"
+              v-if="card_year"
+              v-bind:key="card_year"
+              >{{ String(card_year).slice(2, 4) }}</span
+            >
             <span class="text-txt-color" v-else key="2">••</span>
           </Transition>
         </CreditCardLabel>
       </section>
     </section>
+
+    <section
+      v-if="flip_card"
+      class="flip-back card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5 pt-8"
+    >
+      <Transition name="slide-fade-up" mode="out-in">
+        <span class="card-target card-target-size"></span>
+      </Transition>
+
+      <CreditCardLabel
+        class="cvv-position mt-6"
+        :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
+        :isBack="true"
+      >
+        <Transition name="slide-fade-up" mode="out-in">
+          <span class="text-txt-color" v-if="card_cvv" v-bind:key="card_cvv">
+            {{ String(card_cvv).slice(0, 3) }}
+          </span>
+          <span class="text-txt-color" v-else key="3">•••</span>
+        </Transition>
+      </CreditCardLabel>
+
+      <Transition name="slide-fade-up" mode="out-in">
+        <img
+          v-bind:src="getImg(getCardType)"
+          v-if="getCardType"
+          v-bind:key="getCardType"
+          alt="Bandeira do cartao"
+          class="float-left max-w-[50px] object-contain invert"
+        />
+      </Transition>
+    </section>
   </section>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.flip-class {
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+}
+
+.cvv-position {
+  top: 2.3rem;
+  position: relative;
+}
+.card-target {
+  display: block;
+  background: rgba(0, 0, 19, 0.8);
+  height: 45px;
+}
+
+@media (min-width: 1280px) {
+  .card-target-size {
+    width: 114.9%;
+    margin-left: -1.29rem;
+  }
+}
+@media (max-width: 1279px) {
+  .card-target-size {
+    width: 110.7%;
+    margin-left: -1.31rem;
+  }
+}
+</style>
