@@ -673,10 +673,40 @@ export const useCheckoutStore = defineStore("checkout", {
         const results = await Promise.all(promises);
         this.bump_list.forEach((bump, index) => {
           if (results[index]) {
-            bump.shipping_options = results[index];
+            bump.shipping_options = results[index].sort(
+              (a, b) => parseFloat(a.price) - parseFloat(b.price)
+            );
           }
         });
       }
+    },
+    setSelectedShipping(product_id, shipping) {
+      // Remove shipping amount
+      this.product_list.forEach((item) => {
+        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+          amountStore.setAmount(parseFloat(item.shipping?.amount) * -1);
+          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
+        }
+      });
+      // Set shipping infos in product
+      this.product_list = this.product_list.map((item) => {
+        if (item.id === parseInt(product_id)) {
+          item.shipping = {
+            amount: parseFloat(shipping.price),
+            name: shipping.name,
+            id: shipping.id,
+          };
+        }
+        return item;
+      });
+
+      // Add shipping amount
+      this.product_list.forEach((item) => {
+        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+          amountStore.setAmount(parseFloat(item.shipping?.amount));
+          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
+        }
+      });
     },
   },
 });

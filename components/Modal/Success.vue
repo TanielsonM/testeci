@@ -25,6 +25,7 @@ const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
   bump: {} as Sale,
+  order: {} as any,
   chc: "",
 });
 
@@ -132,22 +133,41 @@ if (!!route.query.s_id && !route.query.chc) {
         </div>
       </div>
     </div>
-    <div class="container" v-if="data.sale.sales[0].method === 'PIX'">
+    <div
+      class="container"
+      v-if="
+        data.sale.sales[0].method === 'PIX' || data.sale?.order?.method === 'PIX'
+      "
+    >
       <ModalPixInfos
-        v-for="(sale, i) in data.sale.sales"
-        :key="i"
-        :name="sale.product.name"
-        :code="sale.qrcode"
-        :url="sale.imgQrcode"
-        :id="sale.id.toString()"
-        :amount="formatMoney(sale.amount)"
-        :last="i + 1 == data.sale.sales.length"
-        :only-buttons="data.sale.sales.length == 1"
-        :sales-length="data.sale.sales.length"
-        :created-at="sale.created_at.toString()"
-        :shipping-amount="formatMoney(sale.shipping_amount)"
-        :shipping-selected="sale.shipping_selected"
+        v-if="data.sale?.order"
+        :code="data.sale?.order.qrcode"
+        :url="data.sale?.order.imgQrcode"
+        :id="data.sale?.order.id.toString()"
+        :amount="formatMoney(data.sale?.order.amount)"
+        :only-buttons="true"
+        :sales-length="1"
+        :created-at="data.sale?.order.created_at.toString()"
+        :has-order="true"
+        :sales="data.sale.sales"
       />
+      <template v-else>
+        <ModalPixInfos
+          v-for="(sale, i) in data.sale.sales"
+          :key="i"
+          :name="sale.product.name"
+          :code="sale.qrcode"
+          :url="sale.imgQrcode"
+          :id="sale.id.toString()"
+          :amount="formatMoney(sale.amount)"
+          :last="i + 1 == data.sale.sales.length"
+          :only-buttons="data.sale.sales.length == 1"
+          :sales-length="data.sale.sales.length"
+          :created-at="sale.created_at.toString()"
+          :shipping-amount="formatMoney(sale.shipping_amount)"
+          :shipping-selected="sale.shipping_selected"
+        />
+      </template>
     </div>
     <div
       class="container"
