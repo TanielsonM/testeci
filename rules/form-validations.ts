@@ -5,12 +5,16 @@ import { usePersonalStore } from "@/store/forms/personal";
 import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
 
+const personalStore = usePersonalStore();
+const { email } = storeToRefs(personalStore);
+
 export const validateName = yup.string().min(4).required();
 export const validateEmail = yup.string().email().required();
 export const validateConfirmEmail = yup
   .string()
-  .required()
-  .oneOf([yup.ref("email-field")]);
+  .email()
+  .oneOf([email.value])
+  .required();
 export const validatePhone = yup.string().min(8).required();
 export const validateDocument = yup.string().required();
 
@@ -21,20 +25,20 @@ export const validateCity = yup.string().min(5).required();
 export const validateNeighborhood = yup.string().min(3).required();
 export const validateState = yup.string().min(2).required();
 
-export const validateAll = async (): Promise<boolean> => {
-  const personalStore = usePersonalStore();
+export const validateFirstStep = async (): Promise<boolean> => {
+  const { name, document, cellphone } = storeToRefs(personalStore);
+
+  const validName = await validateName.isValid(name.value);
+  const validEmail = await validateEmail.isValid(email.value);
+  const validPhone = await validatePhone.isValid(cellphone.value);
+  const validDocument = await validateDocument.isValid(document.value);
+
+  return validName && validEmail && validPhone && validDocument;
+};
+
+export const validateSecondStep = async (): Promise<boolean> => {
   const addressStore = useAddressStore();
-  const purchaseStore = usePurchaseStore();
-
-  const { name, email, document, cellphone } = storeToRefs(personalStore);
   const { charge, shipping, sameAddress } = storeToRefs(addressStore);
-  const { first, second } = storeToRefs(purchaseStore);
-
-  const validName = await validateName.isValid(name);
-  const validEmail = await validateEmail.isValid(email);
-  const validPhone = await validatePhone.isValid(cellphone);
-  const validDocument = await validateDocument.isValid(document);
-
   const validZip = await validateZip.isValid(shipping.value.zipcode);
   const validStreet = await validateStreet.isValid(shipping.value.street);
   const validNumber = await validateNumber.isValid(shipping.value.number);
@@ -55,10 +59,6 @@ export const validateAll = async (): Promise<boolean> => {
     const validChargeState = await validateState.isValid(charge.value.state);
 
     return (
-      validName &&
-      validEmail &&
-      validPhone &&
-      validDocument &&
       validZip &&
       validStreet &&
       validNumber &&
@@ -72,18 +72,30 @@ export const validateAll = async (): Promise<boolean> => {
       validChargeNeighborhood &&
       validChargeState
     );
+  } else {
+    return (
+      validZip &&
+      validStreet &&
+      validNumber &&
+      validCity &&
+      validNeighborhood &&
+      validState
+    );
   }
+};
 
-  return (
-    validName &&
-    validEmail &&
-    validPhone &&
-    validDocument &&
-    validZip &&
-    validStreet &&
-    validNumber &&
-    validCity &&
-    validNeighborhood &&
-    validState
-  );
+export const validateThristStep = (): boolean => {
+  const purchaseStore = usePurchaseStore();
+  const { first, second } = storeToRefs(purchaseStore);
+
+  return true;
+};
+
+export const validateAll = async (): Promise<boolean> => {
+  const validStepOne = await validateFirstStep();
+  const validStepTwo = await validateSecondStep();
+
+  console.log(validStepOne, validStepTwo);
+
+  return validStepOne && validStepTwo;
 };
