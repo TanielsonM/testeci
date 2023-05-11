@@ -420,37 +420,23 @@ watch(installments, () => {
         </template>
       </BaseInput>
     </form>
-    <transition name="flip">
-      <CreditCard
-        v-if="method !== 'TWO_CREDIT_CARDS'"
-        class="flip-class hidden md:block"
-        ref="creditCard"
-        data-anima="bottom"
-        :flip_card="isCardBack"
-        :card_cvv="first.cvv"
-        :card_year="first.year"
-        :card_month="first.month"
-        :card_number="first.number"
-        :card_holder_name="first.holder_name"
-      />
-    </transition>
+
+    <CreditCard
+      v-if="method !== 'TWO_CREDIT_CARDS'"
+      class="flip-class hidden md:block"
+      ref="creditCard"
+      data-anima="bottom"
+      :flip_card="isCardBack"
+      :card_cvv="first.cvv"
+      :card_year="first.year"
+      :card_month="first.month"
+      :card_number="first.number"
+      :card_holder_name="first.holder_name"
+    />
   </section>
 </template>
 
 <style lang="scss" scoped>
-.flip-enter-active {
-  transition: all 0.4s ease;
-}
-
-.flip-leave-active {
-  display: none;
-}
-
-.flip-enter,
-.flip-leave {
-  transform: rotateY(180deg);
-  opacity: 0;
-}
 .button {
   &:hover {
     background-color: rgba(65, 137, 230, 0.2) !important;
