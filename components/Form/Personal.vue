@@ -2,6 +2,7 @@
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
+import { usePaymentStore } from "@/store/modules/payment";
 
 import {
   validateName,
@@ -16,6 +17,9 @@ const leadsStore = useLeadsStore();
 const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
+const payment = usePaymentStore();
+
+const { hasSent } = storeToRefs(payment);
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
@@ -81,7 +85,7 @@ function updateLead() {
       input-name="name-field"
       input-id="name-field"
       v-model="name"
-      :error="name ? !validateName.isValidSync(name) : undefined"
+      :error="name || hasSent ? !validateName.isValidSync(name) : undefined"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
@@ -96,7 +100,7 @@ function updateLead() {
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      :error="email ? !validateEmail.isValidSync(email) : undefined"
+      :error="email || hasSent ? !validateEmail.isValidSync(email) : undefined"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}
@@ -116,7 +120,7 @@ function updateLead() {
       rules="required|email|confirmed:@email-field"
       v-if="custom_checkout.hasConfirmationEmail"
       :error="
-        confirmation_mail
+        confirmation_mail || hasSent
           ? !validateConfirmEmail.isValidSync(confirmation_mail)
           : undefined
       "
@@ -136,7 +140,9 @@ function updateLead() {
       input-id="cellphone-field"
       v-model="cellphone"
       type="tel"
-      :error="cellphone ? !validatePhone.isValidSync(cellphone) : undefined"
+      :error="
+        cellphone || hasSent ? !validatePhone.isValidSync(cellphone) : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
@@ -154,7 +160,11 @@ function updateLead() {
       input-id="document-field"
       v-model="document"
       :mask="documentText.documentMask"
-      :error="document ? !validateDocument.isValidSync(document) : undefined"
+      :error="
+        document || hasSent
+          ? !validateDocument.isValidSync(document)
+          : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.document") }}

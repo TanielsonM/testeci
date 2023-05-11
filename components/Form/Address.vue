@@ -19,6 +19,9 @@ import {
 const store = useAddressStore();
 const checkout = useCheckoutStore();
 const leadsStore = useLeadsStore();
+const payment = usePaymentStore();
+
+const { hasSent } = storeToRefs(payment);
 
 // Props
 const props = defineProps({
@@ -103,7 +106,11 @@ function updateLead() {
       v-model="form.zipcode"
       @input="getAddress(form.zipcode.replace('-', ''))"
       :disabled="isZipDissabled"
-      :error="form.zipcode ? !validateZip.isValidSync(form.zipcode) : undefined"
+      :error="
+        form.zipcode || hasSent
+          ? !validateZip.isValidSync(form.zipcode)
+          : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.zipcode") }}
@@ -118,7 +125,9 @@ function updateLead() {
       class="col-span-12 xl:col-span-6"
       v-model="form.street"
       :error="
-        form.street ? !validateStreet.isValidSync(form.street) : undefined
+        form.street || hasSent
+          ? !validateStreet.isValidSync(form.street)
+          : undefined
       "
     >
       <template #error>
@@ -135,7 +144,9 @@ function updateLead() {
       class="col-span-12 xl:col-span-3"
       v-model="form.number"
       :error="
-        form.number ? !validateNumber.isValidSync(form.number) : undefined
+        form.number || hasSent
+          ? !validateNumber.isValidSync(form.number)
+          : undefined
       "
     >
       <template #error>
@@ -150,7 +161,9 @@ function updateLead() {
       input-name="city-field"
       input-id="city-field"
       v-model="form.city"
-      :error="form.city ? !validateCity.isValidSync(form.city) : undefined"
+      :error="
+        form.city || hasSent ? !validateCity.isValidSync(form.city) : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.city") }}
@@ -165,7 +178,7 @@ function updateLead() {
       class="col-span-12 xl:col-span-6"
       v-model="form.neighborhood"
       :error="
-        form.neighborhood
+        form.neighborhood || hasSent
           ? !validateNeighborhood.isValidSync(form.neighborhood)
           : undefined
       "
@@ -190,7 +203,11 @@ function updateLead() {
       input-id="state-field"
       v-model="form.state"
       v-if="checkout.selectedCountry !== 'BR'"
-      :error="form.state ? !validateState.isValidSync(form.state) : undefined"
+      :error="
+        form.state || hasSent
+          ? !validateState.isValidSync(form.state)
+          : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.state") }}
@@ -206,7 +223,11 @@ function updateLead() {
       class="col-span-12 xl:col-span-5"
       v-model="form.state"
       :data="states"
-      :error="form.state ? !validateState.isValidSync(form.state) : undefined"
+      :error="
+        form.state || hasSent
+          ? !validateState.isValidSync(form.state)
+          : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.address.feedbacks.state") }}

@@ -60,15 +60,14 @@ export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
     error_message: "",
-    hasSend: false,
+    hasSent: false,
   }),
   getters: {},
   actions: {
     async payment(language: string, paypal?: any) {
       const allValid = await validateAll();
       if (!allValid) {
-        this.hasSend = true;
-        console.log("morri aqui");
+        this.hasSent = true;
         return;
       }
 

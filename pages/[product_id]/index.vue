@@ -201,7 +201,7 @@ function closeModal() {
         <BaseButton
           color="transparent"
           size="sm"
-          v-if="currentStep > 1 && currentStep <= 3 && isMobile"
+          v-if="currentStep > 0 && currentStep <= 2 && isMobile"
           @click="stepsStore.setStep(currentStep - 1)"
         >
           <div class="flex items-start justify-start text-left">
@@ -210,7 +210,13 @@ function closeModal() {
           </div>
         </BaseButton>
         <!-- Personal form -->
-        <Steps :title="$t('components.steps.personal_data')" step="01">
+        <Steps
+          :title="$t('components.steps.personal_data')"
+          step="01"
+          v-if="
+            currentStep === 0 || (isMobile && currentStep == 0) || !isMobile
+          "
+        >
           <template #end-line>
             <LocaleSelect />
           </template>
@@ -223,7 +229,11 @@ function closeModal() {
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          v-if="checkout.showAddressStep()"
+          v-if="
+            (checkout.showAddressStep() && currentStep === 1) ||
+            (isMobile && currentStep == 1) ||
+            !isMobile
+          "
         >
           <template #content>
             <FormAddress />
@@ -258,6 +268,9 @@ function closeModal() {
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep() ? '03' : '02'"
+          v-if="
+            currentStep === 2 || (isMobile && currentStep == 2) || !isMobile
+          "
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
@@ -297,7 +310,7 @@ function closeModal() {
         <BaseButton
           class="mt-10"
           @click="payment.payment(locale)"
-          v-if="method !== 'PAYPAL'"
+          v-if="method !== 'PAYPAL' && !isMobile"
         >
           <span class="text-[15px] font-semibold">
             {{
