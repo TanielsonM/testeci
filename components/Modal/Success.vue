@@ -23,7 +23,6 @@ const data = ref({
   chc: "",
 });
 
-
 if (!!saleId && !route.query.chc) {
   await checkoutStore.getSale(saleId);
   const sale: Sale = sales.value as Sale;
@@ -74,7 +73,7 @@ if (!!saleId && !route.query.chc) {
   if (!!saleId) {
     await checkoutStore.getSale(saleId);
     const sale: Sale = sales.value as Sale;
-    data.value.productOffer.data.amount = sale.sales[0].amount;
+    data.value.productOffer.data.total = sale.sales[0].total;
     data.value.chc = sale.sales[0].id.toString();
   }
 
@@ -106,7 +105,7 @@ if (!!saleId && !route.query.chc) {
         :url="sale.boleto_url"
         :id="sale.id.toString()"
         :installments="sale?.installments"
-        :amount="formatMoney(sale.amount)"
+        :amount="formatMoney(sale.total)"
         :last="i + 1 == data.sale.sales.length"
         :index="i"
         :name="sale.product.name"
@@ -139,7 +138,7 @@ if (!!saleId && !route.query.chc) {
         :code="data.sale?.order.qrcode"
         :url="data.sale?.order.imgQrcode"
         :id="data.sale?.order.id.toString()"
-        :amount="formatMoney(data.sale?.order.amount)"
+        :amount="formatMoney(data.sale?.order.total)"
         :only-buttons="true"
         :sales-length="1"
         :created-at="data.sale?.order.created_at.toString()"
@@ -154,7 +153,7 @@ if (!!saleId && !route.query.chc) {
           :code="sale.qrcode"
           :url="sale.imgQrcode"
           :id="sale.id.toString()"
-          :amount="formatMoney(sale.amount)"
+          :amount="formatMoney(sale.total)"
           :last="i + 1 == data.sale.sales.length"
           :only-buttons="data.sale.sales.length == 1"
           :sales-length="data.sale.sales.length"
@@ -197,7 +196,7 @@ if (!!saleId && !route.query.chc) {
     <div class="container">
       <ModalTrialInfos
         :name="data.productOffer.data.name"
-        :amount="formatMoney(data.productOffer.data.amount)"
+        :amount="formatMoney(data.productOffer.data.total)"
         :shipping-amount="
           data.productOffer.data.has_shipping_fee ??
           formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
@@ -228,8 +227,8 @@ if (!!saleId && !route.query.chc) {
         :method="checkoutStore.method"
         :amount="data.productOffer.data.total"
         :original_amount="amountStore.getOriginalAmount"
-        :sale_id="saleId"
-        :chc_id="chc"
+        :sale_id="parseInt(saleId!.toString())"
+        :chc_id="parseInt(data.chc)"
       />
     </ClientOnly>
   </div>
