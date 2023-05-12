@@ -337,6 +337,7 @@
         "number": "El número de tarjeta no es válido",
         "holder_name": "nome do titular é obrigatório",
         "month": "se requiere mes",
+        "year": "se requiere ano",
         "cvv": "se requiere cvv"
       }
     }
