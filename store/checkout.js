@@ -69,6 +69,8 @@ export const useCheckoutStore = defineStore("checkout", {
     bump_list: [],
     /* Payment details */
     checkoutPayment: null,
+    // Captcha
+    captcha_code: "",
 
     sales: {},
     productOffer: {},
@@ -101,7 +103,7 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Global settings
      */
-    captcha: (state) => state.global_settings.captcha,
+    captchaEnabled: (state) => state.global_settings.captcha,
     antifraud: (state) => state.global_settings.antifraud,
     monthly_interest: (state) => state.global_settings.monthly_interest,
     selectedCountry: (state) => state.global_settings.country,

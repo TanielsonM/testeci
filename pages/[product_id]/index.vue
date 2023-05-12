@@ -6,6 +6,7 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
+import { useReCaptcha } from "vue-recaptcha-v3";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -16,17 +17,22 @@ const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const amountStore = useAmountStore();
 
-/* Variables */
+// Recaptcha
+const recaptchaInstance = useReCaptcha();
+
+// Variables
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { method, allowed_methods } = storeToRefs(checkout);
+const { method, allowed_methods, captchaEnabled, captcha_code } =
+  storeToRefs(checkout);
 const { currentStep, isMobile } = storeToRefs(stepsStore);
 const { error_message } = storeToRefs(payment);
 
 // Refs
 const alert_modal = ref(false);
 
+// Computeds
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
     switch (item) {
@@ -142,8 +148,6 @@ const tabs = computed(() => {
   });
 });
 
-await checkout.init();
-
 const handleResize = () => {
   stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
 };
@@ -157,6 +161,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 });
 
+// Watch`s
 watch(method, (method) => {
   checkout.setMethod(method);
 });
@@ -180,10 +185,23 @@ watch(sameAddress, (val) => {
   );
 });
 
+// Functions
 function closeModal() {
   alert_modal.value = false;
   error_message.value = "";
 }
+
+async function callPayment() {
+  if (captchaEnabled.value) {
+    // optional you can await for the reCaptcha load
+    await recaptchaInstance?.recaptchaLoaded();
+    // get the token, a custom action could be added as argument to the method
+    captcha_code.value = await recaptchaInstance?.executeRecaptcha("submit");
+  }
+  payment.payment(locale.value);
+}
+
+await checkout.init();
 </script>
 
 <template>
@@ -192,7 +210,9 @@ function closeModal() {
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>
-    <section class="flex w-full max-w-[520px] lg:max-w-[780px] flex-col gap-10 xl:min-w-[780px]">
+    <section
+      class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]"
+    >
       <!-- Purchase card -->
       <BaseCard
         class="w-full p-5 md:px-[60px] md:py-[50px]"
@@ -294,18 +314,28 @@ function closeModal() {
           </span>
         </BaseButton>
 
-        <BaseButton
-          class="mt-10"
-          @click="payment.payment(locale)"
-          v-if="method !== 'PAYPAL'"
-        >
-          <span class="text-[15px] font-semibold">
-            {{
-              customCheckoutStore.purchase_text ||
-              $t("checkout.footer.btn_compra")
-            }}
-          </span>
-        </BaseButton>
+        <!-- Payment button -->
+        <section>
+          <BaseButton @click="callPayment" v-if="method !== 'PAYPAL'">
+            <span class="text-[15px] font-semibold">
+              {{
+                customCheckoutStore.purchase_text ||
+                $t("checkout.footer.btn_compra")
+              }}
+            </span>
+          </BaseButton>
+          <small v-if="captchaEnabled">
+            {{ $t("checkout.captcha") }}
+            <a href="https://policies.google.com/privacy"
+              >{{ $t("checkout.captcha2") }}
+            </a>
+            {{ $t("checkout.captcha4") }}
+            <a href="https://policies.google.com/terms">{{
+              $t("checkout.captcha3")
+            }}</a>
+            {{ $t("checkout.captcha5") }}.
+          </small>
+        </section>
 
         <span class="flex items-center gap-3">
           <Icon name="fa6-solid:lock" class="text-main-color" />
