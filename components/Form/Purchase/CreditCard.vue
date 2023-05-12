@@ -92,12 +92,6 @@ function syncVerification(from) {
 
 function flipCard(value) {
   isCardBack.value = value;
-
-  if (value) {
-    creditCard.style.transform = "rotateY(180deg)";
-  } else {
-    creditCard.style.transform = "rotateY(0deg)";
-  }
 }
 
 function verifyCard(from) {
