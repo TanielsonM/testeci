@@ -222,7 +222,7 @@ await checkout.init();
           color="transparent"
           size="sm"
           v-if="currentStep > 1 && currentStep <= 3 && isMobile"
-          @click="stepsStore.setStep(currentStep - 1)"
+          @click="stepsStore.back()"
         >
           <div class="flex items-start justify-start text-left">
             <Icon name="mdi:arrow-left" class="mr-4" size="20" />
@@ -230,7 +230,11 @@ await checkout.init();
           </div>
         </BaseButton>
         <!-- Personal form -->
-        <Steps :title="$t('components.steps.personal_data')" step="01">
+        <Steps
+          :title="$t('components.steps.personal_data')"
+          step="01"
+          v-if="(isMobile && currentStep == 1) || !isMobile"
+        >
           <template #end-line>
             <LocaleSelect />
           </template>
@@ -243,7 +247,10 @@ await checkout.init();
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          v-if="checkout.showAddressStep()"
+          v-if="
+            checkout.showAddressStep() &&
+            ((isMobile && currentStep == 2) || !isMobile)
+          "
         >
           <template #content>
             <FormAddress />
@@ -278,6 +285,10 @@ await checkout.init();
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep() ? '03' : '02'"
+          v-if="
+            (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)) ||
+            !isMobile
+          "
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
@@ -307,16 +318,17 @@ await checkout.init();
         <BaseButton
           class="mt-10"
           @click="stepsStore.setStep(currentStep + 1)"
-          v-if="isMobile"
+          v-if="isMobile && currentStep < (checkout.showAddressStep() ? 3 : 2)"
         >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>
         </BaseButton>
-
         <!-- Payment button -->
         <section>
-          <BaseButton @click="callPayment" v-if="method !== 'PAYPAL'">
+          <BaseButton @click="callPayment" v-if="method !== 'PAYPAL' &&
+            (!isMobile ||
+              (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)))">
             <span class="text-[15px] font-semibold">
               {{
                 customCheckoutStore.purchase_text ||

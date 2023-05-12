@@ -97,8 +97,8 @@ const emit = defineEmits([
   "input",
 ]);
 
-const onInput = (event: any, phone: any) => {
-  emit("update:modelValue", phone.number);
+const onInput = (event: any) => {
+  emit("update:modelValue", event);
 };
 
 function validatePhone(phoneObject: object | any) {
@@ -107,6 +107,10 @@ function validatePhone(phoneObject: object | any) {
   }
   isValid = !!phoneObject.valid;
 }
+
+onMounted(() => {
+  cellphone.value = props.modelValue.toString();
+});
 </script>
 
 <template>

@@ -2,12 +2,23 @@
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
+import { usePaymentStore } from "@/store/modules/payment";
+
+import {
+  validateName,
+  validateEmail,
+  validatePhone,
+  validateDocument,
+} from "@/rules/form-validations";
 
 /* Variables */
 const leadsStore = useLeadsStore();
 const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
+const payment = usePaymentStore();
+
+const { hasSent } = storeToRefs(payment);
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
@@ -49,8 +60,8 @@ const documentText = computed(() => {
   }
 });
 
-const { name, email, cellphone, document } = storeToRefs(personalStore);
-const confirmation_mail = ref("");
+const { name, email, cellphone, document, confirmEmail } =
+  storeToRefs(personalStore);
 
 watch([name, email, cellphone, document], (value) => {
   leadsStore.syncPersonal();
@@ -73,7 +84,7 @@ function updateLead() {
       input-name="name-field"
       input-id="name-field"
       v-model="name"
-      rules="required|min:5"
+      :error="name || hasSent ? !validateName.isValidSync(name) : undefined"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
@@ -88,7 +99,7 @@ function updateLead() {
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      rules="required|email"
+      :error="email || hasSent ? !validateEmail.isValidSync(email) : undefined"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}
@@ -104,9 +115,9 @@ function updateLead() {
       :autocomplete="false"
       input-name="confirmation_mail-field"
       input-id="confirmation_mail-field"
-      v-model="confirmation_mail"
-      rules="required|email|confirmed:@email-field"
+      v-model="confirmEmail"
       v-if="custom_checkout.hasConfirmationEmail"
+      :error="confirmEmail || hasSent ? !(confirmEmail === email) : undefined"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.confirmation_email") }}
@@ -122,8 +133,10 @@ function updateLead() {
       input-name="cellphone-field"
       input-id="cellphone-field"
       v-model="cellphone"
-      rules="required|min:8"
       type="tel"
+      :error="
+        cellphone || hasSent ? !validatePhone.isValidSync(cellphone) : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
@@ -141,7 +154,11 @@ function updateLead() {
       input-id="document-field"
       v-model="document"
       :mask="documentText.documentMask"
-      rules="required|document"
+      :error="
+        document || hasSent
+          ? !validateDocument.isValidSync(document)
+          : undefined
+      "
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.document") }}
