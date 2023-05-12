@@ -1,10 +1,11 @@
 import * as yup from "yup";
 
 // Stores
+import { useStepStore } from "@/store/modules/steps";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
-import { useCheckoutStore } from "~~/store/checkout";
+import { useCheckoutStore } from "@/store/checkout";
 
 const personalStore = usePersonalStore();
 const { email } = storeToRefs(personalStore);
@@ -33,12 +34,18 @@ export const validateExpiryYear = yup.string().min(4).max(4).required();
 export const validateFirstStep = (): boolean => {
   const { name, document, cellphone } = storeToRefs(personalStore);
 
+  const stepStore = useStepStore();
+  const { isMobile } = storeToRefs(stepStore);
+
   const validName = validateName.isValidSync(name.value);
   const validEmail = validateEmail.isValidSync(email.value);
   const validPhone = validatePhone.isValidSync(cellphone.value);
-  const validDocument = validateDocument.isValidSync(document.value);
+  if (!isMobile) {
+    const validDocument = validateDocument.isValidSync(document.value);
+    return validName && validEmail && validPhone && validDocument;
+  }
 
-  return validName && validEmail && validPhone && validDocument;
+  return validName && validEmail && validPhone;
 };
 
 export const validateSecondStep = async (): Promise<boolean> => {
@@ -82,21 +89,25 @@ export const validateSecondStep = async (): Promise<boolean> => {
       validChargeNeighborhood &&
       validChargeState
     );
-  } else {
-    return (
-      validZip &&
-      validStreet &&
-      validNumber &&
-      validCity &&
-      validNeighborhood &&
-      validState
-    );
   }
+
+  return (
+    validZip &&
+    validStreet &&
+    validNumber &&
+    validCity &&
+    validNeighborhood &&
+    validState
+  );
 };
 
 export const validateThristStep = async (): Promise<boolean> => {
   const purchaseStore = usePurchaseStore();
   const { first, second } = storeToRefs(purchaseStore);
+  const { document } = storeToRefs(personalStore);
+
+  const stepStore = useStepStore();
+  const { isMobile } = storeToRefs(stepStore);
 
   const validNameOnCard = await validateNameOnCard.isValid(
     first.value.holder_name
@@ -123,6 +134,23 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
     const validCvcSecond = await validateCvc.isValid(second.value.cvv);
 
+    if (!isMobile) {
+      const validDocument = validateDocument.isValidSync(document.value);
+      return (
+        validNameOnCard &&
+        validCardNumber &&
+        validExpiryMonth &&
+        validExpiryYear &&
+        validExpiryMonthSecond &&
+        validExpiryYearSecond &&
+        validCvcSecond &&
+        validCvc &&
+        validNameOnCardSecond &&
+        validCardNumberSecond &&
+        validDocument
+      );
+    }
+
     return (
       validNameOnCard &&
       validCardNumber &&
@@ -134,6 +162,18 @@ export const validateThristStep = async (): Promise<boolean> => {
       validCvc &&
       validNameOnCardSecond &&
       validCardNumberSecond
+    );
+  }
+
+  if (!isMobile) {
+    const validDocument = validateDocument.isValidSync(document.value);
+    return (
+      validNameOnCard &&
+      validCardNumber &&
+      validExpiryMonth &&
+      validExpiryYear &&
+      validCvc &&
+      validDocument
     );
   }
 

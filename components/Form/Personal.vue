@@ -3,13 +3,14 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
 import { usePaymentStore } from "@/store/modules/payment";
+import { useStepStore } from "@/store/modules/steps";
 
 import {
   validateName,
   validateEmail,
   validatePhone,
   validateDocument,
-  phoneValidation
+  phoneValidation,
 } from "@/rules/form-validations";
 
 /* Variables */
@@ -18,8 +19,10 @@ const personalStore = usePersonalStore();
 const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
 const payment = usePaymentStore();
+const stepStore = useStepStore();
 
 const { hasSent } = storeToRefs(payment);
+const { isMobile } = storeToRefs(stepStore);
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
@@ -141,14 +144,13 @@ function updateLead() {
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
       </template>
     </BasePhone>
-
     <BaseInput
       class="col-span-12"
       @blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
-      v-if="showDocumentInput"
+      v-if="showDocumentInput && !isMobile"
       input-name="document-field"
       input-id="document-field"
       v-model="document"
