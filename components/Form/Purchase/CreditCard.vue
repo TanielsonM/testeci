@@ -315,6 +315,7 @@ watch(installments, () => {
         input-id="first-cvv-field"
         @click="flipCard(true)"
         @blur="flipCard(false)"
+        @focus="flipCard(true)"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.cvv") }}
