@@ -78,10 +78,9 @@ function getImg(type) {
 </script>
 
 <template>
-  <section class="flip-card" :class="{ active: flip_card }">
+  <section class="flip-card max-w-[400px]" :class="{ 'show-back': flip_card }">
     <section class="flip-card-inner">
       <section
-        v-if="!flip_card"
         class="flip-card-front card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5"
       >
         <header class="flex h-10 w-full justify-end">
@@ -100,13 +99,13 @@ function getImg(type) {
           :label="$t('checkout.pagamento.metodos.um_cartao.card.numero')"
         >
           <p class="w-full text-txt-color" v-if="getCardType === 'amex'"></p>
-          <span v-else class="flex w-full text-txt-color">
+          <span v-else class="flex w-full text-txt-color font-semibold">
             <p
               v-for="(n, index) in defaultCardMask.replaceAll(' ', '').length"
               :key="index"
             >
               <Transition name="slide-fade-up" mode="out-in">
-                <span class="min-w-2">
+                <span class="min-w-2" :class="{ 'pr-3': n % 4 === 0 }">
                   {{
                     n < 5 || n > 12
                       ? card_number.replaceAll(" ", "")[index]
@@ -114,7 +113,6 @@ function getImg(type) {
                         : "*"
                       : "*"
                   }}
-                  <span class="block w-5" v-if="n % 4 === 0" />
                 </span>
               </Transition>
             </p>
@@ -146,17 +144,17 @@ function getImg(type) {
           >
             <Transition name="slide-fade-up" mode="out-in">
               <span
-                class="text-txt-color"
+                class="text-txt-color font-semibold"
                 v-if="card_month"
                 v-bind:key="card_month"
                 >{{ card_month }}</span
               >
               <span class="text-txt-color" v-else key="2">••</span>
             </Transition>
-            <span class="text-txt-color">/</span>
+            <span class="text-txt-color font-semibold">/</span>
             <Transition name="slide-fade-up" mode="out-in">
               <span
-                class="text-txt-color"
+                class="text-txt-color font-semibold"
                 v-if="card_year"
                 v-bind:key="card_year"
                 >{{ String(card_year).slice(2, 4) }}</span
@@ -168,7 +166,6 @@ function getImg(type) {
       </section>
       <section
         class="flip-card-back card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5 pt-8"
-        v-if="flip_card"
       >
         <span class="card-target card-target-size"></span>
 
@@ -178,10 +175,10 @@ function getImg(type) {
           :isBack="true"
         >
           <Transition name="slide-fade-up" mode="out-in">
-            <span class="text-txt-color" v-if="card_cvv" v-bind:key="card_cvv">
+            <span class="text-txt-color font-semibold" v-if="card_cvv" v-bind:key="card_cvv">
               {{ String(card_cvv).slice(0, 3) }}
             </span>
-            <span class="text-txt-color" v-else key="3">•••</span>
+            <span class="text-txt-color font-semibold" v-else key="3">•••</span>
           </Transition>
         </CreditCardLabel>
 
@@ -216,7 +213,7 @@ function getImg(type) {
   transform-style: preserve-3d;
 }
 
-.flip-card.active .flip-card-inner {
+.flip-card.show-back .flip-card-inner {
   transform: rotateY(180deg);
 }
 
