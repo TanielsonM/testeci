@@ -9,6 +9,7 @@ import {
   validateEmail,
   validatePhone,
   validateDocument,
+  phoneValidation
 } from "@/rules/form-validations";
 
 /* Variables */
@@ -134,9 +135,7 @@ function updateLead() {
       input-id="cellphone-field"
       v-model="cellphone"
       type="tel"
-      :error="
-        cellphone || hasSent ? !validatePhone.isValidSync(cellphone) : undefined
-      "
+      :error="cellphone || hasSent ? !phoneValidation() : undefined"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
