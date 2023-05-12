@@ -27,7 +27,8 @@ const {
   product_id,
   product_offer,
   uuid,
-  captcha,
+  captchaEnabled,
+  captcha_code,
   selectedCountry,
   hasPhysicalProduct,
   product_list,
@@ -98,7 +99,6 @@ export const usePaymentStore = defineStore("Payment", {
         cellphone: cellphone.value,
         document: document.value,
         uuid: uuid.value,
-        captcha: captcha.value,
         country_code: selectedCountry.value,
         // client_statistic: products_client_statistics.value,
         // Address
@@ -116,6 +116,10 @@ export const usePaymentStore = defineStore("Payment", {
         language,
         upsell_id: hasUpsell.value,
       };
+
+      if (captchaEnabled.value) {
+        data.captcha = captcha_code.value;
+      }
 
       if (method.value === "PAYPAL") {
         data.paypal = paypal;
