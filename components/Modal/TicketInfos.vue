@@ -72,19 +72,19 @@ const copy = (id: string) => {
 </script>
 <template>
   <div v-if="!onlyCode">
-    <h6 class="subtitle" v-if="index == 0">
-      {{ $t("pg_obrigado.modal.agradecemos") }}
-    </h6>
-    <p class="paragraph" v-if="index == 0">
-      {{ $t("pg_obrigado.modal.vc_adquiriu") }}
-      {{ name ?? "produto" }}
+    <h6 class="subtitle" v-if="index === 0">{{ $t("pg_obrigado.modal.prazo_pagar") }}</h6>
+    <p class="paragraph" v-if="index === 0">
+      {{ $t("pg_obrigado.modal.internet_banking") }}
     </p>
-    <p class="paragraph" v-if="index == 0">
-      {{ $t("pg_obrigado.modal.detalhes_email") }}
+    <p class="paragraph" v-if="index === 0">
+      {{ $t("pg_obrigado.modal.recebe_email") }}
+    </p>
+    <p class="paragraph" v-if="index === 0">
+      {{ $t("pg_obrigado.modal.compensacao") }}
     </p>
     <p class="paragraph" v-if="!!installments && installments > 1">
-        ✨ {{ $t("pg_obrigado.modal.compra_parcelada") }} {{ installments }}x
-      </p>
+      ✨ {{ $t("pg_obrigado.modal.compra_parcelada") }} {{ installments }}x
+    </p>
     <div class="details py-5">
       <h6 class="title" v-if="index == 0">
         {{ $t("pg_obrigado.modal.detalhes_compra") }}
