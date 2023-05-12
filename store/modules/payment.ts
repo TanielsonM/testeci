@@ -315,6 +315,13 @@ export const usePaymentStore = defineStore("Payment", {
 
             return;
           }
+          if (
+            Array.isArray(res?.sales) &&
+            res.sales.some((item: SaleElement) => !item.success)
+          ) {
+            this.validateError(res?.sales[0]);
+            return;
+          }
           if (res.status === "error" && !res.sales?.success) {
             this.validateError(res);
             return;
