@@ -40,6 +40,7 @@ export default defineNuxtConfig({
   },
   plugins: [
     "~/plugins/maska.ts",
+    "~/plugins/captcha.ts",
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
@@ -69,6 +70,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.API_HOST,
       API_BASE_URL: process.env.API_HOST,
+      RECAPTCHA_KEY: process.env.VUE_KEY_CAPTCHA,
       CHECKOUT_PAGE: process.env.VUE_CHECKOUT_PAGE,
       HEAVEN_CHECKOUT_PAGE: process.env.VUE_CHECKOUT_HEAVEN_PAGE,
       PAYPAL_CLIENT_ID_NATIONAL: process.env.PAYPAL_CLIENT_ID_NATIONAL,
