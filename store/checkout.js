@@ -584,8 +584,12 @@ export const useCheckoutStore = defineStore("checkout", {
     async getSale(id) {
       if (!!id) {
         try {
-          const sales = await useApi().read(`/sale-checkout/${id}`);
-          if (!!sales) this.sales = sales;
+          return await useApi()
+            .read(`/sale-checkout/${id}`)
+            .then((res) => {
+              if (!!res) this.sales = res;
+              return res;
+            });
         } catch (error) {
           this.setError(error.message);
           throw error;

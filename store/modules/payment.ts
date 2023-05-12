@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, Sale } from "~~/types";
 
 // Stores
 import { usePersonalStore } from "../forms/personal";
@@ -40,6 +40,7 @@ const {
   ticket_installments,
 } = storeToRefs(checkoutStore);
 const {
+  productName,
   is_gift,
   gift_message,
   isFixedShipping,
@@ -250,10 +251,16 @@ export const usePaymentStore = defineStore("Payment", {
               product_id: product_id.value,
             });
             const query: any = {};
+            const principal_product = res.sales
+              .filter(
+                (item: SaleElement) => item.product.name === productName.value
+              )
+              .pop();
+            console.log(principal_product);
             // Set principal product query
-            if (res.sales[0]?.chc) query.chc = res.sales[0].chc;
-            if (res.sales[0]?.token) query.token = res.sales[0].token;
-            if (res.sales[0]?.sale_id) {
+            if (principal_product?.chc) query.chc = principal_product.chc;
+            if (principal_product?.token) query.token = principal_product.token;
+            if (principal_product?.sale_id) {
               delete query.chc;
               delete query.token;
               query.s_id = res.sales[0].sale_id;

@@ -1,29 +1,15 @@
 <script setup lang="ts">
-defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-  id: {
-    type: String,
-    default: "",
-    required: true,
-  },
-  amount: {
-    type: String,
-    default: "",
-    required: true,
-  },
-  shippingAmount: {
-    type: String,
-    default: null,
-    required: false,
-  },
-  installments: {
-    type: Number,
-    required: false,
-  },
-});
+import { SaleElement } from "@/types";
+import { formatMoney } from "@/utils/money";
+
+interface InfosProps {
+  name: string;
+  id: string | number;
+  installments: number;
+  sales: SaleElement[];
+}
+
+defineProps<InfosProps>();
 </script>
 <template>
   <h6 class="subtitle">
@@ -36,32 +22,38 @@ defineProps({
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.detalhes_email") }}
   </p>
-  <p class="paragraph py-4" v-if="!!installments && installments > 1">
+  <p class="paragraph py-2" v-if="!!installments && installments > 1">
     ✨ {{ $t("pg_obrigado.modal.compra_parcelada") }} {{ installments }}x
   </p>
-  <div class="details">
+  <section class="details">
     <h6 class="title">
       {{ $t("pg_obrigado.modal.detalhes_compra") }}
     </h6>
-    <div class="item">
-      <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
-      <p>#{{ id }}</p>
-    </div>
-    <div class="item">
-      <div class="flex items-start">
-        <div class="check-icon icon-success"></div>
-        <div class="transaction">
-          <p>{{ name }}</p>
-          <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
-        </div>
-      </div>
-      <p>{{ amount }}</p>
-    </div>
-    <div class="item" v-if="!!shippingAmount">
-      <p>{{ $t("pg_obrigado.modal.frete") }}</p>
-      <p>{{ shippingAmount }}</p>
-    </div>
-  </div>
+    <section v-for="(sale, index) in sales" :key="index">
+      <template class="item">
+        <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
+        <p>#{{ sale.id }}</p>
+      </template>
+      <template class="item">
+        <section class="flex items-start">
+          <section class="check-icon icon-success"></section>
+          <section class="transaction">
+            <p>{{ sale.product.name }}</p>
+            <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
+          </section>
+        </section>
+        <p>{{ formatMoney(sale.amount) }}</p>
+      </template>
+      <section class="item" v-if="!!sale.shipping_amount">
+        <p>{{ $t("pg_obrigado.modal.frete") }}</p>
+        <p>{{ formatMoney(sale.shipping_amount) }}</p>
+      </section>
+      <span
+        class="my-5 block h-[1px] w-full bg-slate-300"
+        v-if="index + 1 !== sales.length"
+      ></span>
+    </section>
+  </section>
 </template>
 <style lang="scss">
 .check-icon {

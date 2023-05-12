@@ -14,13 +14,6 @@ const route = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
 
-defineProps({
-  type: {
-    type: String,
-    default: "ticket",
-  },
-});
-
 const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
@@ -179,10 +172,9 @@ if (!!route.query.s_id && !route.query.chc) {
     >
       <ModalCardInfos
         :id="data.sale.sales[0].id.toString()"
-        :amount="formatMoney(data.sale.sales[0].amount)"
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
-        :shipping-amount="formatMoney(data.sale.sales[0].shipping_amount)"
+        :sales="data.sale.sales"
       />
 
       <div class="actions mt-12 flex content-end justify-end">

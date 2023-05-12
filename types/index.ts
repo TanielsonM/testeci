@@ -457,6 +457,9 @@ export type SaleElement = {
   upsell: any;
   local_currency: SaleLocalCurrency;
   success: boolean;
+  chc?: string;
+  token?: string;
+  sale_id?: string | number;
 };
 
 export type SaleLocalCurrency = {
