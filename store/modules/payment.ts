@@ -107,7 +107,7 @@ export const usePaymentStore = defineStore("Payment", {
         // User details
         name: name.value,
         email: email.value,
-        cellphone: cellphone.value,
+        cellphone: cellphone.value.replace(/[^\d+]/g, ""),
         document: document.value,
         uuid: uuid.value,
         country_code: selectedCountry.value,
@@ -313,6 +313,13 @@ export const usePaymentStore = defineStore("Payment", {
               query,
             });
 
+            return;
+          }
+          if (
+            Array.isArray(res?.sales) &&
+            res.sales.some((item: SaleElement) => !item.success)
+          ) {
+            this.validateError(res?.sales[0]);
             return;
           }
           if (res.status === "error" && !res.sales?.success) {

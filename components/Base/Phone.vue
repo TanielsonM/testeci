@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { VueTelInput } from "vue-tel-input";
+import { usePersonalStore } from "@/store/forms/personal";
+import { phoneValidation } from "@/rules/form-validations";
+
 import "vue-tel-input/vue-tel-input.css";
 
 const props = defineProps({
@@ -69,6 +72,9 @@ const props = defineProps({
   },
 });
 
+const personalStore = usePersonalStore();
+const { validPhone } = storeToRefs(personalStore);
+
 let cellphone = ref("");
 let isValid = true;
 const { t } = useI18n();
@@ -106,6 +112,7 @@ function validatePhone(phoneObject: object | any) {
     return;
   }
   isValid = !!phoneObject.valid;
+  validPhone.value = !!phoneObject.valid;
 }
 
 onMounted(() => {
@@ -141,7 +148,7 @@ onMounted(() => {
     </section>
 
     <small data-anima="top" v-if="isValid">{{ hint }}</small>
-    <small class="text-red-400" v-if="!isValid">
+    <small class="text-red-400" v-if="!isValid || error">
       <slot name="error">
         {{ error }}
       </slot>

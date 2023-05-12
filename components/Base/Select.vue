@@ -74,7 +74,7 @@ const onChange = (event) => {
   >
     {{ label }}
     <select
-      class="flex h-full w-full items-center rounded border border-bd-color bg-checkout p-4 font-medium outline-none transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
+      class="flex h-full max-h-[54.8px] w-full items-center rounded border border-bd-color bg-checkout p-4 font-medium outline-none transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
       :class="customClass"
       :disabled="disabled"
       :value="modelValue"
@@ -91,7 +91,7 @@ const onChange = (event) => {
       </slot>
     </select>
     <small data-anima="top" v-if="!error">{{ hint }}</small>
-    <small class="text-red-400" v-if="error">
+    <small class="font-normal text-red-400" v-if="error">
       <slot name="error">
         {{ error }}
       </slot>
