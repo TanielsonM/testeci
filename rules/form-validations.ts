@@ -12,7 +12,10 @@ const { email } = storeToRefs(personalStore);
 export const validateName = yup.string().min(4).required();
 export const validateEmail = yup.string().email().required();
 export const validatePhone = yup.string().min(8).required();
-export const validateDocument = yup.string().required();
+export const validateDocument = yup
+  .string()
+  .test("cpfCnpj", "", (value) => validateCpfCnpj(value))
+  .required();
 
 export const validateZip = yup.string().min(5).required();
 export const validateStreet = yup.string().min(4).required();
@@ -154,4 +157,65 @@ export const validateAll = async (): Promise<boolean> => {
   }
 
   return validStepOne && validStepThree;
+};
+
+const validateCpfCnpj = (value: any) => {
+  if (!value) return false;
+
+  const cleanValue = value.replace(/[^\d]/g, "");
+  if (!cleanValue) return false;
+
+  if (cleanValue.length === 11) {
+    let sum = 0;
+    let remainder;
+
+    if (cleanValue === "00000000000") return false;
+
+    for (let i = 1; i <= 9; i++) {
+      sum += Number(cleanValue.charAt(i - 1)) * (11 - i);
+    }
+
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== Number(cleanValue.charAt(9))) return false;
+
+    sum = 0;
+    for (let i = 1; i <= 10; i++) {
+      sum += Number(cleanValue.charAt(i - 1)) * (12 - i);
+    }
+
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== Number(cleanValue.charAt(10))) return false;
+  } else if (cleanValue.length === 14) {
+    let sum = 0;
+    let position = 5;
+    let remainder;
+
+    if (cleanValue === "00000000000000") return false;
+
+    for (let i = 0; i < 12; i++) {
+      sum += Number(cleanValue.charAt(i)) * position;
+      position = position === 2 ? 9 : position - 1;
+    }
+
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== Number(cleanValue.charAt(12))) return false;
+
+    sum = 0;
+    position = 6;
+    for (let i = 0; i < 13; i++) {
+      sum += Number(cleanValue.charAt(i)) * position;
+      position = position === 2 ? 9 : position - 1;
+    }
+
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== Number(cleanValue.charAt(13))) return false;
+  } else {
+    return false;
+  }
+
+  return true;
 };

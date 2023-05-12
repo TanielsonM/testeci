@@ -91,7 +91,7 @@ const onChange = (event) => {
       </slot>
     </select>
     <small data-anima="top" v-if="!error">{{ hint }}</small>
-    <small class="text-red-400" v-if="error">
+    <small class="font-normal text-red-400" v-if="error">
       <slot name="error">
         {{ error }}
       </slot>
