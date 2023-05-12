@@ -32,6 +32,11 @@ const props = defineProps({
     required: false,
     default: () => false,
   },
+  on_focus: {
+    type: String,
+    required: false,
+    default: () => null,
+  },
 });
 
 // Variables
@@ -96,10 +101,11 @@ function getImg(type) {
         </header>
 
         <CreditCardLabel
+          :class="{ 'on-focus': on_focus === 'number' }"
           :label="$t('checkout.pagamento.metodos.um_cartao.card.numero')"
         >
           <p class="w-full text-txt-color" v-if="getCardType === 'amex'"></p>
-          <span v-else class="flex w-full text-txt-color font-semibold">
+          <span v-else class="flex w-full font-semibold text-txt-color">
             <p
               v-for="(n, index) in defaultCardMask.replaceAll(' ', '').length"
               :key="index"
@@ -120,6 +126,7 @@ function getImg(type) {
         </CreditCardLabel>
         <section class="flex w-full items-center justify-between">
           <CreditCardLabel
+            :class="{ 'on-focus': on_focus === 'name' }"
             :label="$t('checkout.pagamento.metodos.um_cartao.card.nome')"
           >
             <Transition name="slide-fade-up" mode="out-in">
@@ -144,17 +151,17 @@ function getImg(type) {
           >
             <Transition name="slide-fade-up" mode="out-in">
               <span
-                class="text-txt-color font-semibold"
+                class="font-semibold text-txt-color"
                 v-if="card_month"
                 v-bind:key="card_month"
                 >{{ card_month }}</span
               >
               <span class="text-txt-color" v-else key="2">••</span>
             </Transition>
-            <span class="text-txt-color font-semibold">/</span>
+            <span class="font-semibold text-txt-color">/</span>
             <Transition name="slide-fade-up" mode="out-in">
               <span
-                class="text-txt-color font-semibold"
+                class="font-semibold text-txt-color"
                 v-if="card_year"
                 v-bind:key="card_year"
                 >{{ String(card_year).slice(2, 4) }}</span
@@ -170,15 +177,20 @@ function getImg(type) {
         <span class="card-target card-target-size"></span>
 
         <CreditCardLabel
+          :class="{ 'on-focus': on_focus === 'cvv' }"
           class="cvv-position mt-6"
           :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
           :isBack="true"
         >
           <Transition name="slide-fade-up" mode="out-in">
-            <span class="text-txt-color font-semibold" v-if="card_cvv" v-bind:key="card_cvv">
+            <span
+              class="font-semibold text-txt-color"
+              v-if="card_cvv"
+              v-bind:key="card_cvv"
+            >
               {{ String(card_cvv).slice(0, 3) }}
             </span>
-            <span class="text-txt-color font-semibold" v-else key="3">•••</span>
+            <span class="font-semibold text-txt-color" v-else key="3">•••</span>
           </Transition>
         </CreditCardLabel>
 
@@ -197,6 +209,11 @@ function getImg(type) {
 </template>
 
 <style lang="scss" scoped>
+.on-focus {
+  border: 1px solid #49ebbb;
+  border-radius: 6px;
+  padding: 7px;
+}
 .flip-card {
   background-color: transparent;
   width: 600px;

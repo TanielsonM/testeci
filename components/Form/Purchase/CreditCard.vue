@@ -95,14 +95,21 @@ const months = [
 const isCardValid = ref(true);
 const isCardBack = ref(false);
 const creditCard = ref(null);
+const isOnFocus = ref("");
 
 function syncVerification(from) {
   verifyCard(from);
   changeAmount(from);
+  onFocus("");
 }
 
 function flipCard(value) {
   isCardBack.value = value;
+  onFocus(value ? "cvv" : "");
+}
+
+function onFocus(value) {
+  isOnFocus.value = value;
 }
 
 function verifyCard(from) {
@@ -244,6 +251,7 @@ watch(installments, () => {
         class="col-span-12"
         rules="required"
         v-model="first.amount"
+        @click="onFocus('number')"
         @blur="syncVerification('first')"
         input-id="first-amount-field"
         @vnode-before-mount="formatAmount('first')"
@@ -258,6 +266,7 @@ watch(installments, () => {
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         mask="#### #### #### ####"
         class="col-span-12"
+        @click="onFocus('number')"
         @blur="syncVerification('first')"
         v-model="first.number"
         input-id="first-number-field"
@@ -277,6 +286,8 @@ watch(installments, () => {
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
         v-model="first.holder_name"
+        @click="onFocus('name')"
+        @blur="onFocus('')"
         input-id="first-holder_name-field"
         :error="
           first.holder_name || hasSent
@@ -467,6 +478,7 @@ watch(installments, () => {
       class="flip-class hidden md:block"
       ref="creditCard"
       data-anima="bottom"
+      :on_focus="isOnFocus"
       :flip_card="isCardBack"
       :card_cvv="first.cvv"
       :card_year="first.year"
