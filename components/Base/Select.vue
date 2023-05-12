@@ -69,12 +69,12 @@ const onChange = (event) => {
 <template>
   <label
     for="input"
-    class="text-txt-color flex w-full flex-col items-start gap-2 font-semibold"
+    class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
     :data-anima="animation"
   >
     {{ label }}
     <select
-      class="border-bd-color bg-checkout focus-within:border-main-color focus:border-main-color hover:border-main-color flex h-full w-full items-center rounded border p-4 font-medium outline-none transition-colors duration-300"
+      class="flex h-full w-full items-center rounded border border-bd-color bg-checkout p-4 font-medium outline-none transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
       :class="customClass"
       :disabled="disabled"
       :value="modelValue"
@@ -91,6 +91,10 @@ const onChange = (event) => {
       </slot>
     </select>
     <small data-anima="top" v-if="!error">{{ hint }}</small>
-    <small data-anima="right" class="text-red-400" v-else>{{ error }}</small>
+    <small class="text-red-400" v-if="error">
+      <slot name="error">
+        {{ error }}
+      </slot>
+    </small>
   </label>
 </template>
