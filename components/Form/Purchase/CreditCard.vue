@@ -92,14 +92,20 @@ const months = [
   { value: "12", label: "12" },
 ];
 
-let cardNumberError = ref(false);
+const isCardValid = ref(true);
+const isCardBack = ref(false);
+const creditCard = ref(null);
 
 function syncVerification(from) {
   verifyCard(from);
   changeAmount(from);
 }
 
-async function verifyCard(from) {
+function flipCard(value) {
+  isCardBack.value = value;
+}
+
+function verifyCard(from) {
   let cardNumber = String(
     from == "first"
       ? first.value.number.replace(/\s+/g, "")
@@ -124,7 +130,7 @@ async function verifyCard(from) {
 
   const result = sum % 10 == 0;
 
-  cardNumberError.value = !!result;
+  isCardValid.value = !!result;
 }
 
 function changeAmount(from) {
@@ -234,7 +240,7 @@ watch(installments, () => {
         v-if="method == 'TWO_CREDIT_CARDS'"
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        :error="!cardNumberError"
+        :error="!isCardValid"
         class="col-span-12"
         rules="required"
         v-model="first.amount"
@@ -323,13 +329,15 @@ watch(installments, () => {
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         mask="###"
-        rules="required"
         class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
         input-id="first-cvv-field"
         :error="
           first.cvv || hasSent ? !validateCvc.isValidSync(first.cvv) : undefined
         "
+        @click="flipCard(true)"
+        @blur="flipCard(false)"
+        @focus="flipCard(true)"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.cvv") }}
@@ -434,8 +442,6 @@ watch(installments, () => {
           {{ $t("checkout.cards.feedbacks.year") }}
         </template>
       </BaseSelect>
-
-      />
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
@@ -458,8 +464,10 @@ watch(installments, () => {
 
     <CreditCard
       v-if="method !== 'TWO_CREDIT_CARDS'"
-      class="hidden md:block"
+      class="flip-class hidden md:block"
+      ref="creditCard"
       data-anima="bottom"
+      :flip_card="isCardBack"
       :card_cvv="first.cvv"
       :card_year="first.year"
       :card_month="first.month"

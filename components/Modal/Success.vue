@@ -14,17 +14,11 @@ const route = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
 
-defineProps({
-  type: {
-    type: String,
-    default: "ticket",
-  },
-});
-
 const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
   bump: {} as Sale,
+  order: {} as any,
   chc: "",
 });
 
@@ -132,22 +126,41 @@ if (!!route.query.s_id && !route.query.chc) {
         </div>
       </div>
     </div>
-    <div class="container" v-if="data.sale.sales[0].method === 'PIX'">
+    <div
+      class="container"
+      v-if="
+        data.sale.sales[0].method === 'PIX' || data.sale?.order?.method === 'PIX'
+      "
+    >
       <ModalPixInfos
-        v-for="(sale, i) in data.sale.sales"
-        :key="i"
-        :name="sale.product.name"
-        :code="sale.qrcode"
-        :url="sale.imgQrcode"
-        :id="sale.id.toString()"
-        :amount="formatMoney(sale.amount)"
-        :last="i + 1 == data.sale.sales.length"
-        :only-buttons="data.sale.sales.length == 1"
-        :sales-length="data.sale.sales.length"
-        :created-at="sale.created_at.toString()"
-        :shipping-amount="formatMoney(sale.shipping_amount)"
-        :shipping-selected="sale.shipping_selected"
+        v-if="data.sale?.order"
+        :code="data.sale?.order.qrcode"
+        :url="data.sale?.order.imgQrcode"
+        :id="data.sale?.order.id.toString()"
+        :amount="formatMoney(data.sale?.order.amount)"
+        :only-buttons="true"
+        :sales-length="1"
+        :created-at="data.sale?.order.created_at.toString()"
+        :has-order="true"
+        :sales="data.sale.sales"
       />
+      <template v-else>
+        <ModalPixInfos
+          v-for="(sale, i) in data.sale.sales"
+          :key="i"
+          :name="sale.product.name"
+          :code="sale.qrcode"
+          :url="sale.imgQrcode"
+          :id="sale.id.toString()"
+          :amount="formatMoney(sale.amount)"
+          :last="i + 1 == data.sale.sales.length"
+          :only-buttons="data.sale.sales.length == 1"
+          :sales-length="data.sale.sales.length"
+          :created-at="sale.created_at.toString()"
+          :shipping-amount="formatMoney(sale.shipping_amount)"
+          :shipping-selected="sale.shipping_selected"
+        />
+      </template>
     </div>
     <div
       class="container"
@@ -159,10 +172,9 @@ if (!!route.query.s_id && !route.query.chc) {
     >
       <ModalCardInfos
         :id="data.sale.sales[0].id.toString()"
-        :amount="formatMoney(data.sale.sales[0].amount)"
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
-        :shipping-amount="formatMoney(data.sale.sales[0].shipping_amount)"
+        :sales="data.sale.sales"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
@@ -184,7 +196,7 @@ if (!!route.query.s_id && !route.query.chc) {
       <ModalTrialInfos
         :name="data.productOffer.data.name"
         :amount="formatMoney(data.productOffer.data.amount)"
-        :shipping-amount="
+        :shipping-amount="data.productOffer.data.has_shipping_fee ??
           formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
         "
         :id="data.chc"
@@ -257,7 +269,7 @@ if (!!route.query.s_id && !route.query.chc) {
 
     .paragraph {
       line-height: 1.5;
-      color: var(--text-color);
+      color: var(--txt-color);
       margin-top: 7px;
       font-size: 14px;
       font-weight: 400;

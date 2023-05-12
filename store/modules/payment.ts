@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, Sale } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -30,7 +30,8 @@ const {
   product_id,
   product_offer,
   uuid,
-  captcha,
+  captchaEnabled,
+  captcha_code,
   selectedCountry,
   hasPhysicalProduct,
   product_list,
@@ -42,6 +43,7 @@ const {
   ticket_installments,
 } = storeToRefs(checkoutStore);
 const {
+  productName,
   is_gift,
   gift_message,
   isFixedShipping,
@@ -108,7 +110,6 @@ export const usePaymentStore = defineStore("Payment", {
         cellphone: cellphone.value,
         document: document.value,
         uuid: uuid.value,
-        captcha: captcha.value,
         country_code: selectedCountry.value,
         // client_statistic: products_client_statistics.value,
         // Address
@@ -126,6 +127,10 @@ export const usePaymentStore = defineStore("Payment", {
         language,
         upsell_id: hasUpsell.value,
       };
+
+      if (captchaEnabled.value) {
+        data.captcha = captcha_code.value;
+      }
 
       if (method.value === "PAYPAL") {
         data.paypal = paypal;
@@ -164,10 +169,17 @@ export const usePaymentStore = defineStore("Payment", {
             : shipping.value.state,
         };
 
-        if (hasShippingFee.value && isFixedShipping.value) {
-        } else {
-          data.shipping_amount = FixedShippingAmount.value;
-        }
+        product_list.value.forEach((item: any) => {
+          if (item?.shipping) {
+            const index = data.products
+              .map((prod) => prod.product_id)
+              .indexOf(item.id);
+
+            data.products[index].shipping_amount = item.shipping.amount;
+            data.products[index].shipping_service_id = item.shipping.id;
+            data.products[index].shipping_service_name = item.shipping.name;
+          }
+        });
       }
       // Affiliate id
       if (hasAffiliateId.value) {
@@ -249,10 +261,16 @@ export const usePaymentStore = defineStore("Payment", {
               product_id: product_id.value,
             });
             const query: any = {};
+            const principal_product = res.sales
+              .filter(
+                (item: SaleElement) => item.product.name === productName.value
+              )
+              .pop();
+            console.log(principal_product);
             // Set principal product query
-            if (res.sales[0]?.chc) query.chc = res.sales[0].chc;
-            if (res.sales[0]?.token) query.token = res.sales[0].token;
-            if (res.sales[0]?.sale_id) {
+            if (principal_product?.chc) query.chc = principal_product.chc;
+            if (principal_product?.token) query.token = principal_product.token;
+            if (principal_product?.sale_id) {
               delete query.chc;
               delete query.token;
               query.s_id = res.sales[0].sale_id;

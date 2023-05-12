@@ -103,7 +103,11 @@ if (isFixedShipping.value)
       <BaseCheckbox
         :id="bump.id"
         v-model:checked="bump.checkbox"
-        :label="$t('checkout.pagamento.bump.yes_i_want')"
+        :label="
+          checkout.hasCustomBump
+            ? checkout.bump_options.subtitle
+            : $t('checkout.pagamento.bump.yes_i_want')
+        "
         label-custom-class="text-white"
       />
       <p class="item-value">

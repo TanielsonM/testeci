@@ -14,7 +14,7 @@ const props = defineProps({
   name: {
     type: String,
     default: "",
-    required: true,
+    required: false,
   },
   code: {
     type: String,
@@ -61,6 +61,16 @@ const props = defineProps({
   salesLength: {
     type: Number,
     required: true,
+  },
+  sales: {
+    type: Array,
+    required: false,
+    default: () => {},
+  },
+  hasOrder: {
+    type: Boolean,
+    required: false,
+    default: () => false,
   },
 });
 
@@ -248,7 +258,27 @@ watch(data, () => {});
       <img :src="url" />
     </div>
     <hr v-if="!last" />
-    <div class="details py-5" v-if="onlyButtons">
+    <div class="details py-5" v-if="hasOrder">
+      <h6 class="title">
+        {{ $t("pg_obrigado.modal.detalhes_compra") }}
+      </h6>
+      <section v-for="(item, index) in sales" :key="index">
+        <section class="item">
+          <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
+          <p>#{{ item.id }}</p>
+        </section>
+        <section class="item">
+          <p>{{ item.offer.name }}</p>
+          <p>{{ formatMoney(item.amount) }}</p>
+        </section>
+        <section class="item" v-if="item.shipping_amount">
+          <p>{{ $t("pg_obrigado.modal.frete") }}</p>
+          <p>{{ formatMoney(item.shipping_amount) }}</p>
+        </section>
+        <span class="flex h-[1px] w-full bg-gray-300 my-[15px]" v-if="(index + 1) !== sales.length"></span>
+      </section>
+    </div>
+    <div class="details py-5" v-if="onlyButtons && !hasOrder">
       <h6 class="title">
         {{ $t("pg_obrigado.modal.detalhes_compra") }}
       </h6>
@@ -266,7 +296,10 @@ watch(data, () => {});
         <p>{{ shippingAmount }}</p>
       </div>
     </div>
-    <div class="details py-5" v-if="!!shippingAmount && onlyButtons">
+    <div
+      class="details py-5"
+      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected"
+    >
       <h6 class="title">
         {{ $t("pg_obrigado.modal.frete_selecionado") }}
       </h6>

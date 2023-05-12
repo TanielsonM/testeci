@@ -69,6 +69,8 @@ export const useCheckoutStore = defineStore("checkout", {
     bump_list: [],
     /* Payment details */
     checkoutPayment: null,
+    // Captcha
+    captcha_code: "",
 
     sales: {},
     productOffer: {},
@@ -101,7 +103,7 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Global settings
      */
-    captcha: (state) => state.global_settings.captcha,
+    captchaEnabled: (state) => state.global_settings.captcha,
     antifraud: (state) => state.global_settings.antifraud,
     monthly_interest: (state) => state.global_settings.monthly_interest,
     selectedCountry: (state) => state.global_settings.country,
@@ -582,8 +584,12 @@ export const useCheckoutStore = defineStore("checkout", {
     async getSale(id) {
       if (!!id) {
         try {
-          const sales = await useApi().read(`/sale-checkout/${id}`);
-          if (!!sales) this.sales = sales;
+          return await useApi()
+            .read(`/sale-checkout/${id}`)
+            .then((res) => {
+              if (!!res) this.sales = res;
+              return res;
+            });
         } catch (error) {
           this.setError(error.message);
           throw error;
@@ -673,10 +679,47 @@ export const useCheckoutStore = defineStore("checkout", {
         const results = await Promise.all(promises);
         this.bump_list.forEach((bump, index) => {
           if (results[index]) {
-            bump.shipping_options = results[index];
+            bump.shipping_options = results[index].sort(
+              (a, b) => parseFloat(a.price) - parseFloat(b.price)
+            );
           }
         });
       }
+    },
+    setSelectedShipping(product_id, shipping) {
+      const product = this.product_list
+        .filter((item) => item.id === parseInt(product_id))
+        .pop();
+      if (product.type_shipping_fee === "FIXED") {
+        product.shipping_options = [];
+        return;
+      }
+      // Remove shipping amount
+      this.product_list.forEach((item) => {
+        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+          amountStore.setAmount(parseFloat(item.shipping?.amount) * -1);
+          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
+        }
+      });
+      // Set shipping infos in product
+      this.product_list = this.product_list.map((item) => {
+        if (item.id === parseInt(product_id)) {
+          item.shipping = {
+            amount: parseFloat(shipping.price),
+            name: shipping.name,
+            id: shipping.id,
+          };
+        }
+        return item;
+      });
+
+      // Add shipping amount
+      this.product_list.forEach((item) => {
+        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+          amountStore.setAmount(parseFloat(item.shipping?.amount));
+          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
+        }
+      });
     },
   },
 });

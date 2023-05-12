@@ -1,12 +1,12 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { useProductStore } from "~~/store/product";
 import { useLoadingStore } from "~~/store/loading/loading";
 
 const loading = useLoadingStore();
-const product = useProductStore();
+const checkout = useCheckoutStore();
 
 const { isLoading, current } = storeToRefs(loading);
+const { product_id } = storeToRefs(checkout);
 
 const props = defineProps({
   options: {
@@ -22,16 +22,19 @@ const props = defineProps({
 });
 const isActive = ref(0);
 
-const selectOption = (index, amount) => {
+const selectOption = (index, amount, shipping) => {
   isActive.value = index;
-  product.setProductShipping(amount, props.isBump, props.bump);
+  checkout.setSelectedShipping(
+    props.isBump ? props.bump : product_id.value,
+    shipping
+  );
 };
 
 watch(
   () => props.options,
   (val) => {
     if (props.options.length) {
-      selectOption(0, props.options[0]?.price || 0);
+      selectOption(0, props.options[0]?.price || 0, props.options[0]);
     }
   }
 );
@@ -51,7 +54,7 @@ watch(
   <div
     class="item frete"
     :class="{ selected: isActive == index }"
-    @click="selectOption(index, option?.price)"
+    @click="selectOption(index, option?.price, option)"
     v-for="(option, index) in options.sort(
       (a, b) => parseFloat(a.price) - parseFloat(b.price)
     )"
