@@ -6,6 +6,7 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
 
+const productStore = useProductStore();
 const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
@@ -13,7 +14,7 @@ const { sales, productOffer } = storeToRefs(checkoutStore);
 const route = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
-
+const saleId = route.query.s_id;
 const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
@@ -22,8 +23,8 @@ const data = ref({
   chc: "",
 });
 
-if (!!route.query.s_id && !route.query.chc) {
-  const saleId = route.query.s_id;
+
+if (!!saleId && !route.query.chc) {
   await checkoutStore.getSale(saleId);
   const sale: Sale = sales.value as Sale;
   data.value.sale = sale;
@@ -129,7 +130,8 @@ if (!!route.query.s_id && !route.query.chc) {
     <div
       class="container"
       v-if="
-        data.sale.sales[0].method === 'PIX' || data.sale?.order?.method === 'PIX'
+        data.sale.sales[0].method === 'PIX' ||
+        data.sale?.order?.method === 'PIX'
       "
     >
       <ModalPixInfos
@@ -196,7 +198,8 @@ if (!!route.query.s_id && !route.query.chc) {
       <ModalTrialInfos
         :name="data.productOffer.data.name"
         :amount="formatMoney(data.productOffer.data.amount)"
-        :shipping-amount="data.productOffer.data.has_shipping_fee ??
+        :shipping-amount="
+          data.productOffer.data.has_shipping_fee ??
           formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
         "
         :id="data.chc"
@@ -222,7 +225,7 @@ if (!!route.query.s_id && !route.query.chc) {
         :event="'conversion'"
         :product_id="productStore.product_id"
         :affiliate_id="checkoutStore.hasAffiliateId"
-        :method="checkout.method"
+        :method="checkoutStore.method"
         :amount="data.productOffer.data.total"
         :original_amount="amountStore.getOriginalAmount"
         :sale_id="saleId"
