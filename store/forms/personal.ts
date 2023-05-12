@@ -5,6 +5,7 @@ export const usePersonalStore = defineStore("personal", {
     confirmEmail: "",
     cellphone: "",
     document: "",
+    validPhone: false,
   }),
 
   getters: {},

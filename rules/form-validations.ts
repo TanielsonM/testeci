@@ -232,3 +232,8 @@ const validateCpfCnpj = (value: any) => {
 
   return true;
 };
+
+export const phoneValidation = () => {
+  const { validPhone } = storeToRefs(personalStore);
+  return validPhone.value;
+};
