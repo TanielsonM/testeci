@@ -124,8 +124,8 @@ export const useProductStore = defineStore("product", {
         this.hasFixedInstallments,
         this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
-      checkout.setAllowedMethods(product.method.split(","));
       checkout.setProductList(this.product);
+      checkout.setAllowedMethods(product.method.split(","));
     },
   },
 });
