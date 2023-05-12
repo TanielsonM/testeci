@@ -266,7 +266,6 @@ export const usePaymentStore = defineStore("Payment", {
                 (item: SaleElement) => item.product.name === productName.value
               )
               .pop();
-            console.log(principal_product);
             // Set principal product query
             if (principal_product?.chc) query.chc = principal_product.chc;
             if (principal_product?.token) query.token = principal_product.token;
@@ -321,8 +320,7 @@ export const usePaymentStore = defineStore("Payment", {
             return;
           }
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           checkoutStore.setLoading(false);
         });
     },

@@ -72,7 +72,6 @@ onMounted(async () => {
             });
           },
           onError: (err) => {
-            console.error(err);
             paymentStore.validateError("PayPal");
           },
         })
