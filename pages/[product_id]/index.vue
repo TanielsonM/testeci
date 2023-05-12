@@ -7,6 +7,8 @@ import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { useReCaptcha } from "vue-recaptcha-v3";
+import { usePersonalStore } from "@/store/forms/personal";
+import { validateDocument } from "@/rules/form-validations";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -15,6 +17,7 @@ const checkout = useCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
+const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
 
 // Recaptcha
@@ -27,7 +30,9 @@ const { sameAddress, charge, shipping } = storeToRefs(address);
 const { method, allowed_methods, captchaEnabled, captcha_code } =
   storeToRefs(checkout);
 const { currentStep, isMobile } = storeToRefs(stepsStore);
-const { error_message } = storeToRefs(payment);
+const { error_message, hasSent} = storeToRefs(payment);
+const { document } = storeToRefs(personalStore);
+const currentCountry = useState("currentCountry");
 
 // Refs
 const alert_modal = ref(false);
@@ -201,6 +206,47 @@ async function callPayment() {
   payment.payment(locale.value);
 }
 
+
+const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+  currentCountry.value
+);
+
+const documentText = computed(() => {
+  switch (currentCountry.value) {
+    case "AR":
+      return {
+        label: "CUIT/CUIL o DNI",
+        placeholder: "CUIT/CUIL o DNI",
+        mask: ["#####################"],
+      };
+    case "MX":
+      return {
+        label: "Número RFC",
+        placeholder: "Número RFC",
+        documentMask: ["########################"],
+      };
+    case "UY":
+      return {
+        label: "Número CI",
+        placeholder: "Número CI",
+        documentMask: ["########################"],
+      };
+    case "CL":
+      return {
+        label: "Añadir RUT",
+        placeholder: "Añadir RUT",
+        documentMask: ["#####################"],
+      };
+    default:
+      return {
+        label: "CPF ou CNPJ",
+        placeholder: "Doc. do títular da compra",
+        documentMask:
+          document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
+      };
+  }
+});
+
 await checkout.init();
 </script>
 
@@ -292,6 +338,27 @@ await checkout.init();
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
+              <BaseInput
+      class="col-span-12"
+      @blur="updateLead"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
+      :label="documentText.label"
+      :placeholder="documentText.placeholder"
+      v-if="showDocumentInput && isMobile"
+      input-name="document-field"
+      input-id="document-field"
+      v-model="document"
+      :mask="documentText.documentMask"
+      :error="
+        document || hasSent
+          ? !validateDocument.isValidSync(document)
+          : undefined
+      "
+    >
+      <template #error>
+        {{ $t("checkout.dados_pessoais.feedbacks.document") }}
+      </template>
+    </BaseInput>
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <FormPurchase />
             </section>
