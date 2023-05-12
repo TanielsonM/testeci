@@ -213,7 +213,28 @@ function getImg(type) {
   border: 1px solid #49ebbb;
   border-radius: 6px;
   padding: 7px;
+  opacity: 1;
+  -webkit-animation: fadeIn 2s linear 1 forwards;
+  animation: fadeIn 2s linear 1 forwards;
 }
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .flip-card {
   background-color: transparent;
   width: 600px;
