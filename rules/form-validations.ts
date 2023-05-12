@@ -148,15 +148,28 @@ export const validateThristStep = async (): Promise<boolean> => {
 
 export const validateAll = async (): Promise<boolean> => {
   const checkout = useCheckoutStore();
-  const validStepOne = await validateFirstStep();
+  const validStepOne = validateFirstStep();
   const validStepTwo = await validateSecondStep();
   const validStepThree = await validateThristStep();
 
   if (checkout.showAddressStep()) {
-    return validStepOne && validStepTwo && validStepThree;
+    if (
+      checkout.method === "CREDIT_CARD" ||
+      checkout.method === "TWO_CREDIT_CARD"
+    ) {
+      return validStepOne && validStepTwo && validStepThree;
+    }
+    return validStepOne && validStepTwo;
   }
 
-  return validStepOne && validStepThree;
+  if (
+    checkout.method === "CREDIT_CARD" ||
+    checkout.method === "TWO_CREDIT_CARD"
+  ) {
+    return validStepOne && validStepThree;
+  }
+
+  return validStepOne;
 };
 
 const validateCpfCnpj = (value: any) => {
