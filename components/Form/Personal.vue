@@ -7,7 +7,6 @@ import { usePaymentStore } from "@/store/modules/payment";
 import {
   validateName,
   validateEmail,
-  validateConfirmEmail,
   validatePhone,
   validateDocument,
 } from "@/rules/form-validations";
@@ -61,8 +60,8 @@ const documentText = computed(() => {
   }
 });
 
-const { name, email, cellphone, document } = storeToRefs(personalStore);
-const confirmation_mail = ref("");
+const { name, email, cellphone, document, confirmEmail } =
+  storeToRefs(personalStore);
 
 watch([name, email, cellphone, document], (value) => {
   leadsStore.syncPersonal();
@@ -116,14 +115,9 @@ function updateLead() {
       :autocomplete="false"
       input-name="confirmation_mail-field"
       input-id="confirmation_mail-field"
-      v-model="confirmation_mail"
-      rules="required|email|confirmed:@email-field"
+      v-model="confirmEmail"
       v-if="custom_checkout.hasConfirmationEmail"
-      :error="
-        confirmation_mail || hasSent
-          ? !validateConfirmEmail.isValidSync(confirmation_mail)
-          : undefined
-      "
+      :error="confirmEmail || hasSent ? !(confirmEmail === email) : undefined"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.confirmation_email") }}

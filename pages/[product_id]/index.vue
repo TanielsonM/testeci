@@ -201,8 +201,8 @@ function closeModal() {
         <BaseButton
           color="transparent"
           size="sm"
-          v-if="currentStep > 0 && currentStep <= 2 && isMobile"
-          @click="stepsStore.setStep(currentStep - 1)"
+          v-if="currentStep > 1 && currentStep <= 3 && isMobile"
+          @click="stepsStore.back()"
         >
           <div class="flex items-start justify-start text-left">
             <Icon name="mdi:arrow-left" class="mr-4" size="20" />
@@ -213,9 +213,7 @@ function closeModal() {
         <Steps
           :title="$t('components.steps.personal_data')"
           step="01"
-          v-if="
-            currentStep === 0 || (isMobile && currentStep == 0) || !isMobile
-          "
+          v-if="(isMobile && currentStep == 1) || !isMobile"
         >
           <template #end-line>
             <LocaleSelect />
@@ -230,9 +228,8 @@ function closeModal() {
           :title="$t('components.steps.address')"
           step="02"
           v-if="
-            (checkout.showAddressStep() && currentStep === 1) ||
-            (isMobile && currentStep == 1) ||
-            !isMobile
+            checkout.showAddressStep() &&
+            ((isMobile && currentStep == 2) || !isMobile)
           "
         >
           <template #content>
@@ -269,7 +266,8 @@ function closeModal() {
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep() ? '03' : '02'"
           v-if="
-            currentStep === 2 || (isMobile && currentStep == 2) || !isMobile
+            (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)) ||
+            !isMobile
           "
         >
           <template #content>
@@ -300,7 +298,7 @@ function closeModal() {
         <BaseButton
           class="mt-10"
           @click="stepsStore.setStep(currentStep + 1)"
-          v-if="isMobile"
+          v-if="isMobile && currentStep < (checkout.showAddressStep() ? 3 : 2)"
         >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
@@ -310,7 +308,11 @@ function closeModal() {
         <BaseButton
           class="mt-10"
           @click="payment.payment(locale)"
-          v-if="method !== 'PAYPAL' && !isMobile"
+          v-if="
+            method !== 'PAYPAL' &&
+            (!isMobile ||
+              (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)))
+          "
         >
           <span class="text-[15px] font-semibold">
             {{

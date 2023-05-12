@@ -22,6 +22,7 @@ const leadsStore = useLeadsStore();
 const payment = usePaymentStore();
 
 const { hasSent } = storeToRefs(payment);
+const { shipping, charge } = storeToRefs(store);
 
 // Props
 const props = defineProps({
@@ -33,23 +34,16 @@ const props = defineProps({
   },
 });
 
+const typeAddr = props.type === "charge" ? charge : shipping;
+
 // Variables
-const form = ref<Address>({
-  zipcode: "",
-  street: "",
-  number: "",
-  city: "",
-  neighborhood: "",
-  complement: "",
-  state: "",
-});
 
 const deliveryOptions = ref<Frete[] | undefined>();
 const isZipDissabled = ref(false);
 
 // Watches
-watch(form.value, async () => {
-  await store.setFields(form.value, props.type);
+watch(typeAddr.value, async () => {
+  await store.setFields(typeAddr.value, props.type);
   leadsStore.syncAddress();
 });
 watch(deliveryOptions, () => {});
@@ -67,12 +61,12 @@ async function getAddress(cep = "") {
       if (!!data) {
         let value: ShippingAddress = data.value as ShippingAddress;
 
-        form.value.number = "";
-        form.value.street = value.logradouro;
-        form.value.city = value.localidade;
-        form.value.neighborhood = value.bairro;
-        form.value.complement = value.complemento;
-        form.value.state = value.uf;
+        typeAddr.value.number = "";
+        typeAddr.value.street = value.logradouro;
+        typeAddr.value.city = value.localidade;
+        typeAddr.value.neighborhood = value.bairro;
+        typeAddr.value.complement = value.complemento;
+        typeAddr.value.state = value.uf;
         await checkout.calculateShipping(cep);
       }
     })
@@ -103,12 +97,12 @@ function updateLead() {
       input-name="zipcode-field"
       input-id="zipcode-field"
       class="col-span-12 xl:col-span-3"
-      v-model="form.zipcode"
-      @input="getAddress(form.zipcode.replace('-', ''))"
+      v-model="typeAddr.zipcode"
+      @input="getAddress(typeAddr.zipcode.replace('-', ''))"
       :disabled="isZipDissabled"
       :error="
-        form.zipcode || hasSent
-          ? !validateZip.isValidSync(form.zipcode)
+        typeAddr.zipcode || hasSent
+          ? !validateZip.isValidSync(typeAddr.zipcode)
           : undefined
       "
     >
@@ -123,10 +117,10 @@ function updateLead() {
       input-name="street-field"
       input-id="street-field"
       class="col-span-12 xl:col-span-6"
-      v-model="form.street"
+      v-model="typeAddr.street"
       :error="
-        form.street || hasSent
-          ? !validateStreet.isValidSync(form.street)
+        typeAddr.street || hasSent
+          ? !validateStreet.isValidSync(typeAddr.street)
           : undefined
       "
     >
@@ -142,10 +136,10 @@ function updateLead() {
       mask="###########"
       input-name="number_address-field"
       class="col-span-12 xl:col-span-3"
-      v-model="form.number"
+      v-model="typeAddr.number"
       :error="
-        form.number || hasSent
-          ? !validateNumber.isValidSync(form.number)
+        typeAddr.number || hasSent
+          ? !validateNumber.isValidSync(typeAddr.number)
           : undefined
       "
     >
@@ -160,9 +154,11 @@ function updateLead() {
       class="col-span-12 xl:col-span-6"
       input-name="city-field"
       input-id="city-field"
-      v-model="form.city"
+      v-model="typeAddr.city"
       :error="
-        form.city || hasSent ? !validateCity.isValidSync(form.city) : undefined
+        typeAddr.city || hasSent
+          ? !validateCity.isValidSync(typeAddr.city)
+          : undefined
       "
     >
       <template #error>
@@ -176,10 +172,10 @@ function updateLead() {
       input-name="neighborhood-field"
       input-id="neighborhood-field"
       class="col-span-12 xl:col-span-6"
-      v-model="form.neighborhood"
+      v-model="typeAddr.neighborhood"
       :error="
-        form.neighborhood || hasSent
-          ? !validateNeighborhood.isValidSync(form.neighborhood)
+        typeAddr.neighborhood || hasSent
+          ? !validateNeighborhood.isValidSync(typeAddr.neighborhood)
           : undefined
       "
     >
@@ -192,7 +188,7 @@ function updateLead() {
       :label="$t('forms.address.inputs.complement.label')"
       :placeholder="$t('forms.address.inputs.complement.placeholder')"
       class="col-span-12 xl:col-span-7"
-      v-model="form.complement"
+      v-model="typeAddr.complement"
     />
     <BaseInput
       @blur="updateLead"
@@ -201,11 +197,11 @@ function updateLead() {
       class="col-span-12 xl:col-span-5"
       input-name="state-field"
       input-id="state-field"
-      v-model="form.state"
+      v-model="typeAddr.state"
       v-if="checkout.selectedCountry !== 'BR'"
       :error="
-        form.state || hasSent
-          ? !validateState.isValidSync(form.state)
+        typeAddr.state || hasSent
+          ? !validateState.isValidSync(typeAddr.state)
           : undefined
       "
     >
@@ -221,11 +217,11 @@ function updateLead() {
       input-name="district-field"
       input-id="district-field"
       class="col-span-12 xl:col-span-5"
-      v-model="form.state"
+      v-model="typeAddr.state"
       :data="states"
       :error="
-        form.state || hasSent
-          ? !validateState.isValidSync(form.state)
+        typeAddr.state || hasSent
+          ? !validateState.isValidSync(typeAddr.state)
           : undefined
       "
     >

@@ -36,16 +36,16 @@ const items = computed(() => {
       width="100"
       height="40"
     />
-    <div class="steps flex" v-if="isMobile">
-      <div
-        class="mx-1 h-2 w-2 rounded-full"
-        :class="{
-          'bg-main-color': item <= currentStep,
-          'bg-main-transparent-color': item > currentStep,
-        }"
-        v-for="item in items"
-        :key="item"
-      ></div>
-    </div>
+    <!-- <div class="steps flex" v-if="isMobile">
+          <div
+            class="mx-1 h-2 w-2 rounded-full"
+            :class="{
+              'bg-main-color': item <= currentStep,
+              'bg-main-transparent-color': item > currentStep,
+            }"
+            v-for="item in items"
+            :key="item"
+          ></div>
+        </div> -->
   </header>
 </template>
