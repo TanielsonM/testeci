@@ -3,11 +3,18 @@ import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useInstallmentsStore } from "~~/store/modules/installments";
+import { usePersonalStore } from "@/store/forms/personal";
+import { useStepStore } from "@/store/modules/steps";
+import { usePaymentStore } from "@/store/modules/payment";
+import { validateDocument } from "@/rules/form-validations";
 
 const checkout = useCheckoutStore();
 const product = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const installmentsStore = useInstallmentsStore();
+const personalStore = usePersonalStore();
+const stepStore = useStepStore();
+const paymentStore = usePaymentStore();
 
 const { method, installments, max_installments, hasFees, fixed_installments } =
   storeToRefs(checkout);
@@ -15,6 +22,10 @@ const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
 const { trial_position } = storeToRefs(custom_checkout);
 const { getInstallments } = storeToRefs(installmentsStore);
+const { document } = storeToRefs(personalStore);
+const { isMobile } = storeToRefs(stepStore);
+const currentCountry = useState("currentCountry");
+const { hasSent } = storeToRefs(paymentStore);
 
 // Component forms
 const CREDIT_CARD = resolveComponent("FormPurchaseCreditCard");
@@ -89,6 +100,46 @@ const showInstallments = computed(() => {
   return false;
 });
 
+const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+  currentCountry.value
+);
+
+const documentText = computed(() => {
+  switch (currentCountry.value) {
+    case "AR":
+      return {
+        label: "CUIT/CUIL o DNI",
+        placeholder: "CUIT/CUIL o DNI",
+        mask: ["#####################"],
+      };
+    case "MX":
+      return {
+        label: "Número RFC",
+        placeholder: "Número RFC",
+        documentMask: ["########################"],
+      };
+    case "UY":
+      return {
+        label: "Número CI",
+        placeholder: "Número CI",
+        documentMask: ["########################"],
+      };
+    case "CL":
+      return {
+        label: "Añadir RUT",
+        placeholder: "Añadir RUT",
+        documentMask: ["#####################"],
+      };
+    default:
+      return {
+        label: "CPF ou CNPJ",
+        placeholder: "Doc. do títular da compra",
+        documentMask:
+          document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
+      };
+  }
+});
+
 const config = useRuntimeConfig();
 useHead({
   script: [
@@ -102,6 +153,27 @@ useHead({
 
 <template>
   <span data-anima="top" class="flex w-full flex-col gap-5">
+    <BaseInput
+      class="col-span-12"
+      @blur="updateLead"
+      :class="{ 'xl:col-span-6': showDocumentInput }"
+      :label="documentText.label"
+      :placeholder="documentText.placeholder"
+      v-if="showDocumentInput && isMobile"
+      input-name="document-field"
+      input-id="document-field"
+      v-model="document"
+      :mask="documentText.documentMask"
+      :error="
+        document || hasSent
+          ? !validateDocument.isValidSync(document)
+          : undefined
+      "
+    >
+      <template #error>
+        {{ $t("checkout.dados_pessoais.feedbacks.document") }}
+      </template>
+    </BaseInput>
     <component :is="selectedForm" />
     <ClientOnly>
       <template #fallback>
