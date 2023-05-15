@@ -50,16 +50,23 @@ Build Nuxt:
   image: node:16-alpine
   stage: Build
   environment: ${CI_COMMIT_BRANCH}
+  before_script:
+    - cd ${CI_PROJECT_DIR}
   script:
     - yarn install
     - yarn build
-  # needs:
-  #   - Terraform Plan
+  
+  cache:
+    - key:
+        - files:
+            - package.json
+      paths:
+          - node_modules
 
   artifacts:
     name: nuxt-app
     paths:
-      - ${TF_ROOT}/.output
+      - ${CI_PROJECT_DIR}/.output
 
 
 .Build Images:
