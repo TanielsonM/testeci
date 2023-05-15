@@ -16,7 +16,7 @@
         },
         "cellphone": {
           "label": "Cellphone",
-          "placeholder": "Phone number"
+          "placeholder": "Phone number*"
         },
         "email": {
           "placeholder": "Type with your email",
@@ -333,11 +333,11 @@
     },
     "cards": {
       "feedbacks": {
-        "cvv": "cvv is required",
-        "year": "year is required",
-        "month": "month is required",
-        "holder_name": "holder name is required",
-        "number": "Card Number is Invalid"
+        "cvv": "Fill in the CVV number on the card.",
+        "year": "Choose the year of validity.",
+        "month": "Choose the expiration month.",
+        "holder_name": "Fill in the name printed on the card.",
+        "number": "Fill in your credit card number."
       }
     }
   },

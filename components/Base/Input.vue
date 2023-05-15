@@ -93,6 +93,7 @@ const emit = defineEmits([
   "prepend-click",
   "append-click",
   "blur",
+  "focus"
 ]);
 
 const onInput = (event) => {
@@ -135,6 +136,7 @@ const onInput = (event) => {
           class="h-full w-full bg-checkout text-txt-color outline-none"
           @input="onInput"
           @blur="emit('blur')"
+          @focus="emit('focus')"
         />
         <input
           v-else
@@ -152,6 +154,7 @@ const onInput = (event) => {
           :data-maska="mask"
           @input="onInput"
           @blur="emit('blur')"
+          @focus="emit('focus')"
         />
       </VeeField>
       <Icon

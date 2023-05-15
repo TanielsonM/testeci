@@ -2,7 +2,10 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, Sale } from "~~/types";
+
+// Rules
+import { validateAll } from "@/rules/form-validations";
 
 // Stores
 import { usePersonalStore } from "../forms/personal";
@@ -27,7 +30,8 @@ const {
   product_id,
   product_offer,
   uuid,
-  captcha,
+  captchaEnabled,
+  captcha_code,
   selectedCountry,
   hasPhysicalProduct,
   product_list,
@@ -39,6 +43,7 @@ const {
   ticket_installments,
 } = storeToRefs(checkoutStore);
 const {
+  productName,
   is_gift,
   gift_message,
   isFixedShipping,
@@ -57,10 +62,17 @@ export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
     error_message: "",
+    hasSent: false,
   }),
   getters: {},
   actions: {
     async payment(language: string, paypal?: any) {
+      const allValid = await validateAll();
+      if (!allValid) {
+        this.hasSent = true;
+        return;
+      }
+
       leadsStore.changeStep(3);
 
       const total = computed(() => {
@@ -95,10 +107,9 @@ export const usePaymentStore = defineStore("Payment", {
         // User details
         name: name.value,
         email: email.value,
-        cellphone: cellphone.value,
+        cellphone: cellphone.value.replace(/[^\d+]/g, ""),
         document: document.value,
         uuid: uuid.value,
-        captcha: captcha.value,
         country_code: selectedCountry.value,
         // client_statistic: products_client_statistics.value,
         // Address
@@ -116,6 +127,10 @@ export const usePaymentStore = defineStore("Payment", {
         language,
         upsell_id: hasUpsell.value,
       };
+
+      if (captchaEnabled.value) {
+        data.captcha = captcha_code.value;
+      }
 
       if (method.value === "PAYPAL") {
         data.paypal = paypal;
@@ -246,10 +261,15 @@ export const usePaymentStore = defineStore("Payment", {
               product_id: product_id.value,
             });
             const query: any = {};
+            const principal_product = res.sales
+              .filter(
+                (item: SaleElement) => item.product.name === productName.value
+              )
+              .pop();
             // Set principal product query
-            if (res.sales[0]?.chc) query.chc = res.sales[0].chc;
-            if (res.sales[0]?.token) query.token = res.sales[0].token;
-            if (res.sales[0]?.sale_id) {
+            if (principal_product?.chc) query.chc = principal_product.chc;
+            if (principal_product?.token) query.token = principal_product.token;
+            if (principal_product?.sale_id) {
               delete query.chc;
               delete query.token;
               query.s_id = res.sales[0].sale_id;
@@ -295,13 +315,19 @@ export const usePaymentStore = defineStore("Payment", {
 
             return;
           }
+          if (
+            Array.isArray(res?.sales) &&
+            res.sales.some((item: SaleElement) => !item.success)
+          ) {
+            this.validateError(res?.sales[0]);
+            return;
+          }
           if (res.status === "error" && !res.sales?.success) {
             this.validateError(res);
             return;
           }
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           checkoutStore.setLoading(false);
         });
     },

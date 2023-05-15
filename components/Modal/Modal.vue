@@ -1,7 +1,6 @@
 <script setup>
 import { useModalStore } from "~~/store/modal/success";
 const modal = useModalStore();
-
 </script>
 <template>
   <div class="default-modal">
@@ -44,6 +43,7 @@ const modal = useModalStore();
     -webkit-box-direction: normal;
     flex-direction: column;
     width: 100%;
+    max-height: 95vh;
     pointer-events: auto;
     background-color: #fff;
     background-clip: padding-box;
@@ -52,6 +52,7 @@ const modal = useModalStore();
     outline: 0;
     margin: 1.75rem auto;
     padding: 20px 30px;
+    overflow: auto;
   }
 }
 </style>

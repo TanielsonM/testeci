@@ -96,11 +96,11 @@ export type Payment = {
   cellphone: string;
   uuid: any;
 
-  captcha: string;
   country_code: string;
   product_id: number;
 
   /* Optionals */
+  captcha?: string;
   client_statistic?: any[];
   // Address
   zipcode?: string | any;
@@ -457,6 +457,9 @@ export type SaleElement = {
   upsell: any;
   local_currency: SaleLocalCurrency;
   success: boolean;
+  chc?: string;
+  token?: string;
+  sale_id?: string | number;
 };
 
 export type SaleLocalCurrency = {

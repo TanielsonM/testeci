@@ -69,6 +69,8 @@ export const useCheckoutStore = defineStore("checkout", {
     bump_list: [],
     /* Payment details */
     checkoutPayment: null,
+    // Captcha
+    captcha_code: "",
 
     sales: {},
     productOffer: {},
@@ -101,7 +103,7 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Global settings
      */
-    captcha: (state) => state.global_settings.captcha,
+    captchaEnabled: (state) => state.global_settings.captcha,
     antifraud: (state) => state.global_settings.antifraud,
     monthly_interest: (state) => state.global_settings.monthly_interest,
     selectedCountry: (state) => state.global_settings.country,
@@ -582,8 +584,12 @@ export const useCheckoutStore = defineStore("checkout", {
     async getSale(id) {
       if (!!id) {
         try {
-          const sales = await useApi().read(`/sale-checkout/${id}`);
-          if (!!sales) this.sales = sales;
+          return await useApi()
+            .read(`/sale-checkout/${id}`)
+            .then((res) => {
+              if (!!res) this.sales = res;
+              return res;
+            });
         } catch (error) {
           this.setError(error.message);
           throw error;

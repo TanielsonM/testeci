@@ -6,18 +6,30 @@ import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useAmountStore } from "~~/store/modules/amount";
 import { useInstallmentsStore } from "~~/store/modules/installments";
+import { usePaymentStore } from "@/store/modules/payment";
+
+import {
+  validateCardAmount,
+  validateCardNumber,
+  validateNameOnCard,
+  validateExpiryMonth,
+  validateExpiryYear,
+  validateCvc,
+} from "@/rules/form-validations";
 
 const checkout = useCheckoutStore();
 const purchase = usePurchaseStore();
 const amountStore = useAmountStore();
 const prodStore = useProductStore();
 const instStore = useInstallmentsStore();
+const payment = usePaymentStore();
 
 const { getAmount } = storeToRefs(amountStore);
 const { method, installments, selectedCountry, allowed_methods } =
   storeToRefs(checkout);
 const { productType } = storeToRefs(prodStore);
 const { first, second } = storeToRefs(purchase);
+const { hasSent } = storeToRefs(payment);
 
 const years = [
   { value: moment().year(), label: moment().year() },
@@ -81,14 +93,27 @@ const months = [
   { value: "12", label: "12" },
 ];
 
-let cardNumberError = ref(false);
+const isCardValid = ref(true);
+const isCardBack = ref(false);
+const creditCard = ref(null);
+const isOnFocus = ref("");
 
 function syncVerification(from) {
   verifyCard(from);
   changeAmount(from);
+  onFocus("");
 }
 
-async function verifyCard(from) {
+function flipCard(value) {
+  isCardBack.value = value;
+  onFocus(value ? "cvv" : "");
+}
+
+function onFocus(value) {
+  isOnFocus.value = value;
+}
+
+function verifyCard(from) {
   let cardNumber = String(
     from == "first"
       ? first.value.number.replace(/\s+/g, "")
@@ -113,7 +138,7 @@ async function verifyCard(from) {
 
   const result = sum % 10 == 0;
 
-  cardNumberError.value = !!result;
+  isCardValid.value = !!result;
 }
 
 function changeAmount(from) {
@@ -223,16 +248,21 @@ watch(installments, () => {
         v-if="method == 'TWO_CREDIT_CARDS'"
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        :error="!cardNumberError"
         class="col-span-12"
         rules="required"
         v-model="first.amount"
+        @click="onFocus('number')"
         @blur="syncVerification('first')"
         input-id="first-amount-field"
         @vnode-before-mount="formatAmount('first')"
+        :error="
+          first.amount || hasSent
+            ? !validateCardAmount.isValidSync(clearValue(first.amount))
+            : undefined
+        "
       >
         <template #error>
-          {{ $t("checkout.cards.feedbacks.number") }}
+          {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
         </template>
       </BaseInput>
 
@@ -240,12 +270,16 @@ watch(installments, () => {
         :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         mask="#### #### #### ####"
-        rules="required"
         class="col-span-12"
+        @click="onFocus('number')"
         @blur="syncVerification('first')"
-        :error="!cardNumberError"
         v-model="first.number"
         input-id="first-number-field"
+        :error="
+          first.number || hasSent
+            ? !validateCardNumber.isValidSync(first.number.replace(/\s/g, ''))
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.number") }}
@@ -256,9 +290,15 @@ watch(installments, () => {
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
-        rules="required"
         v-model="first.holder_name"
+        @click="onFocus('name')"
+        @blur="onFocus('')"
         input-id="first-holder_name-field"
+        :error="
+          first.holder_name || hasSent
+            ? !validateNameOnCard.isValidSync(first.holder_name)
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.holder_name") }}
@@ -269,10 +309,14 @@ watch(installments, () => {
         :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
         class="col-span-6 sm:col-span-4"
-        rules="required"
         :data="months"
         v-model="first.month"
         input-id="first-month-field"
+        :error="
+          first.month || hasSent
+            ? !validateExpiryMonth.isValidSync(first.month)
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.month") }}
@@ -283,10 +327,14 @@ watch(installments, () => {
         :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
         class="col-span-6 sm:col-span-4"
-        rules="required"
         :data="years"
         v-model="first.year"
         input-id="first-year-field"
+        :error="
+          first.year || hasSent
+            ? !validateExpiryYear.isValidSync(first.year)
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.year") }}
@@ -297,10 +345,15 @@ watch(installments, () => {
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.CVV')"
         mask="###"
-        rules="required"
         class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
         input-id="first-cvv-field"
+        :error="
+          first.cvv || hasSent ? !validateCvc.isValidSync(first.cvv) : undefined
+        "
+        @click="flipCard(true)"
+        @blur="flipCard(false)"
+        @focus="flipCard(true)"
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.cvv") }}
@@ -324,16 +377,19 @@ watch(installments, () => {
       <BaseInput
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        :error="!cardNumberError"
         class="col-span-12"
         v-model="second.amount"
-        rules="required"
         @blur="syncVerification('second')"
         input-id="second-amount-field"
         @vnode-before-mount="formatAmount('second')"
+        :error="
+          second.amount || hasSent
+            ? !validateCardAmount.isValidSync(clearValue(second.amount))
+            : undefined
+        "
       >
         <template #error>
-          {{ $t("checkout.cards.feedbacks.number") }}
+          {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
         </template>
       </BaseInput>
       <BaseInput
@@ -341,11 +397,14 @@ watch(installments, () => {
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
         mask="#### #### #### ####"
         class="col-span-12"
-        rules="required"
         @blur="syncVerification('second')"
-        :error="!cardNumberError"
         v-model="second.number"
         input-id="second-number-field"
+        :error="
+          second.number || hasSent
+            ? !validateCardNumber.isValidSync(second.number.replace(/\s/g, ''))
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.number") }}
@@ -356,9 +415,13 @@ watch(installments, () => {
         :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
         class="col-span-12"
-        rules="required"
         v-model="second.holder_name"
         input-id="second-holder_name-field"
+        :error="
+          second.holder_name || hasSent
+            ? !validateNameOnCard.isValidSync(second.holder_name)
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.holder_name") }}
@@ -370,9 +433,13 @@ watch(installments, () => {
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
         class="col-span-6 sm:col-span-4"
         :data="months"
-        rules="required"
         v-model="second.month"
         input-id="second-month-field"
+        :error="
+          second.month || hasSent
+            ? !validateExpiryMonth.isValidSync(second.month)
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.month") }}
@@ -384,9 +451,13 @@ watch(installments, () => {
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
         class="col-span-6 sm:col-span-4"
         :data="years"
-        rules="required"
         v-model="second.year"
         input-id="second-year-field"
+        :error="
+          second.year || hasSent
+            ? !validateExpiryYear.isValidSync(second.year)
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.year") }}
@@ -400,6 +471,11 @@ watch(installments, () => {
         rules="required"
         v-model="second.cvv"
         input-id="second-cvv-field"
+        :error="
+          second.cvv || hasSent
+            ? !validateCvc.isValidSync(second.cvv)
+            : undefined
+        "
       >
         <template #error>
           {{ $t("checkout.cards.feedbacks.cvv") }}
@@ -409,8 +485,11 @@ watch(installments, () => {
 
     <CreditCard
       v-if="method !== 'TWO_CREDIT_CARDS'"
-      class="hidden md:block"
+      class="flip-class hidden md:block"
+      ref="creditCard"
       data-anima="bottom"
+      :on_focus="isOnFocus"
+      :flip_card="isCardBack"
       :card_cvv="first.cvv"
       :card_year="first.year"
       :card_month="first.month"
