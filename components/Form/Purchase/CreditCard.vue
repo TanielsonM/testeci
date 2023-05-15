@@ -463,7 +463,7 @@ watch(installments, () => {
         input-id="second-cvv-field"
         :error="
           second.cvv || hasSent
-            ? !validateExpiryCvc.isValidSync(second.cvv)
+            ? !validateCvc.isValidSync(second.cvv)
             : undefined
         "
       >
