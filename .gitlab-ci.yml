@@ -55,13 +55,6 @@ Build Nuxt:
   script:
     - yarn install
     - yarn build
-  
-  cache:
-    - key:
-        - files:
-            - package.json
-      paths:
-          - node_modules
 
   artifacts:
     name: nuxt-app
