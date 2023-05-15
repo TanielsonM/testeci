@@ -52,7 +52,8 @@ const modal = useModalStore();
     outline: 0;
     margin: 1.75rem auto;
     padding: 20px 30px;
-    overflow: auto;
+    max-height: 95vh;
+    overflow-y: auto;
   }
 }
 </style>

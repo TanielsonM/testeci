@@ -23,7 +23,11 @@ const data = ref({
   chc: "",
 });
 
-if (!!saleId && !route.query.chc) {
+if (
+  (!!route.query.s_id && !route.query.chc) ||
+  (!!route.query.s_id && !!route.query.chc)
+) {
+  const saleId = route.query.s_id;
   await checkoutStore.getSale(saleId);
   const sale: Sale = sales.value as Sale;
   data.value.sale = sale;
