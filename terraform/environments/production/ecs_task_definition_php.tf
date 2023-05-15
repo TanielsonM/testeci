@@ -3,8 +3,8 @@ locals {
   memory = 1024
 }
 
-resource "aws_ecs_task_definition" "php" {
-  family                   = "php"
+resource "aws_ecs_task_definition" "node" {
+  family                   = "node"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = local.cpu
