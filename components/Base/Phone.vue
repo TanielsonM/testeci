@@ -2,7 +2,7 @@
 import { VueTelInput } from "vue-tel-input";
 import { usePersonalStore } from "@/store/forms/personal";
 import { phoneValidation } from "@/rules/form-validations";
-
+import { useCheckoutStore } from "~~/store/checkout";
 import "vue-tel-input/vue-tel-input.css";
 
 const props = defineProps({
@@ -14,7 +14,7 @@ const props = defineProps({
   country: {
     type: String,
     required: false,
-    default: () => "BR",
+    default: () => null,
   },
   modelValue: {
     type: [String, Number],
@@ -73,7 +73,9 @@ const props = defineProps({
 });
 
 const personalStore = usePersonalStore();
+const checkoutStore = useCheckoutStore();
 const { validPhone } = storeToRefs(personalStore);
+const { global_settings } = storeToRefs(checkoutStore);
 
 let cellphone = ref("");
 let isValid = true;
@@ -83,8 +85,9 @@ const bindProps = {
   mode: "international",
   placeholder: t("forms.personal.inputs.cellphone.placeholder"),
   required: true,
-  enabledCountryCode: false,
-  autoDefaultCountry: true,
+  enabledCountryCode: true,
+  autoDefaultCountry: false,
+  defaultCountry: global_settings.value.country ?? "BR",
   enabledFlags: true,
   autocomplete: "off",
   name: "cellphone",
