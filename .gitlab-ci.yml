@@ -16,7 +16,7 @@ workflow:
 stages:
   # - Env
   - Plan
-  - Build
+  # - Build
   - Deploy
 
 
@@ -45,3 +45,21 @@ Terraform Plan:
       - ${TF_ROOT}/plan.cache
   # needs:
   #   - Create Secrets
+
+
+Terraform Deploy:
+  image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+  stage: Deploy
+  environment: ${CI_COMMIT_BRANCH}
+  cache:
+    key: terraform-${CI_COMMIT_BRANCH}
+    paths:
+      - ${TF_ROOT}/.terraform
+  before_script:
+    - cd ${TF_ROOT}
+  script:
+    - ls -la
+    - gitlab-terraform apply
+  needs:
+    - Terraform Plan
+    # - Build Images
