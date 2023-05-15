@@ -8,3 +8,7 @@ variable "environment" {
   type        = string
   description = "Ambiente"
 }
+
+variable "deploy_hash" {
+  type = string
+}
