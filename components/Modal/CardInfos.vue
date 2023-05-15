@@ -42,7 +42,9 @@ defineProps<InfosProps>();
             <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
           </section>
         </section>
-        <p>{{ formatMoney(sale.amount) }}</p>
+        <p>
+          {{ formatMoney(sale.total || sale.amount || sale.product.amount) }}
+        </p>
       </template>
       <section class="item" v-if="!!sale.shipping_amount">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
