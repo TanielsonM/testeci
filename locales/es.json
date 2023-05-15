@@ -16,7 +16,7 @@
         },
         "cellphone": {
           "label": "Teléfono",
-          "placeholder": "Número de teléfono"
+          "placeholder": "Número de teléfono*"
         },
         "email": {
           "label": "Email",
@@ -334,10 +334,11 @@
     },
     "cards": {
       "feedbacks": {
-        "number": "El número de tarjeta no es válido",
-        "holder_name": "nome do titular é obrigatório",
-        "month": "se requiere mes",
-        "cvv": "se requiere cvv"
+        "number": "Rellenar correctamente número de la tarjeta de crédito.",
+        "holder_name": "Rellenar correctamente el nombre impreso en la tarjeta.",
+        "month": "Elige el mes de validez.",
+        "year": "Elige el ano de validez.",
+        "cvv": "Rellenar correctamente el número CVV de la tarjeta."
       }
     }
   },

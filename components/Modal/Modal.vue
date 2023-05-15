@@ -43,6 +43,7 @@ const modal = useModalStore();
     -webkit-box-direction: normal;
     flex-direction: column;
     width: 100%;
+    max-height: 95vh;
     pointer-events: auto;
     background-color: #fff;
     background-clip: padding-box;

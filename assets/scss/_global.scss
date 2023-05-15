@@ -48,6 +48,7 @@ textarea {
   color: #00af7b;
   fill: #00af7b;
 }
+
 .card-tag {
   padding: 8px 16px;
   color: #fff;
@@ -72,4 +73,19 @@ textarea {
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-top: 10px solid #3483fa;
+}
+
+ .vti__input {
+  background: var(--checkout);
+}
+
+.vti__dropdown:hover{
+  background-color: var(--border-color) !important;
+}
+.vti__dropdown-item.highlighted {
+  background-color:  var(--border-color) !important;
+}
+
+.vti__dropdown.open,.vti__dropdown-item {
+  background-color:  var(--checkout) !important;
 }

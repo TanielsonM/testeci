@@ -20,7 +20,7 @@ const props = defineProps({
     required: true,
   },
   shippingAmount: {
-    type: String,
+    type: [String, Number],
     default: null,
     required: false,
   },
@@ -83,7 +83,13 @@ const data = ref({
         <p>#{{ data.bump.sales[0].id }}</p>
       </div>
       <div class="item">
-        <p>{{ data.bump.sales[0].product?.name }}</p>
+        <div class="flex items-start">
+          <div class="check-icon icon-success"></div>
+          <div class="transaction">
+            <p>{{ data.bump.sales[0].product?.name }}</p>
+            <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
+        </div>
+        </div>
         <p>
           {{
             data.bump.sales[0].amount == 0
@@ -99,8 +105,8 @@ const data = ref({
     </div>
     <div v-if="data.bump.sales[0].method == 'BOLETO'">
       <ModalTicketInfos
-        :code="data.bump.sales[0].boleto_barcode!"
-        :url="data.bump.sales[0].boleto_url!"
+        :code="data.bump.sales[0].boleto_barcode"
+        :url="data.bump.sales[0].boleto_url"
         :id="data.bump.sales[0].id.toString()"
         :amount="formatMoney(data.bump.sales[0].amount)"
         :last="true"

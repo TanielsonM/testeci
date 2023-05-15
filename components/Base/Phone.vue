@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { VueTelInput } from "vue-tel-input";
+import { usePersonalStore } from "@/store/forms/personal";
+import { phoneValidation } from "@/rules/form-validations";
+
 import "vue-tel-input/vue-tel-input.css";
 
 const props = defineProps({
@@ -69,12 +72,16 @@ const props = defineProps({
   },
 });
 
+const personalStore = usePersonalStore();
+const { validPhone } = storeToRefs(personalStore);
+
 let cellphone = ref("");
 let isValid = true;
+const { t } = useI18n();
 
 const bindProps = {
   mode: "international",
-  placeholder: "Digite seu telefone",
+  placeholder: t("forms.personal.inputs.cellphone.placeholder"),
   required: true,
   enabledCountryCode: false,
   autoDefaultCountry: true,
@@ -83,7 +90,7 @@ const bindProps = {
   name: "cellphone",
   maxLen: 25,
   inputOptions: {
-    placeholder: "Digite seu telefone",
+    placeholder: t("forms.personal.inputs.cellphone.placeholder"),
     showDialCode: false,
   },
 };
@@ -96,8 +103,8 @@ const emit = defineEmits([
   "input",
 ]);
 
-const onInput = (event: any, phone: any) => {
-  emit("update:modelValue", phone.number);
+const onInput = (event: any) => {
+  emit("update:modelValue", event);
 };
 
 function validatePhone(phoneObject: object | any) {
@@ -105,7 +112,12 @@ function validatePhone(phoneObject: object | any) {
     return;
   }
   isValid = !!phoneObject.valid;
+  validPhone.value = !!phoneObject.valid;
 }
+
+onMounted(() => {
+  cellphone.value = props.modelValue.toString();
+});
 </script>
 
 <template>
@@ -136,7 +148,7 @@ function validatePhone(phoneObject: object | any) {
     </section>
 
     <small data-anima="top" v-if="isValid">{{ hint }}</small>
-    <small class="text-red-400" v-if="!isValid">
+    <small class="text-red-400" v-if="!isValid || error">
       <slot name="error">
         {{ error }}
       </slot>

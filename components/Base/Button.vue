@@ -43,6 +43,7 @@ const colorClasses = computed(() => {
     bordered: "border-[#3483fa] text-[#3483fa] bg-transparent",
     transparent:
       "border-transparent bg-transparent text-txt-color !items-start !justify-start !p-0",
+    paypal: "!bg-[#2C2E2F] border-transparent !text-white !opacity-70",
   };
   return colors[props.color] || colors.primary;
 });
@@ -78,9 +79,9 @@ const sizeClasses = computed(() => {
   }
 
   &:disabled {
-    background: #f7f7f7 !important;
-    color: #333 !important;
-    opacity: 0.4 !important;
+    background: #f7f7f7;
+    color: #333;
+    opacity: 0.4;
   }
 
   &.small {

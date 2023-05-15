@@ -2,6 +2,11 @@
 import { storeToRefs } from "pinia";
 import { usePersonalStore } from "~~/store/forms/personal";
 import { usePaymentStore } from "~~/store/modules/payment";
+import logoPayPal from "@/assets/paypal/logo.svg";
+
+import { validateFirstStep } from "@/rules/form-validations";
+import { validate } from "vee-validate";
+
 const { locale } = useI18n();
 const paypal = ref(null);
 const productStore = useProductStore();
@@ -67,17 +72,26 @@ onMounted(async () => {
             });
           },
           onError: (err) => {
-            console.error(err);
             paymentStore.validateError("PayPal");
           },
         })
         .render(paypal.value);
     }
-  }, 10);
+  }, 300);
 });
 </script>
 <template>
   <ClientOnly>
-    <div ref="paypal" data-anima="top"></div>
+    <div
+      ref="paypal"
+      data-anima="top"
+      :class="{ hidden: !validateFirstStep() }"
+    ></div>
+    <BaseButton color="paypal" :disabled="true" v-if="!validateFirstStep()">
+      <span class="mr-1 text-[15px] font-semibold">
+        <img :src="logoPayPal" class="w-20" />
+      </span>
+      <p class="text-lg">Comprar agora</p>
+    </BaseButton>
   </ClientOnly>
 </template>

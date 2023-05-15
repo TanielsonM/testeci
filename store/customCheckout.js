@@ -105,6 +105,9 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     setNotifications(interval, howGet, quantity, type) {
       const toast = Toast.useToast();
       if (!!this.notifications) {
+
+        let time = 0;
+
         for (let i = 0; i < this.notifications.length; i++) {
           let notification = this.notifications[i];
 
@@ -139,12 +142,11 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
           }
 
           if (localStorage.getItem(`notification${notification.id}`) === null) {
-            let time =
+            time = time + 
               this.getRandomInt(
                 interval.split(",")[0],
                 interval.split(",")[1]
-              ) + "000";
-
+              );
             setTimeout(() => {
               localStorage.setItem(`notification${notification.id}`, "true");
               toast.success(content, {
@@ -155,15 +157,15 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
                 toastClassName: "custom",
                 bodyClassName: ["custom"],
               });
-            }, parseInt(time));
+            }, parseInt(time + "000"));
           }
           if (i == quantity) break;
         }
       }
     },
     getRandomInt(min, max) {
-      min = Math.ceil(5);
-      max = Math.floor(10);
+      min = Math.ceil(min);
+      max = Math.floor(max);
       return Math.floor(Math.random() * (max - min)) + min;
     },
   },
