@@ -195,6 +195,8 @@ export const useCheckoutStore = defineStore("checkout", {
         await useApi()
           .read("/global-settings", { query })
           .then((res) => {
+            const headers = useRequestHeaders(["cf-ipcountry"]);
+            this.global_settings.country = headers["cf-ipcountry"] || "BR";
             res.forEach((item) => {
               if (item.key == "PAGARME_ANTIFRAUDE") {
                 this.global_settings.antifraud =
@@ -208,10 +210,6 @@ export const useCheckoutStore = defineStore("checkout", {
                   item.value == "ENABLED" ? true : false;
               }
             });
-            let countryGlobalSettings = [...res].find((item) => item.country);
-            this.global_settings.country = countryGlobalSettings
-              ? countryGlobalSettings.country
-              : "US";
           });
       } catch (error) {
         this.setError("Ocorreu um erro ao processar os dados do produto");

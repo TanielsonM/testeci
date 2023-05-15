@@ -11,10 +11,12 @@ const countryDefault =
   alphabetical
     .filter((item) => item.sigla === global_settings.value.country)
     .pop() || searcher("OTHERS").pop();
-const cookie = useCookie("locale", {
-  default: () => countryDefault,
-  watch: true,
-});
+const cookie = useCookie("locale");
+
+// Reset Cookie value
+cookie.value = null;
+cookie.value = countryDefault;
+
 /* set default value in locale */
 locale.value = cookie.value.language;
 /* set default value in use state */
