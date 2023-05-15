@@ -79,7 +79,7 @@ const amountText = computed(() => {
       >
         <p>{{ bump.name }}</p>
         <p>
-          {{
+          +{{
             formatMoney(
               bump.custom_charges.length
                 ? bump.custom_charges[0].amount
