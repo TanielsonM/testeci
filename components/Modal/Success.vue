@@ -21,6 +21,7 @@ const data = ref({
   bump: {} as Sale,
   order: {} as any,
   chc: "",
+  pixOpened: 0,
 });
 
 if (
@@ -168,6 +169,9 @@ if (
           :created-at="sale.created_at.toString()"
           :shipping-amount="formatMoney(sale.shipping_amount)"
           :shipping-selected="sale.shipping_selected"
+          :sales="data.sale.sales"
+          :opened="data.pixOpened.toString()"
+          @openedPixEvent="(e) => (data.pixOpened = e.toString())"
         />
       </template>
     </div>

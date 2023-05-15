@@ -72,6 +72,11 @@ const props = defineProps({
     required: false,
     default: () => false,
   },
+  opened: {
+    type: String,
+    required: false,
+    default: 0,
+  },
 });
 
 const copy = async (code: string) => {
@@ -90,7 +95,7 @@ const data = ref({
 });
 
 const displayCode = () => {
-  data.value.showCode = !data.value.showCode;
+  emit("openedPixEvent", props.opened === props.id ? 0 : props.id);
 };
 
 const handleResize = () => {
@@ -107,6 +112,8 @@ onBeforeUnmount(() => {
 });
 
 watch(data, () => {});
+
+const emit = defineEmits(["openedPixEvent"]);
 </script>
 <template>
   <div v-if="!modal.expiredPix">
@@ -145,7 +152,7 @@ watch(data, () => {});
           @click="displayCode"
           class="col-span-2 mt-3 block w-full md:hidden lg:col-span-1 lg:max-w-[180px]"
           >{{
-            !data.showCode
+            opened === id
               ? $t("pg_obrigado.pix.ver_codigo")
               : $t("pg_obrigado.pix.fechar_codigo")
           }}</BaseButton
@@ -153,7 +160,7 @@ watch(data, () => {});
 
         <div
           class="w-full"
-          v-if="data.showCode && salesLength == 1 && isMobile"
+          v-if="opened === id && salesLength == 1 && isMobile"
         >
           <BaseTextarea
             class="my-5 w-full"
@@ -220,7 +227,7 @@ watch(data, () => {});
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_visualizar_qr")
-                : !data.showCode
+                : opened === id
                 ? $t("pg_obrigado.pix.ver_codigo")
                 : $t("pg_obrigado.pix.fechar_codigo")
             }}</BaseButton
@@ -240,7 +247,7 @@ watch(data, () => {});
         </div>
       </div>
     </div>
-    <div class="w-full" v-if="data.showCode && salesLength == 1 && !isMobile">
+    <div class="w-full" v-if="opened === id && salesLength == 1 && !isMobile">
       <BaseTextarea
         class="w-full"
         :input-id="`ticket_${id}`"
@@ -252,7 +259,7 @@ watch(data, () => {});
     </div>
 
     <div
-      v-if="data.showCode && salesLength > 1"
+      v-if="opened === id && salesLength > 1"
       class="flex w-full items-center justify-center"
     >
       <img :src="url" />
@@ -275,7 +282,10 @@ watch(data, () => {});
           <p>{{ $t("pg_obrigado.modal.frete") }}</p>
           <p>{{ formatMoney(item.shipping_amount) }}</p>
         </section>
-        <span class="flex h-[1px] w-full bg-gray-300 my-[15px]" v-if="(index + 1) !== sales.length"></span>
+        <span
+          class="my-[15px] flex h-[1px] w-full bg-gray-300"
+          v-if="index + 1 !== sales.length"
+        ></span>
       </section>
     </div>
     <div class="details py-5" v-if="onlyButtons && !hasOrder">
