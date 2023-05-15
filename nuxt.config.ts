@@ -115,4 +115,15 @@ export default defineNuxtConfig({
     cssPath: "~/assets/tailwind.css",
     configPath: "tailwind.config",
   },
+  nitro: {
+    preset: 'node-server',
+    compressPublicAssets: {
+      gzip: true
+    },
+    minify: true,
+    sourceMap: false,
+  },
+  webpack: {
+    aggressiveCodeRemoval: true
+  }
 });
