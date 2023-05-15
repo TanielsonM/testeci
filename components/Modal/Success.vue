@@ -29,7 +29,10 @@ const data = ref({
   chc: "",
 });
 
-if (!!route.query.s_id && !route.query.chc) {
+if (
+  (!!route.query.s_id && !route.query.chc) ||
+  (!!route.query.s_id && !!route.query.chc)
+) {
   const saleId = route.query.s_id;
   await checkoutStore.getSale(saleId);
   const sale: Sale = sales.value as Sale;
@@ -117,6 +120,7 @@ if (!!route.query.s_id && !route.query.chc) {
         :index="i"
         :name="sale.product.name"
         :shipping-amount="formatMoney(sale.shipping_amount)"
+        :status="sale.status"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
@@ -136,7 +140,8 @@ if (!!route.query.s_id && !route.query.chc) {
     <div
       class="container"
       v-if="
-        data.sale.sales[0].method === 'PIX' || data.sale?.order?.method === 'PIX'
+        data.sale.sales[0].method === 'PIX' ||
+        data.sale?.order?.method === 'PIX'
       "
     >
       <ModalPixInfos
@@ -204,8 +209,10 @@ if (!!route.query.s_id && !route.query.chc) {
       <ModalTrialInfos
         :name="data.productOffer.data.name"
         :amount="formatMoney(data.productOffer.data.amount)"
-        :shipping-amount="data.productOffer.data.has_shipping_fee ??
-          formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
+        :shipping-amount="
+          data.productOffer.data.has_shipping_fee
+            ? formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
+            : null
         "
         :id="data.chc"
         :period="data.productOffer.data.trial"

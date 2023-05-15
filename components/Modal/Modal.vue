@@ -1,7 +1,6 @@
 <script setup>
 import { useModalStore } from "~~/store/modal/success";
 const modal = useModalStore();
-
 </script>
 <template>
   <div class="default-modal">
@@ -52,6 +51,8 @@ const modal = useModalStore();
     outline: 0;
     margin: 1.75rem auto;
     padding: 20px 30px;
+    max-height: 95vh;
+    overflow-y: auto;
   }
 }
 </style>
