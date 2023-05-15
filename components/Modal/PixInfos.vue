@@ -150,7 +150,7 @@ const emit = defineEmits(["openedPixEvent"]);
           size="md"
           animation="pulse"
           @click="displayCode"
-          class="col-span-2 mt-3 block w-full md:hidden lg:col-span-1 lg:max-w-[180px]"
+          class="col-span-2 mt-3 w-full lg:col-span-1 lg:max-w-[180px]"
           >{{
             opened === id
               ? $t("pg_obrigado.pix.ver_codigo")
@@ -222,7 +222,7 @@ const emit = defineEmits(["openedPixEvent"]);
             color="bordered"
             :size="!onlyButtons ? 'vsm' : 'md'"
             animation="pulse"
-            class="col-span-2 hidden md:col-span-1 md:block"
+            class="col-span-2 md:col-span-1"
             @click="displayCode()"
             >{{
               !onlyButtons
