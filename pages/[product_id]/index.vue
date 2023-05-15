@@ -205,7 +205,6 @@ async function callPayment() {
   payment.payment(locale.value);
 }
 
-
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
 );
