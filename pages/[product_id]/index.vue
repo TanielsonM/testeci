@@ -20,9 +20,6 @@ const stepsStore = useStepStore();
 const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
 
-// Recaptcha
-const recaptchaInstance = useReCaptcha();
-
 // Variables
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
@@ -198,6 +195,8 @@ function closeModal() {
 
 async function callPayment() {
   if (captchaEnabled.value) {
+    // Recaptcha
+    const recaptchaInstance = useReCaptcha();
     // optional you can await for the reCaptcha load
     await recaptchaInstance?.recaptchaLoaded();
     // get the token, a custom action could be added as argument to the method
