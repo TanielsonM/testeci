@@ -1,13 +1,11 @@
 <script setup>
-import { storeToRefs } from "pinia";
-/* Import and instance checkout store */
 import { useCheckoutStore } from "~~/store/checkout";
+
 const checkout = useCheckoutStore();
-const { global_settings } = storeToRefs(checkout);
-/* import locale */
 const { locale } = useI18n();
-/* import country list */
+const { global_settings } = storeToRefs(checkout);
 const { alphabetical, searcher } = useCountrys();
+
 /* Use locale cookie and set default value*/
 const countryDefault =
   alphabetical
@@ -40,6 +38,7 @@ const selectCountry = (country) => {
   cookie.value = JSON.stringify(country);
   selectedCountry.value = country;
   currentCountryAcronym.value = country.sigla;
+
   setTimeout(() => {
     checkout.init();
   }, 20);
@@ -49,7 +48,7 @@ const selectCountry = (country) => {
 <template>
   <section class="relative">
     <button
-      class="text-txt-color locale-focused flex h-[40px] items-center justify-between gap-5 bg-transparent pl-8"
+      class="locale-focused flex h-[40px] items-center justify-between gap-5 bg-transparent pl-8 text-txt-color"
       @click="opened = !opened"
     >
       <span class="flex items-center gap-3 text-xs">
@@ -75,24 +74,24 @@ const selectCountry = (country) => {
     <ul
       data-anima="top"
       v-if="opened"
-      class="bg-checkout absolute -left-[150px] z-50 max-h-[400px] w-max max-w-[300px] overflow-y-auto rounded p-5 shadow md:-left-[70px]"
+      class="absolute -left-[150px] z-50 max-h-[400px] w-max max-w-[300px] overflow-y-auto rounded bg-checkout p-5 shadow md:-left-[70px]"
     >
       <section
         class="mb-3 box-border flex items-center gap-4 rounded border border-gray-400 p-2 transition-colors duration-300 hover:border-gray-100"
       >
-        <Icon name="ic:sharp-search" class="text-txt-color h-[20px] w-[20px]" />
+        <Icon name="ic:sharp-search" class="h-[20px] w-[20px] text-txt-color" />
         <input
           type="text"
           :placeholder="$t('components.locales.search_country')"
           v-model="search"
-          class="bg-checkout text-txt-color w-full outline-none"
+          class="w-full bg-checkout text-txt-color outline-none"
         />
       </section>
       <li
         @click="selectCountry(country)"
         v-for="(country, index) in searcher(search)"
         :key="index"
-        class="locale-focused text-txt-color flex flex-nowrap items-center gap-3 py-3 px-3 text-xs"
+        class="locale-focused flex flex-nowrap items-center gap-3 px-3 py-3 text-xs text-txt-color"
       >
         <img
           :src="country.img"
