@@ -192,7 +192,9 @@ function closeModal() {
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>
-    <section class="flex w-full max-w-[520px] lg:max-w-[780px] flex-col gap-10 xl:min-w-[780px]">
+    <section
+      class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]"
+    >
       <!-- Purchase card -->
       <BaseCard
         class="w-full p-5 md:px-[60px] md:py-[50px]"
@@ -264,24 +266,25 @@ function closeModal() {
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <FormPurchase />
             </section>
+            <!-- Bumps -->
+            <template
+              v-if="checkout.getBumpList.length && !hasTicketInstallments"
+            >
+              <p class="my-5 w-full text-txt-color">
+                {{
+                  customCheckoutStore.hasCustomBump
+                    ? customCheckoutStore.bump_options.title
+                    : `${$t("checkout.pagamento.bump.title")} 🔥`
+                }}
+              </p>
+              <OrderBumps
+                v-for="(bump, index) in checkout.getBumpList"
+                :key="index"
+                :bump="bump"
+              />
+            </template>
           </template>
         </Steps>
-
-        <!-- Bumps -->
-        <template v-if="checkout.getBumpList.length && !hasTicketInstallments">
-          <p class="w-full text-txt-color">
-            {{
-              customCheckoutStore.hasCustomBump
-                ? customCheckoutStore.bump_options.title
-                : `${$t("checkout.pagamento.bump.title")} 🔥`
-            }}
-          </p>
-          <OrderBumps
-            v-for="(bump, index) in checkout.getBumpList"
-            :key="index"
-            :bump="bump"
-          />
-        </template>
 
         <!-- Purchase button -->
         <BaseButton
