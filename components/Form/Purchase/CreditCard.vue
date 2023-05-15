@@ -9,6 +9,7 @@ import { useInstallmentsStore } from "~~/store/modules/installments";
 import { usePaymentStore } from "@/store/modules/payment";
 
 import {
+  validateCardAmount,
   validateCardNumber,
   validateNameOnCard,
   validateExpiryMonth,
@@ -247,7 +248,6 @@ watch(installments, () => {
         v-if="method == 'TWO_CREDIT_CARDS'"
         :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
         :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        :error="!isCardValid"
         class="col-span-12"
         rules="required"
         v-model="first.amount"
@@ -255,9 +255,14 @@ watch(installments, () => {
         @blur="syncVerification('first')"
         input-id="first-amount-field"
         @vnode-before-mount="formatAmount('first')"
+        :error="
+          first.amount || hasSent
+            ? !validateCardAmount.isValidSync(clearValue(first.amount))
+            : undefined
+        "
       >
         <template #error>
-          {{ $t("checkout.cards.feedbacks.number") }}
+          {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
         </template>
       </BaseInput>
 
@@ -377,9 +382,14 @@ watch(installments, () => {
         @blur="syncVerification('second')"
         input-id="second-amount-field"
         @vnode-before-mount="formatAmount('second')"
+        :error="
+          second.amount || hasSent
+            ? !validateCardAmount.isValidSync(clearValue(second.amount))
+            : undefined
+        "
       >
         <template #error>
-          {{ $t("checkout.cards.feedbacks.number") }}
+          {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
         </template>
       </BaseInput>
       <BaseInput

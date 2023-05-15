@@ -3,8 +3,8 @@ const route = useRoute();
 await useApi()
   .read(`/link/${route.params.page}`)
   .then((res) => {
-    if (res.value.url)
-      navigateTo(res.value.url, {
+    if (res.url)
+      navigateTo(res.url, {
         external: true,
       });
   });

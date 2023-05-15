@@ -30,6 +30,7 @@ export const validateCvc = yup.string().min(3).max(4).required();
 export const validateNameOnCard = yup.string().required();
 export const validateExpiryMonth = yup.string().min(2).max(2).required();
 export const validateExpiryYear = yup.string().min(4).max(4).required();
+export const validateCardAmount = yup.number().positive().min(1).required();
 
 export const validateFirstStep = (): boolean => {
   const { name, document, cellphone } = storeToRefs(personalStore);
