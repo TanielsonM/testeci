@@ -15,7 +15,7 @@ workflow:
 
 stages:
   # - Env
-  # - Plan
+  - Plan
   - Build
   # - Deploy
 
