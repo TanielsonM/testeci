@@ -25,18 +25,15 @@ resource "aws_ecs_task_definition" "node" {
       ]
       volumesFrom = []
       mountPoints = []
-      # linuxParameters = {
-      #   initProcessEnabled = true
-      # }
-      # HealthCheck = {
-      #   Command = [
-      #     "CMD-SHELL",
-      #     "SCRIPT_NAME=/ping SCRIPT_FILENAME=\"/ping\" REQUEST_URI=\"/ping\" REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-      #   ],
-      #   Interval = 10,
-      #   Timeout  = 2,
-      #   Retries  = 2
-      # }
+      HealthCheck = {
+        Command = [
+          "CMD-SHELL",
+          "curl -f http://localhost:3000/ || exit 1"
+        ],
+        Interval = 10,
+        Timeout  = 2,
+        Retries  = 2
+      }
     }
   ])
 }
