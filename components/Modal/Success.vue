@@ -105,7 +105,7 @@ if (!!saleId && !route.query.chc) {
         :url="data.sale?.order?.boleto_url ?? sale.boleto_url"
         :id="sale.id.toString()"
         :installments="sale?.installments"
-        :amount="formatMoney(sale.amount)"
+        :amount="formatMoney(sale.total || sale.amount || sale.product?.amount)"
         :last="i + 1 == data.sale.sales.length"
         :index="i"
         :name="sale.product.name"
@@ -155,7 +155,9 @@ if (!!saleId && !route.query.chc) {
           :code="sale.qrcode"
           :url="sale.imgQrcode"
           :id="sale.id.toString()"
-          :amount="formatMoney(sale.total)"
+          :amount="
+            formatMoney(sale.total || sale.amount || sale.product?.amount)
+          "
           :last="i + 1 == data.sale.sales.length"
           :only-buttons="data.sale.sales.length == 1"
           :sales-length="data.sale.sales.length"
@@ -198,7 +200,11 @@ if (!!saleId && !route.query.chc) {
     <div class="container">
       <ModalTrialInfos
         :name="data.productOffer.data.name"
-        :amount="formatMoney(data.productOffer.data.total)"
+        :amount="
+          formatMoney(
+            data.productOffer.data.total || data.productOffer.data.amount
+          )
+        "
         :shipping-amount="
           data.productOffer.data.has_shipping_fee ??
           formatMoney(data.productOffer.data.amount_fixed_shipping_fee)
