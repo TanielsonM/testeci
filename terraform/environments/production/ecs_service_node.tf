@@ -7,7 +7,7 @@ resource "aws_ecs_service" "node" {
   enable_execute_command = true
 
   network_configuration {
-    security_groups  = aws_security_group.internal
+    security_groups  = [aws_security_group.internal.id]
     subnets          = module.vpc.private_subnets
     assign_public_ip = false
   }
