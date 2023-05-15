@@ -360,24 +360,25 @@ await checkout.init();
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <FormPurchase />
             </section>
+            <!-- Bumps -->
+            <template
+              v-if="checkout.getBumpList.length && !hasTicketInstallments"
+            >
+              <p class="my-5 w-full text-txt-color">
+                {{
+                  customCheckoutStore.hasCustomBump
+                    ? customCheckoutStore.bump_options.title
+                    : `${$t("checkout.pagamento.bump.title")} 🔥`
+                }}
+              </p>
+              <OrderBumps
+                v-for="(bump, index) in checkout.getBumpList"
+                :key="index"
+                :bump="bump"
+              />
+            </template>
           </template>
         </Steps>
-
-        <!-- Bumps -->
-        <template v-if="checkout.getBumpList.length && !hasTicketInstallments">
-          <p class="w-full text-txt-color">
-            {{
-              customCheckoutStore.hasCustomBump
-                ? customCheckoutStore.bump_options.title
-                : `${$t("checkout.pagamento.bump.title")} 🔥`
-            }}
-          </p>
-          <OrderBumps
-            v-for="(bump, index) in checkout.getBumpList"
-            :key="index"
-            :bump="bump"
-          />
-        </template>
 
         <!-- Purchase button -->
         <BaseButton
