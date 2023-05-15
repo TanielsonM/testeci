@@ -107,6 +107,7 @@ const data = ref({
         :name="data.bump.sales[0].product.name"
         :shipping-amount="formatMoney(data.bump.sales[0].shipping_amount)"
         :only-code="true"
+        :status="data.bump.sales[0].status"
       />
     </div>
   </div>
