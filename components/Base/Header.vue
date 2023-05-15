@@ -18,7 +18,10 @@ const items = computed(() => {
 </script>
 
 <template>
-  <section class="w-full flex flex-col justify-center items-center" v-if="product.isValid() && (topThumb || hasScarcity)">
+  <section
+    class="flex w-full flex-col items-center justify-center"
+    v-if="product.isValid() && (topThumb || hasScarcity)"
+  >
     <Scarcity v-if="product.isValid()" />
     <header
       v-if="topThumb && product.isValid()"
@@ -29,7 +32,7 @@ const items = computed(() => {
   </section>
   <header
     v-if="!hasScarcity && !topThumb && product.isValid()"
-    class="sticky top-0 z-50 flex min-h-[60px] w-full items-center justify-between bg-checkout px-4 shadow-lg"
+    class="header sticky top-0 z-50 flex min-h-[60px] w-full items-center justify-between bg-checkout px-4"
   >
     <img
       :src="hasCustomLogo ? hasCustomLogo : greenn"
@@ -51,3 +54,8 @@ const items = computed(() => {
         </div> -->
   </header>
 </template>
+<style lang="scss" scoped>
+.header {
+  box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.05);
+}
+</style>
