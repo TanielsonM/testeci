@@ -116,7 +116,7 @@ export default defineNuxtConfig({
     configPath: "tailwind.config",
   },
   nitro: {
-    preset: 'node-server',
+    preset: 'node-cluster',
     compressPublicAssets: {
       gzip: true
     },
