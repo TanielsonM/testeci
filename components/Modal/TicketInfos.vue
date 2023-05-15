@@ -51,6 +51,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  order: {
+    type: Object,
+    default: {},
+  },
 });
 
 const openTicket = (url: any) => {
@@ -72,7 +76,9 @@ const copy = (id: string) => {
 </script>
 <template>
   <div v-if="!onlyCode">
-    <h6 class="subtitle" v-if="index === 0">{{ $t("pg_obrigado.modal.prazo_pagar") }}</h6>
+    <h6 class="subtitle" v-if="index === 0">
+      {{ $t("pg_obrigado.modal.prazo_pagar") }}
+    </h6>
     <p class="paragraph" v-if="index === 0">
       {{ $t("pg_obrigado.modal.internet_banking") }}
     </p>
@@ -93,6 +99,7 @@ const copy = (id: string) => {
         <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
         <p>#{{ id }}</p>
       </div>
+
       <div class="item" v-if="status == 'trialing'">
         <div class="flex items-start">
           <div class="check-icon icon-success"></div>
@@ -117,7 +124,7 @@ const copy = (id: string) => {
   <div
     class="actions my-3 grid grid-cols-12 gap-3"
     :class="!last ? 'mb-5 pb-5' : ''"
-    v-if="!!code"
+    v-if="(!!code && order && last) || (!!code && !order)"
   >
     <BaseInput
       class="col-span-12 lg:col-span-5"

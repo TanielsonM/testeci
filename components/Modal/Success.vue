@@ -101,15 +101,17 @@ if (!!saleId && !route.query.chc) {
       <ModalTicketInfos
         v-for="(sale, i) in data.sale.sales"
         :key="i"
-        :code="sale.boleto_barcode"
-        :url="sale.boleto_url"
+        :code="data.sale?.order?.boleto_barcode ?? sale.boleto_barcode"
+        :url="data.sale?.order?.boleto_url ?? sale.boleto_url"
         :id="sale.id.toString()"
         :installments="sale?.installments"
-        :amount="formatMoney(sale.total)"
+        :amount="formatMoney(sale.amount)"
         :last="i + 1 == data.sale.sales.length"
         :index="i"
         :name="sale.product.name"
         :shipping-amount="formatMoney(sale.shipping_amount)"
+        :order="data.sale.order"
+        :status="sale.status"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
