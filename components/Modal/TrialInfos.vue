@@ -75,45 +75,57 @@ const data = ref({
       <p>{{ shippingAmount }}</p>
     </div>
   </div>
-  <div v-if="!!data.bump?.sales">
+  <div v-if="!!data.bump?.sales" v-for="sale in data.bump?.sales">
     <hr />
     <div class="details py-5">
       <div class="item">
         <p>{{ $t("pg_obrigado.modal.codigo_transacao") }}</p>
-        <p>#{{ data.bump.sales[0].id }}</p>
+        <p>#{{ sale.id }}</p>
       </div>
-      <div class="item">
+      <div class="item" v-if="sale.status === 'trialing'">
         <div class="flex items-start">
           <div class="check-icon icon-success"></div>
           <div class="transaction">
-            <p>{{ data.bump.sales[0].product?.name }}</p>
+            <p>{{ sale.product?.name }}</p>
             <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
-        </div>
+          </div>
         </div>
         <p>
           {{
-            data.bump.sales[0].amount == 0
+            sale.amount == 0
               ? $t("checkout.pagamento.bump.free")
-              : formatMoney(data.bump.sales[0].amount)
+              : formatMoney(sale.amount)
           }}
         </p>
       </div>
-      <div class="item" v-if="data.bump.sales[0].shipping_amount > 0">
+      <div class="item" v-else>
+        <div class="transaction">
+          <p>{{ sale.product?.name }}</p>
+        </div>
+        <p>
+          {{
+            sale.amount == 0
+              ? $t("checkout.pagamento.bump.free")
+              : formatMoney(sale.amount)
+          }}
+        </p>
+      </div>
+      <div class="item" v-if="sale.shipping_amount > 0">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
-        <p>{{ formatMoney(data.bump.sales[0].shipping_amount) }}</p>
+        <p>{{ formatMoney(sale.shipping_amount) }}</p>
       </div>
     </div>
-    <div v-if="data.bump.sales[0].method == 'BOLETO'">
+    <div v-if="sale.method == 'BOLETO'">
       <ModalTicketInfos
-        :code="data.bump.sales[0].boleto_barcode"
-        :url="data.bump.sales[0].boleto_url"
-        :id="data.bump.sales[0].id.toString()"
-        :amount="formatMoney(data.bump.sales[0].amount)"
+        :code="sale.boleto_barcode"
+        :url="sale.boleto_url"
+        :id="sale.id.toString()"
+        :amount="formatMoney(sale.amount)"
         :last="true"
-        :name="data.bump.sales[0].product.name"
-        :shipping-amount="formatMoney(data.bump.sales[0].shipping_amount)"
+        :name="sale.product.name"
+        :shipping-amount="formatMoney(sale.shipping_amount)"
         :only-code="true"
-        :status="data.bump.sales[0].status"
+        :status="sale.status"
       />
     </div>
   </div>

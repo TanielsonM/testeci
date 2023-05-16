@@ -44,7 +44,10 @@ export default defineNuxtConfig({
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
   ],
-  css: ["~/assets/scss/_global.scss"],
+  css: [
+    "~/assets/scss/fonts/montserrat/style.css",
+    "~/assets/scss/_global.scss",
+  ],
   app: {
     head: {
       charset: "utf-8",
@@ -61,16 +64,6 @@ export default defineNuxtConfig({
         {
           "http-equiv": "x-ua-compatible",
           content: "IE=edge",
-        },
-      ],
-      link: [
-        {
-          rel: "preconnect",
-          href: "https://fonts.gstatic.com",
-        },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap",
         },
       ],
       script: [
