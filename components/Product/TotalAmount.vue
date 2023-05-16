@@ -22,7 +22,7 @@ const {
 } = storeToRefs(checkout);
 
 const { getInstallments } = storeToRefs(installmentsStore);
-const { hasTicketInstallments } = storeToRefs(product);
+const { hasTicketInstallments, productType } = storeToRefs(product);
 
 function formatAmountText(installments = 1) {
   return `${installments}x de ${formatMoney(
@@ -42,6 +42,10 @@ const amountText = computed(() => {
 
   return `${formatMoney(getInstallments.value(1))}`;
 });
+
+const showInstallments = computed(() => {
+  return method.value === "BOLETO" && hasTicketInstallments.value > 1;
+});
 </script>
 
 <template>
@@ -53,7 +57,12 @@ const amountText = computed(() => {
     <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
       {{ formatMoney(amountStore.getOriginalAmount) }}
     </p>
-    <small v-if="installments < 2" class="d-block small-text leading-4">
+    <small
+      v-if="
+        installments < 2 || (method == 'BOLETO' && hasTicketInstallments < 2)
+      "
+      class="d-block small-text"
+    >
       {{ $t("order.vc_pagara") }}
     </small>
     <p class="text-lg font-semibold leading-4 text-txt-color">
@@ -63,7 +72,8 @@ const amountText = computed(() => {
       v-if="
         installments > 1 &&
         !product.hasFixedInstallments &&
-        !product.hasPreSelectedInstallments
+        !product.hasPreSelectedInstallments &&
+        !(method == 'BOLETO' && hasTicketInstallments < 2)
       "
       class="small-text leading-4"
     >

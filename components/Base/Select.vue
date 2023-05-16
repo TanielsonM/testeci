@@ -69,19 +69,19 @@ const onChange = (event) => {
 <template>
   <label
     for="input"
-    class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
+    class="flex w-full flex-col items-start gap-2 text-[14px] font-semibold text-txt-color lg:text-[15px]"
     :data-anima="animation"
   >
     {{ label }}
     <select
-      class="flex h-full max-h-[54.8px] w-full items-center rounded border border-bd-color bg-checkout p-4 font-medium outline-none transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
+      class="flex h-full max-h-[54.8px] w-full items-center rounded border border-bd-color bg-checkout p-4 font-medium outline-none transition-colors duration-300 placeholder:opacity-75 focus-within:border-main-color hover:border-main-color focus:border-main-color"
       :class="customClass"
       :disabled="disabled"
       :value="modelValue"
       :id="selectId"
       @change="onChange"
     >
-      <option v-if="placeholder" selected disabled value="">
+      <option v-if="placeholder" selected disabled value="" class="opacity-75">
         {{ placeholder }}
       </option>
       <slot>

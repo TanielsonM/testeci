@@ -99,7 +99,7 @@ const updateHeight = () => {
 <template>
   <label
     for="input"
-    class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
+    class="flex w-full flex-col items-start gap-2 text-[14px] font-semibold text-txt-color lg:text-[15px]"
     :data-anima="animation"
   >
     {{ label }}
@@ -110,7 +110,7 @@ const updateHeight = () => {
       :placeholder="placeholder"
       :autocomplete="autocomplete"
       :disabled="disabled"
-      class="flex w-full items-center gap-5 rounded border border-bd-color bg-checkout px-4 py-5 text-[13px] outline-none transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
+      class="flex w-full items-center gap-5 rounded border border-bd-color bg-checkout px-4 py-5 text-[13px] outline-none transition-colors duration-300 placeholder:opacity-75 focus-within:border-main-color hover:border-main-color focus:border-main-color"
       :class="customClass"
       @input="onInput"
     />

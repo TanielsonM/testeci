@@ -106,7 +106,7 @@ const onInput = (event) => {
     <label
       v-if="!!label"
       for="input"
-      class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
+      class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color text-[14px] lg:text-[15px]"
     >
       {{ label }}
     </label>
@@ -133,7 +133,7 @@ const onInput = (event) => {
           :readonly="readonly"
           :placeholder="placeholder"
           :autocomplete="autocomplete"
-          class="h-full w-full bg-checkout text-txt-color outline-none"
+          class="h-full w-full bg-checkout text-txt-color outline-none placeholder:opacity-75"
           @input="onInput"
           @blur="emit('blur')"
           @focus="emit('focus')"
@@ -150,7 +150,7 @@ const onInput = (event) => {
           :readonly="readonly"
           :placeholder="placeholder"
           :autocomplete="autocomplete"
-          class="h-full w-full bg-checkout text-txt-color outline-none"
+          class="h-full w-full bg-checkout text-txt-color outline-none placeholder:opacity-75"
           :data-maska="mask"
           @input="onInput"
           @blur="emit('blur')"

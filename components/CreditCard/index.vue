@@ -41,7 +41,7 @@ const props = defineProps({
 
 // Variables
 const amexCardMask = ref("•••• •••••• •••••");
-const defaultCardMask = ref("**** **** **** ****");
+const defaultCardMask = ref("•••• •••••• •••••");
 
 // Computed functions
 const getCardType = computed(() => {
@@ -116,8 +116,8 @@ function getImg(type) {
                     n < 5 || n > 12
                       ? card_number.replaceAll(" ", "")[index]
                         ? card_number.replaceAll(" ", "")[index]
-                        : "*"
-                      : "*"
+                        : "•"
+                      : "•"
                   }}
                 </span>
               </Transition>

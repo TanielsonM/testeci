@@ -88,7 +88,7 @@ function updateLead() {
 </script>
 
 <template>
-  <form class="grid w-full grid-cols-12 gap-3">
+  <form class="grid mb-8 w-full grid-cols-12 gap-3">
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.zipcode.label')"

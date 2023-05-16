@@ -4,7 +4,7 @@
       "inputs": {
         "name": {
           "label": "Nome completo",
-          "placeholder": "Digite aqui seu nome completo"
+          "placeholder": "Digite seu nome completo"
         },
         "mail": {
           "label": "Endereço de email",

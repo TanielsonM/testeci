@@ -410,7 +410,6 @@ await checkout.init();
         </Steps>
 
         <BaseButton
-          class="mt-10"
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="isMobile && currentStep < (checkout.showAddressStep() ? 3 : 2)"
         >
@@ -434,7 +433,7 @@ await checkout.init();
 
     <!-- Product Card -->
     <section
-      class="flex w-full flex-col gap-10 lg:max-w-[380px] xl:min-w-[380px]"
+      class="flex w-full flex-col gap-10 lg:max-w-[370px] xl:min-w-[370px]"
     >
       <ProductCard :product="product" data-anima="bottom" />
       <!-- Side Thumb -->
