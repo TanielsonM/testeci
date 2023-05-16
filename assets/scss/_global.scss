@@ -74,17 +74,18 @@ textarea {
   border-top: 10px solid #3483fa;
 }
 
- .vti__input {
+.vti__input {
   background: var(--checkout);
 }
 
-.vti__dropdown:hover{
+.vti__dropdown:hover {
   background-color: var(--border-color) !important;
 }
 .vti__dropdown-item.highlighted {
-  background-color:  var(--border-color) !important;
+  background-color: var(--border-color) !important;
 }
 
-.vti__dropdown.open,.vti__dropdown-item {
-  background-color:  var(--checkout) !important;
+.vti__dropdown.open,
+.vti__dropdown-item {
+  background-color: var(--checkout) !important;
 }
