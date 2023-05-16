@@ -98,3 +98,13 @@ const onChange = (event) => {
     </small>
   </label>
 </template>
+<style>
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E")
+    right 0.75rem center/8px 10px no-repeat !important;
+}
+</style>
