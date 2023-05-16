@@ -30,13 +30,15 @@ const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
     v-if="!hasScarcity && !topThumb && product.isValid()"
     class="header sticky top-0 z-50 flex min-h-[60px] w-full items-center justify-between bg-checkout px-4"
   >
-    <img
-      :src="hasCustomLogo ? hasCustomLogo : greenn"
-      alt="Logo da pagina"
-      class="max-h-10 max-w-[100px] object-contain"
-      width="100"
-      height="40"
-    />
+    <a href="https://greenn.com.br/" target="_blank">
+      <img
+        :src="hasCustomLogo ? hasCustomLogo : greenn"
+        alt="Logo da pagina"
+        class="max-h-10 max-w-[100px] object-contain"
+        width="100"
+        height="40"
+      />
+    </a>
     <div class="steps flex" v-if="isMobile">
       <div
         class="mx-1 h-2 w-2 rounded-full"
