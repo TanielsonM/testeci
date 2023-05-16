@@ -10,7 +10,7 @@ export const useStepStore = defineStore("Step", {
     currentStep: 1,
     format: "default",
     isMobile: false,
-    countSteps: 0,
+    countSteps: 2,
   }),
   actions: {
     async setStep(step = 1) {

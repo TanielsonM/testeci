@@ -11,10 +11,6 @@ const stepStore = useStepStore();
 
 const { topThumb, hasScarcity, hasCustomLogo } = storeToRefs(customCheckStore);
 const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
-
-const items = computed(() => {
-  return Array.from({ length: countSteps.value / 2 }, (_, index) => index);
-});
 </script>
 
 <template>
@@ -41,17 +37,17 @@ const items = computed(() => {
       width="100"
       height="40"
     />
-    <!-- <div class="steps flex" v-if="isMobile">
-          <div
-            class="mx-1 h-2 w-2 rounded-full"
-            :class="{
-              'bg-main-color': item <= currentStep,
-              'bg-main-transparent-color': item > currentStep,
-            }"
-            v-for="item in items"
-            :key="item"
-          ></div>
-        </div> -->
+    <div class="steps flex" v-if="isMobile">
+      <div
+        class="mx-1 h-2 w-2 rounded-full"
+        :class="{
+          'bg-main-color': item == currentStep,
+          'bg-main-transparent-color': item != currentStep,
+        }"
+        v-for="item in countSteps"
+        :key="item"
+      ></div>
+    </div>
   </header>
 </template>
 <style lang="scss" scoped>
