@@ -14,8 +14,6 @@ defineProps({
     default: () => false,
   },
 });
-
-stepStore.incrementCount();
 </script>
 
 <template>

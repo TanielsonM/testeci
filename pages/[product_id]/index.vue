@@ -23,9 +23,9 @@ const amountStore = useAmountStore();
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { method, allowed_methods, captchaEnabled, captcha_code } =
+const { method, allowed_methods, captchaEnabled } =
   storeToRefs(checkout);
-const { currentStep, isMobile } = storeToRefs(stepsStore);
+const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, hasSent } = storeToRefs(payment);
 const { document } = storeToRefs(personalStore);
 const currentCountry = useState("currentCountry");
@@ -239,6 +239,11 @@ const documentText = computed(() => {
   }
 });
 
+function incrementSteps() {
+  if (countSteps.value != 3) {
+    stepsStore.incrementCount();
+  }
+}
 await checkout.init();
 </script>
 
@@ -290,6 +295,7 @@ await checkout.init();
             checkout.showAddressStep() &&
             ((isMobile && currentStep == 2) || !isMobile)
           "
+          @vnode-mounted="incrementSteps"
         >
           <template #content>
             <FormAddress />

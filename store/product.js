@@ -125,7 +125,15 @@ export const useProductStore = defineStore("product", {
         this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
       checkout.setProductList(this.product);
-      checkout.setAllowedMethods(product.method.split(","));
+      let allowed_methods = product.method.split(",");
+      if (
+        !!product.seller.is_heaven &&
+        product.method.includes("PAYPAL") &&
+        checkout.selectedCountry !== "BR"
+      ) {
+        allowed_methods = allowed_methods.filter((item) => item != "PAYPAL");
+      }
+      checkout.setAllowedMethods(allowed_methods);
     },
   },
 });
