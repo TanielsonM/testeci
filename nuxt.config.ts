@@ -40,10 +40,10 @@ export default defineNuxtConfig({
   },
   plugins: [
     "~/plugins/maska.ts",
-    "~/plugins/captcha.ts",
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
+    "~/plugins/captcha.ts"
   ],
   css: [
     "~/assets/scss/fonts/montserrat/style.css",
@@ -115,5 +115,9 @@ export default defineNuxtConfig({
   },
   webpack: {
     aggressiveCodeRemoval: true,
-  },
+    optimization : {
+      innerGraph: true,
+      providedExports: true
+    }
+  }
 });
