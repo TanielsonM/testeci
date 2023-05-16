@@ -43,7 +43,7 @@ export default defineNuxtConfig({
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
-    { src: "~/plugins/captcha.ts", mode: "client" }
+    "~/plugins/captcha.ts"
   ],
   css: ["~/assets/scss/_global.scss"],
   app: {
