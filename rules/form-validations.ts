@@ -210,6 +210,12 @@ export const validateAll = async (): Promise<boolean> => {
     return validStepOne && validStepThree;
   }
 
+  if (checkout.method === "BOLETO" || checkout.method === "PIX") {
+    const { document } = storeToRefs(personalStore);
+    const validDocument = await validateDocument.isValid(document);
+    return validStepOne && validDocument;
+  }
+
   return validStepOne;
 };
 

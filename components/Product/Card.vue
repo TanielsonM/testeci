@@ -8,15 +8,14 @@ import { useInstallmentsStore } from "~~/store/modules/installments";
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const checkout = useCheckoutStore();
-const installmentsStore = useInstallmentsStore()
+const installmentsStore = useInstallmentsStore();
 const { t } = useI18n();
 /* State */
 const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
-const { method, installments, hasFees } =
-  storeToRefs(checkout);
+const { method, installments, hasFees } = storeToRefs(checkout);
 const { trial_position } = storeToRefs(custom_checkout);
-const { getInstallments } = storeToRefs(installmentsStore)
+const { getInstallments } = storeToRefs(installmentsStore);
 
 /* Trial message */
 const trialMessage = computed({
@@ -34,28 +33,27 @@ const trialMessage = computed({
 </script>
 
 <template>
-  <BaseCard class="bg-checkout w-full">
+  <BaseCard class="w-full bg-checkout">
     <header
-      class="bg-main-color flex h-[50px] w-full items-center gap-1 rounded-t-lg px-5"
+      class="flex h-[50px] w-full items-center gap-1 rounded-t-lg bg-main-color px-5"
     >
       <Icon name="mdi:shield-half-full" class="h-4 w-4 text-white" />
       <p class="text-sm font-semibold text-white">
         {{ $t("components.product_card.title_header") }}
       </p>
     </header>
-    <section class="flex w-full items-start gap-4 px-5">
+    <section class="flex w-full items-center px-5">
       <!-- Product Image -->
       <nuxt-img
         v-if="product.images.length"
         :src="product.images[0].path"
         preload
-        loading="lazy"
         alt="Imagem do produto"
         width="auto"
         height="auto"
         rel="preload"
         format="webp"
-        class="h-full max-h-[120px] w-[120px] rounded object-contain"
+        class="mr-[30px] h-full max-h-[120px] w-full max-w-[90px] rounded object-contain md:mr-[15px] md:max-w-[100px] xl:max-w-[120px]"
       />
       <span
         v-else
@@ -63,13 +61,15 @@ const trialMessage = computed({
       ></span>
       <!--  -->
       <!-- Product Infos -->
-      <section class="text-txt-color flex flex-col gap-1">
+      <section class="flex flex-col gap-1 text-txt-color">
         <small class="text-blue-500" v-if="productStore.isSubscription">{{
           $t("components.product_card.is_subscription")
         }}</small>
-        <h1 class="text-lg font-bold">{{ product.name }}</h1>
+        <h1 class="mb-[5px] text-[18px] font-[700] text-[#000]">
+          {{ product.name }}
+        </h1>
         <p
-          class="text-txt-color text-lg font-semibold"
+          class="text-lg font-semibold leading-4 text-txt-color"
           :class="{ underline: productStore.hasTrial }"
           v-if="productStore.hasTrial"
         >
@@ -162,9 +162,10 @@ const trialMessage = computed({
         class="flex items-center gap-1 md:flex-col md:items-start"
         v-if="custom_checkout.showWarranty"
       >
-        <span class="infos-title">{{
-          $t("components.product_card.warranty")
-        }}</span>
+        <span class="infos-title"
+          >{{ $t("components.product_card.warranty")
+          }}<span class="md:hidden">:</span></span
+        >
         <span class="infos-content"
           >{{ product.warranty }}
           {{ $t("components.product_card.warranty_days") }}</span
@@ -175,9 +176,10 @@ const trialMessage = computed({
         class="flex items-center gap-1 md:flex-col md:items-start"
         v-if="product.seller"
       >
-        <span class="infos-title">{{
-          $t("components.product_card.author")
-        }}</span>
+        <span class="infos-title"
+          >{{ $t("components.product_card.author")
+          }}<span class="md:hidden">:</span></span
+        >
         <span class="infos-content">{{ product.seller.name }}</span>
       </p>
       <!-- Email -->
@@ -189,19 +191,23 @@ const trialMessage = computed({
           product.seller.company.email
         "
       >
-        <span class="infos-title">{{ $t("general.mail") }}</span>
+        <span class="infos-title"
+          >{{ $t("general.mail") }}<span class="md:hidden">:</span></span
+        >
         <span class="infos-content">{{ product.seller.company.email }}</span>
       </p>
       <!-- Cellphone -->
       <p
-        class="flex items-center gap-2 md:flex-col md:items-start"
+        class="mb-5 flex items-center gap-2 md:flex-col md:items-start"
         v-if="
           product.seller &&
           product.seller.company &&
           product.seller.company.support_telephone
         "
       >
-        <span class="infos-title">{{ $t("general.telephone") }}</span>
+        <span class="infos-title"
+          >{{ $t("general.telephone") }}<span class="md:hidden">:</span></span
+        >
         <a
           class="text-xs text-blue-400"
           :href="`tel:${product.seller.company.support_telephone}`"

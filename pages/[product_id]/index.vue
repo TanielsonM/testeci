@@ -26,7 +26,7 @@ const { sameAddress, charge, shipping } = storeToRefs(address);
 const { method, allowed_methods, captchaEnabled, captcha_code } =
   storeToRefs(checkout);
 const { currentStep, isMobile } = storeToRefs(stepsStore);
-const { error_message, hasSent} = storeToRefs(payment);
+const { error_message, hasSent } = storeToRefs(payment);
 const { document } = storeToRefs(personalStore);
 const currentCountry = useState("currentCountry");
 
@@ -259,6 +259,7 @@ await checkout.init();
         <BaseButton
           color="transparent"
           size="sm"
+          class="mb-4"
           v-if="currentStep > 1 && currentStep <= 3 && isMobile"
           @click="stepsStore.back()"
         >
@@ -331,26 +332,26 @@ await checkout.init();
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <BaseInput
-      class="col-span-12"
-      @blur="updateLead"
-      :class="{ 'xl:col-span-6': showDocumentInput }"
-      :label="documentText.label"
-      :placeholder="documentText.placeholder"
-      v-if="showDocumentInput && isMobile"
-      input-name="document-field"
-      input-id="document-field"
-      v-model="document"
-      :mask="documentText.documentMask"
-      :error="
-        document || hasSent
-          ? !validateDocument.isValidSync(document)
-          : undefined
-      "
-    >
-      <template #error>
-        {{ $t("checkout.dados_pessoais.feedbacks.document") }}
-      </template>
-    </BaseInput>
+                class="col-span-12"
+                @blur="updateLead"
+                :class="{ 'xl:col-span-6': showDocumentInput }"
+                :label="documentText.label"
+                :placeholder="documentText.placeholder"
+                v-if="showDocumentInput && isMobile"
+                input-name="document-field"
+                input-id="document-field"
+                v-model="document"
+                :mask="documentText.documentMask"
+                :error="
+                  document || hasSent
+                    ? !validateDocument.isValidSync(document)
+                    : undefined
+                "
+              >
+                <template #error>
+                  {{ $t("checkout.dados_pessoais.feedbacks.document") }}
+                </template>
+              </BaseInput>
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <FormPurchase />
             </section>
@@ -371,12 +372,44 @@ await checkout.init();
                 :bump="bump"
               />
             </template>
+
+            <!-- Payment button -->
+            <section>
+              <BaseButton
+                @click="callPayment"
+                v-if="method !== 'PAYPAL'"
+                class="my-7"
+              >
+                <span class="text-[15px] font-semibold">
+                  {{
+                    customCheckoutStore.purchase_text ||
+                    $t("checkout.footer.btn_compra")
+                  }}
+                </span>
+              </BaseButton>
+              <small v-if="captchaEnabled">
+                {{ $t("checkout.captcha") }}
+                <a href="https://policies.google.com/privacy"
+                  >{{ $t("checkout.captcha2") }}
+                </a>
+                {{ $t("checkout.captcha4") }}
+                <a href="https://policies.google.com/terms">{{
+                  $t("checkout.captcha3")
+                }}</a>
+                {{ $t("checkout.captcha5") }}.
+              </small>
+            </section>
+
+            <span class="flex items-center gap-3">
+              <Icon name="fa6-solid:lock" class="text-main-color" />
+              <p class="text-[13px] font-normal text-txt-color">
+                {{ $t("checkout.footer.info_seguranca") }}
+              </p>
+            </span>
           </template>
         </Steps>
 
-        <!-- Purchase button -->
         <BaseButton
-          class="mt-10"
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="isMobile && currentStep < (checkout.showAddressStep() ? 3 : 2)"
         >
@@ -384,37 +417,6 @@ await checkout.init();
             {{ $t("checkout.steps.next_step") }}
           </span>
         </BaseButton>
-        <!-- Payment button -->
-        <section>
-          <BaseButton @click="callPayment" v-if="method !== 'PAYPAL' &&
-            (!isMobile ||
-              (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)))">
-            <span class="text-[15px] font-semibold">
-              {{
-                customCheckoutStore.purchase_text ||
-                $t("checkout.footer.btn_compra")
-              }}
-            </span>
-          </BaseButton>
-          <small v-if="captchaEnabled">
-            {{ $t("checkout.captcha") }}
-            <a href="https://policies.google.com/privacy"
-              >{{ $t("checkout.captcha2") }}
-            </a>
-            {{ $t("checkout.captcha4") }}
-            <a href="https://policies.google.com/terms">{{
-              $t("checkout.captcha3")
-            }}</a>
-            {{ $t("checkout.captcha5") }}.
-          </small>
-        </section>
-
-        <span class="flex items-center gap-3">
-          <Icon name="fa6-solid:lock" class="text-main-color" />
-          <p class="text-[13px] font-normal text-txt-color">
-            {{ $t("checkout.footer.info_seguranca") }}
-          </p>
-        </span>
       </BaseCard>
       <!-- End purchase card -->
 
@@ -431,7 +433,7 @@ await checkout.init();
 
     <!-- Product Card -->
     <section
-      class="flex w-full flex-col gap-10 lg:max-w-[380px] xl:min-w-[380px]"
+      class="flex w-full flex-col gap-10 lg:max-w-[370px] xl:min-w-[370px]"
     >
       <ProductCard :product="product" data-anima="bottom" />
       <!-- Side Thumb -->

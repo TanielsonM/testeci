@@ -79,7 +79,7 @@ function updateLead() {
 </script>
 
 <template>
-  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form">
+  <VeeForm class="mb-8 grid w-full grid-cols-12 gap-3" ref="personal-form">
     <BaseInput
       @blur="updateLead"
       class="col-span-12"

@@ -15,7 +15,7 @@ const defaultCountry = computed(
 // Cookies
 const cookie = useCookie("locale");
 if (!cookie.value) cookie.value = defaultCountry.value;
-else global_settings.value.country = cookie.value.sigla
+else global_settings.value.country = cookie.value.sigla;
 // Variables
 const selectedCountry = ref(cookie.value);
 const opened = ref(false);
@@ -54,7 +54,6 @@ const selectCountry = (country) => {
     >
       <span class="flex items-center gap-3 text-xs">
         <img
-          loading="lazy"
           :src="selectedCountry.img"
           width="20"
           height="20"

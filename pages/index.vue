@@ -1,6 +1,6 @@
 <script setup>
 setTimeout(() => {
-  // window.location.href = "https://greenn.com.br/";
+  window.location.href = "https://greenn.com.br/";
 }, 2000);
 </script>
 

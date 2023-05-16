@@ -46,7 +46,7 @@ const amountText = computed(() => {
   <section class="flex w-full flex-col gap-3 px-5">
     <!-- Shipping -->
     <section
-      class="flex flex-col items-start gap-1"
+      class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="checkout.hasPhysicalProduct()"
     >
       <span class="infos-title">Frete</span>
@@ -70,10 +70,13 @@ const amountText = computed(() => {
       </span>
     </section>
     <!-- Order bumps -->
-    <section class="flex flex-col items-start gap-1" v-if="hasSelectedBump">
+    <section
+      class="-mt-[9px] flex flex-col items-start md:mt-auto"
+      v-if="hasSelectedBump"
+    >
       <p class="infos-title">Order Bumps</p>
       <span
-        class="infos-content flex w-full items-center justify-between"
+        class="infos-content mt-2 flex w-full items-center justify-between"
         v-for="(bump, index) in bump_list.filter((i) => i.checkbox)"
         :key="index"
       >
@@ -91,7 +94,7 @@ const amountText = computed(() => {
     </section>
     <!-- Coupon -->
     <section
-      class="flex flex-col items-start gap-1"
+      class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="coupon.applied && coupon.amount > 0"
     >
       <span class="infos-title">{{ $t("checkout.cupom.cupom") }}</span>
@@ -102,7 +105,7 @@ const amountText = computed(() => {
     </section>
     <!-- Tax -->
     <section
-      class="flex flex-col items-start justify-between gap-1"
+      class="-mt-[9px] flex flex-col items-start justify-between md:mt-auto"
       v-if="
         typeof checkoutPayment.price === 'object' &&
         checkoutPayment.price.tax.length > 0
@@ -122,7 +125,7 @@ const amountText = computed(() => {
     </section>
     <!-- Total -->
     <section
-      class="flex items-start justify-between gap-1"
+      class="flex items-start justify-between"
       v-if="
         hasSelectedBump ||
         coupon.applied ||

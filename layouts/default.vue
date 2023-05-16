@@ -47,7 +47,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
       </BaseCard>
       <section
         v-else
-        class="flex flex-col-reverse gap-10 overflow-x-hidden md:items-start md:gap-16 lg:flex-row"
+        class="flex flex-col-reverse gap-10 overflow-x-hidden md:items-start lg:flex-row"
       >
         <slot />
       </section>
