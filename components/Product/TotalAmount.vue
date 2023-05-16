@@ -53,10 +53,10 @@ const amountText = computed(() => {
     <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
       {{ formatMoney(amountStore.getOriginalAmount) }}
     </p>
-    <small v-if="installments < 2" class="d-block small-text">
+    <small v-if="installments < 2" class="d-block small-text leading-4">
       {{ $t("order.vc_pagara") }}
     </small>
-    <p class="text-lg font-semibold text-txt-color">
+    <p class="text-lg font-semibold leading-4 text-txt-color">
       {{ amountText }}
     </p>
     <small
@@ -65,7 +65,7 @@ const amountText = computed(() => {
         !product.hasFixedInstallments &&
         !product.hasPreSelectedInstallments
       "
-      class="small-text"
+      class="small-text leading-4"
     >
       {{ $t("order.a_vista") }}
       {{ formatMoney(getInstallments(1)) }}
