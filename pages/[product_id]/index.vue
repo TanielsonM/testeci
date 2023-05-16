@@ -6,7 +6,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
-import { useReCaptcha } from "vue-recaptcha-v3";
 import { usePersonalStore } from "@/store/forms/personal";
 import { validateDocument } from "@/rules/form-validations";
 
@@ -195,14 +194,9 @@ function closeModal() {
 
 async function callPayment() {
   if (captchaEnabled.value) {
-    // Recaptcha
-    const recaptchaInstance = useReCaptcha();
-    // optional you can await for the reCaptcha load
-    await recaptchaInstance?.recaptchaLoaded();
-    // get the token, a custom action could be added as argument to the method
-    captcha_code.value = await recaptchaInstance?.executeRecaptcha("submit");
+    await window.grecaptcha.execute();
   }
-  payment.payment(locale.value);
+  // payment.payment(locale.value);
 }
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
@@ -480,6 +474,7 @@ await checkout.init();
         :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount"
       />
+      <Captcha />
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />

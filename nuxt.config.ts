@@ -43,7 +43,6 @@ export default defineNuxtConfig({
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
-    "~/plugins/captcha.ts"
   ],
   css: [
     "~/assets/scss/fonts/montserrat/style.css",
@@ -65,6 +64,13 @@ export default defineNuxtConfig({
         {
           "http-equiv": "x-ua-compatible",
           content: "IE=edge",
+        },
+      ],
+      script: [
+        {
+          src: "https://www.google.com/recaptcha/api.js",
+          async: true,
+          defer: true,
         },
       ],
     },
@@ -115,9 +121,9 @@ export default defineNuxtConfig({
   },
   webpack: {
     aggressiveCodeRemoval: true,
-    optimization : {
+    optimization: {
       innerGraph: true,
-      providedExports: true
-    }
-  }
+      providedExports: true,
+    },
+  },
 });
