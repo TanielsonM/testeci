@@ -40,10 +40,10 @@ export default defineNuxtConfig({
   },
   plugins: [
     "~/plugins/maska.ts",
-    "~/plugins/captcha.ts",
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
+    { src: "~/plugins/captcha.ts", mode: "client" }
   ],
   css: ["~/assets/scss/_global.scss"],
   app: {
@@ -121,6 +121,10 @@ export default defineNuxtConfig({
     sourceMap: false,
   },
   webpack: {
-    aggressiveCodeRemoval: true
+    aggressiveCodeRemoval: true,
+    optimization : {
+      innerGraph: true,
+      providedExports: true
+    }
   }
 });
