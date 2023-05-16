@@ -196,7 +196,7 @@ async function callPayment() {
   if (captchaEnabled.value) {
     await window.grecaptcha.execute();
   }
-  // payment.payment(locale.value);
+  payment.payment(locale.value);
 }
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
