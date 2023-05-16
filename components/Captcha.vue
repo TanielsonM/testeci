@@ -1,13 +1,27 @@
 <script setup>
 const checkStore = useCheckoutStore();
-const { captcha_code } = storeToRefs(checkStore);
+const { captcha_code, captchaEnabled } = storeToRefs(checkStore);
 const recaptcha = ref(null);
 
 onMounted(() => {
+  console.log("captchaEnabled", captchaEnabled.value);
   if (process.client) {
     const config = useRuntimeConfig();
-
+    window.recaptchaIsLoading = false;
     const loadRecaptcha = () => {
+      if (!window.recaptchaIsLoading) {
+        window.recaptchaIsLoading = true;
+        useHead({
+          script: [
+            {
+              id: "recaptcha",
+              src: `https://www.google.com/recaptcha/api.js`,
+              async: true,
+              defer: true,
+            },
+          ],
+        });
+      }
       if (window.grecaptcha) {
         window.grecaptcha.render(recaptcha.value, {
           sitekey: config.public.RECAPTCHA_KEY,
@@ -17,11 +31,13 @@ onMounted(() => {
       } else {
         setTimeout(() => {
           loadRecaptcha();
-        }, 100);
+        }, 1000);
       }
     };
 
-    loadRecaptcha();
+    if (captchaEnabled.value) {
+      loadRecaptcha();
+    }
   }
 });
 
