@@ -43,7 +43,6 @@ export default defineNuxtConfig({
     "~/plugins/vue-toast.ts",
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
-    "~/plugins/captcha.ts"
   ],
   css: ["~/assets/scss/_global.scss"],
   app: {
@@ -72,6 +71,13 @@ export default defineNuxtConfig({
         {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap",
+        },
+      ],
+      script: [
+        {
+          src: "https://www.google.com/recaptcha/api.js",
+          async: true,
+          defer: true,
         },
       ],
     },
@@ -116,15 +122,15 @@ export default defineNuxtConfig({
     configPath: "tailwind.config",
   },
   nitro: {
-    preset: 'node-server',
+    preset: "node-server",
     minify: true,
     sourceMap: false,
   },
   webpack: {
     aggressiveCodeRemoval: true,
-    optimization : {
+    optimization: {
       innerGraph: true,
-      providedExports: true
-    }
-  }
+      providedExports: true,
+    },
+  },
 });
