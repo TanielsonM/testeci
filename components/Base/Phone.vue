@@ -128,7 +128,7 @@ onMounted(() => {
     <label
       v-if="!!label"
       for="input"
-      class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color"
+      class="flex w-full flex-col items-start gap-2 text-[14px] font-semibold text-txt-color lg:text-[15px]"
     >
       {{ label }}
     </label>
@@ -142,7 +142,7 @@ onMounted(() => {
           v-model="cellphone"
           :value="modelValue"
           :class="customClass"
-          class="h-full w-full bg-checkout text-txt-color outline-none"
+          class="h-full w-full bg-checkout text-txt-color outline-none placeholder:opacity-75"
           @validate="validatePhone"
           @on-input="onInput"
           @blur="emit('blur')"
@@ -172,7 +172,7 @@ onMounted(() => {
     </VeeErrorMessage>
   </div>
 </template>
-<style>
+<style lang="scss">
 .vue-tel-input {
   display: flex;
   text-align: left;
@@ -284,6 +284,10 @@ onMounted(() => {
   width: 100%;
   outline: none;
   padding-left: 7px;
+
+  &::placeholder {
+    opacity: 0.75;
+  }
 }
 .vti__search_box {
   border: 1px solid #ccc;
