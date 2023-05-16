@@ -1,48 +1,47 @@
 <script setup>
-import { useCheckoutStore } from "~~/store/checkout";
-
+// Store
 const checkout = useCheckoutStore();
+// Composables
 const { locale } = useI18n();
 const { global_settings } = storeToRefs(checkout);
 const { alphabetical, searcher } = useCountrys();
-
-/* Use locale cookie and set default value*/
-const countryDefault =
-  alphabetical
-    .filter((item) => item.sigla === global_settings.value.country)
-    .pop() || searcher("OTHERS").pop();
+// Computeds
+const defaultCountry = computed(
+  () =>
+    alphabetical
+      .filter((item) => item.sigla === global_settings.value.country)
+      .pop() || searcher("OTHERS").pop()
+);
+// Cookies
 const cookie = useCookie("locale");
+if (!cookie.value) cookie.value = defaultCountry.value;
+else global_settings.value.country = cookie.value.sigla
+// Variables
+const selectedCountry = ref(cookie.value);
+const opened = ref(false);
+const search = ref("");
 
-// Reset Cookie value
-cookie.value = null;
-cookie.value = countryDefault;
-
-/* set default value in locale */
-locale.value = cookie.value.language;
-/* set default value in use state */
+// State
 const currentCountryAcronym = useState(
   "currentCountry",
   () => cookie.value.sigla
 );
-/* Get current country */
-const currentCountry = computed(() =>
-  alphabetical.filter((item) => item.sigla === cookie.value.sigla).pop()
-);
-/* set current country in controller variable */
-const selectedCountry = ref(currentCountry.value);
-const opened = ref(false);
-const search = ref("");
-/* Function to set new country after selected */
+
+// Code Here
+locale.value = cookie.value.language;
+
 const selectCountry = (country) => {
-  opened.value = !opened.value;
   search.value = "";
-  locale.value = country.language;
-  cookie.value = JSON.stringify(country);
+  opened.value = !opened.value;
   selectedCountry.value = country;
+  locale.value = country.language;
   currentCountryAcronym.value = country.sigla;
+  cookie.value = null;
+  cookie.value = country;
+  global_settings.value.country = country.sigla;
 
   setTimeout(() => {
-    checkout.init();
+    checkout.init(true);
   }, 20);
 };
 </script>
