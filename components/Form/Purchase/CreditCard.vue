@@ -343,6 +343,7 @@ watch(installments, () => {
 
       <BaseInput
         :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
+        placeholder=" "
         mask="###"
         class="col-span-12 sm:col-span-4"
         v-model="first.cvv"
