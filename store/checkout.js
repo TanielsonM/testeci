@@ -160,11 +160,11 @@ export const useCheckoutStore = defineStore("checkout", {
     },
   },
   actions: {
-    async init() {
+    async init(byChangeCountry = false) {
       this.resetProducts();
       amountStore.reset();
       this.setLoading(true);
-      await this.getGlobalSettings();
+      await this.getGlobalSettings(byChangeCountry);
 
       const { params, query, fullPath } = useRoute();
       this.url.params = params;
@@ -184,7 +184,7 @@ export const useCheckoutStore = defineStore("checkout", {
     setUUID(uuid) {
       return (this.uuid = uuid);
     },
-    async getGlobalSettings() {
+    async getGlobalSettings(byChangeCountry = false) {
       const keys = [
         "PAGARME_ANTIFRAUDE",
         "MONTHLY_INTEREST",
@@ -195,8 +195,10 @@ export const useCheckoutStore = defineStore("checkout", {
         await useApi()
           .read("/global-settings", { query })
           .then((res) => {
-            const headers = useRequestHeaders(["cf-ipcountry"]);
-            this.global_settings.country = headers["cf-ipcountry"] || "BR";
+            if (!byChangeCountry) {
+              const headers = useRequestHeaders(["cf-ipcountry"]);
+              this.global_settings.country = headers["cf-ipcountry"] || "BR";
+            }
             res.forEach((item) => {
               if (item.key == "PAGARME_ANTIFRAUDE") {
                 this.global_settings.antifraud =

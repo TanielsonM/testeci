@@ -75,7 +75,7 @@ const props = defineProps({
 const personalStore = usePersonalStore();
 const checkoutStore = useCheckoutStore();
 const { validPhone } = storeToRefs(personalStore);
-const { global_settings } = storeToRefs(checkoutStore);
+const { selectedCountry } = storeToRefs(checkoutStore);
 
 let cellphone = ref("");
 let isValid = true;
@@ -87,7 +87,7 @@ const bindProps = {
   required: true,
   enabledCountryCode: true,
   autoDefaultCountry: false,
-  defaultCountry: global_settings.value.country ?? "BR",
+  defaultCountry: selectedCountry.value !== "UK" ? selectedCountry.value : "GB",
   enabledFlags: true,
   autocomplete: "off",
   name: "cellphone",
