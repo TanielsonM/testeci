@@ -28,7 +28,7 @@ const props = defineProps({
   placeholder: {
     type: String,
     required: false,
-    default: () => "Digite aqui...",
+    default: () => "",
   },
   animation: {
     type: String,
