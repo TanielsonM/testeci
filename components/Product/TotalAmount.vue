@@ -50,10 +50,6 @@ const showInstallments = computed(() => {
 
 <template>
   <ClientOnly>
-    <template #fallback>
-      <LoadingShimmer width="150px" height="30px" />
-      <LoadingShimmer width="120px" height="20px" />
-    </template>
     <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
       {{ formatMoney(amountStore.getOriginalAmount) }}
     </p>

@@ -29,7 +29,7 @@ defineProps({
       <p class="text-2xl text-main-color" v-if="icon">
         <Icon :name="icon" />
       </p>
-      <p class="flex-nowrap text-input-color">
+      <p class="ml-3 flex-nowrap text-input-color">
         {{ title }}
       </p>
     </span>

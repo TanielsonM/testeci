@@ -171,38 +171,46 @@ function getImg(type) {
           </CreditCardLabel>
         </section>
       </section>
+
       <section
         class="flip-card-back card flex h-[208px] w-full flex-col justify-between rounded-lg border border-main-color bg-main-transparent p-5 pt-8"
       >
-        <span class="card-target card-target-size"></span>
+        <section class="cvv-position mb-5 mt-3 flex flex-col items-end">
+          <span class="card-target card-target-size"></span>
+          <label
+            class="mb-1 text-[15px] font-[500] text-input-color opacity-70"
+          >
+            {{ $t("checkout.pagamento.metodos.um_cartao.CVV") }}
+          </label>
+          <section
+            class="mb-5 w-full text-right"
+            :class="{ 'on-focus': flip_card }"
+          >
+            <Transition name="slide-fade-up" mode="out-in">
+              <span
+                class="font-semibold text-txt-color"
+                v-if="card_cvv"
+                v-bind:key="card_cvv"
+              >
+                {{ String(card_cvv).slice(0, 3) }}
+              </span>
+              <span class="font-semibold text-txt-color" v-else key="3"
+                >&nbsp;</span
+              >
+            </Transition>
+          </section>
+        </section>
 
-        <CreditCardLabel
-          :class="{ 'on-focus': on_focus === 'cvv' }"
-          class="cvv-position mt-6"
-          :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
-          :isBack="true"
-        >
+        <div class="flag flex w-full items-end justify-end">
           <Transition name="slide-fade-up" mode="out-in">
-            <span
-              class="font-semibold text-txt-color"
-              v-if="card_cvv"
-              v-bind:key="card_cvv"
-            >
-              {{ String(card_cvv).slice(0, 3) }}
-            </span>
-            <span class="font-semibold text-txt-color" v-else key="3">•••</span>
+            <img
+              v-bind:src="getImg(getCardType)"
+              v-if="getCardType"
+              v-bind:key="getCardType"
+              class="max-w-[50px] object-contain pt-3 invert"
+            />
           </Transition>
-        </CreditCardLabel>
-
-        <Transition name="slide-fade-up" mode="out-in">
-          <img
-            v-bind:src="getImg(getCardType)"
-            v-if="getCardType"
-            v-bind:key="getCardType"
-            alt="Bandeira do cartao"
-            class="float-left max-w-[50px] object-contain invert"
-          />
-        </Transition>
+        </div>
       </section>
     </section>
   </section>
@@ -280,18 +288,11 @@ function getImg(type) {
   display: block;
   background: rgba(0, 0, 19, 0.8);
   height: 45px;
+  position: absolute;
+  left: -1.25rem;
+  top: -3.5rem;
 }
-
-@media (min-width: 1280px) {
-  .card-target-size {
-    width: 114.9%;
-    margin-left: -1.29rem;
-  }
-}
-@media (max-width: 1279px) {
-  .card-target-size {
-    width: 110.7%;
-    margin-left: -1.31rem;
-  }
+.card-target-size {
+  width: calc(100% + 1.25rem * 2);
 }
 </style>
