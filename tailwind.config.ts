@@ -17,6 +17,7 @@ export default <Partial<Config>>{
         checkout: "var(--checkout)",
         error: "var(--error)",
         "txt-color": "var(--txt-color)",
+        "input-color": "var(--input-color)",
         "main-color": "var(--main-color)",
         "main-transparent-color": "var(--transparent-color)",
         "main-transparent": "var(--transparent)",
