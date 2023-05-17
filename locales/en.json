@@ -67,11 +67,11 @@
       "gift_placeholder": "Write a message to the recipient of the gift."
     },
     "locales": {
-      "change_country": "Change country",
+      "change_country": "Change Country",
       "search_country": "Search country"
     },
     "steps": {
-      "personal_data": "Personal data",
+      "personal_data": "Personal Data",
       "address": "Address"
     },
     "footer": {

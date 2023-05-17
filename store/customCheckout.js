@@ -62,6 +62,7 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     purchase_text: (state) => state?.custom_checkout?.button_text,
     hasNotifications: (state) =>
       state?.custom_checkout?.purchase_notification === "on",
+    isOneStep: (state) => state?.custom_checkout?.step_checkout === "one_step",
   },
   actions: {
     async getCustomCheckout() {
@@ -105,7 +106,6 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     setNotifications(interval, howGet, quantity, type) {
       const toast = Toast.useToast();
       if (!!this.notifications) {
-
         let time = 0;
 
         for (let i = 0; i < this.notifications.length; i++) {
@@ -142,11 +142,9 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
           }
 
           if (localStorage.getItem(`notification${notification.id}`) === null) {
-            time = time + 
-              this.getRandomInt(
-                interval.split(",")[0],
-                interval.split(",")[1]
-              );
+            time =
+              time +
+              this.getRandomInt(interval.split(",")[0], interval.split(",")[1]);
             setTimeout(() => {
               localStorage.setItem(`notification${notification.id}`, "true");
               toast.success(content, {

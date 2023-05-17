@@ -9,7 +9,8 @@ const customCheckStore = useCustomCheckoutStore();
 const product = useProductStore();
 const stepStore = useStepStore();
 
-const { topThumb, hasScarcity, hasCustomLogo } = storeToRefs(customCheckStore);
+const { topThumb, hasScarcity, hasCustomLogo, isOneStep } =
+  storeToRefs(customCheckStore);
 const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
 </script>
 
@@ -39,7 +40,7 @@ const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
         height="40"
       />
     </a>
-    <div class="steps flex" v-if="isMobile">
+    <div class="steps flex" v-if="isMobile && !isOneStep">
       <div
         class="mx-1 h-2 w-2 rounded-full"
         :class="{
