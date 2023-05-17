@@ -37,7 +37,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
     :data-theme_color="custom_checkout.themeColor"
   >
     <BaseHeader />
-    <section class="flex w-full max-w-[1300px] justify-center px-5">
+    <section class="flex w-full max-w-[1240px]">
       <BaseCard
         class="mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-b-4 border-gray-200 border-b-error px-5 py-10 md:px-20"
         v-if="!product.isValid()"
@@ -47,7 +47,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
       </BaseCard>
       <section
         v-else
-        class="flex flex-col-reverse gap-10 overflow-x-hidden md:items-start lg:flex-row"
+        class="flex flex-col-reverse gap-10 overflow-x-hidden px-3 md:items-start md:overflow-x-auto lg:flex-row"
       >
         <slot />
       </section>

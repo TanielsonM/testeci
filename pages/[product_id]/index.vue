@@ -23,12 +23,12 @@ const amountStore = useAmountStore();
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { method, allowed_methods, captchaEnabled } =
-  storeToRefs(checkout);
+const { method, allowed_methods, captchaEnabled } = storeToRefs(checkout);
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, hasSent } = storeToRefs(payment);
 const { document } = storeToRefs(personalStore);
 const currentCountry = useState("currentCountry");
+const { isOneStep } = storeToRefs(customCheckoutStore);
 
 // Refs
 const alert_modal = ref(false);
@@ -265,7 +265,7 @@ await checkout.init();
           color="transparent"
           size="sm"
           class="mb-4"
-          v-if="currentStep > 1 && currentStep <= 3 && isMobile"
+          v-if="currentStep > 1 && currentStep <= 3 && isMobile && !isOneStep"
           @click="stepsStore.back()"
         >
           <div class="flex items-start justify-start text-left">
@@ -277,7 +277,7 @@ await checkout.init();
         <Steps
           :title="$t('components.steps.personal_data')"
           step="01"
-          v-if="(isMobile && currentStep == 1) || !isMobile"
+          v-if="(isMobile && currentStep == 1) || !isMobile || isOneStep"
         >
           <template #end-line>
             <LocaleSelect />
@@ -292,8 +292,9 @@ await checkout.init();
           :title="$t('components.steps.address')"
           step="02"
           v-if="
-            checkout.showAddressStep() &&
-            ((isMobile && currentStep == 2) || !isMobile)
+            (checkout.showAddressStep() &&
+              ((isMobile && currentStep == 2) || !isMobile)) ||
+            (isOneStep && checkout.showAddressStep())
           "
           @vnode-mounted="incrementSteps"
         >
@@ -332,7 +333,8 @@ await checkout.init();
           :step="checkout.showAddressStep() ? '03' : '02'"
           v-if="
             (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)) ||
-            !isMobile
+            !isMobile ||
+            isOneStep
           "
         >
           <template #content>
@@ -417,7 +419,11 @@ await checkout.init();
 
         <BaseButton
           @click="stepsStore.setStep(currentStep + 1)"
-          v-if="isMobile && currentStep < (checkout.showAddressStep() ? 3 : 2)"
+          v-if="
+            isMobile &&
+            currentStep < (checkout.showAddressStep() ? 3 : 2) &&
+            !isOneStep
+          "
         >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}

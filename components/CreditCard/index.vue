@@ -208,7 +208,7 @@ function getImg(type) {
               v-bind:src="getImg(getCardType)"
               v-if="getCardType"
               v-bind:key="getCardType"
-              class="max-w-[50px] object-contain pt-3 invert"
+              class="max-h-[40px] max-w-[50px] object-contain pt-3 invert"
             />
           </Transition>
         </div>

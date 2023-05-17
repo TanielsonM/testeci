@@ -1,6 +1,6 @@
 <template>
   <section
-    class="card bg-checkout flex h-auto w-full max-w-[1200px] flex-col gap-4 rounded-lg"
+    class="card flex h-auto w-full max-w-[771.66px] flex-col gap-4 rounded-lg bg-checkout"
   >
     <slot />
   </section>
@@ -8,6 +8,7 @@
 
 <style lang="scss" scoped>
 .card {
-  box-shadow: 2px 4px 10px rgba($color: #000000, $alpha: 0.05);
+  -webkit-box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.05);
 }
 </style>
