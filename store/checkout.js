@@ -165,9 +165,9 @@ export const useCheckoutStore = defineStore("checkout", {
       amountStore.reset();
       this.setLoading(true);
 
-      if (!byChangeCountry) {
+      if (!byChangeCountry && !process.client) {
         const headers = useRequestHeaders(["cf-ipcountry"]);
-        this.global_settings.country = headers["cf-ipcountry"] || "BR";
+        this.global_settings.country = headers["cf-ipcountry"] || 'BR';
       }
 
       const { params, query, fullPath } = useRoute();
@@ -192,19 +192,15 @@ export const useCheckoutStore = defineStore("checkout", {
       const product = useProductStore();
       const { setProduct } = product;
       /* Get country */
-      const cookie = useCookie("locale");
-      let country = null;
-      if (cookie?.value) country = cookie?.value?.sigla;
       /* Set product url */
       const url = offer
         ? `/product/test-checkout/${id}/offer/${offer}`
         : `/product/test-checkout/${id}`;
       /* Set country in query */
-      const query = {};
-      if (country) query.country = country;
-      if (this.selectedCountry !== "BR" && !country) {
-        query.country = this.selectedCountry;
-      }
+      const query = {
+        country: this.selectedCountry
+      };
+
       /* Call api to get product */
       try {
         await useApi()
@@ -213,6 +209,7 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then((response) => {
+            console.log(process.client,url, configs, query,response)
             if (
               response.checkout_payment &&
               response.checkout_payment.data &&
@@ -263,8 +260,13 @@ export const useCheckoutStore = defineStore("checkout", {
             } else {
               this.bump_list.push({ ...response.data, checkbox: false });
             }
-          });
+          })
+          .catch(err => {
+            console.error(err);
+          })
+          ;
       } catch (error) {
+        console.error(error);
         if (!isBump) {
           this.setError("Ocorreu um erro ao processar a sua solicitação");
           this.global_settings.country = "BR";
@@ -284,6 +286,7 @@ export const useCheckoutStore = defineStore("checkout", {
         const res = await useApi().read(url, { query });
         return res;
       } catch (error) {
+        console.error(error);
         throw error;
       } finally {
         this.coupon.loading = false;
@@ -445,8 +448,8 @@ export const useCheckoutStore = defineStore("checkout", {
       this.setInstallments(
         store.hasPreSelectedInstallments ?? store.resolveInstallments(),
         store.product.max_installments ||
-          store.product.max_subscription_installments ||
-          12,
+        store.product.max_subscription_installments ||
+        12,
         store.hasFixedInstallments,
         store.hasTicketInstallments > 1 ? store.hasTicketInstallments : 1
       );

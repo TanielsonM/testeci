@@ -12,23 +12,20 @@ const defaultCountry = computed(
       .filter((item) => item.sigla === global_settings.value.country)
       .pop() || searcher("OTHERS").pop()
 );
-// Cookies
-const cookie = useCookie("locale");
-if (!cookie.value) cookie.value = defaultCountry.value;
-else global_settings.value.country = cookie.value.sigla;
+
 // Variables
-const selectedCountry = ref(cookie.value);
+const selectedCountry = ref(defaultCountry.value);
 const opened = ref(false);
 const search = ref("");
 
 // State
 const currentCountryAcronym = useState(
   "currentCountry",
-  () => cookie.value.sigla
+  () => selectedCountry.value.sigla
 );
 
 // Code Here
-locale.value = cookie.value.language;
+locale.value = selectedCountry.value.language;
 
 const selectCountry = (country) => {
   search.value = "";
@@ -36,8 +33,6 @@ const selectCountry = (country) => {
   selectedCountry.value = country;
   locale.value = country.language;
   currentCountryAcronym.value = country.sigla;
-  cookie.value = null;
-  cookie.value = country;
   global_settings.value.country = country.sigla;
 
   setTimeout(() => {
