@@ -209,7 +209,6 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then((response) => {
-            console.log(process.client,url, configs, query,response)
             if (
               response.checkout_payment &&
               response.checkout_payment.data &&

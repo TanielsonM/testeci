@@ -4,7 +4,6 @@ const { captcha_code, captchaEnabled } = storeToRefs(checkStore);
 const recaptcha = ref(null);
 
 onMounted(() => {
-  console.log("captchaEnabled", captchaEnabled.value);
   if (process.client) {
     const config = useRuntimeConfig();
     window.recaptchaIsLoading = false;
