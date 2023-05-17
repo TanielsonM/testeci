@@ -193,7 +193,7 @@ export const useCheckoutStore = defineStore("checkout", {
       const { setProduct } = product;
       /* Get country */
       const cookie = useCookie("locale");
-      let country = "";
+      let country = null;
       if (cookie?.value) country = cookie?.value?.sigla;
       /* Set product url */
       const url = offer
