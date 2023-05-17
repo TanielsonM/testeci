@@ -67,11 +67,11 @@
       "gift_placeholder": "Escreva uma mensagem para quem receberá o presente"
     },
     "locales": {
-      "change_country": "Alterar país",
+      "change_country": "Alterar País",
       "search_country": "Buscar país"
     },
     "steps": {
-      "personal_data": "Dados pessoais",
+      "personal_data": "Dados Pessoais",
       "address": "Endereço"
     },
     "footer": {

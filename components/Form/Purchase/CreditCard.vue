@@ -488,7 +488,6 @@ watch(installments, () => {
       class="flip-class hidden md:block"
       ref="creditCard"
       data-anima="bottom"
-      :on_focus="isOnFocus"
       :flip_card="isCardBack"
       :card_cvv="first.cvv"
       :card_year="first.year"
