@@ -65,7 +65,7 @@ const trialMessage = computed({
         <small class="text-blue-500" v-if="productStore.isSubscription">{{
           $t("components.product_card.is_subscription")
         }}</small>
-        <h1 class="mb-[5px] text-[18px] font-[700] text-txt-color">
+        <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">
           {{ product.name }}
         </h1>
         <p

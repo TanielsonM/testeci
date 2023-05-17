@@ -88,16 +88,6 @@ const showInstallments = computed(() => {
   }
   return false;
 });
-
-const config = useRuntimeConfig();
-useHead({
-  script: [
-    {
-      id: "paypal_id",
-      src: `https://www.paypal.com/sdk/js?client-id=${config.public.PAYPAL_CLIENT_ID_NATIONAL}&currency=BRL&disable-funding=credit,card,mercadopago`,
-    },
-  ],
-});
 </script>
 
 <template>
