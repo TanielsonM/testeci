@@ -204,6 +204,7 @@ function getImg(type) {
         <div class="flag flex w-full items-end justify-end">
           <Transition name="slide-fade-up" mode="out-in">
             <img
+              alt="Bandeira do cartao"
               v-bind:src="getImg(getCardType)"
               v-if="getCardType"
               v-bind:key="getCardType"
