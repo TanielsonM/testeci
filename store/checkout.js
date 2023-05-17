@@ -164,7 +164,11 @@ export const useCheckoutStore = defineStore("checkout", {
       this.resetProducts();
       amountStore.reset();
       this.setLoading(true);
-      await this.getGlobalSettings(byChangeCountry);
+
+      if (!byChangeCountry) {
+        const headers = useRequestHeaders(["cf-ipcountry"]);
+        this.global_settings.country = headers["cf-ipcountry"] || "BR";
+      }
 
       const { params, query, fullPath } = useRoute();
       this.url.params = params;
@@ -184,41 +188,6 @@ export const useCheckoutStore = defineStore("checkout", {
     setUUID(uuid) {
       return (this.uuid = uuid);
     },
-    async getGlobalSettings(byChangeCountry = false) {
-      const keys = [
-        "PAGARME_ANTIFRAUDE",
-        "MONTHLY_INTEREST",
-        "CHECKOUT_CAPTCHA",
-      ];
-      const query = { keys: keys.join(",") };
-      try {
-        await useApi()
-          .read("/global-settings", { query })
-          .then((res) => {
-            if (!byChangeCountry) {
-              const headers = useRequestHeaders(["cf-ipcountry"]);
-              this.global_settings.country = headers["cf-ipcountry"] || "BR";
-            }
-            res.forEach((item) => {
-              if (item.key == "PAGARME_ANTIFRAUDE") {
-                this.global_settings.antifraud =
-                  item.value == "ENABLED" ? true : false;
-              }
-              if (item.key == "MONTHLY_INTEREST") {
-                this.global_settings.monthly_interest = parseFloat(item.value);
-              }
-              if (item.key == "CHECKOUT_CAPTCHA") {
-                this.global_settings.captcha =
-                  item.value == "ENABLED" ? true : false;
-              }
-            });
-          });
-      } catch (error) {
-        this.setError("Ocorreu um erro ao processar os dados do produto");
-        this.global_settings.country = "BR";
-        this.setLoading();
-      }
-    },
     async getProduct(id, offer = null, isBump = false, configs = {}) {
       const product = useProductStore();
       const { setProduct } = product;
@@ -227,8 +196,8 @@ export const useCheckoutStore = defineStore("checkout", {
       const country = cookie.value?.sigla;
       /* Set product url */
       const url = offer
-        ? `/product/checkout/${id}/offer/${offer}`
-        : `/product/checkout/${id}`;
+        ? `/product/test-checkout/${id}/offer/${offer}`
+        : `/product/test-checkout/${id}`;
       /* Set country in query */
       const query = {};
       if (country) query.country = country;
@@ -265,6 +234,27 @@ export const useCheckoutStore = defineStore("checkout", {
               }
               response.data = { ...response.data, shipping };
             }
+            if (
+              !isBump &&
+              response?.global_settings &&
+              Array.isArray(response?.global_settings)
+            ) {
+              response.global_settings.forEach((item) => {
+                if (item.key == "PAGARME_ANTIFRAUDE") {
+                  this.global_settings.antifraud =
+                    item.value == "ENABLED" ? true : false;
+                }
+                if (item.key == "MONTHLY_INTEREST") {
+                  this.global_settings.monthly_interest = parseFloat(
+                    item.value
+                  );
+                }
+                if (item.key == "CHECKOUT_CAPTCHA") {
+                  this.global_settings.captcha =
+                    item.value == "ENABLED" ? true : false;
+                }
+              });
+            }
 
             if (response?.data && !isBump) {
               this.checkoutPayment = response.checkout_payment;
@@ -274,8 +264,10 @@ export const useCheckoutStore = defineStore("checkout", {
             }
           });
       } catch (error) {
-        if (!isBump)
+        if (!isBump) {
           this.setError("Ocorreu um erro ao processar a sua solicitação");
+          this.global_settings.country = "BR";
+        }
         this.setLoading();
       }
     },
