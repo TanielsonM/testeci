@@ -32,7 +32,11 @@ function formatAmountText(installments = 1) {
 
 /* computeds */
 const amountText = computed(() => {
-  if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
+  if (
+    method.value === "BOLETO" &&
+    hasTicketInstallments.value > 1 &&
+    ticket_installments.value > 1
+  ) {
     return formatAmountText(ticket_installments.value);
   }
 
@@ -41,10 +45,6 @@ const amountText = computed(() => {
   }
 
   return `${formatMoney(getInstallments.value(1))}`;
-});
-
-const showInstallments = computed(() => {
-  return method.value === "BOLETO" && hasTicketInstallments.value > 1;
 });
 </script>
 
@@ -55,7 +55,9 @@ const showInstallments = computed(() => {
     </p>
     <small
       v-if="
-        installments < 2 || (method == 'BOLETO' && hasTicketInstallments < 2)
+        installments < 2 ||
+        (method == 'BOLETO' &&
+          (hasTicketInstallments < 2 || ticket_installments == 1))
       "
       class="d-block small-text"
     >
@@ -69,7 +71,9 @@ const showInstallments = computed(() => {
         installments > 1 &&
         !product.hasFixedInstallments &&
         !product.hasPreSelectedInstallments &&
-        !(method == 'BOLETO' && hasTicketInstallments < 2)
+        !(method == 'BOLETO' && hasTicketInstallments < 2) &&
+        hasTicketInstallments > 1 &&
+        ticket_installments > 1
       "
       class="small-text leading-4"
     >
