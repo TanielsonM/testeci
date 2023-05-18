@@ -1,7 +1,7 @@
 <script setup>
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 const store = useCustomCheckoutStore();
-const { showWhatsappButton, whatsapp_options } = storeToRefs(store)
+const { showWhatsappButton, whatsapp_options } = storeToRefs(store);
 const openWhatsapp = () => {
   window.open(
     `https://wa.me/${whatsapp_options.value.number

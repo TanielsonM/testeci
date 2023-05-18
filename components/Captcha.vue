@@ -48,5 +48,3 @@ function recaptchaCallback(response) {
 <template>
   <div class="hidden" id="recaptcha" ref="recaptcha"></div>
 </template>
-
-

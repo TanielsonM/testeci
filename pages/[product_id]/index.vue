@@ -244,6 +244,7 @@ function incrementSteps() {
     stepsStore.incrementCount();
   }
 }
+
 await checkout.init();
 </script>
 

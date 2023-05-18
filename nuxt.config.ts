@@ -44,9 +44,7 @@ export default defineNuxtConfig({
     "~/plugins/veevalidate-components.ts",
     "~/plugins/veevalidate-rules.ts",
   ],
-  css: [
-    "~/assets/scss/_global.scss"
-  ],
+  css: ["~/assets/scss/_global.scss"],
   app: {
     head: {
       charset: "utf-8",
@@ -68,17 +66,17 @@ export default defineNuxtConfig({
       link: [
         {
           rel: "dns-prefetch",
-          href: "fonts.googleapis.com"
+          href: "fonts.googleapis.com",
         },
         {
           rel: "preconnect",
           href: "https://fonts.gstatic.com",
-          crossorigin: ""
+          crossorigin: "",
         },
         {
           rel: "preload",
           href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap",
-          as: "style"
+          as: "style",
         },
         {
           rel: "stylesheet",

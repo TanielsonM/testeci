@@ -31,7 +31,6 @@ function formatTime(time: number) {
 }
 
 onMounted(() => {
-  
   setInterval(() => {
     if (remainingTime.value > 0) {
       currentTime.value = new Date().getTime();

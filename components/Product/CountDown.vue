@@ -45,7 +45,7 @@ watch(
     ) {
       window.clearInterval(interval);
       checkout.setCoupon(false, true).then(() => {
-        toast.warning("Cupom expirou")
+        toast.warning("Cupom expirou");
       });
     }
   }

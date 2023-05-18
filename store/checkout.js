@@ -167,7 +167,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
       if (!byChangeCountry && !process.client) {
         const headers = useRequestHeaders(["cf-ipcountry"]);
-        this.global_settings.country = headers["cf-ipcountry"] || 'BR';
+        this.global_settings.country = headers["cf-ipcountry"] || "BR";
       }
 
       const { params, query, fullPath } = useRoute();
@@ -198,7 +198,7 @@ export const useCheckoutStore = defineStore("checkout", {
         : `/product/test-checkout/${id}`;
       /* Set country in query */
       const query = {
-        country: this.selectedCountry
+        country: this.selectedCountry,
       };
 
       /* Call api to get product */
@@ -260,10 +260,9 @@ export const useCheckoutStore = defineStore("checkout", {
               this.bump_list.push({ ...response.data, checkbox: false });
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.error(err);
-          })
-          ;
+          });
       } catch (error) {
         console.error(error);
         if (!isBump) {
@@ -447,8 +446,8 @@ export const useCheckoutStore = defineStore("checkout", {
       this.setInstallments(
         store.hasPreSelectedInstallments ?? store.resolveInstallments(),
         store.product.max_installments ||
-        store.product.max_subscription_installments ||
-        12,
+          store.product.max_subscription_installments ||
+          12,
         store.hasFixedInstallments,
         store.hasTicketInstallments > 1 ? store.hasTicketInstallments : 1
       );

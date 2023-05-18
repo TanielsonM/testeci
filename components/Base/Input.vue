@@ -93,7 +93,7 @@ const emit = defineEmits([
   "prepend-click",
   "append-click",
   "blur",
-  "focus"
+  "focus",
 ]);
 
 const onInput = (event) => {
@@ -106,7 +106,7 @@ const onInput = (event) => {
     <label
       v-if="!!label"
       for="input"
-      class="flex w-full flex-col items-start gap-2 font-semibold text-txt-color text-[14px] lg:text-[15px]"
+      class="flex w-full flex-col items-start gap-2 text-[14px] font-semibold text-txt-color lg:text-[15px]"
     >
       {{ label }}
     </label>
