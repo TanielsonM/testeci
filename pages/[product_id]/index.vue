@@ -260,7 +260,6 @@ await checkout.init();
       <!-- Purchase card -->
       <BaseCard
         class="w-full p-5 md:px-[60px] md:py-[50px]"
-        data-anima="bottom"
       >
         <BaseButton
           color="transparent"
@@ -448,7 +447,7 @@ await checkout.init();
     <section
       class="flex w-full flex-col gap-10 lg:max-w-[370px] xl:min-w-[370px]"
     >
-      <ProductCard :product="product" data-anima="bottom" />
+      <ProductCard :product="product" />
       <!-- Side Thumb -->
       <img
         v-if="customCheckoutStore.sideThumb"

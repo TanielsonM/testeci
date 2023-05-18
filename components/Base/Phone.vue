@@ -81,13 +81,21 @@ let cellphone = ref("");
 let isValid = true;
 const { t } = useI18n();
 
+const defaultCountry = computed(() => {
+  switch(selectedCountry.value) {
+    case "UK":  return "GB";
+    case "OUTROS": return "BR";
+    default: return selectedCountry.value;
+  }
+})
+
 const bindProps = {
   mode: "international",
   placeholder: t("forms.personal.inputs.cellphone.placeholder"),
   required: true,
   enabledCountryCode: true,
   autoDefaultCountry: false,
-  defaultCountry: selectedCountry.value !== "UK" ? selectedCountry.value : "GB",
+  defaultCountry: defaultCountry.value,
   enabledFlags: true,
   autocomplete: "off",
   name: "cellphone",
