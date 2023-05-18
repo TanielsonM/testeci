@@ -91,9 +91,10 @@ const showInstallments = computed(() => {
 </script>
 
 <template>
-  <span data-anima="top" class="flex w-full flex-col gap-5">
-    <component :is="selectedForm" />
-
+  <span class="flex w-full flex-col gap-5">
+    <transition name="slide-fade-bottom" mode="out-in">
+      <component :is="selectedForm" />
+    </transition>
     <ClientOnly>
       <template #fallback>
         <LoadingShimmer width="50%" height="55px" />

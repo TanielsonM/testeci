@@ -202,297 +202,295 @@ watch(installments, () => {
 </script>
 
 <template>
-  <section
-    class="flex w-full items-center justify-between gap-5"
-    data-anima="top"
-    v-if="showCreditCardsTabs"
-  >
-    <BaseButton
-      color="info"
-      class="pulse flex gap-1"
-      :class="{ active: method === 'CREDIT_CARD' }"
-      @click="checkout.setMethod('CREDIT_CARD')"
+  <section class="flex flex-col gap-5">
+    <section
+      class="flex w-full items-center justify-between gap-5"
+      v-if="showCreditCardsTabs"
     >
-      <Icon name="bi:credit-card-fill" />
-      <p class="text-[90%] font-semibold">
-        {{ $t("checkout.pagamento.metodos.um_cartao.title") }}
-      </p>
-    </BaseButton>
-    <BaseButton
-      color="info"
-      class="pulse flex gap-1"
-      :class="{ active: method === 'TWO_CREDIT_CARDS' }"
-      @click="checkout.setMethod('TWO_CREDIT_CARDS')"
+      <BaseButton
+        color="info"
+        class="pulse flex gap-1"
+        :class="{ active: method === 'CREDIT_CARD' }"
+        @click="checkout.setMethod('CREDIT_CARD')"
+      >
+        <Icon name="bi:credit-card-fill" />
+        <p class="text-[90%] font-semibold">
+          {{ $t("checkout.pagamento.metodos.um_cartao.title") }}
+        </p>
+      </BaseButton>
+      <BaseButton
+        color="info"
+        class="pulse flex gap-1"
+        :class="{ active: method === 'TWO_CREDIT_CARDS' }"
+        @click="checkout.setMethod('TWO_CREDIT_CARDS')"
+      >
+        <Icon name="bi:credit-card-fill" />
+        <Icon name="bi:credit-card-fill" />
+        <p class="text-[90%] font-semibold">
+          {{ $t("checkout.pagamento.metodos.dois_cartoes.title") }}
+        </p>
+      </BaseButton>
+    </section>
+    <section
+      class="flex flex-wrap justify-center gap-5 xl:flex-nowrap xl:justify-between"
     >
-      <Icon name="bi:credit-card-fill" />
-      <Icon name="bi:credit-card-fill" />
-      <p class="text-[90%] font-semibold">
-        {{ $t("checkout.pagamento.metodos.dois_cartoes.title") }}
-      </p>
-    </BaseButton>
-  </section>
-  <section
-    class="flex flex-wrap justify-center gap-5 xl:flex-nowrap xl:justify-between"
-  >
-    <!-- First credit card -->
-    <form class="grid w-full grid-cols-12 gap-3">
-      <span
-        v-if="method == 'TWO_CREDIT_CARDS'"
-        class="card-tag col-span-12"
-        data-anima="bottom"
-      >
-        {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
-        01
-      </span>
-      <BaseInput
-        v-if="method == 'TWO_CREDIT_CARDS'"
-        :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        class="col-span-12"
-        rules="required"
-        v-model="first.amount"
-        @click="onFocus('number')"
-        @blur="syncVerification('first')"
-        input-id="first-amount-field"
-        @vnode-before-mount="formatAmount('first')"
-        :error="
-          first.amount || hasSent
-            ? !validateCardAmount.isValidSync(clearValue(first.amount))
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
-        </template>
-      </BaseInput>
+      <!-- First credit card -->
+      <form class="grid w-full grid-cols-12 gap-3">
+        <span
+          v-if="method == 'TWO_CREDIT_CARDS'"
+          class="card-tag col-span-12"
+        >
+          {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
+          01
+        </span>
+        <BaseInput
+          v-if="method == 'TWO_CREDIT_CARDS'"
+          :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          class="col-span-12"
+          rules="required"
+          v-model="first.amount"
+          @click="onFocus('number')"
+          @blur="syncVerification('first')"
+          input-id="first-amount-field"
+          @vnode-before-mount="formatAmount('first')"
+          :error="
+            first.amount || hasSent
+              ? !validateCardAmount.isValidSync(clearValue(first.amount))
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
+          </template>
+        </BaseInput>
 
-      <BaseInput
-        :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        mask="#### #### #### ####"
-        class="col-span-12"
-        @click="onFocus('number')"
-        @blur="syncVerification('first')"
-        v-model="first.number"
-        input-id="first-number-field"
-        :error="
-          first.number || hasSent
-            ? !validateCardNumber.isValidSync(first.number.replace(/\s/g, ''))
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.number") }}
-        </template>
-      </BaseInput>
+        <BaseInput
+          :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          mask="#### #### #### ####"
+          class="col-span-12"
+          @click="onFocus('number')"
+          @blur="syncVerification('first')"
+          v-model="first.number"
+          input-id="first-number-field"
+          :error="
+            first.number || hasSent
+              ? !validateCardNumber.isValidSync(first.number.replace(/\s/g, ''))
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.number") }}
+          </template>
+        </BaseInput>
 
-      <BaseInput
-        :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
-        class="col-span-12"
-        v-model="first.holder_name"
-        @click="onFocus('name')"
-        @blur="onFocus('')"
-        input-id="first-holder_name-field"
-        :error="
-          first.holder_name || hasSent
-            ? !validateNameOnCard.isValidSync(first.holder_name)
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.holder_name") }}
-        </template>
-      </BaseInput>
+        <BaseInput
+          :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
+          class="col-span-12"
+          v-model="first.holder_name"
+          @click="onFocus('name')"
+          @blur="onFocus('')"
+          input-id="first-holder_name-field"
+          :error="
+            first.holder_name || hasSent
+              ? !validateNameOnCard.isValidSync(first.holder_name)
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.holder_name") }}
+          </template>
+        </BaseInput>
 
-      <BaseSelect
-        :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
-        class="col-span-6 sm:col-span-4"
-        :data="months"
-        v-model="first.month"
-        input-id="first-month-field"
-        :error="
-          first.month || hasSent
-            ? !validateExpiryMonth.isValidSync(first.month)
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.month") }}
-        </template>
-      </BaseSelect>
+        <BaseSelect
+          :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
+          class="col-span-6 sm:col-span-4"
+          :data="months"
+          v-model="first.month"
+          input-id="first-month-field"
+          :error="
+            first.month || hasSent
+              ? !validateExpiryMonth.isValidSync(first.month)
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.month") }}
+          </template>
+        </BaseSelect>
 
-      <BaseSelect
-        :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
-        class="col-span-6 sm:col-span-4"
-        :data="years"
-        v-model="first.year"
-        input-id="first-year-field"
-        :error="
-          first.year || hasSent
-            ? !validateExpiryYear.isValidSync(first.year)
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.year") }}
-        </template>
-      </BaseSelect>
+        <BaseSelect
+          :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
+          class="col-span-6 sm:col-span-4"
+          :data="years"
+          v-model="first.year"
+          input-id="first-year-field"
+          :error="
+            first.year || hasSent
+              ? !validateExpiryYear.isValidSync(first.year)
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.year") }}
+          </template>
+        </BaseSelect>
 
-      <BaseInput
-        :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
-        mask="###"
-        class="col-span-12 sm:col-span-4"
-        v-model="first.cvv"
-        input-id="first-cvv-field"
-        :error="
-          first.cvv || hasSent ? !validateCvc.isValidSync(first.cvv) : undefined
-        "
-        @click="flipCard(true)"
-        @blur="flipCard(false)"
-        @focus="flipCard(true)"
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.cvv") }}
-        </template>
-      </BaseInput>
-    </form>
+        <BaseInput
+          :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
+          mask="###"
+          class="col-span-12 sm:col-span-4"
+          v-model="first.cvv"
+          input-id="first-cvv-field"
+          :error="
+            first.cvv || hasSent ? !validateCvc.isValidSync(first.cvv) : undefined
+          "
+          @click="flipCard(true)"
+          @blur="flipCard(false)"
+          @focus="flipCard(true)"
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.cvv") }}
+          </template>
+        </BaseInput>
+      </form>
 
-    <!-- Second credit card -->
-    <form
-      class="grid w-full grid-cols-12 gap-3"
-      v-if="method === 'TWO_CREDIT_CARDS'"
-    >
-      <span
-        v-if="method == 'TWO_CREDIT_CARDS'"
-        class="card-tag col-span-12"
-        data-anima="bottom"
+      <!-- Second credit card -->
+      <form
+        class="grid w-full grid-cols-12 gap-3"
+        v-if="method === 'TWO_CREDIT_CARDS'"
       >
-        {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
-        02
-      </span>
-      <BaseInput
-        :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        class="col-span-12"
-        v-model="second.amount"
-        @blur="syncVerification('second')"
-        input-id="second-amount-field"
-        @vnode-before-mount="formatAmount('second')"
-        :error="
-          second.amount || hasSent
-            ? !validateCardAmount.isValidSync(clearValue(second.amount))
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
-        </template>
-      </BaseInput>
-      <BaseInput
-        :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
-        mask="#### #### #### ####"
-        class="col-span-12"
-        @blur="syncVerification('second')"
-        v-model="second.number"
-        input-id="second-number-field"
-        :error="
-          second.number || hasSent
-            ? !validateCardNumber.isValidSync(second.number.replace(/\s/g, ''))
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.number") }}
-        </template>
-      </BaseInput>
+        <span
+          v-if="method == 'TWO_CREDIT_CARDS'"
+          class="card-tag col-span-12"
+        >
+          {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
+          02
+        </span>
+        <BaseInput
+          :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          class="col-span-12"
+          v-model="second.amount"
+          @blur="syncVerification('second')"
+          input-id="second-amount-field"
+          @vnode-before-mount="formatAmount('second')"
+          :error="
+            second.amount || hasSent
+              ? !validateCardAmount.isValidSync(clearValue(second.amount))
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.pagamento.feedbacks.valor_cartao") }}
+          </template>
+        </BaseInput>
+        <BaseInput
+          :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          mask="#### #### #### ####"
+          class="col-span-12"
+          @blur="syncVerification('second')"
+          v-model="second.number"
+          input-id="second-number-field"
+          :error="
+            second.number || hasSent
+              ? !validateCardNumber.isValidSync(second.number.replace(/\s/g, ''))
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.number") }}
+          </template>
+        </BaseInput>
 
-      <BaseInput
-        :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
-        class="col-span-12"
-        v-model="second.holder_name"
-        input-id="second-holder_name-field"
-        :error="
-          second.holder_name || hasSent
-            ? !validateNameOnCard.isValidSync(second.holder_name)
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.holder_name") }}
-        </template>
-      </BaseInput>
+        <BaseInput
+          :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
+          class="col-span-12"
+          v-model="second.holder_name"
+          input-id="second-holder_name-field"
+          :error="
+            second.holder_name || hasSent
+              ? !validateNameOnCard.isValidSync(second.holder_name)
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.holder_name") }}
+          </template>
+        </BaseInput>
 
-      <BaseSelect
-        :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
-        class="col-span-6 sm:col-span-4"
-        :data="months"
-        v-model="second.month"
-        input-id="second-month-field"
-        :error="
-          second.month || hasSent
-            ? !validateExpiryMonth.isValidSync(second.month)
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.month") }}
-        </template>
-      </BaseSelect>
+        <BaseSelect
+          :label="$t('checkout.pagamento.metodos.um_cartao.mes')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.mes')"
+          class="col-span-6 sm:col-span-4"
+          :data="months"
+          v-model="second.month"
+          input-id="second-month-field"
+          :error="
+            second.month || hasSent
+              ? !validateExpiryMonth.isValidSync(second.month)
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.month") }}
+          </template>
+        </BaseSelect>
 
-      <BaseSelect
-        :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
-        :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
-        class="col-span-6 sm:col-span-4"
-        :data="years"
-        v-model="second.year"
-        input-id="second-year-field"
-        :error="
-          second.year || hasSent
-            ? !validateExpiryYear.isValidSync(second.year)
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.year") }}
-        </template>
-      </BaseSelect>
-      <BaseInput
-        :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
-        mask="###"
-        class="col-span-12 sm:col-span-4"
-        rules="required"
-        v-model="second.cvv"
-        input-id="second-cvv-field"
-        :error="
-          second.cvv || hasSent
-            ? !validateCvc.isValidSync(second.cvv)
-            : undefined
-        "
-      >
-        <template #error>
-          {{ $t("checkout.cards.feedbacks.cvv") }}
-        </template>
-      </BaseInput>
-    </form>
+        <BaseSelect
+          :label="$t('checkout.pagamento.metodos.um_cartao.ano')"
+          :placeholder="$t('checkout.pagamento.metodos.um_cartao.ano')"
+          class="col-span-6 sm:col-span-4"
+          :data="years"
+          v-model="second.year"
+          input-id="second-year-field"
+          :error="
+            second.year || hasSent
+              ? !validateExpiryYear.isValidSync(second.year)
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.year") }}
+          </template>
+        </BaseSelect>
+        <BaseInput
+          :label="$t('checkout.pagamento.metodos.um_cartao.CVV')"
+          mask="###"
+          class="col-span-12 sm:col-span-4"
+          rules="required"
+          v-model="second.cvv"
+          input-id="second-cvv-field"
+          :error="
+            second.cvv || hasSent
+              ? !validateCvc.isValidSync(second.cvv)
+              : undefined
+          "
+        >
+          <template #error>
+            {{ $t("checkout.cards.feedbacks.cvv") }}
+          </template>
+        </BaseInput>
+      </form>
 
-    <CreditCard
-      v-if="method !== 'TWO_CREDIT_CARDS'"
-      class="flip-class hidden md:block"
-      ref="creditCard"
-      data-anima="bottom"
-      :flip_card="isCardBack"
-      :card_cvv="first.cvv"
-      :card_year="first.year"
-      :card_month="first.month"
-      :card_number="first.number"
-      :card_holder_name="first.holder_name"
-    />
+      <CreditCard
+        v-if="method !== 'TWO_CREDIT_CARDS'"
+        class="flip-class hidden md:block"
+        ref="creditCard"
+        :flip_card="isCardBack"
+        :card_cvv="first.cvv"
+        :card_year="first.year"
+        :card_month="first.month"
+        :card_number="first.number"
+        :card_holder_name="first.holder_name"
+      />
+    </section>
   </section>
 </template>
 
