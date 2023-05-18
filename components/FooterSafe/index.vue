@@ -41,7 +41,7 @@ const items = computed(() => {
         height="34"
         class="mb-2 h-[34px] w-[25px]"
       />
-      <p class="text-txt-color text-[11px]">{{ item.label }}</p>
+      <p class="text-[11px] text-txt-color">{{ item.label }}</p>
       <p class="emphasis text-[13px] font-semibold">{{ item.emphasis }}</p>
     </span>
   </section>

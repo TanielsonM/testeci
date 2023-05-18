@@ -59,9 +59,7 @@ const details = ref(false);
 const hasTrial = computed(() => !!props.bump.trial);
 
 const showDescription = computed(() =>
-  customCheckout.hasCustomBump
-    ? customCheckout.bump_options.description
-    : true
+  customCheckout.hasCustomBump ? customCheckout.bump_options.description : true
 );
 
 // Methods

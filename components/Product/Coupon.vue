@@ -28,7 +28,7 @@ function apply() {
 
 <template>
   <section
-    class="border-bd-color item-collapse flex w-full flex-col items-center gap-5 rounded border p-5"
+    class="item-collapse flex w-full flex-col items-center gap-5 rounded border border-bd-color p-5"
     :opened="isOpen"
   >
     <span
@@ -36,7 +36,7 @@ function apply() {
       @click="isOpen = !isOpen"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
-      <p class="text-txt-color w-full text-[13px] font-semibold">
+      <p class="w-full text-[13px] font-semibold text-txt-color">
         {{
           coupon.applied
             ? $t("checkout.cupom.header_aplicado")
@@ -76,7 +76,7 @@ function apply() {
       v-else-if="isOpen"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
-      <p class="text-txt-color text-xs">
+      <p class="text-xs text-txt-color">
         {{ $t("checkout.cupom.cupom") }}
         <span class="font-bold">{{ coupon.name.toUpperCase() }}</span>
         {{ $t("checkout.cupom.aplicado") }}
@@ -98,7 +98,7 @@ function apply() {
         }}
       </BaseBadge>
       <section class="w-full" v-if="coupon.due_date">
-        <span class="text-txt-color text-[13px]">{{
+        <span class="text-[13px] text-txt-color">{{
           $t("components.coupon.coupon_due_date")
         }}</span>
         <ProductCountDown :coupon="coupon" />

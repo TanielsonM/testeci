@@ -53,7 +53,7 @@ const trialMessage = computed({
         height="auto"
         rel="preload"
         format="webp"
-        class="mr-[30px] h-full min-h-[120px] max-h-[120px] w-full max-w-[90px] rounded object-cover md:mr-[15px] md:max-w-[100px] xl:max-w-[120px]"
+        class="mr-[30px] h-full max-h-[120px] min-h-[120px] w-full max-w-[90px] rounded object-cover md:mr-[15px] md:max-w-[100px] xl:max-w-[120px]"
       />
       <span
         v-else
