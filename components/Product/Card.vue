@@ -44,17 +44,21 @@ const trialMessage = computed({
     </header>
     <section class="flex w-full items-center px-5">
       <!-- Product Image -->
-      <nuxt-img
+      <aside
+        class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px]"
         v-if="product.images.length"
-        :src="product.images[0].path"
-        preload
-        alt="Imagem do produto"
-        width="auto"
-        height="auto"
-        rel="preload"
-        format="webp"
-        class="mr-[30px] h-full max-h-[120px] min-h-[120px] w-full max-w-[90px] rounded object-cover md:mr-[15px] md:max-w-[100px] xl:max-w-[120px]"
-      />
+      >
+        <nuxt-img
+          :src="product.images[0].path"
+          preload
+          alt="Imagem do produto"
+          width="auto"
+          height="auto"
+          rel="preload"
+          format="webp"
+          class="h-full w-full object-contain"
+        />
+      </aside>
       <span
         v-else
         class="h-[120px] w-[120px] rounded bg-gray-200 shadow"
