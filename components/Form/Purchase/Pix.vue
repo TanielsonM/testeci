@@ -24,7 +24,10 @@ const items = ref([
 </script>
 
 <template>
-  <section class="grid w-full grid-flow-col gap-10" data-anima="top">
+  <section
+    class="grid w-full grid-flow-row gap-10 md:grid-flow-col"
+    data-anima="top"
+  >
     <section
       class="flex flex-col items-start justify-start gap-3"
       v-for="(item, index) in items"
@@ -32,7 +35,7 @@ const items = ref([
     >
       <Icon
         :name="item.icon"
-        class="h-full text-main-color"
+        class="h-[31px] text-main-color"
         :size="item.size"
       />
       <h4 class="text-sm font-semibold text-txt-color">{{ item.title }}</h4>
