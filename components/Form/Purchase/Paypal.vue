@@ -91,17 +91,19 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <ClientOnly>
-    <div
-      ref="paypal"
-      data-anima="top"
-      :class="{ hidden: !validateFirstStep() }"
-    ></div>
-    <BaseButton color="paypal" :disabled="true" v-if="!validateFirstStep()">
-      <span class="mr-1 text-[15px] font-semibold">
-        <img :src="logoPayPal" class="w-20" />
-      </span>
-      <p class="text-lg">Comprar agora</p>
-    </BaseButton>
-  </ClientOnly>
+  <section class="flex flex-col gap-5 pb-5">
+    <ClientOnly>
+      <div
+        ref="paypal"
+        data-anima="top"
+        :class="{ hidden: !validateFirstStep() }"
+      ></div>
+      <BaseButton color="paypal" :disabled="true" v-if="!validateFirstStep()">
+        <span class="mr-1 text-[15px] font-semibold">
+          <img :src="logoPayPal" class="w-20" />
+        </span>
+        <p class="text-lg">Comprar agora</p>
+      </BaseButton>
+    </ClientOnly>
+  </section>
 </template>

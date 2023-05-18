@@ -30,11 +30,6 @@ const props = defineProps({
     required: false,
     default: () => false,
   },
-  animation: {
-    type: String,
-    required: false,
-    default: () => "bottom",
-  },
   disabled: {
     type: Boolean,
     required: false,
@@ -70,7 +65,6 @@ const onChange = (event) => {
   <label
     for="input"
     class="flex w-full flex-col items-start gap-2 text-[14px] font-semibold text-txt-color lg:text-[15px]"
-    :data-anima="animation"
   >
     {{ label }}
     <select

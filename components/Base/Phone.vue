@@ -132,7 +132,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="default-input z-40 w-full" :data-anima="animation">
+  <div class="default-input z-40 w-full">
     <label
       v-if="!!label"
       for="input"

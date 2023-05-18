@@ -60,7 +60,6 @@ const sizeClasses = computed(() => {
 
 <template>
   <button
-    :data-anima="animation"
     class="button w-full px-3 py-2"
     :class="[baseClasses, colorClasses, sizeClasses]"
     :disabled="disabled"

@@ -11,6 +11,7 @@ import {
   validatePhone,
   validateDocument,
   phoneValidation,
+  validateRequired,
 } from "@/rules/form-validations";
 
 /* Variables */
@@ -157,7 +158,9 @@ function updateLead() {
       :mask="documentText.documentMask"
       :error="
         document || hasSent
-          ? !validateDocument.isValidSync(document)
+          ? currentCountry === 'BR'
+            ? !validateDocument.isValidSync(document)
+            : !validateRequired.isValidSync(document)
           : undefined
       "
     >

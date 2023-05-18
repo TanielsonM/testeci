@@ -30,11 +30,6 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
-  animation: {
-    type: String,
-    required: false,
-    default: () => "bottom",
-  },
   mask: {
     type: [String, Array, Boolean],
     required: false,
@@ -102,7 +97,7 @@ const onInput = (event) => {
 </script>
 
 <template>
-  <div class="default-input w-full" :data-anima="animation">
+  <div class="default-input w-full">
     <label
       v-if="!!label"
       for="input"
