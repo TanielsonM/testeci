@@ -245,10 +245,7 @@ function incrementSteps() {
   }
 }
 
-// Call methods in server side
-onServerPrefetch(async () => {
-  await checkout.init();
-})
+await checkout.init();
 </script>
 
 <template>
