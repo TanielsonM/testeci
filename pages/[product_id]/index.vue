@@ -378,6 +378,7 @@ await checkout.init();
                 v-for="(bump, index) in checkout.getBumpList"
                 :key="index"
                 :bump="bump"
+                :class="{ 'mb-5': checkout.getBumpList.length !== (index + 1) }"
               />
             </template>
 
