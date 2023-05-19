@@ -262,6 +262,7 @@ export const useCheckoutStore = defineStore("checkout", {
           })
           .catch((err) => {
             console.error(err);
+            if (!isBump) throw err;
           });
       } catch (error) {
         console.error(error);
