@@ -21,7 +21,7 @@ const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
     class="flex max-h-[40vh] w-full max-w-[1250px] items-center justify-center object-contain"
     :class="{ '-mt-10': hasScarcity }"
   >
-    <img :src="topThumb" alt="Thumb superior" />
+    <img :src="topThumb" alt="Thumb superior" class="rounded-lg" />
   </header>
   <header
     v-if="!hasScarcity && !topThumb && product.isValid()"
