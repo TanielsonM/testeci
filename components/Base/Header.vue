@@ -15,18 +15,14 @@ const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
 </script>
 
 <template>
-  <section
-    class="flex w-full flex-col items-center justify-center"
-    v-if="product.isValid() && (topThumb || hasScarcity)"
+  <Scarcity v-if="product.isValid() && hasScarcity" />
+  <header
+    v-if="topThumb && product.isValid()"
+    class="flex max-h-[40vh] w-full max-w-[1250px] items-center justify-center object-contain overflow-hidden rounded-lg"
+    :class="{ '-mt-10': hasScarcity }"
   >
-    <Scarcity v-if="product.isValid()" />
-    <header
-      v-if="topThumb && product.isValid()"
-      class="flex max-h-[40vh] w-full max-w-[1250px] items-center justify-center object-contain"
-    >
-      <img :src="topThumb" alt="Thumb superior" />
-    </header>
-  </section>
+    <img :src="topThumb" alt="Thumb superior" class="rounded-lg" />
+  </header>
   <header
     v-if="!hasScarcity && !topThumb && product.isValid()"
     class="header sticky top-0 z-50 flex min-h-[60px] w-full items-center justify-between bg-checkout px-4"

@@ -378,6 +378,7 @@ await checkout.init();
                 v-for="(bump, index) in checkout.getBumpList"
                 :key="index"
                 :bump="bump"
+                :class="{ 'mb-5': checkout.getBumpList.length !== (index + 1) }"
               />
             </template>
 
@@ -437,10 +438,12 @@ await checkout.init();
         v-if="customCheckoutStore.bottomThumb"
         :src="customCheckoutStore.bottomThumb"
         alt="Thumb inferior"
-        class="w-full object-contain"
+        class="w-full object-contain max-w-[771.66px] rounded-lg"
       />
       <!-- End bottom thumb (custom checkout) -->
       <FooterSafe />
+      <!-- Payment methods -->
+      <FormFooter />
     </section>
 
     <!-- Product Card -->
@@ -453,7 +456,7 @@ await checkout.init();
         v-if="customCheckoutStore.sideThumb"
         :src="customCheckoutStore.sideThumb"
         alt="Thumb lateral"
-        class="hidden w-full lg:block"
+        class="hidden w-full lg:block rounded-lg"
       />
       <!-- End side Thumb -->
     </section>
