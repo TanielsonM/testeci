@@ -442,6 +442,8 @@ await checkout.init();
       />
       <!-- End bottom thumb (custom checkout) -->
       <FooterSafe />
+      <!-- Payment methods -->
+      <FormFooter />
     </section>
 
     <!-- Product Card -->
@@ -454,7 +456,7 @@ await checkout.init();
         v-if="customCheckoutStore.sideThumb"
         :src="customCheckoutStore.sideThumb"
         alt="Thumb lateral"
-        class="hidden w-full lg:block"
+        class="hidden w-full lg:block rounded-lg"
       />
       <!-- End side Thumb -->
     </section>
