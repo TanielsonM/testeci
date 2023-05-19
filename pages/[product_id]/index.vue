@@ -438,7 +438,7 @@ await checkout.init();
         v-if="customCheckoutStore.bottomThumb"
         :src="customCheckoutStore.bottomThumb"
         alt="Thumb inferior"
-        class="w-full object-contain"
+        class="w-full object-contain max-w-[771.66px] rounded-lg"
       />
       <!-- End bottom thumb (custom checkout) -->
       <FooterSafe />
