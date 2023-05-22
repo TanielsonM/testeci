@@ -23,7 +23,8 @@ const amountStore = useAmountStore();
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { method, allowed_methods, captchaEnabled } = storeToRefs(checkout);
+const { method, allowed_methods, captchaEnabled, hasAffiliateId, product_id } =
+  storeToRefs(checkout);
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, hasSent } = storeToRefs(payment);
 const { document } = storeToRefs(personalStore);
@@ -245,6 +246,13 @@ function incrementSteps() {
   }
 }
 
+if (hasAffiliateId.value) {
+  const affiliate_id = useCookie(`affiliate_${product_id.value}`);
+  const affiliate = useCookie("affiliate");
+  affiliate_id.value = hasAffiliateId.value;
+  affiliate.value = hasAffiliateId.value;
+}
+
 await checkout.init();
 </script>
 
@@ -258,9 +266,7 @@ await checkout.init();
       class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]"
     >
       <!-- Purchase card -->
-      <BaseCard
-        class="w-full p-5 md:px-[60px] md:py-[50px]"
-      >
+      <BaseCard class="w-full p-5 md:px-[60px] md:py-[50px]">
         <BaseButton
           color="transparent"
           size="sm"
@@ -378,7 +384,7 @@ await checkout.init();
                 v-for="(bump, index) in checkout.getBumpList"
                 :key="index"
                 :bump="bump"
-                :class="{ 'mb-5': checkout.getBumpList.length !== (index + 1) }"
+                :class="{ 'mb-5': checkout.getBumpList.length !== index + 1 }"
               />
             </template>
 
@@ -438,7 +444,7 @@ await checkout.init();
         v-if="customCheckoutStore.bottomThumb"
         :src="customCheckoutStore.bottomThumb"
         alt="Thumb inferior"
-        class="w-full object-contain max-w-[771.66px] rounded-lg"
+        class="w-full max-w-[771.66px] rounded-lg object-contain"
       />
       <!-- End bottom thumb (custom checkout) -->
       <FooterSafe />
@@ -456,7 +462,7 @@ await checkout.init();
         v-if="customCheckoutStore.sideThumb"
         :src="customCheckoutStore.sideThumb"
         alt="Thumb lateral"
-        class="hidden w-full lg:block rounded-lg"
+        class="hidden w-full rounded-lg lg:block"
       />
       <!-- End side Thumb -->
     </section>
@@ -486,7 +492,7 @@ await checkout.init();
       <PixelClient
         :event="'view'"
         :product_id="productStore.product_id"
-        :affiliate_id="checkout.hasAffiliateId"
+        :affiliate_id="hasAffiliateId"
         :method="checkout.method"
         :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount"

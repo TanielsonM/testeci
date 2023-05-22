@@ -89,3 +89,22 @@ textarea {
 .vti__dropdown-item {
   background-color: var(--checkout) !important;
 }
+
+.Vue-Toastification__toast.custom {
+  --notification-title-color: #00e4a0;
+  --notification-text-color: #5f5c6b;
+  background-color: #f2fefa !important;
+  border: 2px solid #00e4a0;
+  color: #00e4a0 !important;
+  width: 400px;
+
+  .Vue-Toastification__progress-bar {
+    display: none;
+  }
+
+  .Vue-Toastification__close-button {
+    color: #5f5c6b;
+    opacity: 0.5;
+    align-self: flex-start;
+  }
+}

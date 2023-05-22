@@ -50,6 +50,7 @@ const {
   hasShippingFee,
   FixedShippingAmount,
   hasTicketInstallments,
+  hasAffiliationLead,
 } = storeToRefs(productStore);
 
 const { name, email, document, cellphone } = storeToRefs(personalStore);
@@ -182,8 +183,14 @@ export const usePaymentStore = defineStore("Payment", {
         });
       }
       // Affiliate id
+      const affiliate_id = useCookie(`affiliate_${product_id.value}`);
+      const affiliate = useCookie("affiliate");
       if (hasAffiliateId.value) {
         data.affiliate_id = hasAffiliateId.value;
+      } else if (!hasAffiliationLead.value && affiliate_id.value) {
+        data.affiliate_id = affiliate_id.value;
+      } else if (hasAffiliationLead.value && affiliate.value) {
+        data.affiliate_id = affiliate.value;
       }
 
       // Coupon

@@ -102,6 +102,7 @@ export const useProductStore = defineStore("product", {
     },
     productName: (state) => state.product.name,
     seller_id: (state) => state.product.seller_id,
+    hasAffiliationLead: (state) => state.product.affiliation_lead,
   },
   actions: {
     setProduct(product) {

@@ -12,11 +12,15 @@ defineProps({
 </script>
 <template>
   <div class="notification flex items-center">
-    <div class="icon pr-7">🔥</div>
+    <img
+      class="icon"
+      src="@/assets/icons/notify_success.svg"
+      alt="greenn check circle icon"
+    />
     <div class="content">
-      <h3>{{ title }}</h3>
+      <h3 class="font-semibold">{{ title }}</h3>
       <p>
-        <span class="font-semibold">{{ name }}</span> acabou de comprar!
+        <span>{{ name }}</span> acabou de comprar!
       </p>
     </div>
   </div>
@@ -24,20 +28,21 @@ defineProps({
 <style lang="scss">
 .notification {
   .icon {
-    font-size: 22px;
+    align-self: flex-start;
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    line-height: 1.5;
   }
   .content {
     h3 {
-      color: white;
+      color: var(--notification-title-color);
+      display: flex;
+      flex-wrap: wrap;
     }
     p {
-      color: white;
+      color: var(--notification-text-color);
     }
-  }
-}
-
-.Vue-Toastification__toast--default {
-  &.custom {
   }
 }
 </style>
