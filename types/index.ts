@@ -127,7 +127,7 @@ export type Payment = {
   is_gift?: boolean;
   gift_message?: string;
   // Affiliate
-  affiliate_id?: number;
+  affiliate_id?: number | string;
   // Paypal
   paypal?: any;
   // Upsell
