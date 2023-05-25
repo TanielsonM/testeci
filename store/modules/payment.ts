@@ -415,7 +415,7 @@ export const usePaymentStore = defineStore("Payment", {
           break;
       }
 
-      GreennLogs.logger.info("🔴  Error Compra", {
+      GreennLogs.logger.info("🔴 Error Compra", {
         name: "Erro na Compra",
         product_id: product_id.value,
         error_code: error ? error.code : null,

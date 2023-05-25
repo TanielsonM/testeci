@@ -1,6 +1,9 @@
 // Types
 import { HeadersState } from "@/types";
 
+// Utils
+import { GreennLogs } from "@/utils/greenn-logs";
+
 import { useLoadingStore } from "@/store/loading/loading";
 const loading = useLoadingStore();
 const headStore = useHeadersStore();
@@ -46,6 +49,10 @@ export default function () {
           if (headStore["wd-token-"]) {
             headers.set("Wd-Token-", headStore["wd-token-"]);
           }
+
+          GreennLogs.logger.info("axiosRequest", {
+            axiosRequest: options,
+          });
         }
         options.headers = headers;
       },
