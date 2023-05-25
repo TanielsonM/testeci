@@ -110,11 +110,18 @@ export default defineNuxtConfig({
   },
   hooks: {
     "pages:extend"(pages) {
-      pages.push({
-        name: "has-offer",
-        path: "/:product_id/offer/:hash",
-        file: resolve(__dirname, "/pages/[product_id]/index.vue"),
-      });
+      pages.push(
+        {
+          name: "has-offer",
+          path: "/:product_id/offer/:hash",
+          file: resolve(__dirname, "/pages/[product_id]/index.vue"),
+        },
+        {
+          name: "signature-has-offer",
+          path: "/assinatura/:product_id/offer/:hash",
+          file: resolve(__dirname, "/pages/assinatura/[product_id].vue"),
+        }
+      );
     },
   },
   typescript: {
