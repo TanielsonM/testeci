@@ -23,7 +23,7 @@ const amountStore = useAmountStore();
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { method, allowed_methods, captchaEnabled, hasAffiliateId, product_id } =
+const { method, allowed_methods, captchaEnabled, hasAffiliateId, product_id, selectedCountry } =
   storeToRefs(checkout);
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, hasSent } = storeToRefs(payment);
@@ -251,6 +251,12 @@ if (hasAffiliateId.value) {
   const affiliate = useCookie("affiliate");
   affiliate_id.value = hasAffiliateId.value;
   affiliate.value = hasAffiliateId.value;
+}
+
+if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+  if (process.client) {
+    window.location.href = `https://payu.greenn.com.br/${product_id.value}`
+  }
 }
 
 await checkout.init();
