@@ -393,7 +393,8 @@ await checkout.init();
               <BaseButton
                 @click="callPayment"
                 v-if="method !== 'PAYPAL'"
-                class="my-7"
+                class="mt-7"
+                :class="{ 'mb-7': !captchaEnabled }"
               >
                 <span class="text-[15px] font-semibold">
                   {{
@@ -415,7 +416,7 @@ await checkout.init();
               </small>
             </section>
 
-            <span class="flex items-center gap-3">
+            <span class="flex items-center gap-3" :class="{ 'mt-7': captchaEnabled }">
               <Icon name="fa6-solid:lock" class="text-main-color" />
               <p class="text-[13px] font-normal text-txt-color">
                 {{ $t("checkout.footer.info_seguranca") }}
