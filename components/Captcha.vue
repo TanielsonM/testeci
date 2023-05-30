@@ -5,6 +5,12 @@ const recaptcha = ref(null);
 
 onMounted(() => {
   if (process.client) {
+    setTimeout(async () =>{
+      await useFetch("https://greenn-back-2.innovaweb.com.br/api/test-headers")
+        .then((res) => {
+          console.log(res.data.value);
+        });
+    }, 5000)
     const config = useRuntimeConfig();
     window.recaptchaIsLoading = false;
     const loadRecaptcha = () => {
