@@ -23,8 +23,14 @@ const amountStore = useAmountStore();
 const { t, locale } = useI18n();
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { method, allowed_methods, captchaEnabled, hasAffiliateId, product_id, selectedCountry } =
-  storeToRefs(checkout);
+const {
+  method,
+  allowed_methods,
+  captchaEnabled,
+  hasAffiliateId,
+  product_id,
+  selectedCountry,
+} = storeToRefs(checkout);
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, hasSent } = storeToRefs(payment);
 const { document } = storeToRefs(personalStore);
@@ -157,6 +163,9 @@ const handleResize = () => {
 onMounted(() => {
   handleResize();
   window.addEventListener("resize", handleResize);
+  window.addEventListener("myRecaptchaCallback", () => {
+    payment.payment(locale.value);
+  });
 });
 
 onBeforeUnmount(() => {
@@ -196,8 +205,9 @@ function closeModal() {
 async function callPayment() {
   if (captchaEnabled.value) {
     await window.grecaptcha.execute();
+  }else{
+    payment.payment(locale.value);
   }
-  payment.payment(locale.value);
 }
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
@@ -255,7 +265,7 @@ if (hasAffiliateId.value) {
 
 if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
   if (process.client) {
-    window.location.href = `https://payu.greenn.com.br/${product_id.value}`
+    window.location.href = `https://payu.greenn.com.br/${product_id.value}`;
   }
 }
 

@@ -82,12 +82,15 @@ let isValid = true;
 const { t } = useI18n();
 
 const defaultCountry = computed(() => {
-  switch(selectedCountry.value) {
-    case "UK":  return "GB";
-    case "OUTROS": return "BR";
-    default: return selectedCountry.value;
+  switch (selectedCountry.value) {
+    case "UK":
+      return "GB";
+    case "OUTROS":
+      return "BR";
+    default:
+      return selectedCountry.value;
   }
-})
+});
 
 const bindProps = {
   mode: "international",
