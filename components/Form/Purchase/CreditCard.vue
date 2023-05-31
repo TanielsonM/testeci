@@ -236,17 +236,16 @@ watch(installments, () => {
     >
       <!-- First credit card -->
       <form class="grid w-full grid-cols-12 gap-3">
-        <span
-          v-if="method == 'TWO_CREDIT_CARDS'"
-          class="card-tag col-span-12"
-        >
+        <span v-if="method == 'TWO_CREDIT_CARDS'" class="card-tag col-span-12">
           {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
           01
         </span>
         <BaseInput
           v-if="method == 'TWO_CREDIT_CARDS'"
           :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
-          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          :placeholder="
+            $t('checkout.pagamento.metodos.um_cartao.numero_holder')
+          "
           class="col-span-12"
           rules="required"
           v-model="first.amount"
@@ -267,7 +266,9 @@ watch(installments, () => {
 
         <BaseInput
           :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
-          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          :placeholder="
+            $t('checkout.pagamento.metodos.um_cartao.numero_holder')
+          "
           mask="#### #### #### ####"
           class="col-span-12"
           @click="onFocus('number')"
@@ -287,7 +288,9 @@ watch(installments, () => {
 
         <BaseInput
           :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
-          :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
+          :placeholder="
+            $t('checkout.pagamento.metodos.um_cartao.titular_holder')
+          "
           class="col-span-12"
           v-model="first.holder_name"
           @click="onFocus('name')"
@@ -347,7 +350,9 @@ watch(installments, () => {
           v-model="first.cvv"
           input-id="first-cvv-field"
           :error="
-            first.cvv || hasSent ? !validateCvc.isValidSync(first.cvv) : undefined
+            first.cvv || hasSent
+              ? !validateCvc.isValidSync(first.cvv)
+              : undefined
           "
           @click="flipCard(true)"
           @blur="flipCard(false)"
@@ -364,16 +369,15 @@ watch(installments, () => {
         class="grid w-full grid-cols-12 gap-3"
         v-if="method === 'TWO_CREDIT_CARDS'"
       >
-        <span
-          v-if="method == 'TWO_CREDIT_CARDS'"
-          class="card-tag col-span-12"
-        >
+        <span v-if="method == 'TWO_CREDIT_CARDS'" class="card-tag col-span-12">
           {{ $t("checkout.pagamento.metodos.dois_cartoes.flag") }}
           02
         </span>
         <BaseInput
           :label="$t('checkout.pagamento.metodos.dois_cartoes.valor')"
-          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          :placeholder="
+            $t('checkout.pagamento.metodos.um_cartao.numero_holder')
+          "
           class="col-span-12"
           v-model="second.amount"
           @blur="syncVerification('second')"
@@ -391,7 +395,9 @@ watch(installments, () => {
         </BaseInput>
         <BaseInput
           :label="$t('checkout.pagamento.metodos.um_cartao.numero')"
-          :placeholder="$t('checkout.pagamento.metodos.um_cartao.numero_holder')"
+          :placeholder="
+            $t('checkout.pagamento.metodos.um_cartao.numero_holder')
+          "
           mask="#### #### #### ####"
           class="col-span-12"
           @blur="syncVerification('second')"
@@ -399,7 +405,9 @@ watch(installments, () => {
           input-id="second-number-field"
           :error="
             second.number || hasSent
-              ? !validateCardNumber.isValidSync(second.number.replace(/\s/g, ''))
+              ? !validateCardNumber.isValidSync(
+                  second.number.replace(/\s/g, '')
+                )
               : undefined
           "
         >
@@ -410,7 +418,9 @@ watch(installments, () => {
 
         <BaseInput
           :label="$t('checkout.pagamento.metodos.um_cartao.titular')"
-          :placeholder="$t('checkout.pagamento.metodos.um_cartao.titular_holder')"
+          :placeholder="
+            $t('checkout.pagamento.metodos.um_cartao.titular_holder')
+          "
           class="col-span-12"
           v-model="second.holder_name"
           input-id="second-holder_name-field"
