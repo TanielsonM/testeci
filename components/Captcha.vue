@@ -8,7 +8,6 @@ onMounted(() => {
     const config = useRuntimeConfig();
     window.recaptchaIsLoading = false;
     const loadRecaptcha = () => {
-      debugger;
       if (!window.recaptchaIsLoading) {
         window.recaptchaIsLoading = true;
         useHead({
@@ -23,14 +22,12 @@ onMounted(() => {
         });
       }
       if (window.grecaptcha) {
-        debugger;
         window.grecaptcha.render(recaptcha.value, {
           sitekey: config.public.RECAPTCHA_KEY,
           callback: recaptchaCallback,
           size: "invisible",
         });
       } else {
-        debugger;
         setTimeout(() => {
           loadRecaptcha();
         }, 1000);
