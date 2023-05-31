@@ -409,8 +409,7 @@ await checkout.init();
               <BaseButton
                 @click="callPayment"
                 v-if="method !== 'PAYPAL'"
-                class="mt-7"
-                :class="{ 'mb-7': !captchaEnabled }"
+                class="my-7"
               >
                 <span class="text-[15px] font-semibold">
                   {{
@@ -419,23 +418,9 @@ await checkout.init();
                   }}
                 </span>
               </BaseButton>
-              <small v-if="captchaEnabled">
-                {{ $t("checkout.captcha") }}
-                <a href="https://policies.google.com/privacy"
-                  >{{ $t("checkout.captcha2") }}
-                </a>
-                {{ $t("checkout.captcha4") }}
-                <a href="https://policies.google.com/terms">{{
-                  $t("checkout.captcha3")
-                }}</a>
-                {{ $t("checkout.captcha5") }}.
-              </small>
             </section>
 
-            <span
-              class="flex items-center gap-3"
-              :class="{ 'mt-7': captchaEnabled }"
-            >
+            <span class="flex items-center gap-3">
               <Icon name="fa6-solid:lock" class="text-main-color" />
               <p class="text-[13px] font-normal text-txt-color">
                 {{ $t("checkout.footer.info_seguranca") }}
