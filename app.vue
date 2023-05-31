@@ -7,7 +7,7 @@ useSeoMeta({
   ogImage: "https://paystatic.greenn.com.br/og-image_greenn.png",
   ogImageHeight: "500",
   ogImageWidth: "500",
-  ogSiteName: "Checkout"
+  ogSiteName: "Checkout",
 });
 </script>
 

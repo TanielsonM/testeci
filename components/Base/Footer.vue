@@ -4,7 +4,7 @@ const actual_year = computed(() => new Date().getFullYear());
 
 <template>
   <footer
-    class="flex min-h-[45px] w-full flex-col items-start md:items-center justify-center gap-5 p-4"
+    class="flex min-h-[45px] w-full flex-col items-start justify-center gap-5 p-4 md:items-center"
   >
     <p
       class="relative flex flex-nowrap text-[10px] font-normal text-txt-color md:hidden"

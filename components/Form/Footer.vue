@@ -57,7 +57,9 @@ const imgs = [
 ];
 </script>
 <template>
-  <section class="flex w-full flex-wrap items-center justify-center md:justify-between gap-5">
+  <section
+    class="flex w-full flex-wrap items-center justify-center gap-5 md:justify-between"
+  >
     <p
       class="relative hidden flex-nowrap text-[10px] font-normal text-txt-color md:flex"
     >
