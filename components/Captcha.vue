@@ -44,9 +44,8 @@ onMounted(() => {
 });
 
 function recaptchaCallback(response) {
-  debugger;
   captcha_code.value = response;
-  window.dispatchEvent(new CustomEvent('myRecaptchaCallback'))
+  window.dispatchEvent(new CustomEvent("myRecaptchaCallback"));
 }
 </script>
 
