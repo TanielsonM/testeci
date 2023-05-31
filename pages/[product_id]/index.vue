@@ -157,6 +157,10 @@ const handleResize = () => {
 onMounted(() => {
   handleResize();
   window.addEventListener("resize", handleResize);
+  window.addEventListener('myRecaptchaCallback', ()=> {
+    debugger;
+    payment.payment(locale.value);
+  })
 });
 
 onBeforeUnmount(() => {
@@ -195,10 +199,13 @@ function closeModal() {
 
 async function callPayment() {
   if (captchaEnabled.value) {
+    debugger
     await window.grecaptcha.execute();
   }
-  payment.payment(locale.value);
+  debugger
+  // payment.payment(locale.value);
 }
+
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
