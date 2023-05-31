@@ -1,11 +1,24 @@
 <script setup>
 const actual_year = computed(() => new Date().getFullYear());
+const store = useCheckoutStore();
+const { captchaEnabled } = storeToRefs(store);
 </script>
 
 <template>
   <footer
-    class="flex min-h-[45px] w-full flex-col items-start md:items-center justify-center gap-5 p-4"
+    class="flex min-h-[45px] w-full flex-col items-start justify-center gap-2 p-4 md:items-center"
   >
+    <small v-if="captchaEnabled" class="text-[12px] font-normal text-txt-color">
+      {{ $t("checkout.captcha") }}
+      <a class="text-[#007bff] hover:underline" href="https://policies.google.com/privacy"
+        >{{ $t("checkout.captcha2") }}
+      </a>
+      {{ $t("checkout.captcha4") }}
+      <a class="text-[#007bff] hover:underline" href="https://policies.google.com/terms">{{
+        $t("checkout.captcha3")
+      }}</a>
+      {{ $t("checkout.captcha5") }}.
+    </small>
     <p
       class="relative flex flex-nowrap text-[10px] font-normal text-txt-color md:hidden"
     >
