@@ -4,6 +4,14 @@ RUN apk add curl
 
 WORKDIR /app
 
-COPY .output/ /app/
+COPY package.json ./
 
-CMD [ "node", "server/index.mjs" ]
+COPY yarn.lock ./
+
+RUN yarn install
+
+COPY ./ ./
+
+RUN yarn build
+
+CMD [ "node", ".output/server/index.mjs" ]
