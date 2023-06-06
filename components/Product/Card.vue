@@ -184,7 +184,14 @@ const trialMessage = computed({
           >{{ $t("components.product_card.author")
           }}<span class="md:hidden">:</span></span
         >
-        <span class="infos-content">{{ product.seller.name }}</span>
+        <span class="infos-content">
+          {{
+            product.seller.company
+              ? product.seller.company.fantasy_name ||
+                product.seller.company.name
+              : product.seller.name
+          }}
+        </span>
       </p>
       <!-- Email -->
       <p
