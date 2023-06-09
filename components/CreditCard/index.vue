@@ -262,6 +262,7 @@ function getImg(type) {
 
 .flip-card.show-back .flip-card-inner {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 
 .flip-card-front,
@@ -269,16 +270,21 @@ function getImg(type) {
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-perspective: 0;
   -webkit-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  visibility: visible;
   backface-visibility: hidden;
 }
 
 .flip-card-front {
   transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
 }
 
 .flip-card-back {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 
 .cvv-position {
