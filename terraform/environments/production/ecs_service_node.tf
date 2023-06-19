@@ -27,7 +27,7 @@ resource "aws_ecs_service" "node" {
 
   wait_for_steady_state = true
 
-  deployment_minimum_healthy_percent = 50
+  deployment_minimum_healthy_percent = 100
   deployment_maximum_percent         = 200
 
   depends_on = [
@@ -38,7 +38,7 @@ resource "aws_ecs_service" "node" {
 
 resource "aws_appautoscaling_target" "node_target" {
   max_capacity       = 20
-  min_capacity       = 4
+  min_capacity       = 2
   resource_id        = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
