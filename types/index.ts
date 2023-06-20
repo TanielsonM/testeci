@@ -88,6 +88,8 @@ export type Payment = {
     shipping_service_name?: string;
   }[];
 
+  metas: any;
+
   cards?: PurcharseCard[];
 
   name: string;

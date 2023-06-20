@@ -41,6 +41,7 @@ const {
   coupon,
   hasUpsell,
   ticket_installments,
+  url,
 } = storeToRefs(checkoutStore);
 const {
   productName,
@@ -127,6 +128,7 @@ export const usePaymentStore = defineStore("Payment", {
         // Others
         language,
         upsell_id: hasUpsell.value,
+        metas: url.value.query,
       };
 
       if (captchaEnabled.value) {
