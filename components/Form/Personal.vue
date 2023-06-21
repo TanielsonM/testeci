@@ -65,8 +65,18 @@ const documentText = computed(() => {
   }
 });
 
-const { name, email, cellphone, document, confirmEmail } =
-  storeToRefs(personalStore);
+const {
+  name,
+  email,
+  cellphone,
+  document,
+  confirmEmail,
+  forceName,
+  forceEmail,
+  forceConfirmEmail,
+  forceDocument,
+  forceCellphone,
+} = storeToRefs(personalStore);
 
 watch([name, email, cellphone, document], (value) => {
   leadsStore.syncPersonal();
@@ -77,6 +87,8 @@ function updateLead() {
     leadsStore.updateLead();
   }, 10000);
 }
+
+personalStore.setFields(useRoute().query);
 </script>
 
 <template>
@@ -90,6 +102,7 @@ function updateLead() {
       input-id="name-field"
       v-model="name"
       :error="name || hasSent ? !validateName.isValidSync(name) : undefined"
+      :disabled="forceName"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
@@ -105,6 +118,7 @@ function updateLead() {
       input-id="email-field"
       v-model="email"
       :error="email || hasSent ? !validateEmail.isValidSync(email) : undefined"
+      :disabled="forceEmail"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}
@@ -123,6 +137,7 @@ function updateLead() {
       v-model="confirmEmail"
       v-if="custom_checkout.hasConfirmationEmail"
       :error="confirmEmail || hasSent ? !(confirmEmail === email) : undefined"
+      :disabled="forceConfirmEmail"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.confirmation_email") }}
@@ -140,6 +155,7 @@ function updateLead() {
       v-model="cellphone"
       type="tel"
       :error="cellphone || hasSent ? !phoneValidation() : undefined"
+      :disabled="forceCellphone"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.celular") }}
@@ -163,6 +179,7 @@ function updateLead() {
             : !validateRequired.isValidSync(document)
           : undefined
       "
+      :disabled="forceDocument"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.document") }}
