@@ -3,10 +3,20 @@ const route = useRoute();
 await useApi()
   .read(`/link/${route.params.page}`)
   .then((res) => {
-    if (res.url)
-      navigateTo(res.url, {
+    const url = new URL(res.url);
+    const currentQuery = new URLSearchParams(route.query);
+    const query = new URLSearchParams(url.searchParams);
+    if (currentQuery) {
+      for (let [key, value] of currentQuery.entries()) {
+        query.append(key, value);
+      }
+    }
+    const fullURL = url.origin + url.pathname + "?" + query.toString();
+    if (fullURL) {
+      navigateTo(fullURL, {
         external: true,
       });
+    }
   });
 </script>
 
