@@ -6,16 +6,17 @@ await useApi()
     const url = new URL(res.url);
     const currentQuery = new URLSearchParams(route.query);
     const query = new URLSearchParams(url.searchParams);
-    if (currentQuery.size) {
+    if (currentQuery) {
       for (let [key, value] of currentQuery.entries()) {
         query.append(key, value);
       }
     }
     const fullURL = url.origin + url.pathname + "?" + query.toString();
-    if (fullURL)
+    if (fullURL) {
       navigateTo(fullURL, {
         external: true,
       });
+    }
   });
 </script>
 
