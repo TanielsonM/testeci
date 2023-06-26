@@ -75,6 +75,8 @@ export const useCheckoutStore = defineStore("checkout", {
     sales: {},
     productOffer: {},
     deliveryOptions: {},
+    // Paypal details
+    paypal_details: {},
   }),
   getters: {
     isLoading: (state) => state.global_loading,
