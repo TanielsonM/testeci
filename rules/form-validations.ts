@@ -8,7 +8,6 @@ import { usePurchaseStore } from "@/store/forms/purchase";
 import { useCheckoutStore } from "@/store/checkout";
 
 const personalStore = usePersonalStore();
-const { email } = storeToRefs(personalStore);
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
@@ -33,17 +32,18 @@ export const validateExpiryMonth = yup.string().min(2).max(2).required();
 export const validateExpiryYear = yup.string().min(4).max(4).required();
 export const validateCardAmount = yup.number().positive().min(1).required();
 
-export const validateFirstStep = (): boolean => {
-  const { name, document, cellphone } = storeToRefs(personalStore);
+export const validateFirstStep = async (): Promise<boolean> => {
+  const { name, document, cellphone, email } = storeToRefs(personalStore);
 
   const stepStore = useStepStore();
   const { isMobile } = storeToRefs(stepStore);
 
-  const validName = validateName.isValidSync(name.value);
-  const validEmail = validateEmail.isValidSync(email.value);
-  const validPhone = validatePhone.isValidSync(cellphone.value);
+  const validName = await validateName.isValid(name.value);
+  const validEmail = await validateEmail.isValid(email.value);
+  const validPhone = await validatePhone.isValid(cellphone.value);
+
   if (!isMobile) {
-    const validDocument = validateDocument.isValidSync(document.value);
+    const validDocument = await validateDocument.isValid(document.value);
     return validName && validEmail && validPhone && validDocument;
   }
 
@@ -190,7 +190,7 @@ export const validateThristStep = async (): Promise<boolean> => {
 
 export const validateAll = async (): Promise<boolean> => {
   const checkout = useCheckoutStore();
-  const validStepOne = validateFirstStep();
+  const validStepOne = await validateFirstStep();
   const validStepTwo = await validateSecondStep();
   const validStepThree = await validateThristStep();
 
