@@ -42,6 +42,7 @@ const {
   hasUpsell,
   ticket_installments,
   url,
+  paypal_details,
 } = storeToRefs(checkoutStore);
 const {
   productName,
@@ -68,7 +69,7 @@ export const usePaymentStore = defineStore("Payment", {
   }),
   getters: {},
   actions: {
-    async payment(language: string, paypal?: any) {
+    async payment(language: string) {
       const allValid = await validateAll();
       if (!allValid) {
         this.hasSent = true;
@@ -136,7 +137,7 @@ export const usePaymentStore = defineStore("Payment", {
       }
 
       if (method.value === "PAYPAL") {
-        data.paypal = paypal;
+        data.paypal = paypal_details.value;
       }
 
       // Gift

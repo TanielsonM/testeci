@@ -21,6 +21,8 @@ const {
   hasAffiliateId,
   checkoutPayment,
   selectedCountry,
+  captchaEnabled,
+  paypal_details
 } = storeToRefs(checkoutStore);
 
 const { email } = storeToRefs(personalStore);
@@ -77,8 +79,13 @@ onMounted(async () => {
             });
           },
           onApprove: async (data, actions) => {
-            await actions.order.capture().then(function (details) {
-              paymentStore.payment(locale.value, details);
+            await actions.order.capture().then(async function (details) {
+              paypal_details.value = details;
+              if (captchaEnabled.value) {
+                await window.grecaptcha.execute();
+              } else {
+                paymentStore.payment(locale.value);
+              }
             });
           },
           onError: (err) => {
