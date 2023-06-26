@@ -34,7 +34,7 @@ export default defineNuxtConfig({
       },
     ],
   ],
-  devtools: { componentInspector: false },
+  devtools: true,
   imports: {
     dirs: ["store"],
   },

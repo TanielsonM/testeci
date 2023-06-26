@@ -39,6 +39,7 @@ const { isOneStep } = storeToRefs(customCheckoutStore);
 
 // Refs
 const alert_modal = ref(false);
+const pixelComponentKey = 1;
 
 // Computeds
 const tabs = computed(() => {
@@ -205,7 +206,7 @@ function closeModal() {
 async function callPayment() {
   if (captchaEnabled.value) {
     await window.grecaptcha.execute();
-  }else{
+  } else {
     payment.payment(locale.value);
   }
 }
@@ -495,6 +496,7 @@ await checkout.init();
     <ClientOnly class="hidden">
       <LeadsClient />
       <PixelClient
+        :key="pixelComponentKey"
         :event="'view'"
         :product_id="productStore.product_id"
         :affiliate_id="hasAffiliateId"
