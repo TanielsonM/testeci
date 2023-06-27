@@ -200,8 +200,9 @@ if (
             animation="pulse"
             class="col-span-12 lg:col-span-4"
             @click="modal.closeAtion"
-            >{{ $t("pg_obrigado.modal.entendido") }}</BaseButton
           >
+            {{ $t("pg_obrigado.modal.entendido") }}
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -245,14 +246,7 @@ if (
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
-      :amount="
-        data.productOffer?.data?.total ||
-        data.productOffer?.data?.amount ||
-        sale?.total ||
-        sale?.amount ||
-        sale?.product?.amount ||
-        0
-      "
+      :amount="amountStore.getAmount || amountStore.getOriginalAmount"
       :original_amount="amountStore.getOriginalAmount"
       :sale_id="parseInt(saleId!.toString())"
       :chc_id="parseInt(data.chc)"
