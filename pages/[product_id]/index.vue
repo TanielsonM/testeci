@@ -417,7 +417,6 @@ await checkout.init();
                     customCheckoutStore.purchase_text ||
                     $t("checkout.footer.btn_compra")
                   }}
-                  {{ method }}
                 </span>
               </BaseButton>
             </section>
