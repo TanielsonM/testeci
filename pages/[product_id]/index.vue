@@ -39,6 +39,7 @@ const { isOneStep } = storeToRefs(customCheckoutStore);
 
 // Refs
 const alert_modal = ref(false);
+const pixelComponentKey = 1;
 
 // Computeds
 const tabs = computed(() => {
@@ -496,6 +497,7 @@ await checkout.init();
     <ClientOnly class="hidden">
       <LeadsClient />
       <PixelClient
+        :key="pixelComponentKey"
         :event="'view'"
         :product_id="productStore.product_id"
         :affiliate_id="hasAffiliateId"

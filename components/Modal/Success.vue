@@ -14,7 +14,9 @@ const { sales, productOffer } = storeToRefs(checkoutStore);
 const route = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
+
 const saleId = route.query.s_id;
+
 const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
@@ -198,8 +200,9 @@ if (
             animation="pulse"
             class="col-span-12 lg:col-span-4"
             @click="modal.closeAtion"
-            >{{ $t("pg_obrigado.modal.entendido") }}</BaseButton
           >
+            {{ $t("pg_obrigado.modal.entendido") }}
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -235,19 +238,20 @@ if (
         </BaseButton>
       </div>
     </div>
-    <ClientOnly>
-      <PixelClient
-        :event="'conversion'"
-        :product_id="productStore.product_id"
-        :affiliate_id="checkoutStore.hasAffiliateId"
-        :method="checkoutStore.method"
-        :amount="data.productOffer.data.total"
-        :original_amount="amountStore.getOriginalAmount"
-        :sale_id="parseInt(saleId!.toString())"
-        :chc_id="parseInt(data.chc)"
-      />
-    </ClientOnly>
   </div>
+
+  <ClientOnly class="hidden">
+    <PixelClient
+      :event="'conversion'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="amountStore.getAmount || amountStore.getOriginalAmount"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="parseInt(saleId!.toString())"
+      :chc_id="parseInt(data.chc)"
+    />
+  </ClientOnly>
 </template>
 
 <style lang="scss">
