@@ -7,8 +7,6 @@ import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useCheckoutStore } from "@/store/checkout";
 
-const personalStore = usePersonalStore();
-
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
 export const validateEmail = yup.string().email().required();
@@ -27,12 +25,13 @@ export const validateState = yup.string().min(2).required();
 
 export const validateCardNumber = yup.string().max(16).required();
 export const validateCvc = yup.string().min(3).max(4).required();
-export const validateNameOnCard = yup.string().required();
+export const validateNameOnCard = yup.string().min(4).required();
 export const validateExpiryMonth = yup.string().min(2).max(2).required();
 export const validateExpiryYear = yup.string().min(4).max(4).required();
 export const validateCardAmount = yup.number().positive().min(1).required();
 
 export const validateFirstStep = async (): Promise<boolean> => {
+  const personalStore = usePersonalStore();
   const { name, document, cellphone, email } = storeToRefs(personalStore);
 
   const stepStore = useStepStore();
@@ -106,6 +105,7 @@ export const validateSecondStep = async (): Promise<boolean> => {
 export const validateThristStep = async (): Promise<boolean> => {
   const purchaseStore = usePurchaseStore();
   const { first, second } = storeToRefs(purchaseStore);
+  const personalStore = usePersonalStore();
   const { document } = storeToRefs(personalStore);
 
   const stepStore = useStepStore();
@@ -211,6 +211,8 @@ export const validateAll = async (): Promise<boolean> => {
     return validStepOne && validStepThree;
   }
   if (checkout.method === "BOLETO" || checkout.method === "PIX") {
+    const personalStore = usePersonalStore();
+
     const { document } = storeToRefs(personalStore);
     const validDocument = await validateDocument.isValid(document.value);
     return validStepOne && validDocument;
@@ -280,6 +282,7 @@ const validateCpfCnpj = (value: any) => {
 };
 
 export const phoneValidation = () => {
+  const personalStore = usePersonalStore();
   const { validPhone } = storeToRefs(personalStore);
   return validPhone.value;
 };
