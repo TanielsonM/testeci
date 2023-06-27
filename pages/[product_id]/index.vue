@@ -204,8 +204,9 @@ function closeModal() {
 
 async function callPayment() {
   if (captchaEnabled.value) {
+    await window.grecaptcha.reset();
     await window.grecaptcha.execute();
-  }else{
+  } else {
     payment.payment(locale.value);
   }
 }
