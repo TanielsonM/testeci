@@ -204,8 +204,10 @@ function closeModal() {
 
 async function callPayment() {
   if (captchaEnabled.value) {
-    await window.grecaptcha.reset();
-    await window.grecaptcha.execute();
+    //não colocar await pois nenhuma dessa funções retornam promises
+    //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
+    window.grecaptcha.reset();
+    window.grecaptcha.execute();
   } else {
     payment.payment(locale.value);
   }
