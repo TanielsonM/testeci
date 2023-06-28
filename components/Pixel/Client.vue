@@ -57,7 +57,7 @@ onMounted(async () => {
       }
     });
 
-    function handleGtag(pixel_id: any) {
+    function handleGtag(pixel_id: string) {
       (function (w: any, d: any, s: any, l: any, i: any) {
         w[l] = w[l] || [];
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
