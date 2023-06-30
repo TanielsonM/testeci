@@ -2,6 +2,13 @@
 const actual_year = computed(() => new Date().getFullYear());
 const store = useCheckoutStore();
 const { captchaEnabled } = storeToRefs(store);
+const props = defineProps({
+  installments_fee: {
+    required: false,
+    type: Boolean,
+    default: true
+  }
+})
 </script>
 
 <template>
@@ -20,6 +27,7 @@ const { captchaEnabled } = storeToRefs(store);
       {{ $t("checkout.captcha5") }}.
     </small>
     <p
+      v-if="installments_fee"
       class="relative flex flex-nowrap text-[10px] font-normal text-txt-color md:hidden"
     >
       {{ $t("components.footer.annual_fee") }}
