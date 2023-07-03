@@ -207,12 +207,12 @@ export const usePaymentStore = defineStore("Payment", {
       ) {
         let cards = [];
         cards.push({
-          amount: parseFloat(
+          amount: Number(
             first.value.amount
               .toString()
-              .replace("R$ ", "")
+              .replace("R$", "")
+              .replace(".", "")
               .replace(",", ".")
-              .replace("-", "")
           ),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
@@ -221,12 +221,12 @@ export const usePaymentStore = defineStore("Payment", {
         });
         if (method.value === "TWO_CREDIT_CARDS") {
           cards.push({
-            amount: parseFloat(
+            amount: Number(
               second.value.amount
                 .toString()
-                .replace("R$ ", "")
+                .replace("R$", "")
+                .replace(".", "")
                 .replace(",", ".")
-                .replace("-", "")
             ),
             card_cvv: second.value.cvv,
             card_expiration_date: `${second.value.month}${second.value.year}`,
@@ -240,7 +240,7 @@ export const usePaymentStore = defineStore("Payment", {
 
       const allowed_installments = [
         "CREDIT_CARD",
-        "TWO_CREDIT_CARD",
+        "TWO_CREDIT_CARDS",
         "DEBIT_CARD",
         "BOLETO",
       ];
