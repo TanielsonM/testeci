@@ -210,9 +210,9 @@ export const usePaymentStore = defineStore("Payment", {
           amount: Number(
             first.value.amount
               .toString()
-              .replace("R$ ", "")
+              .replace("R$", "")
+              .replace(".", "")
               .replace(",", ".")
-              .replace("-", "")
           ),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
@@ -224,9 +224,9 @@ export const usePaymentStore = defineStore("Payment", {
             amount: Number(
               second.value.amount
                 .toString()
-                .replace("R$ ", "")
+                .replace("R$", "")
+                .replace(".", "")
                 .replace(",", ".")
-                .replace("-", "")
             ),
             card_cvv: second.value.cvv,
             card_expiration_date: `${second.value.month}${second.value.year}`,
