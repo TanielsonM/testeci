@@ -207,7 +207,7 @@ export const usePaymentStore = defineStore("Payment", {
       ) {
         let cards = [];
         cards.push({
-          amount: parseFloat(
+          amount: Number(
             first.value.amount
               .toString()
               .replace("R$ ", "")
@@ -221,7 +221,7 @@ export const usePaymentStore = defineStore("Payment", {
         });
         if (method.value === "TWO_CREDIT_CARDS") {
           cards.push({
-            amount: parseFloat(
+            amount: Number(
               second.value.amount
                 .toString()
                 .replace("R$ ", "")
