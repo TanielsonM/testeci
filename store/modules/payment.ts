@@ -240,7 +240,7 @@ export const usePaymentStore = defineStore("Payment", {
 
       const allowed_installments = [
         "CREDIT_CARD",
-        "TWO_CREDIT_CARD",
+        "TWO_CREDIT_CARDS",
         "DEBIT_CARD",
         "BOLETO",
       ];
