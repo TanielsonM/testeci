@@ -83,7 +83,7 @@ async function getAddress(cep = "") {
 function updateLead() {
   setTimeout(function () {
     leadsStore.updateLead();
-  }, 10000);
+  }, 1000);
 }
 </script>
 
