@@ -271,7 +271,18 @@ if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
   }
 }
 
-await checkout.init();
+await checkout.init().then(() => {
+  useSeoMeta({
+    ogTitle: product.value.name || "Checkout",
+    ogDescription: product.value.description || "Your payment platform!",
+    ogType: "website",
+    ogUrl: "https://paystatic.greenn.com.br/",
+    ogImage: product.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
+    ogImageHeight: "500",
+    ogImageWidth: "500",
+    ogSiteName: "Checkout",
+  });
+});
 </script>
 
 <template>
