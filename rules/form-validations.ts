@@ -197,7 +197,7 @@ export const validateAll = async (): Promise<boolean> => {
   if (checkout.showAddressStep()) {
     if (
       checkout.method === "CREDIT_CARD" ||
-      checkout.method === "TWO_CREDIT_CARD"
+      checkout.method === "TWO_CREDIT_CARDS"
     ) {
       return validStepOne && validStepTwo && validStepThree;
     }
@@ -206,7 +206,7 @@ export const validateAll = async (): Promise<boolean> => {
 
   if (
     checkout.method === "CREDIT_CARD" ||
-    checkout.method === "TWO_CREDIT_CARD"
+    checkout.method === "TWO_CREDIT_CARDS"
   ) {
     return validStepOne && validStepThree;
   }

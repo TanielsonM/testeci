@@ -192,7 +192,7 @@ function getImg(type) {
                 v-if="card_cvv"
                 v-bind:key="card_cvv"
               >
-                {{ String(card_cvv).slice(0, 3) }}
+                {{ String(card_cvv).slice(0, 4) }}
               </span>
               <span class="font-semibold text-txt-color" v-else key="3"
                 >&nbsp;</span
