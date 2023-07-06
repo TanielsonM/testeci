@@ -167,6 +167,15 @@ onMounted(() => {
   window.addEventListener("myRecaptchaCallback", () => {
     payment.payment(locale.value);
   });
+  if (process.client) {
+    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+      let currentUrl = new URL(window.location.href);
+      currentUrl.host = "payu.greenn.com.br";
+      currentUrl.protocol = "https";
+      currentUrl.port = "";
+      window.location = currentUrl.href;
+    }
+  }
 });
 
 onBeforeUnmount(() => {
@@ -178,14 +187,13 @@ watch(method, (method) => {
   checkout.setMethod(method);
 });
 
-
 watch(selectedCountry, () => {
   if (process.client) {
     if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
       let currentUrl = new URL(window.location.href);
       currentUrl.host = "payu.greenn.com.br";
       currentUrl.protocol = "https";
-      currentUrl.port = ""; 
+      currentUrl.port = "";
       window.location = currentUrl.href;
     }
   }
