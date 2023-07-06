@@ -30,9 +30,6 @@ onMounted(() => {
           ],
         });
       }
-      setTimeout(() => {
-        loadRecaptcha();
-      }, 1000);
     };
 
     if (captchaEnabled.value) {
