@@ -6,7 +6,7 @@ import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
-console.log(product)
+
 const { t } = useI18n();
 const customCheckout = useCustomCheckoutStore();
 const props = defineProps({
