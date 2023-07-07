@@ -15,19 +15,21 @@ function start() {
   }
 }
 
-function finish() {
+function finish(evt) {
   if (cronometroRodando.value) {
     tempoEmSegundos.value = 0;
     cronometroRodando.value = false;
     clearInterval(cronometro);
     cronometro = null;
-    expiredSession.setHaveFinished(true);
+    if(evt !== 'onBeforeUnmount'){
+      expiredSession.setHaveFinished(true);
+    }
   }
 }
 
 onBeforeUnmount(() => {
   if(cronometro) {
-    finish();
+    finish('onBeforeUnmount');
   }
 });
 
@@ -44,6 +46,7 @@ watch(tempoEmSegundos, (newValue) => {
 })
 
 onMounted(() => {
+  expiredSession.setHaveFinished(false);
   start();
 })
 </script>

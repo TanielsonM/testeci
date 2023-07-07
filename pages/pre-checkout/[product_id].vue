@@ -1,12 +1,21 @@
 <script setup>
 import { useCheckoutStore } from "~~/store/checkout";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
+import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
 
 const checkout = useCheckoutStore();
 const custom_checkout = useCustomCheckoutStore();
+const expiredSession = useExpiredSessionStore();
 
+const route = useRoute();
 await checkout.init();
 const theme = custom_checkout.theme;
+
+function byTickets() {
+  expiredSession.setHaveFinished(false);
+  navigateTo(`/${route.params?.product_id}`);
+}
+
 </script>
 
 <template>
@@ -38,10 +47,11 @@ const theme = custom_checkout.theme;
         <div class="flex flex-col justify-between items-center md:flex-row">
           <BatchTotal />
           <div class="w-full md:w-fit">
-            <BaseButton :class="{'bg-black': theme === 'light', 'bg-white': theme === 'dark'}">
-              <span :class="{'text-white': theme === 'light', 'text-black': theme === 'dark'}">
-                Comprar ingressos
-              </span>
+            <BaseButton
+              :color="theme"
+              @click="byTickets"
+            >
+              Comprar ingressos
             </BaseButton>
           </div>
         </div>
