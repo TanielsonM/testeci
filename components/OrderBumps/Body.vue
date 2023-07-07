@@ -6,7 +6,7 @@ import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
-
+console.log(product)
 const { t } = useI18n();
 const customCheckout = useCustomCheckoutStore();
 const props = defineProps({
@@ -68,7 +68,7 @@ const showDescription = computed(() =>
 const exceptionSellerId = computed(() => {
   if(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION) {
     const ids = JSON.parse(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION)
-    return ids.some(x => parseInt(x) === parseInt(product.value.seller.id))
+    return ids.some(x => parseInt(x) === parseInt(product.product.seller.id))
   }
   return false
 })
