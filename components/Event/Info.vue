@@ -1,8 +1,13 @@
+<script setup>
+import { useProductStore } from "~~/store/product";
+const { product } = useProductStore();
+</script>
+
 <template>
   <ul class="mb-6 text-txt-color">
     <li class="flex items-center mb-2">
       <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>
-      <span>Data do evento: 03/09/2022</span>
+      <span>Data do evento: {{ product.event_date }}</span>
     </li>
     <li class="flex items-center mb-2">
       <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>

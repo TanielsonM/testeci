@@ -1,3 +1,10 @@
+<script setup>
+import { useProductStore } from "~~/store/product";
+const { product } = useProductStore();
+</script>
+
 <template>
-  <img class="rounded" src="https://heavenclub.com.br/wp-content/uploads/2022/08/03-SET-Heaven-in-rio-POST-Capa-Evento-1280x720-1.jpg" alt="event_img">
+  <div class="w-full flex justify-center">
+    <img class="rounded max-h-[200px]" :src="product.images[0].path" alt="event_img">
+  </div>
 </template>

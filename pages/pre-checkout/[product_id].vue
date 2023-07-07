@@ -2,7 +2,11 @@
 import { useCheckoutStore } from "~~/store/checkout";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
-
+import { useProductStore } from "~~/store/product";
+// const { product } = useProductStore();
+const productStore = useProductStore();
+const { product } = storeToRefs(productStore);
+console.log(product)
 const checkout = useCheckoutStore();
 const custom_checkout = useCustomCheckoutStore();
 const expiredSession = useExpiredSessionStore();
