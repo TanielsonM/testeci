@@ -8,6 +8,7 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { validateDocument } from "@/rules/form-validations";
+import { useLeadsStore } from "@/store/modules/leads";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -18,6 +19,7 @@ const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
+const leadsStore = useLeadsStore();
 
 // Variables
 const { t, locale } = useI18n();
@@ -274,6 +276,12 @@ const documentText = computed(() => {
       };
   }
 });
+
+function updateLead() {
+  setTimeout(function () {
+    leadsStore.updateLead();
+  }, 1000);
+}
 
 function incrementSteps() {
   if (countSteps.value != 3) {

@@ -85,7 +85,7 @@ watch([name, email, cellphone, document], (value) => {
 function updateLead() {
   setTimeout(function () {
     leadsStore.updateLead();
-  }, 10000);
+  }, 1000);
 }
 
 personalStore.setFields(useRoute().query);
