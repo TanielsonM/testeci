@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useCheckoutStore } from "~~/store/checkout";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
@@ -7,7 +7,6 @@ const custom_checkout = useCustomCheckoutStore();
 
 await checkout.init();
 const theme = custom_checkout.theme;
-
 </script>
 
 <template>
