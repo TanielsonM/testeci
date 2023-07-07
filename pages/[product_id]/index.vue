@@ -31,6 +31,7 @@ const {
   product_id,
   selectedCountry,
 } = storeToRefs(checkout);
+
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, hasSent } = storeToRefs(payment);
 const { document } = storeToRefs(personalStore);
@@ -38,8 +39,14 @@ const currentCountry = useState("currentCountry");
 const { isOneStep } = storeToRefs(customCheckoutStore);
 
 // Refs
-const alert_modal = ref(false);
 const pixelComponentKey = 1;
+const alert_modal = ref(false);
+const closeUpModal = ref(
+  customCheckoutStore.popUpImage === "on" ? true : false
+);
+const closeUpOnlyImage = ref(
+  customCheckoutStore.popUpButton === "on" ? false : true
+);
 
 // Computeds
 const tabs = computed(() => {
@@ -161,8 +168,24 @@ const handleResize = () => {
   stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
 };
 
+let lastScrollPosition = 0;
+
+const handleScroll = () => {
+  const currentScrollPosition =
+    window.pageYOffset || document.documentElement.scrollTop;
+  if (currentScrollPosition < lastScrollPosition) {
+    // Scrolled up
+    closeUpModal.value = true;
+  } else {
+    // Scrolled down
+    closeUpModal.value = false;
+  }
+  lastScrollPosition = currentScrollPosition;
+};
+
 onMounted(() => {
   handleResize();
+  window.addEventListener("scroll", handleScroll);
   window.addEventListener("resize", handleResize);
   window.addEventListener("myRecaptchaCallback", () => {
     payment.payment(locale.value);
@@ -179,6 +202,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  window.removeEventListener("scroll", handleScroll);
   window.removeEventListener("resize", handleResize);
 });
 
@@ -221,6 +245,7 @@ watch(sameAddress, (val) => {
 // Functions
 function closeModal() {
   alert_modal.value = false;
+  closeUpModal.value = false;
   error_message.value = "";
 }
 
@@ -501,11 +526,45 @@ await checkout.init();
         <section class="mt-10 flex w-full justify-end">
           <BaseButton
             color="blue"
-            class="w-[40%] text-txt-color"
+            class="w-[40%] bg-main-color text-txt-color"
             @click="closeModal"
           >
             {{ $t("checkout.dados_pessoais.btn_error") }}
           </BaseButton>
+        </section>
+      </section>
+    </BaseModal>
+
+    <!--- Close Up Modal -->
+    <BaseModal :is-open="closeUpModal" @close="closeModal">
+      <section class="-mt-14 flex w-full max-w-[400px] flex-col gap-5">
+        <section v-if="closeUpOnlyImage">
+          <a :href="customCheckoutStore.popUpLink">
+            <img class="rounded" :src="customCheckoutStore.popUpImage" />
+          </a>
+        </section>
+        <section v-else>
+          <h6 class="text-[17px] font-semibold text-txt-color">
+            {{ customCheckoutStore.popUpTitle }}
+          </h6>
+
+          <section>
+            <img class="rounded" :src="customCheckoutStore.popUpImage" />
+          </section>
+
+          <p class="mt-2 text-sm text-txt-color">
+            {{ customCheckoutStore.popUpDescription }}
+          </p>
+          <section class="mt-10 flex w-full justify-end">
+            <a :href="customCheckoutStore.popUpLink">
+              <BaseButton
+                class="w-[40%] bg-main-color text-txt-color"
+                @click="closeModal"
+              >
+                {{ customCheckoutStore.popUpButtonText }}
+              </BaseButton>
+            </a>
+          </section>
         </section>
       </section>
     </BaseModal>
