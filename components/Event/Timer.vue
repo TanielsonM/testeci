@@ -1,44 +1,45 @@
 <script setup>
-const route = useRoute();
+import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
+
+const expiredSession = useExpiredSessionStore();
 const cronometroRodando = ref(false);
 const tempoEmSegundos = ref(600);
 let cronometro = null;
 
 function start() {
   if (!cronometroRodando.value) {
-    cronometroRodando.value = true
+    cronometroRodando.value = true;
     cronometro = setInterval(() => {
-      tempoEmSegundos.value -= 1
-    }, 1000)
+      tempoEmSegundos.value -= 1;
+    }, 1000);
   }
 }
 
 function finish() {
   if (cronometroRodando.value) {
-    tempoEmSegundos.value = 0
-    cronometroRodando.value = false
-    clearInterval(cronometro)
+    tempoEmSegundos.value = 0;
+    cronometroRodando.value = false;
+    clearInterval(cronometro);
+    cronometro = null;
+    expiredSession.setHaveFinished(true);
   }
 }
 
 onBeforeUnmount(() => {
-  finish();
+  if(cronometro) {
+    finish();
+  }
 });
 
 watch(cronometroRodando, (newValue) => {
-  if (!newValue) {
+  if (!newValue && cronometro) {
     finish();
   }
 });
 
 watch(tempoEmSegundos, (newValue) => {
-  if(newValue === 0) {
-    finish()
-    if(route.name === 'pre-checkout-product_id') {
-      window.location.reload(true)
-    } else {
-      navigateTo(`/pre-checkout/${route.params?.product_id}`)
-    }
+  if(newValue === 0 && cronometro) {
+    finish();
   }
 })
 

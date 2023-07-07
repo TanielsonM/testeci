@@ -229,7 +229,7 @@ const trialMessage = computed({
       <!-- Coupon -->
       <ProductCoupon v-if="productStore.allowedCoupon" />
     </section>
-    <EventTimer />
+    <EventTimer v-if="product.format === 'PRESENTIAL_EVENT'" />
   </BaseCard>
 </template>
 
