@@ -15,7 +15,7 @@ const theme = custom_checkout.theme;
     <section class="flex w-full flex-col xl:max-w-[780px]">
       <BaseCard class="w-full p-5 mb-5 ">
         <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">Pré-checkout</h1>
-
+        <EventTimer class="hidden"/>
         <EventImage />
         <EventTitle />
         <EventDescription />
