@@ -8,6 +8,7 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { validateDocument } from "@/rules/form-validations";
+import { useLeadsStore } from "@/store/modules/leads";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -18,6 +19,7 @@ const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
+const leadsStore = useLeadsStore();
 
 // Variables
 const { t, locale } = useI18n();
@@ -167,6 +169,15 @@ onMounted(() => {
   window.addEventListener("myRecaptchaCallback", () => {
     payment.payment(locale.value);
   });
+  if (process.client) {
+    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+      let currentUrl = new URL(window.location.href);
+      currentUrl.host = "payu.greenn.com.br";
+      currentUrl.protocol = "https";
+      currentUrl.port = "";
+      window.location = currentUrl.href;
+    }
+  }
 });
 
 onBeforeUnmount(() => {
@@ -176,6 +187,18 @@ onBeforeUnmount(() => {
 // Watch`s
 watch(method, (method) => {
   checkout.setMethod(method);
+});
+
+watch(selectedCountry, () => {
+  if (process.client) {
+    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+      let currentUrl = new URL(window.location.href);
+      currentUrl.host = "payu.greenn.com.br";
+      currentUrl.protocol = "https";
+      currentUrl.port = "";
+      window.location = currentUrl.href;
+    }
+  }
 });
 
 watch(error_message, (val) => {
@@ -254,6 +277,12 @@ const documentText = computed(() => {
   }
 });
 
+function updateLead() {
+  setTimeout(function () {
+    leadsStore.updateLead();
+  }, 1000);
+}
+
 function incrementSteps() {
   if (countSteps.value != 3) {
     stepsStore.incrementCount();
@@ -265,12 +294,6 @@ if (hasAffiliateId.value) {
   const affiliate = useCookie("affiliate");
   affiliate_id.value = hasAffiliateId.value;
   affiliate.value = hasAffiliateId.value;
-}
-
-if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-  if (process.client) {
-    window.location.href = `https://payu.greenn.com.br/${product_id.value}`;
-  }
 }
 
 await checkout.init();
