@@ -141,13 +141,13 @@ const theme = custom_checkout.theme;
           </ul>
         </div>
         <hr>
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col justify-between items-center md:flex-row">
           <div>
             <small class="text-gray-400">Total</small>
             <p class="text-3xl text-input-color font-bold">R$ 671,00</p>
             <small class="text-main-color">ou 12x de R$ 69,40</small>
           </div>
-          <div>
+          <div class="w-full md:w-fit">
             <BaseButton :class="{'bg-black': theme === 'light', 'bg-white': theme === 'dark'}">
               <span :class="{'text-white': theme === 'light', 'text-black': theme === 'dark'}">
                 Comprar ingressos
