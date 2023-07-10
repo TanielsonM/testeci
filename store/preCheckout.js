@@ -1,5 +1,6 @@
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
+import { storeToRefs } from "pinia";
 
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
@@ -41,7 +42,31 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     isPresentialEvent() {
       const { product } = useProductStore();
       return product.format === 'PRESENTIAL_EVENT';
-    }
+    },
+    ticketList() {
+      const checkoutStore = useCheckoutStore();
+      const { product_list } = storeToRefs(checkoutStore);
+
+      const batchGroupsObj = {};
+      product_list.forEach(ticket => {
+        const { batch_order, id, amount } = ticket;
+        if (batchGroupsObj[batch_order]) {
+          batchGroupsObj[batch_order].total_amount += amount;
+        } else {
+          batchGroupsObj[batch_order] = { id, total_amount: amount };
+        }
+      });
+
+      // Converte o objeto 'batchGroups' em um array de objetos
+      const batchGroupsArry = Object.entries(batchGroupsObj).map(([batch_order, { id, total_amount }]) => ({
+        batch_order: parseInt(batch_order),
+        id,
+        total_amount
+      }));
+
+      batchGroupsArry.sort((a, b) => a.batch_order - b.batch_order);
+      return batchGroupsArry;
+    },
   },
   actions: {
     setBatchsList(value) {

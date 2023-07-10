@@ -188,7 +188,7 @@ export const useLeadsStore = defineStore("Leads", {
               return res;
             });
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       }
     },

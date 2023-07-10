@@ -21,6 +21,7 @@ const {
   bump_list,
   hasSelectedBump,
   checkoutPayment,
+  product_list
 } = storeToRefs(checkout);
 const { getBatchsList, isPresentialEvent } = storeToRefs(preCheckout);
 const { getInstallments } = storeToRefs(installmentsStore);
@@ -135,12 +136,12 @@ const amountText = computed(() => {
       <p class="infos-title">Ingressos</p>
       <span
         class="infos-content mt-2 flex w-full items-center justify-between"
-        v-for="batch in getBatchsList"
+        v-for="batch in product_list"
         :key="batch.id"
       >
         <p>{{ batch.name }}</p>
         <p>
-          +{{ batch.total }}
+          +{{ formatMoney(batch.amount) }}
         </p>
       </span>
     </section>

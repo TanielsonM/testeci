@@ -164,6 +164,8 @@ export const useCheckoutStore = defineStore("checkout", {
   },
   actions: {
     async init(byChangeCountry = false) {
+      const { product } = useProductStore();
+      if(product.id && product.format === 'PRESENTIAL_EVENT') return
       this.resetProducts();
       amountStore.reset();
       this.setLoading(true);
@@ -262,7 +264,6 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response.data.format === "PRESENTIAL_EVENT") {
               const preCheckout = usePreCheckoutStore();
-              console.log(response.batch)
               // preCheckout.setBatchsList(response.batch);
             }
           })
