@@ -66,9 +66,9 @@ const trialMessage = computed({
       <!--  -->
       <!-- Product Infos -->
       <section class="flex flex-col gap-1 text-txt-color">
-        <small class="text-blue-500" v-if="productStore.isSubscription">{{
-          $t("components.product_card.is_subscription")
-        }}</small>
+        <small class="text-blue-500" v-if="productStore.isSubscription">
+          {{ $t("components.product_card.is_subscription") }}
+        </small>
         <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">
           {{ product.name }}
         </h1>
@@ -92,19 +92,19 @@ const trialMessage = computed({
               :key="charge.id"
               class="flex w-full items-center justify-between"
             >
-              <span
-                >{{ charge.sequence }}ª
-                {{ $t("checkout.different_amount_text.charge") }}</span
-              >
+              <span>
+                {{ charge.sequence }}ª
+                {{ $t("checkout.different_amount_text.charge") }}
+              </span>
               <span class="flex-nowrap">{{ formatMoney(charge.amount) }}</span>
             </p>
             <p class="flex w-full items-center justify-between">
-              <span class="flex-wrap">{{
-                $t("checkout.different_amount_text.other_charges")
-              }}</span>
-              <span class="min-w-[70px] flex-nowrap text-end">{{
-                formatMoney(product.amount)
-              }}</span>
+              <span class="flex-wrap">
+                {{ $t("checkout.different_amount_text.other_charges") }}
+              </span>
+              <span class="min-w-[70px] flex-nowrap text-end">
+                {{ formatMoney(product.amount) }}
+              </span>
             </p>
           </section>
           <button class="show-more" @click="opened = !opened">
@@ -187,8 +187,7 @@ const trialMessage = computed({
         <span class="infos-content">
           {{
             product.seller.company
-              ? product.seller.company.fantasy_name ||
-                product.seller.company.name
+              ? product.seller.company.fantasy_name || product.seller.company.name
               : product.seller.name
           }}
         </span>
@@ -196,11 +195,7 @@ const trialMessage = computed({
       <!-- Email -->
       <p
         class="flex items-center gap-1 md:flex-col md:items-start"
-        v-if="
-          product.seller &&
-          product.seller.company &&
-          product.seller.company.email
-        "
+        v-if="product?.seller?.company?.email"
       >
         <span class="infos-title"
           >{{ $t("general.mail") }}<span class="md:hidden">:</span></span
@@ -210,11 +205,7 @@ const trialMessage = computed({
       <!-- Cellphone -->
       <p
         class="mb-5 flex items-center gap-2 md:flex-col md:items-start"
-        v-if="
-          product.seller &&
-          product.seller.company &&
-          product.seller.company.support_telephone
-        "
+        v-if="product?.seller?.company?.support_telephone"
       >
         <span class="infos-title"
           >{{ $t("general.telephone") }}<span class="md:hidden">:</span></span

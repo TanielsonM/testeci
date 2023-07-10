@@ -61,8 +61,8 @@ export const useInstallmentsStore = defineStore("installments", {
       };
     },
     getTicketInstallments(state: InstallmentsState) {
-      const amountStore = useAmountStore();
       const checkout = useCheckoutStore();
+      const amountStore = useAmountStore();
       const {
         monthly_interest,
         product_list,

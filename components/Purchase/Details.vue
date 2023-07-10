@@ -2,13 +2,16 @@
 // Stores
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
+import { useProductStore } from "~~/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
 
 // Utils
 import { formatMoney } from "~~/utils/money";
 
 const checkout = useCheckoutStore();
-const product = useProductStore();
+const preCheckout = usePreCheckoutStore();
+const productStore = useProductStore();
 const installmentsStore = useInstallmentsStore();
 const {
   coupon,
@@ -19,8 +22,9 @@ const {
   hasSelectedBump,
   checkoutPayment,
 } = storeToRefs(checkout);
+const { getBatchsList, isPresentialEvent } = storeToRefs(preCheckout);
 const { getInstallments } = storeToRefs(installmentsStore);
-const { hasTicketInstallments } = storeToRefs(product);
+const { hasTicketInstallments } = storeToRefs(productStore);
 
 function formatAmountText(installments = 1) {
   return `${installments}x de ${formatMoney(
@@ -123,12 +127,30 @@ const amountText = computed(() => {
         <p>+{{ formatMoney(tax.local_amount) }}</p>
       </span>
     </section>
+    <!-- Event Tickets -->
+    <section
+      class="-mt-[9px] flex flex-col items-start md:mt-auto"
+      v-if="isPresentialEvent"
+    >
+      <p class="infos-title">Ingressos</p>
+      <span
+        class="infos-content mt-2 flex w-full items-center justify-between"
+        v-for="batch in getBatchsList"
+        :key="batch.id"
+      >
+        <p>{{ batch.name }}</p>
+        <p>
+          +{{ batch.total }}
+        </p>
+      </span>
+    </section>
     <!-- Total -->
     <section
       class="flex items-start justify-between"
       v-if="
         hasSelectedBump ||
         coupon.applied ||
+        isPresentialEvent ||
         (typeof checkoutPayment.price === 'object' &&
           checkoutPayment.price.tax.length > 0)
       "

@@ -2,6 +2,7 @@ import * as Toast from "vue-toastification";
 
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
 import { useInstallmentsStore } from "./modules/installments";
@@ -211,15 +212,11 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then((response) => {
-            if (
-              response.checkout_payment &&
-              response.checkout_payment.data &&
-              response.checkout_payment.data.amount
-            ) {
+            if (response?.checkout_payment?.data?.amount) {
               response.data.amount = response.checkout_payment.data.amount;
             }
 
-            if (response.checkout_payment && response.checkout_payment.paypal) {
+            if (response?.checkout_payment?.paypal) {
               response.data.paypal = response.checkout_payment.paypal;
             }
 
@@ -233,6 +230,7 @@ export const useCheckoutStore = defineStore("checkout", {
               }
               response.data = { ...response.data, shipping };
             }
+
             if (
               !isBump &&
               response?.global_settings &&
@@ -260,6 +258,12 @@ export const useCheckoutStore = defineStore("checkout", {
               setProduct(response.data);
             } else {
               this.bump_list.push({ ...response.data, checkbox: false });
+            }
+
+            if (response.data.format === "PRESENTIAL_EVENT") {
+              const preCheckout = usePreCheckoutStore();
+              console.log(response.batch)
+              // preCheckout.setBatchsList(response.batch);
             }
           })
           .catch((err) => {
@@ -493,30 +497,35 @@ export const useCheckoutStore = defineStore("checkout", {
 
       this.checkAllowedMethods();
       if (index === -1) {
-        this.product_list.push(product);
-        amountStore.setAmount(
-          !!product.custom_charges.length
-            ? product.custom_charges[0].amount
-            : product.amount
-        );
-        amountStore.setOriginalAmount(
-          !!product.custom_charges.length
-            ? product.custom_charges[0].amount
-            : product.amount
-        );
-
-        if (
-          product.format === "PHYSICALPRODUCT" &&
-          !!product.has_shipping_fee
-        ) {
-          amountStore.setAmount(product?.shipping?.amount || 0);
-          amountStore.setOriginalAmount(product?.shipping?.amount || 0);
-        }
-        return;
+        this.addProductList(product);
+      } else {
+        this.removeProductList(product, index);
       }
-      this.product_list.splice(index, 1);
+    },
+    addProductList(product) {
+      this.product_list.push(product);
+
       amountStore.setAmount(
-        !!product.custom_charges.length
+        !!product?.custom_charges?.length
+          ? product.custom_charges[0].amount
+          : product.amount
+      );
+      amountStore.setOriginalAmount(
+        !!product?.custom_charges?.length
+          ? product.custom_charges[0].amount
+          : product.amount
+      );
+
+      if (product?.format === "PHYSICALPRODUCT" && !!product?.has_shipping_fee) {
+        amountStore.setAmount(product?.shipping?.amount || 0);
+        amountStore.setOriginalAmount(product?.shipping?.amount || 0);
+      }
+    },
+    removeProductList(product, index) {
+      this.product_list.splice(index, 1);
+
+      amountStore.setAmount(
+        !!product?.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
@@ -526,7 +535,7 @@ export const useCheckoutStore = defineStore("checkout", {
           : product.amount * -1
       );
 
-      if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee) {
+      if (product?.format === "PHYSICALPRODUCT" && !!product?.has_shipping_fee) {
         amountStore.setAmount(product?.shipping?.amount * -1 || 0);
         amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
       }

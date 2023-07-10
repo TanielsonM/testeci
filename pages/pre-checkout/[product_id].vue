@@ -1,16 +1,16 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
-import { useProductStore } from "~~/store/product";
-// const { product } = useProductStore();
-const productStore = useProductStore();
-const { product } = storeToRefs(productStore);
-console.log(product)
+import { useAmountStore } from "~~/store/modules/amount";
+
 const checkout = useCheckoutStore();
 const custom_checkout = useCustomCheckoutStore();
 const expiredSession = useExpiredSessionStore();
+const amountStore = useAmountStore();
 
+const { amount } = storeToRefs(amountStore);
 const route = useRoute();
 await checkout.init();
 const theme = custom_checkout.theme;
@@ -44,7 +44,9 @@ function byTickets() {
       <BaseCard class="w-full p-5 mb-5">
         <div class="flex justify-between mb-5">
           <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">Ingressos</h1>
-          <h1 class="mb-[5px] text-[18px] font-[700] text-main-color">R$ 0,00</h1>
+          <h1 class="mb-[5px] text-[18px] font-[700] text-main-color">
+            {{ formatMoney(amount) }}
+          </h1>
         </div>
         <BatchList />
         <hr>

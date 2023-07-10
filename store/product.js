@@ -125,7 +125,11 @@ export const useProductStore = defineStore("product", {
         this.hasFixedInstallments,
         this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
-      checkout.setProductList(this.product);
+      if (product.format !== "PRESENTIAL_EVENT") {
+        checkout.setProductList(this.product);
+      } else {
+        amountStore.reset();
+      }
       let allowed_methods = product.method.split(",");
       if (
         !!product.seller.is_heaven &&

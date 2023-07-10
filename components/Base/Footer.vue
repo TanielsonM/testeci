@@ -1,4 +1,7 @@
 <script setup>
+import { storeToRefs } from "pinia";
+import { useCheckoutStore } from "~~/store/checkout";
+
 const actual_year = computed(() => new Date().getFullYear());
 const store = useCheckoutStore();
 const { captchaEnabled } = storeToRefs(store);
