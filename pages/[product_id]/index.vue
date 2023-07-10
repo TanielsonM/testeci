@@ -410,7 +410,9 @@ await checkout.init();
                 </template>
               </BaseInput>
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
-              <FormPurchase />
+              <template v-if="method !== 'PIX'">
+                <FormPurchase />
+              </template>
             </section>
             <!-- Bumps -->
             <template
@@ -446,6 +448,11 @@ await checkout.init();
                 </span>
               </BaseButton>
             </section>
+
+            <!-- Pix purchase infos -->
+            <template v-if="method === 'PIX'">
+              <FormPurchasePix />
+            </template>
 
             <span class="flex items-center gap-3">
               <Icon name="fa6-solid:lock" class="text-main-color" />
