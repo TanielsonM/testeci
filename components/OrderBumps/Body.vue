@@ -3,6 +3,9 @@
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
+import { useProductStore } from "~~/store/product";
+const productStore = useProductStore();
+const { product } = storeToRefs(productStore);
 
 const { t } = useI18n();
 const customCheckout = useCustomCheckoutStore();
@@ -61,6 +64,14 @@ const hasTrial = computed(() => !!props.bump.trial);
 const showDescription = computed(() =>
   customCheckout.hasCustomBump ? customCheckout.bump_options.description : true
 );
+
+const exceptionSellerId = computed(() => {
+  if(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION) {
+    const ids = JSON.parse(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION)
+    return ids.some(x => parseInt(x) === parseInt(product.value.seller.id))
+  }
+  return false
+})
 
 // Methods
 function getType(type = "") {
@@ -122,7 +133,7 @@ function getType(type = "") {
               class="info-value custom-color"
               >{{ `${formatMoney(amount)}` }}</span
             >
-            <section class="charges" :opened="details" v-if="hasCustomCharges">
+            <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
               <p
                 v-for="charge in customCharges"
                 :key="charge.id"
