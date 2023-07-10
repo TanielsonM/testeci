@@ -8,10 +8,10 @@ const { product_id } = storeToRefs(productStore);
 
 const closeUpModal = ref(false);
 const closeUpModalCookie = useCookie(`${product_id.value}_closeUp`);
-const closeUpOnlyImage = ref(true);
-// const closeUpOnlyImage = ref(
-//   customCheckoutStore.popUpButton === "on" ? false : true
-// );
+
+const closeUpOnlyImage = ref(
+  customCheckoutStore.popUpButton === "on" ? false : true
+);
 
 let lastScrollPosition = 0;
 
