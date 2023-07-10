@@ -183,6 +183,7 @@ export const useLeadsStore = defineStore("Leads", {
               id: this.uuid,
               country_code: this.address.country_code,
               status: this.purchase.status,
+              cellphone: (this.personal.cellphone).replace( / /g, '' )
             })
             .then((res) => {
               return res;
