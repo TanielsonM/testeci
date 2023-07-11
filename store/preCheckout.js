@@ -1,6 +1,7 @@
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { storeToRefs } from "pinia";
+import { saleHasStarted } from "@/utils/validateBatch";
 
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
@@ -86,7 +87,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     addTicket(id) {
       let batch = this.batchs_list.find(x => x.id === id);
-      if(batch.ticket_quantity !== batch.selected_tickets) {
+      if(batch?.ticket_quantity !== batch?.selected_tickets && saleHasStarted(batch)) {
         batch.selected_tickets += 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.addProductList(batch);
@@ -94,11 +95,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     subTicket(id) {
       let batch = this.batchs_list.find(x => x.id === id)
-      if(batch.selected_tickets > 0) {
+      if(batch?.selected_tickets > 0 && saleHasStarted(batch)) {
         batch.selected_tickets -= 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.removeProductList(batch);
       }
-    }
+    },
   }
 });
