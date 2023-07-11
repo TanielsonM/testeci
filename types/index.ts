@@ -25,20 +25,6 @@ export type Company = {
   support_telephone: string;
 };
 
-export type pixelState = {
-  event: String;
-  product_id: number;
-  event_id: String;
-  method: String;
-  amount: Number;
-  original_amount: Number;
-  affiliate_id?: Number;
-  sale_id?: Number;
-  client_has_contract?: Number;
-  email?: string;
-  cellphone?: string;
-};
-
 export type Coupon = {
   amount: number;
   applied: boolean;
@@ -49,14 +35,6 @@ export type Coupon = {
   is_valid: boolean;
   loading: boolean;
   name: string;
-};
-
-export type PurcharseCard = {
-  amount: string | number;
-  card_cvv: string;
-  card_expiration_date: string;
-  card_holder_name: string;
-  card_number: string;
 };
 
 export type GlobalSettings = {
@@ -173,6 +151,20 @@ export type Pixel = {
   host: string;
 };
 
+export type pixelState = {
+  event: String;
+  product_id: number;
+  event_id: String;
+  method: String;
+  amount: Number;
+  original_amount: Number;
+  affiliate_id?: Number;
+  sale_id?: Number;
+  client_has_contract?: Number;
+  email?: string;
+  cellphone?: string;
+};
+
 export type Product = {
   id: number;
   name: string;
@@ -267,6 +259,14 @@ export type Product = {
   shipping?: Shipping;
 };
 
+export type PurcharseCard = {
+  amount: string | number;
+  card_cvv: string;
+  card_expiration_date: string;
+  card_holder_name: string;
+  card_number: string;
+};
+
 export type Seller = {
   id: number;
   name: string;
@@ -297,6 +297,12 @@ export type AddressState = {
   shipping: Address;
 };
 
+export type AdditionalServices = {
+  receipt: boolean;
+  own_hand: boolean;
+  collect: boolean;
+};
+
 export type AmountState = {
   amount: number;
   originalAmount: number;
@@ -304,6 +310,24 @@ export type AmountState = {
 
 export type BumpsState = {
   bumps: Product[];
+};
+
+export type CheckoutPayment = {
+  price: Price;
+  data: CheckoutPaymentData;
+  token: string;
+  conversion: boolean;
+  base_currency: string;
+  seller_id: number;
+};
+
+export type CheckoutPaymentData = {
+  symbol_currency: string;
+  rate: number;
+  from: string;
+  to: string;
+  base_amount: number;
+  amount: number;
 };
 
 export type CheckoutState = {
@@ -354,191 +378,14 @@ export type CheckoutState = {
   shippingProducts?: () => Product[] | never[];
 };
 
+export type CompanyShipping = {
+  id: number;
+  name: string;
+  picture: string;
+};
+
 export type CouponState = {
   coupon: Coupon;
-};
-
-export type HeadersState = {
-  "controller-token-": string | null;
-  "requestray-token-": string | null;
-  "firewall-token-": string | null;
-  "cache-token-": string | null;
-  "trans-token-": string | null;
-  "wd-token-": string;
-};
-
-export type leadsState = {
-  step: number;
-  uuid: any;
-  personal: {
-    name: any;
-    email: any;
-    cellphone: any;
-    document: any;
-  };
-  address: {
-    zip_code: any;
-    state: any;
-    city: any;
-    street: any;
-    number: any;
-    neighborhood: any;
-    complement: any;
-    country_code: any;
-  };
-  payment: {
-    offer_hash: any;
-    proposal_id: any;
-    product_id: any;
-    seller_id: any;
-    affiliate_id: any;
-  };
-  purchase: {
-    status: string;
-  };
-};
-
-export type InstallmentsState = {
-  installments: Installment[];
-  maxInstallments: number;
-  minValue: number;
-  getInstallments?: () => number;
-};
-
-export type MethodsState = {
-  method: string;
-  allowedMethods: string[];
-};
-
-export type StepState = {
-  currentStep: number;
-  format: "one_step" | "default";
-  isMobile: boolean;
-  countSteps: number;
-};
-
-export type Sale = {
-  sales: SaleElement[];
-  order: any;
-};
-
-export type SaleElement = {
-  id: number;
-  product_id: number;
-  contract_id: any;
-  type: string;
-  status: string;
-  created_at: Date;
-  updated_at: Date;
-  installments: number;
-  method: string;
-  client_id: number;
-  total: number;
-  amount: number;
-  proposal_id: any;
-  subscription_id: any;
-  boleto_url: any;
-  boleto_barcode: any;
-  boleto_expiration_date: any;
-  qrcode: string;
-  imgQrcode: string;
-  paid_at: any;
-  country_code: string;
-  coupon_id: any;
-  is_gift: number;
-  gift_message: any;
-  shipping_amount: any;
-  shipping_selected: any;
-  offer_id: number;
-  base_currency_id: number;
-  local_currency_id: number;
-  original_amount: number;
-  trial_with_shipping: number;
-  offer: SaleOffer;
-  product: SaleProduct;
-  upsell: any;
-  local_currency: SaleLocalCurrency;
-  success: boolean;
-  chc?: string;
-  token?: string;
-  sale_id?: string | number;
-};
-
-export type SaleLocalCurrency = {
-  id: number;
-  name: string;
-  currency: string;
-  currency_symbol: string;
-};
-
-export type SaleOffer = {
-  id: number;
-  product_id: number;
-  hash: string;
-  amount: number;
-  method: string;
-  name: string;
-  allowed_coupon: number;
-  fixed_installments: any;
-  max_boleto_installments: number;
-  no_interest_installments: number;
-  max_installments: number;
-  period: any;
-  trial: any;
-  charges: any;
-  default: number;
-  status: string;
-  reason: any;
-  analised: number;
-  created_at: Date;
-  updated_at: Date;
-  max_subscription_installments: any;
-  deleted_at: any;
-  pre_selected_installment: number;
-  currency_id: number;
-  allow_offer_link: number;
-  status_offer: string;
-};
-
-export type SaleProduct = {
-  id: number;
-  name: string;
-  thank_you_page: string;
-  trial: number;
-  amount: number;
-  in_stock: boolean;
-  status_product: any;
-  custom_thank_you_pages: any[];
-};
-
-export type ProductOffer = {
-  data: ProductOfferData;
-  type: string;
-  custom_checkout: CustomCheckout;
-  checkout_payment: CheckoutPayment;
-};
-
-export type CheckoutPayment = {
-  price: Price;
-  data: CheckoutPaymentData;
-  token: string;
-  conversion: boolean;
-  base_currency: string;
-  seller_id: number;
-};
-
-export type CheckoutPaymentData = {
-  symbol_currency: string;
-  rate: number;
-  from: string;
-  to: string;
-  base_amount: number;
-  amount: number;
-};
-
-export type Price = {
-  payable_tax: number;
-  tax: any[];
 };
 
 export type CustomCheckout = {
@@ -578,6 +425,132 @@ export type CustomCheckout = {
   zopim_id: any;
   whatsapp_button: any;
   confirmation_email: any;
+};
+
+export type DeliveryRange = {
+  min: number;
+  max: number;
+};
+
+export type Dimensions = {
+  height: number;
+  width: number;
+  length: number;
+};
+
+export type FiscalCenterSetting = {
+  id: number;
+  key: string;
+  value: number;
+  user_id: number;
+  product_id: number;
+  created_at: Date;
+  updated_at: Date;
+};
+
+export type Frete = {
+  id: number;
+  name: string;
+  price: string;
+  custom_price: string;
+  discount: string;
+  currency: string;
+  delivery_time: number;
+  delivery_range: DeliveryRange;
+  custom_delivery_time: number;
+  custom_delivery_range: DeliveryRange;
+  packages: Package[];
+  additional_services: AdditionalServices;
+  company: CompanyShipping;
+};
+
+export type HeadersState = {
+  "controller-token-": string | null;
+  "requestray-token-": string | null;
+  "firewall-token-": string | null;
+  "cache-token-": string | null;
+  "trans-token-": string | null;
+  "wd-token-": string;
+};
+
+export type Image = {
+  id: number;
+  product_id: number;
+  path: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
+export type InstallmentsState = {
+  installments: Installment[];
+  maxInstallments: number;
+  minValue: number;
+  getInstallments?: () => number;
+};
+
+export type leadsState = {
+  step: number;
+  uuid: any;
+  personal: {
+    name: any;
+    email: any;
+    cellphone: any;
+    document: any;
+  };
+  address: {
+    zip_code: any;
+    state: any;
+    city: any;
+    street: any;
+    number: any;
+    neighborhood: any;
+    complement: any;
+    country_code: any;
+  };
+  payment: {
+    offer_hash: any;
+    proposal_id: any;
+    product_id: any;
+    seller_id: any;
+    affiliate_id: any;
+  };
+  purchase: {
+    status: string;
+  };
+};
+
+export type Link = {
+  id: number;
+  product_id: number;
+  url: string;
+  name: string;
+  source: any;
+  medium: any;
+  created_at: Date;
+  updated_at: Date;
+  is_bump: number;
+};
+
+export type Meta = {
+  id: number;
+  key: string;
+  value: string;
+  product_id: number;
+  created_at: Date;
+  updated_at: Date;
+  proposal_id: any;
+};
+
+export type MethodsState = {
+  method: string;
+  allowedMethods: string[];
+};
+
+export type ProductOffer = {
+  data: ProductOfferData;
+  type: string;
+  custom_checkout: CustomCheckout;
+  checkout_payment: CheckoutPayment;
 };
 
 export type ProductOfferData = {
@@ -681,93 +654,119 @@ export type ProductOfferData = {
   custom_charges: any[];
 };
 
-export type FiscalCenterSetting = {
-  id: number;
-  key: string;
-  value: number;
-  user_id: number;
-  product_id: number;
-  created_at: Date;
-  updated_at: Date;
+export type Package = {
+  price?: string;
+  discount?: string;
+  format: string;
+  weight: string;
+  insurance_value: string;
+  dimensions: Dimensions;
 };
 
-export type Image = {
-  id: number;
-  product_id: number;
-  path: string;
-  created_at: Date;
-  updated_at: Date;
+export type Price = {
+  payable_tax: number;
+  tax: any[];
 };
 
-export type Link = {
-  id: number;
-  product_id: number;
-  url: string;
-  name: string;
-  source: any;
-  medium: any;
-  created_at: Date;
-  updated_at: Date;
-  is_bump: number;
+export type StepState = {
+  currentStep: number;
+  format: "one_step" | "default";
+  isMobile: boolean;
+  countSteps: number;
 };
 
-export type Meta = {
-  id: number;
-  key: string;
-  value: string;
-  product_id: number;
-  created_at: Date;
-  updated_at: Date;
-  proposal_id: any;
+export type Sale = {
+  sales: SaleElement[];
+  order: any;
 };
 
-export type ShippingSelected = {
-  address: Address;
-  service_name: string;
-  service_id: number;
+export type SaleElement = {
+  id: number;
+  product_id: number;
+  contract_id: any;
+  type: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  installments: number;
+  method: string;
+  client_id: number;
+  total: number;
   amount: number;
-  old_amount: number;
-  frete: Frete;
-  frete_anterior: number;
+  proposal_id: any;
+  subscription_id: any;
+  boleto_url: any;
+  boleto_barcode: any;
+  boleto_expiration_date: any;
+  qrcode: string;
+  imgQrcode: string;
+  paid_at: any;
+  country_code: string;
+  coupon_id: any;
+  is_gift: number;
+  gift_message: any;
+  shipping_amount: any;
+  shipping_selected: any;
+  offer_id: number;
+  base_currency_id: number;
+  local_currency_id: number;
+  original_amount: number;
+  trial_with_shipping: number;
+  offer: SaleOffer;
+  product: SaleProduct;
+  upsell: any;
+  local_currency: SaleLocalCurrency;
+  success: boolean;
+  chc?: string;
+  token?: string;
+  sale_id?: string | number;
 };
 
-export type Frete = {
+export type SaleLocalCurrency = {
   id: number;
   name: string;
-  price: string;
-  custom_price: string;
-  discount: string;
   currency: string;
-  delivery_time: number;
-  delivery_range: DeliveryRange;
-  custom_delivery_time: number;
-  custom_delivery_range: DeliveryRange;
-  packages: Package[];
-  additional_services: AdditionalServices;
-  company: CompanyShipping;
+  currency_symbol: string;
 };
 
-export type AdditionalServices = {
-  receipt: boolean;
-  own_hand: boolean;
-  collect: boolean;
+export type SaleOffer = {
+  id: number;
+  product_id: number;
+  hash: string;
+  amount: number;
+  method: string;
+  name: string;
+  allowed_coupon: number;
+  fixed_installments: any;
+  max_boleto_installments: number;
+  no_interest_installments: number;
+  max_installments: number;
+  period: any;
+  trial: any;
+  charges: any;
+  default: number;
+  status: string;
+  reason: any;
+  analised: number;
+  created_at: Date;
+  updated_at: Date;
+  max_subscription_installments: any;
+  deleted_at: any;
+  pre_selected_installment: number;
+  currency_id: number;
+  allow_offer_link: number;
+  status_offer: string;
 };
 
-export type CompanyShipping = {
+export type SaleProduct = {
   id: number;
   name: string;
-  picture: string;
-};
-
-export type DeliveryRange = {
-  min: number;
-  max: number;
-};
-
-export type Dimensions = {
-  height: number;
-  width: number;
-  length: number;
+  thank_you_page: string;
+  trial: number;
+  amount: number;
+  in_stock: boolean;
+  status_product: any;
+  custom_thank_you_pages: any[];
 };
 
 export type ShippingAddress = {
@@ -783,11 +782,12 @@ export type ShippingAddress = {
   siafi: string;
 };
 
-export type Package = {
-  price?: string;
-  discount?: string;
-  format: string;
-  weight: string;
-  insurance_value: string;
-  dimensions: Dimensions;
+export type ShippingSelected = {
+  address: Address;
+  service_name: string;
+  service_id: number;
+  amount: number;
+  old_amount: number;
+  frete: Frete;
+  frete_anterior: number;
 };

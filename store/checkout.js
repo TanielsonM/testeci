@@ -531,7 +531,7 @@ export const useCheckoutStore = defineStore("checkout", {
           : product.amount * -1
       );
       amountStore.setOriginalAmount(
-        !!product.custom_charges.length
+        !!product?.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
