@@ -13,7 +13,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         max_installments: 12,
         have_ticket_quantity: true,
         ticket_quantity: 10,
-        selected_tickets: 0
+        selected_tickets: 0,
+        immediate_sale: true,
+        sales_start_date: null,
+        has_sale_deadline: true,
+        sale_deadline: '08/07/2023'
       },
       {
         id: 2,
@@ -23,7 +27,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         max_installments: 12,
         have_ticket_quantity: true,
         ticket_quantity: 10,
-        selected_tickets: 0
+        selected_tickets: 0,
+        immediate_sale: false,
+        sales_start_date: '2023-07-14',
+        has_sale_deadline: true,
+        sale_deadline: '08/07/2023'
       },
       {
         id: 3,
@@ -33,7 +41,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         max_installments: 12,
         have_ticket_quantity: false,
         ticket_quantity: null,
-        selected_tickets: 0
+        selected_tickets: 0,
+        immediate_sale: true,
+        sales_start_date: null,
+        has_sale_deadline: false,
+        sale_deadline: null
       }
     ]
   }),
