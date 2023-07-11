@@ -10,13 +10,14 @@ const checkout = useCheckoutStore();
 const { getBatchsList } = storeToRefs(preCheckout);
 
 const getTicketInstallments = function (batch_id) {
+  if(getBatchsList?.value) return 0;
   const {
     monthly_interest,
     product_id,
     coupon,
     installments,
   } = storeToRefs(checkout);
-  const batch = getBatchsList.value.find(x => x.id === batch_id);
+  const batch = getBatchsList.value.find(x => x?.id === batch_id);
 
   const getAmount = batch.selected_tickets * batch.amount;
   const n = installments.value;
@@ -34,7 +35,7 @@ const getTicketInstallments = function (batch_id) {
       : batch.shipping?.amount || 0;
   }
   // Verifica se tem cupom
-  if (batch.id === parseInt(product_id.value) && coupon.value.applied) {
+  if (batch?.id === parseInt(product_id.value) && coupon.value.applied) {
     value -= coupon.value.amount;
   }
   // Cliente não paga juros
@@ -57,7 +58,7 @@ const getTicketInstallments = function (batch_id) {
 <template>
   <div class="mb-3">
     <ul class="text-txt-color">
-      <li v-for="batch in getBatchsList" :key="batch.id" class="mb-6 flex justify-between items-center">
+      <li v-for="batch in getBatchsList" :key="batch?.id" class="mb-6 flex justify-between items-center">
         <div :class="{'line-through': batch?.ticket_quantity === batch?.selected_tickets || !batch?.have_ticket_quantity }">
           <h5 class="text-base font-semibold text-input-color mb-2">{{ batch?.name }}</h5>
           <p class="text-sm">{{ formatMoney(batch?.amount) }} (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa)</p>

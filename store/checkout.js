@@ -264,7 +264,13 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response.data.format === "PRESENTIAL_EVENT") {
               const preCheckout = usePreCheckoutStore();
-              // preCheckout.setBatchsList(response.batch);
+              if(Array.isArray(response?.batch)) {
+                response.batch = response.batch.map(x => {
+                  return { ...x, selected_tickets: 0 }
+                })
+              }
+
+              preCheckout.setBatchsList(response.batch);
             }
           })
           .catch((err) => {
