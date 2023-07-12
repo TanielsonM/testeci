@@ -157,7 +157,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     addTicket(hash) {
       let batch = this.batchs_list.find(x => x.hash === hash); 
-      if(haveAvailableTickets(batch) && saleHasStarted(batch) && dependsOnAnotherBatch(batch)) {
+      if(haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         batch.selected_tickets += 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.addProductList(batch);

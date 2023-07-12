@@ -1,4 +1,5 @@
 import moment from "moment";
+import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 
 const saleHasStarted = function (batch) {
@@ -17,8 +18,10 @@ const dependsOnAnotherBatch = function (batch) {
   else {
     const preCheckout = usePreCheckoutStore();
     const { getBatchsList } = storeToRefs(preCheckout);
-    const dependentBatch = getBatchsList.find(x => x.id === batch.product_has_offer_id);
-    return haveAvailableTickets(dependentBatch);
+    if(getBatchsList?.value && Array.isArray(getBatchsList.value)) {
+      const dependentBatch = getBatchsList.value.find(x => x.id === batch.product_has_offer_id);
+      return haveAvailableTickets(dependentBatch);
+    } else return false
   }
 }
 
