@@ -13,7 +13,7 @@ const { product } = useProductStore();
     </li>
     <li class="flex items-center mb-2">
       <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>
-      <span>Início: 23:00 (horário de Brasília)</span>
+      <span>Início: {{ moment(product.event_date).format('HH:mm') }} (horário de Brasília)</span>
     </li>
     <li class="flex items-center mb-2">
       <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>
