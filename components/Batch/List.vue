@@ -73,7 +73,7 @@ const getTicketInstallments = function (batch_hash) {
             </template>
           </p>
         </div>
-        <div v-if="batch?.have_ticket_quantity && batch?.tickets > 0" class="flex items-center">
+        <div v-if="!batch?.have_ticket_quantity || (batch?.have_ticket_quantity && batch?.tickets > 0)" class="flex items-center">
           <Icon
             name="mdi:minus-circle-outline"
             size="20"
