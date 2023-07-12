@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
-import { saleHasStarted } from "@/utils/validateBatch";
+import { saleHasStarted, haveAvailableTickets } from "@/utils/validateBatch";
 import moment from "moment";
 
 const preCheckout = usePreCheckoutStore();
@@ -59,7 +59,7 @@ const getTicketInstallments = function (batch_hash) {
   <div class="mb-3">
     <ul class="text-txt-color">
       <li v-for="batch in getBatchsList" :key="batch?.hash" class="mb-6 flex justify-between items-center">
-        <div :class="{'line-through': batch?.ticket_quantity === batch?.selected_tickets || !batch?.have_ticket_quantity }">
+        <div :class="{'line-through': batch?.have_ticket_quantity && batch?.selected_tickets >= batch?.tickets}">
           <h5 class="text-base font-semibold text-input-color mb-2">{{ batch?.name }}</h5>
           <p class="text-sm">{{ formatMoney(batch?.amount) }}</p>
           <!-- (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa) -->
@@ -73,7 +73,7 @@ const getTicketInstallments = function (batch_hash) {
             </template>
           </p>
         </div>
-        <div v-if="batch?.have_ticket_quantity" class="flex items-center">
+        <div v-if="batch?.have_ticket_quantity && batch?.tickets > 0" class="flex items-center">
           <Icon
             name="mdi:minus-circle-outline"
             size="20"
@@ -90,10 +90,10 @@ const getTicketInstallments = function (batch_hash) {
             name="mdi:plus-circle-outline"
             size="20"
             :class="{
-              'text-gray-300': batch?.ticket_quantity === batch?.selected_tickets || !saleHasStarted(batch),
-              'text-main-color': batch?.ticket_quantity !== batch?.selected_tickets && saleHasStarted(batch),
-              'hover:scale-110': batch?.ticket_quantity !== batch?.selected_tickets && saleHasStarted(batch),
-              'hover:cursor-pointer': batch?.ticket_quantity !== batch?.selected_tickets && saleHasStarted(batch)
+              'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch),
+              'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch),
+              'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch),
+              'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch)
             }"
             @click="preCheckout.addTicket(batch?.hash)"
           />
