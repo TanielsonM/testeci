@@ -53,6 +53,16 @@ const getTicketInstallments = function (batch_hash) {
   return (total + frete) / n;
 }
 
+const dependentBatchName = function (batch) {
+  if(!batch?.product_has_offer_id) return '';
+  else {
+    if(getBatchsList?.value && Array.isArray(getBatchsList.value)) {
+      const dependentBatch = getBatchsList.value.find(x => x.id === batch.product_has_offer_id);
+      return dependentBatch?.name;
+    } else return '';
+  }
+}
+
 </script>
 
 <template>
@@ -65,7 +75,10 @@ const getTicketInstallments = function (batch_hash) {
           <!-- (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa) -->
           <small class="text-main-color">em até {{ batch?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch?.hash)) }}</small>
           <p class="text-sm font-normal text-gray-400">
-            <template v-if="saleHasStarted(batch)">
+            <template v-if="dependsOnAnotherBatch(batch)">
+              Vendas disponíveis após esgotamento do lote: <br> {{ dependentBatchName(batch) }}
+            </template>
+            <template v-else-if="saleHasStarted(batch)">
               Vendas até {{ batch?.has_sale_deadline ? moment(batch?.sale_deadline).format('DD/MM/YYYY') : 'sem prazo limite' }}
             </template>
             <template v-else>
