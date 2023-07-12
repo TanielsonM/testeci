@@ -137,11 +137,11 @@ const amountText = computed(() => {
       <span
         class="infos-content mt-2 flex w-full items-center justify-between"
         v-for="batch in product_list"
-        :key="batch.id"
+        :key="batch?.hash"
       >
-        <p>{{ batch.name }}</p>
+        <p>{{ batch?.name }}</p>
         <p>
-          +{{ formatMoney(batch.amount) }}
+          +{{ formatMoney(batch?.amount) }}
         </p>
       </span>
     </section>

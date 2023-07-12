@@ -270,6 +270,12 @@ export const useCheckoutStore = defineStore("checkout", {
                 })
               }
 
+              response.batch.sort((a, b) => {
+                if (a.batch_order < b.batch_order) return -1;
+                if (a.batch_order > b.batch_order) return 1;
+                return 0;
+              });
+              console.log(response.batch)
               preCheckout.setBatchsList(response.batch);
             }
           })

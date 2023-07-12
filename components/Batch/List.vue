@@ -9,15 +9,15 @@ const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
 const { getBatchsList } = storeToRefs(preCheckout);
 
-const getTicketInstallments = function (batch_id) {
-  if(getBatchsList?.value) return 0;
+const getTicketInstallments = function (batch_hash) {
+  if(!getBatchsList?.value) return 0;
   const {
     monthly_interest,
     product_id,
     coupon,
     installments,
   } = storeToRefs(checkout);
-  const batch = getBatchsList.value.find(x => x?.id === batch_id);
+  const batch = getBatchsList.value.find(x => x?.hash === batch_hash);
 
   const getAmount = batch.selected_tickets * batch.amount;
   const n = installments.value;
@@ -35,7 +35,7 @@ const getTicketInstallments = function (batch_id) {
       : batch.shipping?.amount || 0;
   }
   // Verifica se tem cupom
-  if (batch?.id === parseInt(product_id.value) && coupon.value.applied) {
+  if (batch?.product_id === parseInt(product_id.value) && coupon.value.applied) {
     value -= coupon.value.amount;
   }
   // Cliente não paga juros
@@ -58,14 +58,15 @@ const getTicketInstallments = function (batch_id) {
 <template>
   <div class="mb-3">
     <ul class="text-txt-color">
-      <li v-for="batch in getBatchsList" :key="batch?.id" class="mb-6 flex justify-between items-center">
+      <li v-for="batch in getBatchsList" :key="batch?.hash" class="mb-6 flex justify-between items-center">
         <div :class="{'line-through': batch?.ticket_quantity === batch?.selected_tickets || !batch?.have_ticket_quantity }">
           <h5 class="text-base font-semibold text-input-color mb-2">{{ batch?.name }}</h5>
-          <p class="text-sm">{{ formatMoney(batch?.amount) }} (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa)</p>
-          <small class="text-main-color">em até {{ batch?.max_installments }}x de {{ formatMoney(getTicketInstallments(batch?.id)) }}</small>
+          <p class="text-sm">{{ formatMoney(batch?.amount) }}</p>
+          <!-- (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa) -->
+          <small class="text-main-color">em até {{ batch?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch?.hash)) }}</small>
           <p class="text-sm font-normal text-gray-400">
             <template v-if="saleHasStarted(batch)">
-              Vendas até {{ batch?.has_sale_deadline ? batch?.sale_deadline : 'sem prazo limite' }}
+              Vendas até {{ batch?.has_sale_deadline ? moment(batch?.sale_deadline).format('DD/MM/YYYY') : 'sem prazo limite' }}
             </template>
             <template v-else>
               Vendas começarão em {{ moment(batch?.sales_start_date).format('DD/MM/YYYY') }}
@@ -82,7 +83,7 @@ const getTicketInstallments = function (batch_id) {
               'hover:scale-110': batch?.selected_tickets > 0 && saleHasStarted(batch),
               'hover:cursor-pointer': batch.selected_tickets > 0 && saleHasStarted(batch)
             }"
-            @click="preCheckout.subTicket(batch?.id)"
+            @click="preCheckout.subTicket(batch?.hash)"
           />
           <span class="mx-2 font-semibold">{{ batch?.selected_tickets }}</span>
           <Icon
@@ -94,7 +95,7 @@ const getTicketInstallments = function (batch_id) {
               'hover:scale-110': batch?.ticket_quantity !== batch?.selected_tickets && saleHasStarted(batch),
               'hover:cursor-pointer': batch?.ticket_quantity !== batch?.selected_tickets && saleHasStarted(batch)
             }"
-            @click="preCheckout.addTicket(batch?.id)"
+            @click="preCheckout.addTicket(batch?.hash)"
           />
         </div>
         <div v-else>

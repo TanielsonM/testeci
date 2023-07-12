@@ -5,7 +5,119 @@ import { saleHasStarted } from "@/utils/validateBatch";
 
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
-    batchs_list: []
+    batchs_list: [
+    // {
+    //   product_id: 25733,
+    //   hash: 'UpKGOT1',
+    //   amount: 50,
+    //   method: 'CREDIT_CARD,BOLETO,PIX',
+    //   name: 'Teste Evento Presencial 8',
+    //   allowed_coupon: 0,
+    //   fixed_installments: null,
+    //   max_boleto_installments: null,
+    //   no_interest_installments: null,
+    //   max_installments: null,
+    //   period: 30,
+    //   trial: null,
+    //   charges: null,
+    //   default: 1,
+    //   reason: '',
+    //   analised: 0,
+    //   created_at: '2023-07-11T20:56:00.000000Z',
+    //   updated_at: '2023-07-11T20:56:00.000000Z',
+    //   max_subscription_installments: null,
+    //   deleted_at: null,
+    //   pre_selected_installment: null,
+    //   currency_id: 1,
+    //   allow_offer_link: 0,
+    //   product_has_offer_id: null,
+    //   have_ticket_quantity: 1,
+    //   ticket_quantity: 100,
+    //   batch_order: 1,
+    //   are_non_transferable: 0,
+    //   immediate_sale: 1,
+    //   sales_start_date: '2023-07-14',
+    //   has_sale_deadline: 1,
+    //   sale_deadline: '2023-07-28',
+    //   status_offer: 'APPROVED',
+    //   custom_charges: [],
+    //   selected_tickets: 0
+    // },
+    // {
+    //   product_id: 25733,
+    //   hash: 'UpKGOT2',
+    //   amount: 50,
+    //   method: 'CREDIT_CARD,BOLETO,PIX',
+    //   name: 'Teste Evento Presencial 8 lote 2',
+    //   allowed_coupon: 0,
+    //   fixed_installments: null,
+    //   max_boleto_installments: null,
+    //   no_interest_installments: null,
+    //   max_installments: null,
+    //   period: 30,
+    //   trial: null,
+    //   charges: null,
+    //   default: 1,
+    //   reason: '',
+    //   analised: 0,
+    //   created_at: '2023-07-11T20:56:00.000000Z',
+    //   updated_at: '2023-07-11T20:56:00.000000Z',
+    //   max_subscription_installments: null,
+    //   deleted_at: null,
+    //   pre_selected_installment: null,
+    //   currency_id: 1,
+    //   allow_offer_link: 0,
+    //   product_has_offer_id: null,
+    //   have_ticket_quantity: 1,
+    //   ticket_quantity: 100,
+    //   batch_order: 1,
+    //   are_non_transferable: 0,
+    //   immediate_sale: 1,
+    //   sales_start_date: '2023-07-14',
+    //   has_sale_deadline: 1,
+    //   sale_deadline: '2023-07-28',
+    //   status_offer: 'APPROVED',
+    //   custom_charges: [],
+    //   selected_tickets: 0
+    // },
+    // {
+    //   product_id: 25733,
+    //   hash: 'UpKGOT3',
+    //   amount: 50,
+    //   method: 'CREDIT_CARD,BOLETO,PIX',
+    //   name: 'Teste Evento Presencial 8 lote 3',
+    //   allowed_coupon: 0,
+    //   fixed_installments: null,
+    //   max_boleto_installments: null,
+    //   no_interest_installments: null,
+    //   max_installments: null,
+    //   period: 30,
+    //   trial: null,
+    //   charges: null,
+    //   default: 1,
+    //   reason: '',
+    //   analised: 0,
+    //   created_at: '2023-07-11T20:56:00.000000Z',
+    //   updated_at: '2023-07-11T20:56:00.000000Z',
+    //   max_subscription_installments: null,
+    //   deleted_at: null,
+    //   pre_selected_installment: null,
+    //   currency_id: 1,
+    //   allow_offer_link: 0,
+    //   product_has_offer_id: null,
+    //   have_ticket_quantity: 1,
+    //   ticket_quantity: 100,
+    //   batch_order: 1,
+    //   are_non_transferable: 0,
+    //   immediate_sale: 1,
+    //   sales_start_date: '2023-07-14',
+    //   has_sale_deadline: 1,
+    //   sale_deadline: '2023-07-28',
+    //   status_offer: 'APPROVED',
+    //   custom_charges: [],
+    //   selected_tickets: 0
+    // }
+  ]
   }),
   getters: {
     getBatchsList: (state) => state.batchs_list,
@@ -43,16 +155,16 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     setBatchsList(value) {
       this.batchs_list = value;
     },
-    addTicket(id) {
-      let batch = this.batchs_list.find(x => x.id === id);
+    addTicket(hash) {
+      let batch = this.batchs_list.find(x => x.hash === hash); 
       if(batch?.ticket_quantity !== batch?.selected_tickets && saleHasStarted(batch)) {
         batch.selected_tickets += 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.addProductList(batch);
       }
     },
-    subTicket(id) {
-      let batch = this.batchs_list.find(x => x.id === id)
+    subTicket(hash) {
+      let batch = this.batchs_list.find(x => x.hash === hash)
       if(batch?.selected_tickets > 0 && saleHasStarted(batch)) {
         batch.selected_tickets -= 1;
         const checkoutStore = useCheckoutStore();
