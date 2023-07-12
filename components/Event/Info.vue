@@ -17,7 +17,13 @@ const { product } = useProductStore();
     </li>
     <li class="flex items-center mb-2">
       <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>
-      <span>Local: Rua Riachuelo, 97 - Centro - Rio de Janeiro/RJ</span>
+      <span>
+        Local:
+            {{ product.address.street }},
+            {{ product.address.number }}
+          - {{ product.address.neighborhood }}
+          - {{ product.address.city }}
+      </span>
     </li>
   </ul>
 </template>
