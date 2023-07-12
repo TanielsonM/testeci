@@ -1,7 +1,7 @@
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { storeToRefs } from "pinia";
-import { saleHasStarted, haveAvailableTickets } from "@/utils/validateBatch";
+import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/utils/validateBatch";
 
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
@@ -157,7 +157,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     addTicket(hash) {
       let batch = this.batchs_list.find(x => x.hash === hash); 
-      if(haveAvailableTickets(batch) && saleHasStarted(batch)) {
+      if(haveAvailableTickets(batch) && saleHasStarted(batch) && dependsOnAnotherBatch(batch)) {
         batch.selected_tickets += 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.addProductList(batch);

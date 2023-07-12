@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
-import { saleHasStarted, haveAvailableTickets } from "@/utils/validateBatch";
+import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/utils/validateBatch";
 import moment from "moment";
 
 const preCheckout = usePreCheckoutStore();
@@ -90,10 +90,10 @@ const getTicketInstallments = function (batch_hash) {
             name="mdi:plus-circle-outline"
             size="20"
             :class="{
-              'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch),
-              'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch),
-              'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch),
-              'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch)
+              'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch),
+              'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
+              'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
+              'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)
             }"
             @click="preCheckout.addTicket(batch?.hash)"
           />
