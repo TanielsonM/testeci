@@ -16,7 +16,7 @@ const closeUpOnlyImage = ref(
 const expirationDate = new Date();
 
 const handleMouseOut = (event) => {
-  if (customCheckoutStore.isPopUp === 'on' && closeUpModalCookie.value !== false) {
+  if (customCheckoutStore.isPopUp === "on" && closeUpModalCookie.value !== false) {
     if (
       event.clientY <= 0 ||
       event.clientX <= 0 ||
