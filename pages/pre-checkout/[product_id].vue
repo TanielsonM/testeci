@@ -1,16 +1,19 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "~~/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
 import { useAmountStore } from "~~/store/modules/amount";
 
 const checkout = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const custom_checkout = useCustomCheckoutStore();
 const expiredSession = useExpiredSessionStore();
 const amountStore = useAmountStore();
 
 const { amount } = storeToRefs(amountStore);
+const { getReservations } = storeToRefs(preCheckout);
 const route = useRoute();
 await checkout.init();
 const theme = custom_checkout.theme;
@@ -20,12 +23,40 @@ function byTickets() {
   navigateTo(`/${route.params?.product_id}`);
 }
 
+async function showUnloadAlert(evt) {
+  if(getReservations?.value?.length) {
+    evt.preventDefault();
+    evt.returnValue = '';
+    return "Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso recarregue a página esses dados serão perdidos.";
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', showUnloadAlert);
+
+  if(localStorage.getItem('reservations')) {
+    const reservations = JSON.parse(localStorage.getItem(reservations));
+    reservations.forEach(async x => {
+      try {
+        const res = await preCheckout.deleteReservation(x);
+        localStorage.removeItem('reservations')
+        return res;
+      } catch(err) {
+        return err;
+      }
+    });
+  }
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', showUnloadAlert);
+});
 </script>
 
 <template>
   <NuxtLayout name="pre-checkout">
 
-    <section class="flex w-full flex-col xl:max-w-[780px]">
+    <section class="flex w-full flex-col xl:max-w-[780px]" @click="teste">
       <BaseCard class="w-full p-5 mb-5 ">
         <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">Pré-checkout</h1>
         <EventTimer class="hidden"/>
