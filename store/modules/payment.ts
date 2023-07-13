@@ -204,18 +204,19 @@ export const usePaymentStore = defineStore("Payment", {
       /* When method is Credit card */
       if (
         ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
-        ) {
-          
-
-        let parsedFirstAmount = Number(first.value.amount
-          .toString()
-          .replace("R$", "")
-          .replace(".", "")
-          .replace(",", "."))
+      ) {
+        let parsedFirstAmount = Number(
+          first.value.amount
+            .toString()
+            .replace("R$", "")
+            .replace(".", "")
+            .replace(",", ".")
+        );
         let firstCardAmountWithoutInterest = parsedFirstAmount;
-        if(method.value === 'TWO_CREDIT_CARDS'){
+        if (method.value === "TWO_CREDIT_CARDS") {
           let percentageFirstCard = parsedFirstAmount / total.value;
-          firstCardAmountWithoutInterest = (getAmount.value * percentageFirstCard );
+          firstCardAmountWithoutInterest =
+            getAmount.value * percentageFirstCard;
         }
         let cards = [];
         cards.push({
@@ -227,7 +228,9 @@ export const usePaymentStore = defineStore("Payment", {
         });
         if (method.value === "TWO_CREDIT_CARDS") {
           cards.push({
-            amount: Number(getAmount.value - firstCardAmountWithoutInterest).toFixed(2),
+            amount: Number(
+              getAmount.value - firstCardAmountWithoutInterest
+            ).toFixed(2),
             card_cvv: second.value.cvv,
             card_expiration_date: `${second.value.month}${second.value.year}`,
             card_holder_name: second.value.holder_name,
@@ -281,7 +284,6 @@ export const usePaymentStore = defineStore("Payment", {
             if (principal_product?.token) query.token = principal_product.token;
             if (principal_product?.sale_id) {
               delete query.chc;
-              delete query.token;
               query.s_id = res.sales[0].sale_id;
             }
             if (!!product_offer.value) query.offer = product_offer.value;
