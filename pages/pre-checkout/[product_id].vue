@@ -24,6 +24,7 @@ function byTickets() {
 }
 
 async function showUnloadAlert(evt) {
+  console.log(getReservations?.value?.length)
   if(getReservations?.value?.length) {
     evt.preventDefault();
     evt.returnValue = '';
@@ -34,18 +35,23 @@ async function showUnloadAlert(evt) {
 onMounted(() => {
   window.addEventListener('beforeunload', showUnloadAlert);
 
-  if(localStorage.getItem('reservations')) {
-    const reservations = JSON.parse(localStorage.getItem(reservations));
-    reservations.forEach(async x => {
-      try {
-        const res = await preCheckout.deleteReservation(x);
-        localStorage.removeItem('reservations')
-        return res;
-      } catch(err) {
-        return err;
+  setTimeout(() => {
+    if(localStorage.getItem('reservations')) {
+      let reservations = JSON.parse(localStorage.getItem('reservations'));
+      if(reservations?.length) {
+        reservations.forEach(async reservation => {
+          try {
+            const res = await preCheckout.deleteReservation(reservation);
+            reservations = reservations.filter(x => x.id !== reservation.id)
+            localStorage.setItem('reservations', reservations)
+            return res;
+          } catch(err) {
+            return err;
+          }
+        });
       }
-    });
-  }
+    }
+  }, 500)
 })
 
 onBeforeUnmount(() => {

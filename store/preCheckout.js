@@ -51,6 +51,13 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     addReservation(value) {
       this.reservations.push(value);
     },
+    updateReservation(value) {
+      const reservation = this.reservations.find(x => x.id === value.id)
+      const index = this.reservations.indexOf(reservation);
+      if(index !== -1) {
+        this.reservations = this.reservations.splice(index, 1, value);
+      }
+    },
     removeReservation(value) {
       const index = this.reservations.indexOf(value);
       if(index !== -1) {
@@ -66,40 +73,14 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         console.log(this.reservations, this.reservations?.length && this.reservations.some(x => x.offer_id === batch.id))
         if(this.reservations?.length && this.reservations.some(x => x.offer_id === batch.id)) {
           // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
-          const reservation = this.reservations.find(x => x.offer_id === batch.id)
-          const payload = {
-            ...reservation,
-            quantity: batch.selected_tickets
-          }
-          console.log("update payload reservation", payload, reservation)
-          await useApi()
-            .update(`/event/reservation/${reservation.token}`, payload)
-            .then(res => {
-              console.log("create res", res)
-              this.addReservation({...res, offer_id: batch.id})
-              localStorage.setItem('reservations', JSON.stringify(this.reservations))
-            })
-            .catch(err => console.error(err))
+          await this.putReservation(batch);
+          this.updateReservation(payload)
+          localStorage.setItem('reservations', JSON.stringify(this.reservations))
         } else {
           // Cria nova reserva do ingresso do lote selecionado
-          const start = new Date();
-          const end = new Date(start.getTime());
-          end.setMinutes(end.getMinutes() + 10);
-          const payload = {
-            start,
-            end,
-            offer_id: batch.id,
-            quantity: 1
-          }
-          console.log("create payload", payload)
-          await useApi()
-            .create('/event/reservation', payload)
-            .then(res => {
-              console.log("create res", res)
-              this.addReservation({...res, offer_id: batch.id})
-              localStorage.setItem('reservations', JSON.stringify(this.reservations))
-            })
-            .catch(err => console.error(err))
+          await this.createReservation(batch.id);
+          this.addReservation({...res, offer_id: batch.id})
+          localStorage.setItem('reservations', JSON.stringify(this.reservations))
         }
       }
     },
@@ -112,26 +93,42 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         if(batch.selected_tickets === 0) {
           // Deleta a reserva do lote existente, já que foram removidos todos ingressos
           const reservation = this.reservations.find(x => x.offer_id === batch.id)
-          console.log("delete reservation", reservation)
           await this.deleteReservation(reservation)
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         } else {
           // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
-          const reservation = this.reservations.find(x => x.offer_id === batch.id)
-          const payload = {
-            ...reservation,
-            quantity: batch.selected_tickets
-          }
-          console.log("update payload reservation", payload, reservation)
-          await useApi()
-            .update(`/event/reservation/${reservation.token}`, payload)
-            .then(res => {
-              console.log("create res", res)
-              this.addReservation({...res, offer_id: batch.id})
-              localStorage.setItem('reservations', JSON.stringify(this.reservations))
-            })
-            .catch(err => console.error(err))
+          await this.putReservation(batch);
+          this.updateReservation(payload)
+          localStorage.setItem('reservations', JSON.stringify(this.reservations))
         }
+      }
+    },
+    async createReservation(offer_id) {
+      const start = new Date();
+      const end = new Date(start.getTime());
+      end.setMinutes(end.getMinutes() + 10);
+      const payload = { start, end, offer_id, quantity: 1 };
+      console.log("create payload", payload)
+      try {
+        const res = await useApi().create('/event/reservation', payload)
+        console.log("create res", res)
+        return res;
+      } catch(err) {
+        console.error(err)
+        return err;
+      }
+    },
+    async putReservation(batch) {
+      const reservation = this.reservations.find(x => x.offer_id === batch.id)
+      const payload = { ...reservation, quantity: batch.selected_tickets }
+      console.log("delete reservation", payload)
+      try {
+        const res = await useApi().update(`/event/reservation/${payload.token}`, payload)
+        console.log("update res", res)
+        return res;
+      } catch(err) {
+        console.error(err)
+        return err;
       }
     },
     async deleteReservation(reservation) {
