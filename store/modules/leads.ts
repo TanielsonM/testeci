@@ -162,6 +162,10 @@ export const useLeadsStore = defineStore("Leads", {
     async updateLead(): Promise<void> {
       if (this.uuid) {
         try {
+          let updatedCellphone = this.personal.cellphone;
+          if (this.personal.cellphone !== null) {
+            updatedCellphone = updatedCellphone.replace(/\s/g, "");
+          }
           await useApi()
             .update("lead/" + this.uuid, {
               product_id: this.payment.product_id,
@@ -183,6 +187,7 @@ export const useLeadsStore = defineStore("Leads", {
               id: this.uuid,
               country_code: this.address.country_code,
               status: this.purchase.status,
+              cellphone: updatedCellphone
             })
             .then((res) => {
               return res;

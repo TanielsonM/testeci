@@ -100,6 +100,10 @@ if (
     })
   );
 }
+
+function openPix(id: number) {
+  data.value.pixOpened = id;
+}
 </script>
 
 <template>
@@ -146,13 +150,15 @@ if (
         v-if="data.sale?.order"
         :code="data.sale?.order.qrcode"
         :url="data.sale?.order.imgQrcode"
-        :id="data.sale?.order.id.toString()"
+        :id="data.sale?.order.id"
         :amount="formatMoney(data.sale?.order.total)"
         :only-buttons="true"
         :sales-length="1"
         :created-at="data.sale?.order.created_at.toString()"
         :has-order="true"
         :sales="data.sale.sales"
+        :opened="data.pixOpened"
+        @openedPixEvent="openPix"
       />
       <template v-else>
         <ModalPixInfos
@@ -161,7 +167,7 @@ if (
           :name="sale.product.name"
           :code="sale.qrcode"
           :url="sale.imgQrcode"
-          :id="sale.id.toString()"
+          :id="sale.id"
           :amount="
             formatMoney(sale.total || sale.amount || sale.product?.amount)
           "
@@ -172,8 +178,8 @@ if (
           :shipping-amount="formatMoney(sale.shipping_amount)"
           :shipping-selected="sale.shipping_selected"
           :sales="data.sale.sales"
-          :opened="data.pixOpened.toString()"
-          @openedPixEvent="(e) => (data.pixOpened = e.toString())"
+          :opened="data.pixOpened"
+          @openedPixEvent="openPix"
         />
       </template>
     </div>

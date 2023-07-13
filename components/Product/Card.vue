@@ -30,6 +30,15 @@ const trialMessage = computed({
     )}s.`;
   },
 });
+
+const exceptionSellerId = computed(() => {
+  if(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION) {
+    const ids = JSON.parse(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION)
+    return ids.some(x => parseInt(x) === parseInt(product.value.seller.id))
+  }
+  return false
+})
+
 </script>
 
 <template>
@@ -82,7 +91,7 @@ const trialMessage = computed({
         <ProductTotalAmount v-else />
         <section
           class="custom_charges"
-          v-if="!!productStore.hasCustomCharges.length"
+          v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId"
         >
           <section class="charges" :opened="opened">
             <p
@@ -92,10 +101,10 @@ const trialMessage = computed({
               :key="charge.id"
               class="flex w-full items-center justify-between"
             >
-              <span
-                >{{ charge.sequence }}ª
-                {{ $t("checkout.different_amount_text.charge") }}</span
-              >
+              <span>
+                {{ charge.sequence }}ª
+                {{ $t("checkout.different_amount_text.charge") }}
+              </span>
               <span class="flex-nowrap">{{ formatMoney(charge.amount) }}</span>
             </p>
             <p class="flex w-full items-center justify-between">
