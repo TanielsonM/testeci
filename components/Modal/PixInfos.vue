@@ -9,7 +9,7 @@ const modal = useModalStore();
 const stepsStore = useStepStore();
 
 const { isMobile } = storeToRefs(stepsStore);
-const emit = defineEmits(['openedPixEvent', 'teste']);
+const emit = defineEmits(['openedPixEvent']);
 const props = defineProps({
   name: {
     type: String,
