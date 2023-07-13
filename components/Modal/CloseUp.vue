@@ -16,20 +16,20 @@ const closeUpOnlyImage = ref(
 const expirationDate = new Date();
 
 const handleMouseOut = (event) => {
-  if (closeUpModalCookie.value !== false) { 
-    if (
-      event.clientY <= 0 ||
-      event.clientX <= 0 ||
-      event.clientX >= window.innerWidth ||
-      event.clientY >= window.innerHeight
-    ) {
-        closeUpModal.value = true;
-        closeUpModalCookie.value = false;
-        closeUpModalCookie.expires = expirationDate.setDate(
-          expirationDate.getDate() + 7
-        );
+  if (customCheckoutStore.isPopUp === 'on') {
+    if (closeUpModalCookie.value !== false) { 
+      if (
+        event.clientY <= 0 ||
+        event.clientX <= 0 ||
+        event.clientX >= window.innerWidth ||
+        event.clientY >= window.innerHeight
+      ) {
+          closeUpModal.value = true;
+          closeUpModalCookie.value = false;
+          closeUpModalCookie.expires = expirationDate.setDate(expirationDate.getDate() + 7);
       }
     }
+  }
 };
 
 function closeModal() {
