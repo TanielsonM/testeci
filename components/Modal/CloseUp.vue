@@ -13,28 +13,23 @@ const closeUpOnlyImage = ref(
   customCheckoutStore.popUpButton === "on" ? false : true
 );
 
-let lastScrollPosition = 0;
-
 const expirationDate = new Date();
 
-const handleScroll = () => {
-  if (closeUpModalCookie.value !== false) {
-    const currentScrollPosition =
-      window.scrollY || document.documentElement.scrollTop;
-
-    if (currentScrollPosition < lastScrollPosition) {
-      setTimeout(function () {
+const handleMouseOut = (event) => {
+  if (closeUpModalCookie.value !== false) { 
+    if (
+      event.clientY <= 0 ||
+      event.clientX <= 0 ||
+      event.clientX >= window.innerWidth ||
+      event.clientY >= window.innerHeight
+    ) {
         closeUpModal.value = true;
         closeUpModalCookie.value = false;
         closeUpModalCookie.expires = expirationDate.setDate(
           expirationDate.getDate() + 7
         );
-      }, 4000);
-    } else {
-      closeUpModal.value = false;
+      }
     }
-    lastScrollPosition = currentScrollPosition;
-  }
 };
 
 function closeModal() {
@@ -42,11 +37,11 @@ function closeModal() {
 }
 
 onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
+  window.addEventListener('mouseout', handleMouseOut);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener('mouseout', handleMouseOut);
 });
 </script>
 
