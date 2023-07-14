@@ -69,7 +69,7 @@ const dependentBatchName = function (batch) {
   <div class="mb-3">
     <ul class="text-txt-color">
       <li v-for="batch in getBatchsList" :key="batch?.hash" class="mb-6 flex justify-between items-center">
-        <div :class="{'line-through': batch?.have_ticket_quantity && batch?.selected_tickets >= batch?.tickets}">
+        <div :class="{'line-through': !haveAvailableTickets(batch)}">
           <h5 class="text-base font-semibold text-input-color mb-2">{{ batch?.name }}</h5>
           <p class="text-sm">{{ formatMoney(batch?.amount) }}</p>
           <!-- (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa) -->
@@ -86,7 +86,7 @@ const dependentBatchName = function (batch) {
             </template>
           </p>
         </div>
-        <div v-if="!batch?.have_ticket_quantity || (batch?.have_ticket_quantity && batch?.tickets > 0)" class="flex items-center">
+        <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && batch?.selected_tickets > 0)" class="flex items-center">
           <template v-if="!loadingReservation">
             <Icon
               name="mdi:minus-circle-outline"

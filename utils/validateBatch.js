@@ -10,7 +10,7 @@ const saleHasStarted = function (batch) {
 
 const haveAvailableTickets = function (batch) {
   if(!batch?.have_ticket_quantity) return true;
-  else return batch?.selected_tickets < batch?.tickets;
+  else return batch?.tickets > 0;
 }
 
 const dependsOnAnotherBatch = function (batch) {

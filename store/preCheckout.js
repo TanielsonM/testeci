@@ -53,6 +53,10 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     setBatchsList(value) {
       this.batchs_list = value;
     },
+    updateAvailableTickets(offer_id, tickets) {
+      let batch = this.batchs_list.find(x => x.id === offer_id);
+      batch.tickets = tickets ?? 0;
+    },
     setReservations(value) {
       this.reservations = value;
     },
@@ -120,6 +124,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         const res = await useApi().create('/event/reservation', payload);
         this.addReservation({ ...res, offer_id });
+        this.updateAvailableTickets(offer_id, res.tickets);
         return res;
       } catch(err) {
         console.error(err);
@@ -135,6 +140,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         const res = await useApi().update(`/event/reservation/${payload.token}`, payload);
         this.updateReservation({ ...res, offer_id: batch.id });
+        this.updateAvailableTickets(batch.id, res.tickets);
         return res;
       } catch(err) {
         console.error(err);
@@ -148,6 +154,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         const res = await useApi().remove(`/event/reservation/${reservation.token}`);
         if(this.reservations?.length) this.removeReservation(reservation);
+        this.updateAvailableTickets(reservation.offer_id, res.tickets);
         return res;
       } catch(err) {
         console.error(err)
