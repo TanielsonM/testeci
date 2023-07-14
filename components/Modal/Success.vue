@@ -50,8 +50,9 @@ if (
   }
 
   const closeAction = () => {
+    const current_query = new URLSearchParams(route.query);
     window.location.href =
-      sale.sales[0].product.thank_you_page || "https://greenn.com.br";
+      sale.sales[0].product.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
   };
 
   modal.setAction(closeAction);
@@ -69,8 +70,9 @@ if (
   modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
 
   const closeAction = () => {
+    const current_query = new URLSearchParams(route.query);
     window.location.href =
-      data.value.productOffer.data.thank_you_page || "https://greenn.com.br";
+      data.value.productOffer.data.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
   };
 
   modal.setAction(closeAction);
