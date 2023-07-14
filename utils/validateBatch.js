@@ -25,8 +25,20 @@ const dependsOnAnotherBatch = function (batch) {
   }
 }
 
+const showUnloadAlert = async function (evt) {
+  const preCheckout = usePreCheckoutStore();
+  const { getReservations } = storeToRefs(preCheckout);
+  console.log(getReservations?.value?.length)
+  if(getReservations?.value?.length) {
+    evt.preventDefault();
+    evt.returnValue = '';
+    return "Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso recarregue a página esses dados serão perdidos.";
+  }
+}
+
 export {
   saleHasStarted,
   haveAvailableTickets,
-  dependsOnAnotherBatch
+  dependsOnAnotherBatch,
+  showUnloadAlert
 }

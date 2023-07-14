@@ -1,4 +1,5 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useProductStore } from "~~/store/product";
 import { useStepStore } from "~~/store/modules/steps";

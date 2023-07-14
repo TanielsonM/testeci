@@ -1,5 +1,7 @@
 <script setup>
+import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
+
 const store = useCustomCheckoutStore();
 const { showWhatsappButton, whatsapp_options } = storeToRefs(store);
 const openWhatsapp = () => {

@@ -5,6 +5,7 @@ import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
 import { useAmountStore } from "~~/store/modules/amount";
+import { showUnloadAlert } from "@/utils/validateBatch";
 
 const checkout = useCheckoutStore();
 const preCheckout = usePreCheckoutStore();
@@ -13,7 +14,6 @@ const expiredSession = useExpiredSessionStore();
 const amountStore = useAmountStore();
 
 const { amount } = storeToRefs(amountStore);
-const { getReservations } = storeToRefs(preCheckout);
 const route = useRoute();
 await checkout.init();
 const theme = custom_checkout.theme;
@@ -21,15 +21,6 @@ const theme = custom_checkout.theme;
 function byTickets() {
   expiredSession.setHaveFinished(false);
   navigateTo(`/${route.params?.product_id}`);
-}
-
-async function showUnloadAlert(evt) {
-  console.log(getReservations?.value?.length)
-  if(getReservations?.value?.length) {
-    evt.preventDefault();
-    evt.returnValue = '';
-    return "Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso recarregue a página esses dados serão perdidos.";
-  }
 }
 
 onMounted(() => {

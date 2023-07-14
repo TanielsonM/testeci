@@ -8,6 +8,12 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { validateDocument } from "@/rules/form-validations";
+import { showUnloadAlert } from "@/utils/validateBatch";
+
+import { storeToRefs } from "pinia";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
+  const preCheckout = usePreCheckoutStore();
+  const { getReservations } = storeToRefs(preCheckout);
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -162,6 +168,15 @@ const handleResize = () => {
 };
 
 onMounted(() => {
+  if(product?.value?.format === 'PRESENTIAL_EVENT') {
+    if(getReservations?.value?.length) {
+      window.addEventListener('beforeunload', showUnloadAlert);
+    } else {
+      const route = useRoute();
+      navigateTo(`/pre-checkout/${route.params?.product_id}`);
+    }
+  }
+  // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
   handleResize();
   window.addEventListener("resize", handleResize);
   window.addEventListener("myRecaptchaCallback", () => {
@@ -179,6 +194,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  if(product?.value?.format === 'PRESENTIAL_EVENT') {
+    window.removeEventListener('beforeunload', showUnloadAlert);
+  }
   window.removeEventListener("resize", handleResize);
 });
 

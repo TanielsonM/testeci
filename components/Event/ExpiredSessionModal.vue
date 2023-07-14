@@ -1,5 +1,6 @@
 <script setup>
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
+import { showUnloadAlert } from "@/utils/validateBatch";
 
 const expiredSession = useExpiredSessionStore();
 const route = useRoute();
@@ -9,6 +10,7 @@ const { product } = storeToRefs(productStore);
 function closeModal() {
   expiredSession.setHaveFinished(false);
   if(route.name === 'pre-checkout-product_id') {
+    window.removeEventListener('beforeunload', showUnloadAlert);
     window.location.reload(true);
   } else {
     navigateTo(`/pre-checkout/${route.params?.product_id}`);
