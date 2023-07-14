@@ -7,10 +7,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
     batchs_list: [],
     reservations: [],
+    loadingReservation: false
   }),
   getters: {
     getBatchsList: (state) => state.batchs_list,
     getReservations: (state) => state.reservations,
+    getLoadingReservation: (state) => state.loadingReservation,
     isPresentialEvent() {
       const { product } = useProductStore();
       return product.format === 'PRESENTIAL_EVENT';
@@ -55,14 +57,18 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       const reservation = this.reservations.find(x => x.id === value.id);
       const index = this.reservations.indexOf(reservation);
       if(index !== -1) {
-        this.reservations = this.reservations.splice(index, 1, value);
+        this.reservations.splice(index, 1, value);
       }
     },
     removeReservation(value) {
-      const index = this.reservations.indexOf(value);
+      const reservation = this.reservations.find(x => x.id === value.id);
+      const index = this.reservations.indexOf(reservation);
       if(index !== -1) {
-        this.reservations = this.reservations.splice(index, 1);
+        this.reservations.splice(index, 1);
       }
+    },
+    setLoadingReservation(value) {
+      this.loadingReservation = value;
     },
     async addTicket(hash) {
       let batch = this.batchs_list.find(x => x.hash === hash); 
@@ -108,6 +114,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       end.setMinutes(end.getMinutes() + 10);
       const payload = { start, end, offer_id, quantity: 1 };
       console.log("create payload", payload)
+      this.setLoadingReservation(true);
       try {
         const res = await useApi().create('/event/reservation', payload);
         console.log("create res", res)
@@ -116,12 +123,15 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       } catch(err) {
         console.error(err);
         return err;
+      } finally {
+        this.setLoadingReservation(false);
       }
     },
     async putReservation(batch) {
       const reservation = this.reservations.find(x => x.offer_id === batch.id);
       const payload = { ...reservation, quantity: batch.selected_tickets };
       console.log("update reservation", payload)
+      this.setLoadingReservation(true);
       try {
         const res = await useApi().update(`/event/reservation/${payload.token}`, payload);
         console.log("update res", res)
@@ -129,10 +139,13 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       } catch(err) {
         console.error(err);
         return err;
+      } finally {
+        this.setLoadingReservation(false);
       }
     },
     async deleteReservation(reservation) {
       console.log("delete reservation", reservation)
+      this.setLoadingReservation(true);
       try {
         const res = await useApi().remove(`/event/reservation/${reservation.token}`);
         console.log("delete res", res)
@@ -141,6 +154,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       } catch(err) {
         console.error(err)
         return err;
+      } finally {
+        this.setLoadingReservation(false);
       }
     }
   }

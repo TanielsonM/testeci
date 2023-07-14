@@ -7,7 +7,7 @@ import moment from "moment";
 
 const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
-const { getBatchsList } = storeToRefs(preCheckout);
+const { getBatchsList, loadingReservation } = storeToRefs(preCheckout);
 
 const getTicketInstallments = function (batch_hash) {
   if(!getBatchsList?.value) return 0;
@@ -87,29 +87,38 @@ const dependentBatchName = function (batch) {
           </p>
         </div>
         <div v-if="!batch?.have_ticket_quantity || (batch?.have_ticket_quantity && batch?.tickets > 0)" class="flex items-center">
-          <Icon
-            name="mdi:minus-circle-outline"
-            size="20"
-            :class="{
-              'text-gray-300': batch?.selected_tickets === 0 || !saleHasStarted(batch),
-              'text-main-color': batch?.selected_tickets > 0 && saleHasStarted(batch),
-              'hover:scale-110': batch?.selected_tickets > 0 && saleHasStarted(batch),
-              'hover:cursor-pointer': batch.selected_tickets > 0 && saleHasStarted(batch)
-            }"
-            @click="preCheckout.subTicket(batch?.hash)"
-          />
-          <span class="mx-2 font-semibold">{{ batch?.selected_tickets }}</span>
-          <Icon
-            name="mdi:plus-circle-outline"
-            size="20"
-            :class="{
-              'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch),
-              'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
-              'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
-              'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)
-            }"
-            @click="preCheckout.addTicket(batch?.hash)"
-          />
+          <template v-if="!loadingReservation">
+            <Icon
+              name="mdi:minus-circle-outline"
+              size="20"
+              :class="{
+                'text-gray-300': batch?.selected_tickets === 0 || !saleHasStarted(batch),
+                'text-main-color': batch?.selected_tickets > 0 && saleHasStarted(batch),
+                'hover:scale-110': batch?.selected_tickets > 0 && saleHasStarted(batch),
+                'hover:cursor-pointer': batch.selected_tickets > 0 && saleHasStarted(batch)
+              }"
+              @click="preCheckout.subTicket(batch?.hash)"
+            />
+            <span class="mx-2 font-semibold">{{ batch?.selected_tickets }}</span>
+            <Icon
+              name="mdi:plus-circle-outline"
+              size="20"
+              :class="{
+                'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch),
+                'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
+                'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
+                'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)
+              }"
+              @click="preCheckout.addTicket(batch?.hash)"
+            />
+          </template>
+          <template v-else>
+            <Icon
+              name="mdi:loading"
+              size="25"
+              class="animate-spin mr-5"
+            />
+          </template>
         </div>
         <div v-else>
           <span class="mx-2 font-normal text-gray-400">Esgotado</span>
