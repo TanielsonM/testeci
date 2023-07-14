@@ -28,7 +28,6 @@ const dependsOnAnotherBatch = function (batch) {
 const showUnloadAlert = async function (evt) {
   const preCheckout = usePreCheckoutStore();
   const { getReservations } = storeToRefs(preCheckout);
-  console.log(getReservations?.value?.length)
   if(getReservations?.value?.length) {
     evt.preventDefault();
     evt.returnValue = '';

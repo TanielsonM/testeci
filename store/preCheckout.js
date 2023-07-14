@@ -20,23 +20,29 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     ticketList() {
       const checkoutStore = useCheckoutStore();
       const { product_list } = storeToRefs(checkoutStore);
-
       const batchGroupsObj = {};
-      if(!Array.isArray(product_list)) return 
-      product_list.forEach(ticket => {
-        const { batch_order, id, amount } = ticket;
+
+      if(!Array.isArray(product_list?.value)) return [];
+
+      product_list.value.forEach(ticket => {
+        const { id, name, batch_order, amount } = ticket;
         if (batchGroupsObj[batch_order]) {
+          // Atualiza o valor total_amount do grupo existente e a quantidade de ingressos
           batchGroupsObj[batch_order].total_amount += amount;
+          batchGroupsObj[batch_order].tickets += 1;
         } else {
-          batchGroupsObj[batch_order] = { id, total_amount: amount };
+          // Cria um novo grupo com o valor total_amount e quantidade de ingressos inicializado
+          batchGroupsObj[batch_order] = { id, name, total_amount: amount, tickets: 1 };
         }
       });
 
-      // Converte o objeto 'batchGroups' em um array de objetos
-      const batchGroupsArry = Object.entries(batchGroupsObj).map(([batch_order, { id, total_amount }]) => ({
+      // Converte o objeto 'batchGroupsObj' em um array de objetos
+      const batchGroupsArry = Object.entries(batchGroupsObj).map(([batch_order, { id, name, total_amount, tickets }]) => ({
         batch_order: parseInt(batch_order),
         id,
-        total_amount
+        name,
+        total_amount,
+        tickets
       }));
 
       batchGroupsArry.sort((a, b) => a.batch_order - b.batch_order);

@@ -20,10 +20,9 @@ const {
   hasFees,
   bump_list,
   hasSelectedBump,
-  checkoutPayment,
-  product_list
+  checkoutPayment
 } = storeToRefs(checkout);
-const { getBatchsList, isPresentialEvent } = storeToRefs(preCheckout);
+const { ticketList, isPresentialEvent } = storeToRefs(preCheckout);
 const { getInstallments } = storeToRefs(installmentsStore);
 const { hasTicketInstallments } = storeToRefs(productStore);
 
@@ -136,12 +135,16 @@ const amountText = computed(() => {
       <p class="infos-title">Ingressos</p>
       <span
         class="infos-content mt-2 flex w-full items-center justify-between"
-        v-for="batch in product_list"
-        :key="batch?.hash"
+        v-for="batch in ticketList"
+        :key="batch?.id"
       >
-        <p>{{ batch?.name }}</p>
         <p>
-          +{{ formatMoney(batch?.amount) }}
+          {{ batch?.name }}
+          <br>
+          {{ batch?.tickets }} ingresso{{ batch?.tickets > 1 ? 's' : '' }}
+        </p>
+        <p>
+          +{{ formatMoney(batch?.total_amount) }}
         </p>
       </span>
     </section>
