@@ -76,11 +76,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         batch.selected_tickets += 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.addProductList(batch);
-        console.log(this.reservations, this.reservations?.length && this.reservations.some(x => x.offer_id === batch.id))
         if(this.reservations?.length && this.reservations.some(x => x.offer_id === batch.id)) {
           // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
           const res = await this.putReservation(batch);
-          this.updateReservation(res);
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         } else {
           // Cria nova reserva do ingresso do lote selecionado
@@ -103,7 +101,6 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         } else {
           // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
           const res = await this.putReservation(batch);
-          this.updateReservation(res);
           localStorage.setItem('reservations', JSON.stringify(this.reservations))
         }
       }
@@ -113,11 +110,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       const end = new Date(start.getTime());
       end.setMinutes(end.getMinutes() + 10);
       const payload = { start, end, offer_id, quantity: 1 };
-      console.log("create payload", payload)
       this.setLoadingReservation(true);
       try {
         const res = await useApi().create('/event/reservation', payload);
-        console.log("create res", res)
         this.addReservation({ ...res, offer_id });
         return res;
       } catch(err) {
@@ -130,11 +125,10 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     async putReservation(batch) {
       const reservation = this.reservations.find(x => x.offer_id === batch.id);
       const payload = { ...reservation, quantity: batch.selected_tickets };
-      console.log("update reservation", payload)
       this.setLoadingReservation(true);
       try {
         const res = await useApi().update(`/event/reservation/${payload.token}`, payload);
-        console.log("update res", res)
+        this.updateReservation({ ...res, offer_id: batch.id });
         return res;
       } catch(err) {
         console.error(err);
@@ -144,11 +138,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       }
     },
     async deleteReservation(reservation) {
-      console.log("delete reservation", reservation)
       this.setLoadingReservation(true);
       try {
         const res = await useApi().remove(`/event/reservation/${reservation.token}`);
-        console.log("delete res", res)
         if(this.reservations?.length) this.removeReservation(reservation);
         return res;
       } catch(err) {
