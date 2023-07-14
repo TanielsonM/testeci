@@ -13,6 +13,13 @@ function closeModal() {
     window.removeEventListener('beforeunload', showUnloadAlert);
     window.location.reload(true);
   } else {
+    const preCheckout = usePreCheckoutStore();
+    const { getBatchsList } = storeToRefs(preCheckout);
+    let batchs = getBatchsList.value;
+    batchs.forEach(x => {
+      x.selected_tickets = 0;
+    });
+    preCheckout.setBatchsList(batchs);
     navigateTo(`/pre-checkout/${route.params?.product_id}`);
   }
 }

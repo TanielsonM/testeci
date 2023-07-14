@@ -8,7 +8,6 @@ import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlert } from "@/utils/validateBatch";
 
 const checkout = useCheckoutStore();
-const preCheckout = usePreCheckoutStore();
 const custom_checkout = useCustomCheckoutStore();
 const expiredSession = useExpiredSessionStore();
 const amountStore = useAmountStore();
@@ -26,20 +25,27 @@ function byTickets() {
 onMounted(() => {
   window.addEventListener('beforeunload', showUnloadAlert);
 
-  setTimeout(() => {
+  setTimeout(async () => {
     if(localStorage.getItem('reservations')) {
-      let reservations = JSON.parse(localStorage.getItem('reservations'));
-      if(reservations?.length) {
-        reservations.forEach(async reservation => {
-          try {
-            const res = await preCheckout.deleteReservation(reservation);
-            reservations = reservations.filter(x => x.id !== reservation.id)
-            localStorage.setItem('reservations', reservations)
-            return res;
-          } catch(err) {
-            return err;
-          }
-        });
+      try {
+        let reservations = JSON.parse(localStorage.getItem('reservations'));
+        if(reservations?.length) {
+          const preCheckout = usePreCheckoutStore();
+          const promises = reservations.map(async reservation => {
+            try {
+              await preCheckout.deleteReservation(reservation);
+              reservations = reservations.filter(x => x.id !== reservation.id);
+            } catch(err) {
+              consol.error(err)
+            }
+          });
+          await Promise.all(promises);
+          preCheckout.setReservations(reservations);
+          localStorage.setItem('reservations', reservations);
+        }
+        return reservations;
+      } catch (error) {
+        return error;
       }
     }
   }, 500)
