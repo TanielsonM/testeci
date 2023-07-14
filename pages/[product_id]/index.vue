@@ -1,6 +1,7 @@
 <script setup>
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
@@ -11,14 +12,12 @@ import { validateDocument } from "@/rules/form-validations";
 import { showUnloadAlert } from "@/utils/validateBatch";
 
 import { storeToRefs } from "pinia";
-import { usePreCheckoutStore } from "~~/store/preCheckout";
-  const preCheckout = usePreCheckoutStore();
-  const { getReservations } = storeToRefs(preCheckout);
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
@@ -27,6 +26,7 @@ const amountStore = useAmountStore();
 
 // Variables
 const { t, locale } = useI18n();
+const { getReservations, getBatchsList } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const {
@@ -49,6 +49,20 @@ const pixelComponentKey = 1;
 
 // Computeds
 const tabs = computed(() => {
+  if(product.value.format === 'PRESENTIAL_EVENT') {
+    // Lista os métodos de pagamento do late que tiver a menor quantidade de métodos de pagamento
+    let batchWithLessMethods = getBatchsList.value[0];
+    for (let i = 1; i < getBatchsList.value.length; i++) {
+      const obj = getBatchsList.value[i];
+      const qtdCurrentMethods = obj.method.split(',').length;
+      const qtdLessMethods = batchWithLessMethods.method.split(',').length;
+
+      if (qtdCurrentMethods < qtdLessMethods) {
+        batchWithLessMethods = obj;
+      }
+    }
+    allowed_methods.value = batchWithLessMethods.method.split(',');
+  }
   return allowed_methods.value.map((item) => {
     switch (item) {
       case "CREDIT_CARD":
