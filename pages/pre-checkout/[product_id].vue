@@ -13,6 +13,7 @@ const expiredSession = useExpiredSessionStore();
 const amountStore = useAmountStore();
 
 const { amount } = storeToRefs(amountStore);
+const { product_list } = storeToRefs(checkout);
 const route = useRoute();
 await checkout.init();
 const theme = custom_checkout.theme;
@@ -89,6 +90,7 @@ onBeforeUnmount(() => {
           <div class="w-full md:w-fit">
             <BaseButton
               :color="theme"
+              :disabled="!product_list?.length"
               @click="byTickets"
             >
               Comprar ingressos

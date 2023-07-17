@@ -1,6 +1,6 @@
 <script setup>
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
-import { showUnloadAlert } from "@/utils/validateBatch";
+import { showUnloadAlert, goBackToPreCheckout } from "@/utils/validateBatch";
 
 const expiredSession = useExpiredSessionStore();
 const route = useRoute();
@@ -13,14 +13,7 @@ function closeModal() {
     window.removeEventListener('beforeunload', showUnloadAlert);
     window.location.reload(true);
   } else {
-    const preCheckout = usePreCheckoutStore();
-    const { getBatchsList } = storeToRefs(preCheckout);
-    let batchs = getBatchsList.value;
-    batchs.forEach(x => {
-      x.selected_tickets = 0;
-    });
-    preCheckout.setBatchsList(batchs);
-    navigateTo(`/pre-checkout/${route.params?.product_id}`);
+    goBackToPreCheckout();
   }
 }
 </script>

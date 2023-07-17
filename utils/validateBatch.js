@@ -54,10 +54,23 @@ const getLessMethods = function () {
   return batchWithLessMethods?.method.split(',');
 }
 
+const goBackToPreCheckout = function() {
+  const preCheckout = usePreCheckoutStore();
+  const { getBatchsList } = storeToRefs(preCheckout);
+  let batchs = getBatchsList.value;
+  batchs.forEach(x => {
+    x.selected_tickets = 0;
+  });
+  preCheckout.setBatchsList(batchs);
+  const route = useRoute();
+  navigateTo(`/pre-checkout/${route.params?.product_id}`);
+}
+
 export {
   saleHasStarted,
   haveAvailableTickets,
   dependsOnAnotherBatch,
   showUnloadAlert,
-  getLessMethods
+  getLessMethods,
+  goBackToPreCheckout
 }

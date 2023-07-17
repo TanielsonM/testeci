@@ -2,20 +2,16 @@
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
-import { useCheckoutStore } from "~~/store/checkout";
-import { formatMoney } from "~/utils/money";
-import { useInstallmentsStore } from "~~/store/modules/installments";
+import { goBackToPreCheckout } from "@/utils/validateBatch";
+
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
-const checkout = useCheckoutStore();
-const installmentsStore = useInstallmentsStore();
 const { t } = useI18n();
+
 /* State */
 const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
-const { method, installments, hasFees } = storeToRefs(checkout);
 const { trial_position } = storeToRefs(custom_checkout);
-const { getInstallments } = storeToRefs(installmentsStore);
 
 /* Trial message */
 const trialMessage = computed({
@@ -220,7 +216,17 @@ const trialMessage = computed({
       <!-- Coupon -->
       <ProductCoupon v-if="productStore.allowedCoupon" />
     </section>
-    <EventTimer v-if="product.format === 'PRESENTIAL_EVENT'" />
+    <template v-if="product.format === 'PRESENTIAL_EVENT'">
+      <div class="mx-5">
+        <p
+          class="small-text text-xs cursor-pointer hover:scale-105 hover:mx-1"
+          @click="goBackToPreCheckout"
+        >
+          Alterar ingressos
+        </p>
+      </div>
+      <EventTimer />
+    </template>
   </BaseCard>
 </template>
 
