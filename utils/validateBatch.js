@@ -4,9 +4,9 @@ import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 
 const saleHasStarted = function (batch) {
-  const today = moment().format('DD/MM/YYYY');
-  const saleStartDate = moment(batch?.sales_start_date).format('DD/MM/YYYY');
-  return batch?.immediate_sale || (!batch?.immediate_sale && today === saleStartDate)
+  const today = moment();
+  const saleStartDate = moment(batch?.sales_start_date);
+  return batch?.immediate_sale || (!batch?.immediate_sale && today >= saleStartDate)
 }
 
 const haveAvailableTickets = function (batch) {
