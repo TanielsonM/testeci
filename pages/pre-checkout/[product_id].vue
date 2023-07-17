@@ -50,6 +50,18 @@ onMounted(() => {
       }
     }
   }, 500)
+
+  if(route?.query?.batchs) {
+    const preCheckout = usePreCheckoutStore();
+    const { getBatchsList } = storeToRefs(preCheckout);
+    const batchs = getBatchsList?.value;
+    const route_batchs = JSON.parse(route.query.batchs);
+
+    if(Array.isArray(batchs) && Array.isArray(route_batchs)) {
+      const filter_batchs = batchs.filter(b => route_batchs.includes(b.hash));
+      if(filter_batchs.length) preCheckout.setBatchsList(filter_batchs);
+    }
+  }
 })
 
 onBeforeUnmount(() => {
