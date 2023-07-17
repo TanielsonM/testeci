@@ -49,25 +49,11 @@ onBeforeUnmount(() => {
     :is-open="closeUpModal"
     :show-close="false"
     @close="closeModal"
-    :style="{ 'padding: 0px': closeUpOnlyImage === true }"
   >
     <section
-      class="flex w-full max-w-[400px] flex-col gap-5"
-      :class="{ '-mt-[70px]': closeUpOnlyImage === false }"
-    >
-      <section v-if="closeUpOnlyImage" class="margin-top-fix">
-        <Icon
-          name="mdi:close"
-          class="cursor-close cursor-pointer text-gray-400"
-          size="25"
-          @click="closeModal"
-        />
-        <a :href="customCheckoutStore.popUpLink">
-          <img class="rounded" :src="customCheckoutStore.popUpImage" />
-        </a>
-      </section>
-
-      <section v-else :class="{ 'p-[5px]': closeUpOnlyImage === false }">
+      class="flex -mt-[70px] w-full max-w-[400px] flex-col gap-5"
+    > 
+      <section class="p-[5px]">
         <h6
           class="flex-content mb-[8px] text-[17px] font-semibold text-txt-color"
         >
@@ -81,7 +67,10 @@ onBeforeUnmount(() => {
         </h6>
 
         <section>
-          <img
+          <a v-if="closeUpOnlyImage" :href="customCheckoutStore.popUpLink">
+            <img class="rounded" :src="customCheckoutStore.popUpImage" />
+          </a>
+          <img v-else
             class="mb-[30px] rounded"
             :src="customCheckoutStore.popUpImage"
           />
@@ -93,6 +82,7 @@ onBeforeUnmount(() => {
         <section class="mt-3 flex w-full justify-end">
           <a :href="customCheckoutStore.popUpLink" class="mt-[20px] w-full">
             <BaseButton
+              v-if="!closeUpOnlyImage"
               class="bg-main-color text-txt-color"
               @click="closeModal"
             >
