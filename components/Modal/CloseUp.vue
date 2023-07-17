@@ -121,6 +121,7 @@ onBeforeUnmount(() => {
 
 .image-fix {
   display: block;
+  margin: 0 auto;
 } 
 
 .margin-top-fix {
