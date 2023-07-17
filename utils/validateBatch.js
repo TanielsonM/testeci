@@ -1,6 +1,7 @@
 import moment from "moment";
 import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
+import { useCheckoutStore } from "~~/store/checkout";
 
 const saleHasStarted = function (batch) {
   const today = moment().format('DD/MM/YYYY');
@@ -35,9 +36,28 @@ const showUnloadAlert = async function (evt) {
   }
 }
 
+const getLessMethods = function () {
+  const checkout = useCheckoutStore();
+  const preCheckout = usePreCheckoutStore();
+  const { getBatchsList } = storeToRefs(preCheckout);
+  let batchWithLessMethods = getBatchsList?.value[0];
+  for (let i = 1; i < getBatchsList?.value?.length; i++) {
+    const obj = getBatchsList?.value[i];
+    const qtdCurrentMethods = obj?.method.split(',').length;
+    const qtdLessMethods = batchWithLessMethods?.method.split(',').length;
+
+    if (qtdCurrentMethods < qtdLessMethods) {
+      batchWithLessMethods = obj;
+    }
+  }
+  checkout.setMethod(batchWithLessMethods?.method.split(',')[0])
+  return batchWithLessMethods?.method.split(',');
+}
+
 export {
   saleHasStarted,
   haveAvailableTickets,
   dependsOnAnotherBatch,
-  showUnloadAlert
+  showUnloadAlert,
+  getLessMethods
 }

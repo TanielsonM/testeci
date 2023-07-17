@@ -9,7 +9,7 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { validateDocument } from "@/rules/form-validations";
-import { showUnloadAlert } from "@/utils/validateBatch";
+import { showUnloadAlert, getLessMethods } from "@/utils/validateBatch";
 
 import { storeToRefs } from "pinia";
 
@@ -50,18 +50,8 @@ const pixelComponentKey = 1;
 // Computeds
 const tabs = computed(() => {
   if(product.value.format === 'PRESENTIAL_EVENT') {
-    // Lista os métodos de pagamento do late que tiver a menor quantidade de métodos de pagamento
-    let batchWithLessMethods = getBatchsList.value[0];
-    for (let i = 1; i < getBatchsList.value.length; i++) {
-      const obj = getBatchsList.value[i];
-      const qtdCurrentMethods = obj.method.split(',').length;
-      const qtdLessMethods = batchWithLessMethods.method.split(',').length;
-
-      if (qtdCurrentMethods < qtdLessMethods) {
-        batchWithLessMethods = obj;
-      }
-    }
-    allowed_methods.value = batchWithLessMethods.method.split(',');
+    // Lista os métodos de pagamento do lote que tiver a menor quantidade de métodos de pagamento
+    allowed_methods.value = getLessMethods();
   }
   return allowed_methods.value.map((item) => {
     switch (item) {
