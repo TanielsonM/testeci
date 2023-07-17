@@ -30,25 +30,19 @@ const handleMouseOut = (event) => {
   }
 };
 
-const handleTouchEnd = (event) => {
-  if (customCheckoutStore.isPopUp === "on" && closeUpModalCookie.value !== false) {
-    const touch = event.changedTouches[0];
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+const handleTouchStart = (event) => {
+  var touchX = event.touches[0].clientX;
+  var touchY = event.touches[0].clientY;
 
-    if (
-      touch.clientY <= 0 ||
-      touch.clientX <= 0 ||
-      touch.clientX >= windowWidth ||
-      touch.clientY >= windowHeight
-    ) {
-      closeUpModal.value = true;
-      closeUpModalCookie.value = false;
-      closeUpModalCookie.expires = expirationDate.setDate(expirationDate.getDate() + 7);
-    }
+  var siteWidth = document.documentElement.clientWidth;
+  var siteHeight = document.documentElement.clientHeight;
+
+  if (touchX < 0 || touchX > siteWidth || touchY < 0 || touchY > siteHeight) {
+    closeUpModal.value = true;
+    closeUpModalCookie.value = false;
+    closeUpModalCookie.expires = expirationDate.setDate(expirationDate.getDate() + 7);
   }
 };
-
 
 function closeModal() {
   closeUpModal.value = false;
@@ -56,12 +50,12 @@ function closeModal() {
 
 onMounted(() => {
   window.addEventListener('mouseout', handleMouseOut);
-  window.addEventListener('touchend', handleTouchEnd);
+  window.addEventListener('touchstart', handleTouchStart);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('mouseout', handleMouseOut);
-  window.removeEventListener('touchend', handleTouchEnd);
+  window.removeEventListener('touchstart', handleTouchStart);
 });
 </script>
 
