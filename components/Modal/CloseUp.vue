@@ -68,10 +68,10 @@ onBeforeUnmount(() => {
 
         <section>
           <a v-if="closeUpOnlyImage" :href="customCheckoutStore.popUpLink">
-            <img class="rounded" :src="customCheckoutStore.popUpImage" />
+            <img class="mb-[30px] rounded image-fix" :src="customCheckoutStore.popUpImage" />
           </a>
           <img v-else
-            class="mb-[30px] rounded"
+            class="mb-[30px] rounded image-fix"
             :src="customCheckoutStore.popUpImage"
           />
         </section>
@@ -117,6 +117,12 @@ onBeforeUnmount(() => {
   .modal__content {
     margin-top: 100px;
   }
+}
+
+.image-fix {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .margin-top-fix {
