@@ -89,13 +89,9 @@ onBeforeUnmount(() => {
         </h6>
 
         <section>
-          <a v-if="closeUpOnlyImage" :href="customCheckoutStore.popUpLink">
+          <a :href="customCheckoutStore.popUpLink">
             <img class="mb-[30px] rounded image-fix" :src="customCheckoutStore.popUpImage" />
           </a>
-          <img v-else
-            class="mb-[30px] rounded image-fix"
-            :src="customCheckoutStore.popUpImage"
-          />
         </section>
 
         <p class="mt-2 justify-end text-sm text-txt-color">
