@@ -4,10 +4,14 @@ import * as Toast from "vue-toastification";
 
 export const useCustomCheckoutStore = defineStore("customCheckout", {
   state: () => ({
+    greennWrapper: null,
     custom_checkout: null,
     notifications: null,
   }),
   getters: {
+    /* get wrapper */
+    getGreennWrapper: (state) => state.greennWrapper,
+
     /* Exit Modal */
     isPopUp: (state) => state.custom_checkout?.exit_pop_up,
     popUpImage: (state) => state.custom_checkout?.image_exit_pop_up,

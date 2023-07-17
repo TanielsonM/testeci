@@ -30,14 +30,10 @@ const handleMouseOut = (event) => {
   }
 };
 
-const handleTouchStart = (event) => {
-  var touchX = event.touches[0].clientX;
-  var touchY = event.touches[0].clientY;
+const handleTouchOutside = (event) => {
+  const greennWrapper = customCheckoutStore.getGreennWrapper;
 
-  var siteWidth = document.documentElement.clientWidth;
-  var siteHeight = document.documentElement.clientHeight;
-
-  if (touchX < 0 || touchX > siteWidth || touchY < 0 || touchY > siteHeight) {
+  if (!greennWrapper.contains(event.target)) {
     closeUpModal.value = true;
     closeUpModalCookie.value = false;
     closeUpModalCookie.expires = expirationDate.setDate(expirationDate.getDate() + 7);
@@ -50,12 +46,12 @@ function closeModal() {
 
 onMounted(() => {
   window.addEventListener('mouseout', handleMouseOut);
-  window.addEventListener('touchstart', handleTouchStart);
+  window.addEventListener('touchstart', handleTouchOutside);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('mouseout', handleMouseOut);
-  window.removeEventListener('touchstart', handleTouchStart);
+  window.removeEventListener('touchstart', handleTouchOutside);
 });
 </script>
 
