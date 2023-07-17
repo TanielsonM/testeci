@@ -532,7 +532,10 @@ await checkout.init();
       </section>
     </BaseModal>
 
-    <EventExpiredSessionModal v-if="product.format === 'PRESENTIAL_EVENT'" />
+    <template v-if="product.format === 'PRESENTIAL_EVENT'">
+      <EventExpiredSessionModal />
+      <EventGoBackWarningModal />
+    </template>
 
     <!-- Client Only section -->
     <ClientOnly class="hidden">

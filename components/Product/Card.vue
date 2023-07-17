@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
-import { goBackToPreCheckout } from "@/utils/validateBatch";
+import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout";
 
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
@@ -26,6 +26,11 @@ const trialMessage = computed({
     )}s.`;
   },
 });
+
+function openGoBackPreCheckoutModal() {
+  const goBackToPrecheckout = useGoBackToPrecheckoutStore();
+  goBackToPrecheckout.setShowModal(true);
+}
 </script>
 
 <template>
@@ -220,7 +225,7 @@ const trialMessage = computed({
       <div class="mx-5">
         <p
           class="small-text text-xs cursor-pointer hover:scale-105 hover:mx-1"
-          @click="goBackToPreCheckout"
+          @click="openGoBackPreCheckoutModal"
         >
           Alterar ingressos
         </p>

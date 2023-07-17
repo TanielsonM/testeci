@@ -1,4 +1,4 @@
-export const useExpiredSessionStore = defineStore("modal", {
+export const useExpiredSessionStore = defineStore("expiredSession", {
   state: () => ({
     haveFinished: false
   }),
