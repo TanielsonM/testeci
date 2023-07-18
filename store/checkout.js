@@ -136,7 +136,7 @@ export const useCheckoutStore = defineStore("checkout", {
       return () => {
         const product = useProductStore();
         return (
-          !!this.antifraud || !!product.showAddress || this.hasPhysicalProduct()
+          !!this.antifraud || !!product.showAddress || this.hasPhysicalProduct() || this.hasCheckoutAddressBump
         );
       };
     },
@@ -150,6 +150,11 @@ export const useCheckoutStore = defineStore("checkout", {
           )
         );
       };
+    },
+    hasCheckoutAddressBump(state) {
+      return state.bump_list.some(
+        (bump) => !!bump.is_checkout_address && bump.checkbox
+      )
     },
     getBumpList: (state) => state.bump_list,
     shippingProducts(state) {
