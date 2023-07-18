@@ -2,10 +2,10 @@
 import { storeToRefs } from "pinia";
 import { usePersonalStore } from "~~/store/forms/personal";
 import { usePaymentStore } from "~~/store/modules/payment";
+import { useAmountStore } from "~~/store/modules/amount";
 import logoPayPal from "@/assets/paypal/logo.svg";
 
 import { validateFirstStep } from "@/rules/form-validations";
-import { validate } from "vee-validate";
 
 const { locale } = useI18n();
 const paypal = ref(null);
@@ -22,7 +22,8 @@ const {
   checkoutPayment,
   selectedCountry,
   captchaEnabled,
-  paypal_details
+  paypal_details,
+  coupon
 } = storeToRefs(checkoutStore);
 
 const { email } = storeToRefs(personalStore);
@@ -40,6 +41,8 @@ useHead({
 onMounted(async () => {
   setTimeout(() => {
     if (process.client) {
+      const amountStore = useAmountStore();
+      const { getAmount } = storeToRefs(amountStore);
       window.paypal
         .Buttons({
           locale: "pt_BR",
@@ -59,7 +62,9 @@ onMounted(async () => {
                 {
                   description: productName.value,
                   amount: {
-                    value: checkoutPayment.value.paypal.amount,
+                    value: coupon.value.applied
+                     ? getAmount.value
+                     : checkoutPayment.value.paypal.amount,
                     currency_code: checkoutPayment.value.paypal.currency,
                   },
                   reference_id: JSON.stringify({

@@ -210,15 +210,11 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then((response) => {
-            if (
-              response.checkout_payment &&
-              response.checkout_payment.data &&
-              response.checkout_payment.data.amount
-            ) {
+            if (response?.checkout_payment?.data?.amount) {
               response.data.amount = response.checkout_payment.data.amount;
             }
 
-            if (response.checkout_payment && response.checkout_payment.paypal) {
+            if (response?.checkout_payment?.paypal) {
               response.data.paypal = response.checkout_payment.paypal;
             }
 
