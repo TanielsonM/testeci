@@ -91,7 +91,7 @@ const showInstallments = computed(() => {
 </script>
 
 <template>
-  <span class="flex w-full flex-col gap-5">
+  <span class="flex w-full flex-col gap-5" v-if="selectedForm !== PIX">
     <transition name="slide-fade-bottom" mode="out-in">
       <component :is="selectedForm" />
     </transition>

@@ -50,8 +50,9 @@ if (
   }
 
   const closeAction = () => {
+    const current_query = new URLSearchParams(route.query);
     window.location.href =
-      sale.sales[0].product.thank_you_page || "https://greenn.com.br";
+      sale.sales[0].product.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
   };
 
   modal.setAction(closeAction);
@@ -69,8 +70,9 @@ if (
   modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
 
   const closeAction = () => {
+    const current_query = new URLSearchParams(route.query);
     window.location.href =
-      data.value.productOffer.data.thank_you_page || "https://greenn.com.br";
+      data.value.productOffer.data.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
   };
 
   modal.setAction(closeAction);
@@ -99,6 +101,10 @@ if (
       }
     })
   );
+}
+
+function openPix(id: number) {
+  data.value.pixOpened = id;
 }
 </script>
 
@@ -146,13 +152,15 @@ if (
         v-if="data.sale?.order"
         :code="data.sale?.order.qrcode"
         :url="data.sale?.order.imgQrcode"
-        :id="data.sale?.order.id.toString()"
+        :id="data.sale?.order.id"
         :amount="formatMoney(data.sale?.order.total)"
         :only-buttons="true"
         :sales-length="1"
         :created-at="data.sale?.order.created_at.toString()"
         :has-order="true"
         :sales="data.sale.sales"
+        :opened="data.pixOpened"
+        @openedPixEvent="openPix"
       />
       <template v-else>
         <ModalPixInfos
@@ -161,7 +169,7 @@ if (
           :name="sale.product.name"
           :code="sale.qrcode"
           :url="sale.imgQrcode"
-          :id="sale.id.toString()"
+          :id="sale.id"
           :amount="
             formatMoney(sale.total || sale.amount || sale.product?.amount)
           "
@@ -172,8 +180,8 @@ if (
           :shipping-amount="formatMoney(sale.shipping_amount)"
           :shipping-selected="sale.shipping_selected"
           :sales="data.sale.sales"
-          :opened="data.pixOpened.toString()"
-          @openedPixEvent="(e) => (data.pixOpened = e.toString())"
+          :opened="data.pixOpened"
+          @openedPixEvent="openPix"
         />
       </template>
     </div>

@@ -8,6 +8,8 @@ import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
+import { useLeadsStore } from "@/store/modules/leads";
+
 import { validateDocument } from "@/rules/form-validations";
 import { showUnloadAlert, getLessMethods } from "@/utils/validateBatch";
 
@@ -23,6 +25,7 @@ const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
+const leadsStore = useLeadsStore();
 
 // Variables
 const { t, locale } = useI18n();
@@ -297,6 +300,12 @@ const documentText = computed(() => {
   }
 });
 
+function updateLead() {
+  setTimeout(function () {
+    leadsStore.updateLead();
+  }, 1000);
+}
+
 function incrementSteps() {
   if (countSteps.value != 3) {
     stepsStore.incrementCount();
@@ -424,7 +433,9 @@ await checkout.init();
                 </template>
               </BaseInput>
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
-              <FormPurchase />
+              <template v-if="method !== 'PIX'">
+                <FormPurchase />
+              </template>
             </section>
             <!-- Bumps -->
             <template
@@ -460,6 +471,11 @@ await checkout.init();
                 </span>
               </BaseButton>
             </section>
+
+            <!-- Pix purchase infos -->
+            <template v-if="method === 'PIX'">
+              <FormPurchasePix />
+            </template>
 
             <span class="flex items-center gap-3">
               <Icon name="fa6-solid:lock" class="text-main-color" />

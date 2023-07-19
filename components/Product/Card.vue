@@ -31,6 +31,14 @@ function openGoBackPreCheckoutModal() {
   const goBackToPrecheckout = useGoBackToPrecheckoutStore();
   goBackToPrecheckout.setShowModal(true);
 }
+
+const exceptionSellerId = computed(() => {
+  if(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION) {
+    const ids = JSON.parse(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION)
+    return ids.some(x => parseInt(x) === parseInt(product.value.seller.id))
+  }
+  return false
+})
 </script>
 
 <template>
@@ -83,7 +91,7 @@ function openGoBackPreCheckoutModal() {
         <ProductTotalAmount v-else />
         <section
           class="custom_charges"
-          v-if="!!productStore.hasCustomCharges.length"
+          v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId"
         >
           <section class="charges" :opened="opened">
             <p
