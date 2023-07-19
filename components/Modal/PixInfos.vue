@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
 <template>
   <div v-if="!modal.expiredPix">
     <p class="paragraph" v-if="(!onlyButtons && !last) || salesLength == 1">
-      {{ $t("pg_obrigado.pix.efetuando") }} Greenn Marketing e Tecnologia LTDA
+      {{ $t("pg_obrigado.pix.efetuando") }} Greenn Pagamentos e Tecnologia LTDA
       {{ $t("pg_obrigado.pix.ref") }};
     </p>
     <hr class="my-5" v-if="(!onlyButtons && !last) || salesLength == 1" />
