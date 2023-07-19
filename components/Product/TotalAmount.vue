@@ -24,7 +24,6 @@ const {
 const { getInstallments } = storeToRefs(installmentsStore);
 const {
   hasTicketInstallments,
-  productType,
   hasFixedInstallments,
   hasPreSelectedInstallments,
 } = storeToRefs(product);
