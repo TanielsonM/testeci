@@ -7,12 +7,29 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
     batchs_list: [],
     reservations: [],
-    loadingReservation: false
+    loadingReservation: false,
+    groups: [
+      {
+        id: 1,
+        name: 'Lote Um',
+        tickets: 100,
+        has_sale_deadline: true,
+        sale_deadline: '28/07/2023'
+      },
+      {
+        id: 2,
+        name: 'Lote Dois',
+        tickets: 50,
+        has_sale_deadline: true,
+        sale_deadline: '28/07/2023'
+      }
+    ]
   }),
   getters: {
     getBatchsList: (state) => state.batchs_list,
     getReservations: (state) => state.reservations,
     getLoadingReservation: (state) => state.loadingReservation,
+    getGroups: (state) => state.groups,
     isPresentialEvent() {
       const { product } = useProductStore();
       return product.format === 'PRESENTIAL_EVENT';
@@ -79,6 +96,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     setLoadingReservation(value) {
       this.loadingReservation = value;
+    },
+    setGroups(value) {
+      this.groups = value;
     },
     async addTicket(hash) {
       let batch = this.batchs_list.find(x => x.hash === hash); 

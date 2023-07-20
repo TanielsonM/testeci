@@ -7,7 +7,7 @@ import moment from "moment";
 
 const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
-const { getBatchsList, loadingReservation } = storeToRefs(preCheckout);
+const { getGroups, getBatchsList, loadingReservation } = storeToRefs(preCheckout);
 
 const getTicketInstallments = function (batch_hash) {
   if(!getBatchsList?.value) return 0;
@@ -67,63 +67,84 @@ const dependentBatchName = function (batch) {
 
 <template>
   <div class="mb-3">
-    <ul class="text-txt-color">
-      <li v-for="batch in getBatchsList" :key="batch?.hash" class="mb-6 flex justify-between items-center">
-        <div :class="{'line-through': !haveAvailableTickets(batch)}">
-          <h5 class="text-base font-semibold text-input-color mb-2">{{ batch?.name }}</h5>
-          <p class="text-sm">{{ formatMoney(batch?.amount) }}</p>
-          <!-- (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa) -->
-          <small class="text-main-color">em até {{ batch?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch?.hash)) }}</small>
+    <div v-for="group in getGroups" :key="group.id"> 
+      <div class="text-txt-color flex justify-between items-center mb-3">
+        <div>
+          <p class="text-base font-bold text-input-color">{{ group?.name }}</p>
           <p class="text-sm font-normal text-gray-400">
-            <template v-if="dependsOnAnotherBatch(batch)">
-              Vendas disponíveis após esgotamento do lote: <br> {{ dependentBatchName(batch) }}
+            <template v-if="dependsOnAnotherBatch(group)">
+              Vendas disponíveis após esgotamento do lote: <br> {{ dependentgroupName(group) }}
             </template>
-            <template v-else-if="saleHasStarted(batch)">
-              Vendas até {{ batch?.has_sale_deadline ? moment(batch?.sale_deadline).format('DD/MM/YYYY') : 'sem prazo limite' }}
+            <template v-else-if="saleHasStarted(group)">
+              Vendas até {{ group?.has_sale_deadline ? moment(group?.sale_deadline).format('DD/MM/YYYY') : 'sem prazo limite' }}
             </template>
             <template v-else>
-              Vendas começarão em {{ moment(batch?.sales_start_date).format('DD/MM/YYYY') }}
+              Vendas começarão em {{ moment(group?.sales_start_date).format('DD/MM/YYYY') }}
             </template>
           </p>
         </div>
-        <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && batch?.selected_tickets > 0)" class="flex items-center">
-          <template v-if="!loadingReservation">
-            <Icon
-              name="mdi:minus-circle-outline"
-              size="20"
-              :class="{
-                'text-gray-300': batch?.selected_tickets === 0 || !saleHasStarted(batch),
-                'text-main-color': batch?.selected_tickets > 0 && saleHasStarted(batch),
-                'hover:scale-110': batch?.selected_tickets > 0 && saleHasStarted(batch),
-                'hover:cursor-pointer': batch.selected_tickets > 0 && saleHasStarted(batch)
-              }"
-              @click="preCheckout.subTicket(batch?.hash)"
-            />
-            <span class="mx-2 font-semibold">{{ batch?.selected_tickets }}</span>
-            <Icon
-              name="mdi:plus-circle-outline"
-              size="20"
-              :class="{
-                'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch),
-                'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
-                'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
-                'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)
-              }"
-              @click="preCheckout.addTicket(batch?.hash)"
-            />
-          </template>
-          <template v-else>
-            <Icon
-              name="mdi:loading"
-              size="25"
-              class="animate-spin mr-5"
-            />
-          </template>
+        <div>
+          <span class="text-main-color font-semibold px-2 py-1 text-sm bg-greenn-transparent rounded-full">{{ group?.tickets }}</span>
         </div>
-        <div v-else>
-          <span class="mx-2 font-normal text-gray-400">Esgotado</span>
-        </div>
-      </li>
-    </ul>
+      </div>
+      <ul class="text-txt-color ml-2">
+        <li v-for="batch in getBatchsList" :key="batch?.hash" class="mb-6 flex justify-between items-center">
+          <div :class="{'line-through': !haveAvailableTickets(batch)}">
+            <h5 class="text-base font-semibold text-input-color mb-2">{{ batch?.name }}</h5>
+            <p class="text-sm">{{ formatMoney(batch?.amount) }}</p>
+            <!-- (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa) -->
+            <small class="text-main-color">em até {{ batch?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch?.hash)) }}</small>
+            <p class="text-sm font-normal text-gray-400">
+              <template v-if="dependsOnAnotherBatch(batch)">
+                Vendas disponíveis após esgotamento do lote: <br> {{ dependentBatchName(batch) }}
+              </template>
+              <template v-else-if="saleHasStarted(batch)">
+                Vendas até {{ batch?.has_sale_deadline ? moment(batch?.sale_deadline).format('DD/MM/YYYY') : 'sem prazo limite' }}
+              </template>
+              <template v-else>
+                Vendas começarão em {{ moment(batch?.sales_start_date).format('DD/MM/YYYY') }}
+              </template>
+            </p>
+          </div>
+          <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && batch?.selected_tickets > 0)" class="flex items-center">
+            <template v-if="!loadingReservation">
+              <Icon
+                name="mdi:minus-circle-outline"
+                size="20"
+                :class="{
+                  'text-gray-300': batch?.selected_tickets === 0 || !saleHasStarted(batch),
+                  'text-main-color': batch?.selected_tickets > 0 && saleHasStarted(batch),
+                  'hover:scale-110': batch?.selected_tickets > 0 && saleHasStarted(batch),
+                  'hover:cursor-pointer': batch.selected_tickets > 0 && saleHasStarted(batch)
+                }"
+                @click="preCheckout.subTicket(batch?.hash)"
+              />
+              <span class="mx-2 font-semibold">{{ batch?.selected_tickets }}</span>
+              <Icon
+                name="mdi:plus-circle-outline"
+                size="20"
+                :class="{
+                  'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch),
+                  'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
+                  'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
+                  'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)
+                }"
+                @click="preCheckout.addTicket(batch?.hash)"
+              />
+            </template>
+            <template v-else>
+              <Icon
+                name="mdi:loading"
+                size="25"
+                class="animate-spin mr-5"
+              />
+            </template>
+          </div>
+          <div v-else>
+            <span class="mx-2 font-normal text-gray-400">Esgotado</span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
