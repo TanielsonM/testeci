@@ -19,3 +19,7 @@ package-lock.json
 yarn-error.log
 yarn.lock
 .vite
+
+# Local Netlify folder
+.netlify
+netlify.toml
