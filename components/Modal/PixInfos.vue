@@ -9,7 +9,7 @@ const modal = useModalStore();
 const stepsStore = useStepStore();
 
 const { isMobile } = storeToRefs(stepsStore);
-
+const emit = defineEmits(['openedPixEvent']);
 const props = defineProps({
   name: {
     type: String,
@@ -27,8 +27,8 @@ const props = defineProps({
     required: true,
   },
   id: {
-    type: String,
-    default: "",
+    type: Number,
+    default: 0,
     required: true,
   },
   amount: {
@@ -73,7 +73,7 @@ const props = defineProps({
     default: () => false,
   },
   opened: {
-    type: String,
+    type: Number,
     required: false,
     default: 0,
   },
@@ -110,15 +110,11 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 });
-
-watch(data, () => {});
-
-const emit = defineEmits(["openedPixEvent"]);
 </script>
 <template>
   <div v-if="!modal.expiredPix">
     <p class="paragraph" v-if="(!onlyButtons && !last) || salesLength == 1">
-      {{ $t("pg_obrigado.pix.efetuando") }} GD Marketing e Tecnologia LTDA
+      {{ $t("pg_obrigado.pix.efetuando") }} Greenn Pagamentos e Tecnologia LTDA
       {{ $t("pg_obrigado.pix.ref") }};
     </p>
     <hr class="my-5" v-if="(!onlyButtons && !last) || salesLength == 1" />

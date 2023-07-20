@@ -104,6 +104,7 @@ export const validateSecondStep = async (): Promise<boolean> => {
 
 export const validateThristStep = async (): Promise<boolean> => {
   const purchaseStore = usePurchaseStore();
+  const checkout = useCheckoutStore();
   const { first, second } = storeToRefs(purchaseStore);
   const personalStore = usePersonalStore();
   const { document } = storeToRefs(personalStore);
@@ -121,7 +122,7 @@ export const validateThristStep = async (): Promise<boolean> => {
   const validExpiryYear = await validateExpiryYear.isValid(first.value.year);
   const validCvc = await validateCvc.isValid(first.value.cvv);
 
-  if (!!second.value.number) {
+  if (checkout.method === "TWO_CREDIT_CARDS") {
     const validNameOnCardSecond = await validateNameOnCard.isValid(
       second.value.holder_name
     );

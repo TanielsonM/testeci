@@ -1,5 +1,4 @@
 import * as Toast from "vue-toastification";
-
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
@@ -137,7 +136,7 @@ export const useCheckoutStore = defineStore("checkout", {
       return () => {
         const product = useProductStore();
         return (
-          !!this.antifraud || !!product.showAddress || this.hasPhysicalProduct()
+          !!this.antifraud || !!product.showAddress || this.hasPhysicalProduct() || this.hasCheckoutAddressBump
         );
       };
     },
@@ -151,6 +150,11 @@ export const useCheckoutStore = defineStore("checkout", {
           )
         );
       };
+    },
+    hasCheckoutAddressBump(state) {
+      return state.bump_list.some(
+        (bump) => !!bump.is_checkout_address && bump.checkbox
+      )
     },
     getBumpList: (state) => state.bump_list,
     shippingProducts(state) {
@@ -190,7 +194,7 @@ export const useCheckoutStore = defineStore("checkout", {
     setUUID(uuid) {
       return (this.uuid = uuid);
     },
-    async getProduct(id, offer = null, isBump = false, configs = {}) {
+    async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
       const product = useProductStore();
       const { setProduct } = product;
       /* Get country */
@@ -211,15 +215,11 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then((response) => {
-            if (
-              response.checkout_payment &&
-              response.checkout_payment.data &&
-              response.checkout_payment.data.amount
-            ) {
+            if (response?.checkout_payment?.data?.amount) {
               response.data.amount = response.checkout_payment.data.amount;
             }
 
-            if (response.checkout_payment && response.checkout_payment.paypal) {
+            if (response?.checkout_payment?.paypal) {
               response.data.paypal = response.checkout_payment.paypal;
             }
 
@@ -259,7 +259,10 @@ export const useCheckoutStore = defineStore("checkout", {
               this.checkoutPayment = response.checkout_payment;
               setProduct(response.data);
             } else {
-              this.bump_list.push({ ...response.data, checkbox: false });
+              this.bump_list.push({ ...response.data, checkbox: false, b_order: bumpOrder });
+              this.bump_list = this.bump_list.sort((bump1, bump2) => {
+                return bump1.b_order - bump2.b_order;
+              })
             }
           })
           .catch((err) => {
@@ -340,7 +343,7 @@ export const useCheckoutStore = defineStore("checkout", {
         this.products_client_statistics = [];
         bumpsWithOffers.forEach((bump) => {
           if (this.product_id !== bump.product_id)
-            this.getProduct(bump.product_id, bump.offer_hash, true);
+            this.getProduct(bump.product_id, bump.offer_hash, true, {}, Number(bump.bump_id));
         });
       }
     },
