@@ -8,15 +8,15 @@ const { product } = useProductStore();
 <template>
   <ul class="mb-6 text-txt-color">
     <li class="flex items-center mb-2">
-      <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>
+      <div class="min-w-[10px] h-[10px] rounded-full bg-main-color mr-3"></div>
       <span>Data do evento: {{ moment(product.event_date).format('DD/MM/YYYY') }}</span>
     </li>
     <li class="flex items-center mb-2">
-      <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>
+      <div class="min-w-[10px] h-[10px] rounded-full bg-main-color mr-3"></div>
       <span>Início: {{ moment(product.event_date).format('HH:mm') }} (horário de Brasília)</span>
     </li>
     <li class="flex items-center mb-2">
-      <div class="min-w-[15px] h-[15px] bg-main-color mr-3"></div>
+      <div class="min-w-[10px] h-[10px] rounded-full bg-main-color mr-3"></div>
       <span>
         Local:
             {{ product.address.street }},
