@@ -19,7 +19,6 @@ const {
   coupon,
   checkoutPayment,
   ticket_installments,
-  product
 } = storeToRefs(checkout);
 
 const { getInstallments } = storeToRefs(installmentsStore);
@@ -27,6 +26,7 @@ const {
   hasTicketInstallments,
   hasFixedInstallments,
   hasPreSelectedInstallments,
+  product
 } = storeToRefs(productStore);
 
 function formatAmountText(installments = 1) {
@@ -69,7 +69,7 @@ const showInCashText = computed(() => {
 
 <template>
   <ClientOnly>
-    <template v-if="product.product.method === 'FREE'">
+    <template v-if="product?.method === 'FREE'">
       {{ $t('order.gratis') }}
     </template>
     <template v-else>
