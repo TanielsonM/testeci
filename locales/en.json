@@ -362,7 +362,8 @@
     "anos": "years",
     "apos_trial": "After evaluation period",
     "vc_pagara": "You will pay",
-    "country_taxs": "Country tax(s)"
+    "country_taxs": "Country tax(s)",
+    "gratis": "Free"
   },
   "pg_obrigado": {
     "pix": {
