@@ -409,9 +409,11 @@ await checkout.init();
                   {{ $t("checkout.dados_pessoais.feedbacks.document") }}
                 </template>
               </BaseInput>
-              <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
-              <template v-if="method !== 'PIX'">
-                <FormPurchase />
+              <template v-if="product?.method !== 'FREE'">
+                <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
+                <template v-if="method !== 'PIX'">
+                  <FormPurchase />
+                </template>
               </template>
             </section>
             <!-- Bumps -->
