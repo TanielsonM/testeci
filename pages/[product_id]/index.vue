@@ -160,7 +160,7 @@ const tabs = computed(() => {
 });
 
 const handleResize = () => {
-  stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
 onMounted(() => {
@@ -389,12 +389,12 @@ await checkout.init();
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <BaseInput
-                class="col-span-12 block md:hidden"
+                class="col-span-12"
                 @blur="updateLead"
                 :class="{ 'xl:col-span-6': showDocumentInput }"
                 :label="documentText.label"
                 :placeholder="documentText.placeholder"
-                v-if="showDocumentInput"
+                v-if="showDocumentInput && isMobile"
                 input-name="document-field"
                 input-id="document-field"
                 v-model="document"

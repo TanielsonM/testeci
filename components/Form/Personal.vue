@@ -162,12 +162,12 @@ personalStore.setFields(useRoute().query);
       </template>
     </BasePhone>
     <BaseInput
-      class="col-span-12 hidden md:block"
+      class="col-span-12"
       @blur="updateLead"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
-      v-if="showDocumentInput"
+      v-if="showDocumentInput && isMobile"
       input-name="document-field"
       input-id="document-field"
       v-model="document"
