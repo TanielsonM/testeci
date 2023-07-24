@@ -389,12 +389,12 @@ await checkout.init();
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <BaseInput
-                class="col-span-12"
+                class="col-span-12 block md:hidden"
                 @blur="updateLead"
                 :class="{ 'xl:col-span-6': showDocumentInput }"
                 :label="documentText.label"
                 :placeholder="documentText.placeholder"
-                v-if="showDocumentInput && isMobile"
+                v-if="showDocumentInput"
                 input-name="document-field"
                 input-id="document-field"
                 v-model="document"
