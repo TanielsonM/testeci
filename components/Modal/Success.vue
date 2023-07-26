@@ -42,7 +42,7 @@ if (
     BOLETO: "",
     PAYPAL: "",
     CREDIT_CARD: "",
-    TWO_CREDIT_CARDS: ""
+    TWO_CREDIT_CARDS: "",
     DEFAULT: ""
   });
 
@@ -91,7 +91,7 @@ if (
       window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
     } 
     else if (customUrl.value.DEFAULT) {
-      window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+      window.location.href = customUrl.value.DEFAULT + `?${current_query.toString()}`;
     }
     else {
       window.location.href = sale.sales[0].product.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
