@@ -145,41 +145,34 @@ function changeAmount(from) {
   // When method is diff of two credit cards, stop function
   if (method.value !== "TWO_CREDIT_CARDS") return;
   const amount = instStore.getInstallments() * installments.value;
+  let firstAmount = clearValue(first.value.amount);
+  let secondAmount = clearValue(second.value.amount);
 
-  // when user change amount of first card, set amount of second card
   if (from === "first") {
-    let value = first.value.amount ? clearValue(first.value.amount) : 0;
-    // if the value of the card is greater than the total value, set the card with the entire value
-    if (value >= parseFloat(amount)) {
-      value = parseFloat(amount);
+    if (firstAmount >= amount) {
+      firstAmount = amount - 1;
     }
-    second.value.amount = parseFloat(amount - value).toFixed(2);
-    first.value.amount = value;
-
-    formatAmount("first");
-    formatAmount("second");
-    return;
+    secondAmount = amount - firstAmount;
+    second.value.amount = secondAmount;
+    first.value.amount = firstAmount;
+  } else {
+    if (secondAmount >= amount) {
+      secondAmount = amount - 1;
+    }
+    firstAmount = amount - secondAmount;
+    first.value.amount = firstAmount;
+    second.value.amount = secondAmount;
   }
-  let value = second.value.amount ? clearValue(second.value.amount) : 0;
-  // if the value of the card is greater than the total value, set the card with the entire value
-  if (value >= parseFloat(amount)) {
-    value = parseFloat(amount);
-  }
-  first.value.amount = parseFloat(amount - value).toFixed(2);
-  second.value.amount = value;
   formatAmount("first");
   formatAmount("second");
-  return;
 }
 
 function formatAmount(from) {
   if (from === "first") {
-    const value = parseFloat(first.value.amount.toString().replace("R$ ", ""));
-    first.value.amount = formatMoney(value);
-    return;
+    first.value.amount = formatMoney(clearValue(first.value.amount));
+  } else {
+    second.value.amount = formatMoney(clearValue(second.value.amount));
   }
-  const value = parseFloat(second.value.amount.toString().replace("R$ ", ""));
-  second.value.amount = formatMoney(value);
 }
 
 const showCreditCardsTabs = computed(() => {
@@ -191,9 +184,9 @@ const showCreditCardsTabs = computed(() => {
 });
 
 function clearValue(value) {
-  return parseFloat(
-    value.toString().replace("R$ ", "").replace(",", ".").replace("-", "")
-  ).toFixed(2);
+  const valorSemSimbolo = value.toString().replace("R$", "").replace(/\./g, "");
+  const numberValue = valorSemSimbolo.replace(",", ".");
+  return parseFloat(numberValue);
 }
 
 watch(installments, () => {
@@ -252,7 +245,6 @@ watch(installments, () => {
           @click="onFocus('number')"
           @blur="syncVerification('first')"
           input-id="first-amount-field"
-          @vnode-before-mount="formatAmount('first')"
           :error="
             first.amount || hasSent
               ? !validateCardAmount.isValidSync(clearValue(first.amount))
@@ -381,7 +373,6 @@ watch(installments, () => {
           v-model="second.amount"
           @blur="syncVerification('second')"
           input-id="second-amount-field"
-          @vnode-before-mount="formatAmount('second')"
           :error="
             second.amount || hasSent
               ? !validateCardAmount.isValidSync(clearValue(second.amount))
