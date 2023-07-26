@@ -89,7 +89,7 @@ if (
     else {
       const redirectTo = sale.sales[0].product.thank_you_page 
       ? sale.sales[0].product.thank_you_page + `?${current_query.toString()}` 
-      : `https://greenn.com.br?${current_query.toString()}`;
+      : `https://greenn.com.br/checkout-obrigado?${current_query.toString()}`;
 
       window.location.href = redirectTo;
     }
