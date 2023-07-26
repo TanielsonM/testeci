@@ -66,6 +66,7 @@ if (
         break;
       default:
         customUrl.value.DEFAULT = `https://greenn.com.br/checkout-obrigado`;  
+        break;
     }
   });
 
