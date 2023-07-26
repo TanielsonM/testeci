@@ -145,8 +145,8 @@ function changeAmount(from) {
   // When method is diff of two credit cards, stop function
   if (method.value !== "TWO_CREDIT_CARDS") return;
   const amount = instStore.getInstallments() * installments.value;
-  let firstAmount = clearValue(first.value.amount);
-  let secondAmount = clearValue(second.value.amount);
+  let firstAmount = clearValue(first.value.amount) || 1;
+  let secondAmount = clearValue(second.value.amount) || 1;
 
   if (from === "first") {
     if (firstAmount >= amount) {
@@ -184,9 +184,9 @@ const showCreditCardsTabs = computed(() => {
 });
 
 function clearValue(value) {
-  const valorSemSimbolo = value.toString().replace("R$", "").replace(/\./g, "");
+  const valorSemSimbolo = value.toString().replace("R$", "");
   const numberValue = valorSemSimbolo.replace(",", ".");
-  return parseFloat(numberValue);
+  return parseFloat(parseFloat(numberValue).toFixed(2));
 }
 
 watch(installments, () => {
