@@ -76,7 +76,7 @@ const dependentBatchName = function (batch) {
               Vendas disponíveis após esgotamento do lote: <br> {{ dependentgroupName(group) }}
             </template>
             <template v-else-if="saleHasStarted(group)">
-              Vendas até {{ group?.has_sale_deadline ? moment(group?.sale_deadline).format('DD/MM/YYYY') : 'sem prazo limite' }}
+              Vendas {{ group?.has_sale_deadline ? `até ${moment(group?.sale_deadline).format('DD/MM/YYYY')}` : 'sem prazo limite' }}
             </template>
             <template v-else>
               Vendas começarão em {{ moment(group?.sales_start_date).format('DD/MM/YYYY') }}

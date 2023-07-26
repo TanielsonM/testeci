@@ -5,7 +5,18 @@ import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/u
 
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
-    batchs_list: [],
+    batchs_list: [
+      // {
+      //   id: 1,
+      //   name: 'Inteira',
+      //   selected_tickets: 0
+      // },
+      // {
+      //   id: 2,
+      //   name: 'Meia',
+      //   selected_tickets: 0
+      // }
+    ],
     reservations: [],
     loadingReservation: false,
     groups: [
