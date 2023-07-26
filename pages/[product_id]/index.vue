@@ -29,7 +29,7 @@ const leadsStore = useLeadsStore();
 
 // Variables
 const { t, locale } = useI18n();
-const { getReservations, getBatchsList } = storeToRefs(preCheckout);
+const { getReservations } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const {
