@@ -35,7 +35,9 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
     class="flex min-h-screen w-full flex-col items-center gap-10 bg-background"
     :data-theme="product.isValid() ? custom_checkout.theme : 'light'"
     :data-theme_color="
-      product.isValid() ? custom_checkout.themeColor : '#00E4A0'
+      product.isValid()
+        ? (custom_checkout.themeColor === '#00E4A0' ? 'dark-greenn' : custom_checkout.themeColor)
+        : 'dark-greenn'
     "
   >
     <BaseHeader />

@@ -22,6 +22,12 @@
   --background: #17191f;
 }
 
+[data-theme_color="dark-greenn"] {
+  --main-color: #058A2A;
+  --transparent-color: rgba(5, 138, 42, 0.5);
+  --transparent: rgba(5, 138, 42, 0.1);
+}
+
 [data-theme_color="#00E4A0"] {
   --main-color: #00e4a0;
   --transparent-color: rgba(0, 228, 160, 0.5);
