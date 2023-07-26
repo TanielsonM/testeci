@@ -26,11 +26,6 @@ const data = ref({
   pixOpened: 0,
 });
 
-
-
-
-
-
 if (
   (!!route.query.s_id && !route.query.chc) ||
   (!!route.query.s_id && !!route.query.chc)
@@ -48,6 +43,7 @@ if (
     PAYPAL: "",
     CREDIT_CARD: "",
     TWO_CREDIT_CARDS: ""
+    DEFAULT: ""
   });
 
 
@@ -67,7 +63,9 @@ if (
         break;
       case "TWO_CREDIT_CARD": 
         customUrl.value.TWO_CREDIT_CARDS = element.url;
-        break;  
+        break;
+      default:
+        customUrl.value.DEFAULT = `https://greenn.com.br/checkout-obrigado`;  
     }
   });
 
@@ -90,7 +88,11 @@ if (
 
     if (customUrl.value[sale.sales[0].method]) {
       window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
-    } else {
+    } 
+    else if (customUrl.value.DEFAULT) {
+      window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+    }
+    else {
       window.location.href = sale.sales[0].product.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
     }
   };
