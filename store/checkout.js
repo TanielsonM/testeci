@@ -457,18 +457,9 @@ export const useCheckoutStore = defineStore("checkout", {
         store.hasFixedInstallments,
         store.hasTicketInstallments > 1 ? store.hasTicketInstallments : 1
       );
-      /* credit card */
-      if (method === "CREDIT_CARD") {
-        purchaseStore.first.amount =
-          installmentsStore.getInstallments() * this.installments;
-        return;
-      }
-      /* two credit card */
-      if (method === "TWO_CREDIT_CARDS") {
-        purchaseStore.first.amount =
-          (installmentsStore.getInstallments() * this.installments) / 2;
-        purchaseStore.second.amount =
-          (installmentsStore.getInstallments() * this.installments) / 2;
+      /* credit card or two credit cards */
+      if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method)) {
+        purchaseStore.setCardsAmount()
         return;
       }
     },
