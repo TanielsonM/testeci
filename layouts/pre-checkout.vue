@@ -13,7 +13,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
 <template>
   <main
     v-if="checkout.isLoading"
-    class="flex h-screen w-screen flex-col items-center justify-center gap-8 bg-background"
+    class="flex h-screen w-screen flex-col items-center justify-center gap-8"
   >
     <img
       v-if="logo === 'Heaven'"
@@ -32,7 +32,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
   </main>
   <main
     v-else
-    class="flex min-h-screen w-full flex-col items-center gap-10 bg-background"
+    class="flex min-h-screen w-full flex-col items-center gap-10"
     :data-theme="product.isValid() ? custom_checkout.theme : 'light'"
     :data-theme_color="
       product.isValid()

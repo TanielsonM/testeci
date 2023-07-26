@@ -68,10 +68,10 @@ const dependentBatchName = function (batch) {
 <template>
   <div class="mb-3">
     <div v-for="group in getGroups" :key="group.id"> 
-      <div class="text-txt-color flex justify-between items-center mb-3">
-        <div>
-          <p class="text-base font-bold text-input-color">{{ group?.name }}</p>
-          <p class="text-sm font-normal text-gray-400">
+      <div class="text-txt-color flex justify-between items-center mb-7 mt-5">
+        <div class="ml-5">
+          <p class="text-[18px] font-bold text-input-color mb-2">{{ group?.name }}</p>
+          <p class="text-[16px] font-[400] text-txt-color">
             <template v-if="dependsOnAnotherBatch(group)">
               Vendas disponíveis após esgotamento do lote: <br> {{ dependentgroupName(group) }}
             </template>
@@ -83,30 +83,20 @@ const dependentBatchName = function (batch) {
             </template>
           </p>
         </div>
-        <div>
-          <span class="text-main-color font-semibold px-2 py-1 text-sm bg-greenn-transparent rounded-full">{{ group?.tickets }}</span>
+        <div class="mr-5">
+          <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
+            {{ group?.tickets }}
+          </span>
         </div>
       </div>
-      <ul class="text-txt-color ml-2">
-        <li v-for="batch in getBatchsList" :key="batch?.hash" class="mb-6 flex justify-between items-center">
-          <div :class="{'line-through': !haveAvailableTickets(batch)}">
-            <h5 class="text-base font-semibold text-input-color mb-2">{{ batch?.name }}</h5>
-            <p class="text-sm">{{ formatMoney(batch?.amount) }}</p>
-            <!-- (+ {{ formatMoney(batch?.amount * batch?.fee) }} de taxa) -->
-            <small class="text-main-color">em até {{ batch?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch?.hash)) }}</small>
-            <p class="text-sm font-normal text-gray-400">
-              <template v-if="dependsOnAnotherBatch(batch)">
-                Vendas disponíveis após esgotamento do lote: <br> {{ dependentBatchName(batch) }}
-              </template>
-              <template v-else-if="saleHasStarted(batch)">
-                Vendas até {{ batch?.has_sale_deadline ? moment(batch?.sale_deadline).format('DD/MM/YYYY') : 'sem prazo limite' }}
-              </template>
-              <template v-else>
-                Vendas começarão em {{ moment(batch?.sales_start_date).format('DD/MM/YYYY') }}
-              </template>
-            </p>
+      <ul class="text-txt-color">
+        <li v-for="(batch, i) in getBatchsList" :key="batch?.hash" class="mb-6 pt-5 flex justify-between items-center" :class="{'border-t': i !== 0}">
+          <div class="ml-5" :class="{'line-through': !haveAvailableTickets(batch)}">
+            <h5 class="text-[18px] font-bold text-input-color mb-2">{{ batch?.name }}</h5>
+            <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(batch?.amount) }} + taxas</p>
+            <small class="text-[14px] font-[400] text-main-color">em até {{ batch?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch?.hash)) }}</small>
           </div>
-          <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && batch?.selected_tickets > 0)" class="flex items-center">
+          <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && batch?.selected_tickets > 0)" class="flex items-center mr-5">
             <template v-if="!loadingReservation">
               <Icon
                 name="mdi:minus-circle-outline"

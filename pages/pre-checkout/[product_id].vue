@@ -74,7 +74,6 @@ onBeforeUnmount(() => {
 
     <section class="flex w-full flex-col xl:max-w-[780px]" @click="teste">
       <BaseCard class="w-full p-5 mb-5 ">
-        <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">Pré-checkout</h1>
         <EventTimer class="hidden"/>
         <EventImage />
         <EventTitle />
@@ -88,29 +87,40 @@ onBeforeUnmount(() => {
     </section>
 
     <section class="flex w-full flex-col xl:max-w-[780px]">
-      <BaseCard class="w-full p-5 mb-5">
-        <div class="flex justify-between mb-5">
-          <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">Ingressos</h1>
-          <h1 class="mb-[5px] text-[18px] font-[700] text-main-color">
-            {{ formatMoney(amount) }}
-          </h1>
+      <div class="flex justify-between items-center mb-5">
+        <div class="flex items-center px-3 bg-[#F7F7F7] rounded-lg">
+          <img
+            class="mr-2"
+            src="@/assets/icons/credit_card.svg"
+            alt="credit_card_icon"
+          />
+          <h4 class="mb-[5px] mt-1 text-[14px] font-[600] text-input-color">
+            Parcele sua compra em até 12x
+          </h4>
         </div>
+        <div class="px-3 pt-1 bg-main-transparent rounded-lg">
+          <h4 class="mb-[5px] text-[18px] font-[700] text-main-color">
+            {{ formatMoney(amount) }}
+          </h4>
+        </div>
+      </div>
+      <PreCheckoutCard class="w-full mb-5">
         <BatchList />
         <hr>
         <div class="flex flex-col justify-between items-center md:flex-row">
           <BatchTotal />
           <div class="w-full md:w-fit">
-            <BaseButton
+            <PreCheckoutButton
               :color="theme"
               :disabled="!product_list?.length"
               @click="byTickets"
             >
               Comprar ingressos
-            </BaseButton>
+            </PreCheckoutButton>
           </div>
         </div>
         <BatchInfoFees />
-      </BaseCard>
+      </PreCheckoutCard>
     </section>
 
     <EventExpiredSessionModal />
