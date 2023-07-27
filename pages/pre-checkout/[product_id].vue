@@ -104,23 +104,23 @@ onBeforeUnmount(() => {
           </h4>
         </div>
       </div>
-      <PreCheckoutCard class="w-full mb-5">
+      <div class="w-full mb-5">
         <BatchList />
         <hr>
         <div class="flex flex-col justify-between items-center md:flex-row">
           <BatchTotal />
           <div class="w-full md:w-fit">
-            <PreCheckoutButton
+            <BaseButton
               :color="theme"
               :disabled="!product_list?.length"
               @click="byTickets"
             >
               Comprar ingressos
-            </PreCheckoutButton>
+            </BaseButton>
           </div>
         </div>
         <BatchInfoFees />
-      </PreCheckoutCard>
+      </div>
     </section>
 
     <EventExpiredSessionModal />

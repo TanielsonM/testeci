@@ -67,8 +67,8 @@ const dependentBatchName = function (batch) {
 
 <template>
   <div class="mb-3">
-    <div v-for="group in getGroups" :key="group.id"> 
-      <div class="text-txt-color flex justify-between items-center mb-7 mt-5">
+    <PreCheckoutCard v-for="group in getGroups" :key="group.id" class="mb-5" :class="{'bg-gray-100': group?.dependent_batch}"> 
+      <div class="text-txt-color flex justify-between items-center mt-5" :class="{'mb-5': group?.dependent_batch}">
         <div class="ml-5">
           <p class="text-[18px] font-bold text-input-color mb-2">{{ group?.name }}</p>
           <p class="text-[16px] font-[400] text-txt-color">
@@ -83,14 +83,19 @@ const dependentBatchName = function (batch) {
             </template>
           </p>
         </div>
-        <div class="mr-5">
+        <div v-if="!group?.dependent_batch" class="mr-5">
+          <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
+            {{ group?.tickets }}
+          </span>
+        </div>
+        <div v-else class="mr-5">
           <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
             {{ group?.tickets }}
           </span>
         </div>
       </div>
-      <ul class="text-txt-color">
-        <li v-for="(batch, i) in getBatchsList" :key="batch?.hash" class="mb-6 pt-5 flex justify-between items-center" :class="{'border-t': i !== 0}">
+      <ul v-if="!group?.dependent_batch" class="text-txt-color">
+        <li v-for="(batch, i) in getBatchsList" :key="batch?.hash" class="mb-6 pt-5 flex justify-between items-center border-[#E5E5E5]" :class="{'border-t': i !== 0}">
           <div class="ml-5" :class="{'line-through': !haveAvailableTickets(batch)}">
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ batch?.name }}</h5>
             <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(batch?.amount) }} + taxas</p>
@@ -135,6 +140,6 @@ const dependentBatchName = function (batch) {
           </div>
         </li>
       </ul>
-    </div>
+    </PreCheckoutCard>
   </div>
 </template>
