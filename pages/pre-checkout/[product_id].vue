@@ -80,11 +80,10 @@ onBeforeUnmount(() => {
         <EventInfo />
         <EventCalendar />
       </div>
+      <EventShare />
       <EventDescription />
-      <div class="flex justify-between px-0 md:px-4 lg:px-8 font-bold text-input-color">
-        <EventNeedHelp />
-        <EventShare />
-      </div>
+      <EventLocation />
+      <EventOrganizers />
     </section>
 
     <section class="flex w-full flex-col xl:max-w-[780px]">
