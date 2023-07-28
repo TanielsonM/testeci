@@ -4,6 +4,7 @@ import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
 import { useInstallmentsStore } from "./modules/installments";
+import { storeToRefs } from "pinia";
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
@@ -362,11 +363,17 @@ export const useCheckoutStore = defineStore("checkout", {
     setAllowedMethods(allowed_methods = []) {
       this.allowed_methods = [];
       this.allowed_methods = allowed_methods;
-      this.setMethod(
-        allowed_methods.includes("CREDIT_CARD")
-          ? "CREDIT_CARD"
-          : allowed_methods[0]
-      );
+      const productStore = useProductStore();
+      const { product } = storeToRefs(productStore);
+      if(product.method === 'FREE') {
+        this.setMethod("FREE");
+      } else {
+        if(allowed_methods.includes("CREDIT_CARD")) {
+          this.setMethod("CREDIT_CARD");
+        } else {
+          this.setMethod(allowed_methods[0]);
+        }
+      }
     },
     setAmount(amount = 0) {
       this.amount = amount;
