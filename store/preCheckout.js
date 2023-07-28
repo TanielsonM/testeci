@@ -6,44 +6,44 @@ import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/u
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
     batchs_list: [
-    //   {
-    //     id: 1,
-    //     name: 'Inteira',
-    //     selected_tickets: 0
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'Meia',
-    //     selected_tickets: 0
-    //   }
+      {
+        id: 1,
+        name: 'Inteira',
+        selected_tickets: 0
+      },
+      {
+        id: 2,
+        name: 'Meia',
+        selected_tickets: 0
+      }
     ],
     reservations: [],
     loadingReservation: false,
     groups: [
-      // {
-      //   id: 1,
-      //   name: 'Lote Um',
-      //   tickets: 100,
-      //   dependent_batch: false,
-      //   has_sale_deadline: true,
-      //   sale_deadline: '28/07/2023'
-      // },
-      // {
-      //   id: 2,
-      //   name: 'Lote Dois',
-      //   tickets: 50,
-      //   dependent_batch: false,
-      //   has_sale_deadline: true,
-      //   sale_deadline: '28/07/2023'
-      // },
-      // {
-      //   id: 3,
-      //   name: 'Lote Tres',
-      //   tickets: 50,
-      //   dependent_batch: true,
-      //   has_sale_deadline: true,
-      //   sale_deadline: '28/07/2023'
-      // }
+      {
+        id: 1,
+        name: 'Lote Um',
+        tickets: 100,
+        dependent_batch: false,
+        has_sale_deadline: true,
+        sale_deadline: '28/07/2023'
+      },
+      {
+        id: 2,
+        name: 'Lote Dois',
+        tickets: 50,
+        dependent_batch: false,
+        has_sale_deadline: true,
+        sale_deadline: '28/07/2023'
+      },
+      {
+        id: 3,
+        name: 'Lote Tres',
+        tickets: 50,
+        dependent_batch: true,
+        has_sale_deadline: true,
+        sale_deadline: '28/07/2023'
+      }
     ]
   }),
   getters: {

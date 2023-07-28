@@ -106,12 +106,11 @@ onBeforeUnmount(() => {
       </div>
       <div class="w-full mb-5">
         <BatchList />
-        <hr>
-        <div class="flex flex-col justify-between items-center md:flex-row">
+        <div class="flex flex-col justify-between items-center mb-12 md:flex-row">
           <BatchTotal />
           <div class="w-full md:w-fit">
             <BaseButton
-              :color="theme"
+              color="primary"
               :disabled="!product_list?.length"
               @click="byTickets"
             >
@@ -119,7 +118,8 @@ onBeforeUnmount(() => {
             </BaseButton>
           </div>
         </div>
-        <BatchInfoFees />
+        <BatchPaymentMethods />
+        <!-- <BatchInfoFees /> -->
       </div>
     </section>
 

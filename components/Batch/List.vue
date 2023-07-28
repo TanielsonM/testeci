@@ -71,6 +71,9 @@ const dependentGroupName = function (batch) {
         <div class="ml-5">
           <p class="text-[18px] font-bold text-input-color mb-2">{{ group?.name }}</p>
           <p class="text-[16px] font-[400] text-txt-color">
+            A partir de R$ 157,20
+          </p>
+          <p class="text-[14px] font-[400] text-main-color">
             <template v-if="dependsOnAnotherBatch(group)">
               Vendas disponíveis após esgotamento do lote: <br> {{ dependentGroupName(group) }}
             </template>

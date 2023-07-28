@@ -283,7 +283,7 @@ export const useCheckoutStore = defineStore("checkout", {
                 return 0;
               });
 
-              preCheckout.setBatchsList(response.batch);
+              // preCheckout.setBatchsList(response.batch);
             }
           })
           .catch((err) => {

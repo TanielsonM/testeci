@@ -14,8 +14,8 @@ const { installments } = storeToRefs(checkout);
 
 <template>
   <div>
-    <small class="text-gray-400">Total</small>
-    <p class="text-3xl text-input-color font-bold">{{ formatMoney(amount) }}</p>
-    <small class="text-main-color">ou {{ installments }}x de {{ formatMoney(getInstallments()) }}</small>
+    <p class="text-[14px] font-[400] text-[#81858E]">Total</p>
+    <p class="text-[24px] font-[700] text-input-color">{{ formatMoney(amount) }}</p>
+    <p class="text-[14px] font-[400] text-main-color">ou {{ installments }}x de {{ formatMoney(getInstallments()) }}</p>
   </div>
 </template>
