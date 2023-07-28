@@ -70,7 +70,7 @@ const showInCashText = computed(() => {
 <template>
   <ClientOnly>
     <template v-if="product?.method === 'FREE'">
-      {{ $t('order.gratis') }}
+      {{ $t("order.gratis") }}
     </template>
     <template v-else>
       <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
