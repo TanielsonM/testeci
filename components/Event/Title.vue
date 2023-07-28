@@ -4,5 +4,5 @@ const { product } = useProductStore();
 </script>
 
 <template>
-  <h5 class="text-base font-semibold text-input-color">{{ product.name }}</h5>
+  <h5 class="text-[24px] font-[700] text-input-color">{{ product.name }}</h5>
 </template>

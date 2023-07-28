@@ -7,16 +7,16 @@ const { product } = useProductStore();
 
 <template>
   <ul class="mb-6 text-txt-color">
-    <li class="flex items-center mb-2">
-      <div class="min-w-[10px] h-[10px] rounded-full bg-main-color mr-3"></div>
+    <li class="flex items-center mb-5">
+      <img class="mr-3" width="18" src="@/assets/icons/calendar.svg" alt="calendar">
       <span>Data do evento: {{ moment(product?.event_date).format('DD/MM/YYYY') }}</span>
     </li>
-    <li class="flex items-center mb-2">
-      <div class="min-w-[10px] h-[10px] rounded-full bg-main-color mr-3"></div>
+    <li class="flex items-center mb-5">
+      <img class="mr-3" width="18" src="@/assets/icons/clock.svg" alt="clock">
       <span>Início: {{ moment(product?.event_date).format('HH:mm') }} (horário de Brasília)</span>
     </li>
-    <li class="flex items-center mb-2">
-      <div class="min-w-[10px] h-[10px] rounded-full bg-main-color mr-3"></div>
+    <li class="flex items-center mb-5">
+      <img class="mr-3" width="18" src="@/assets/icons/location.svg" alt="location">
       <span>
         Local:
             {{ product?.address?.street }},

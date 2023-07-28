@@ -5,6 +5,6 @@ const { product } = useProductStore();
 
 <template>
   <div class="w-full flex justify-center">
-    <img class="rounded max-h-[200px]" :src="product.images[0].path" alt="event_img">
+    <img class="rounded-[20px] max-h-[354px]" :src="product.images[0].path" alt="event_img">
   </div>
 </template>
