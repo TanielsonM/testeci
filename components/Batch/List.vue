@@ -53,7 +53,7 @@ const getTicketInstallments = function (batch_hash) {
   return (total + frete) / n;
 }
 
-const dependentBatchName = function (batch) {
+const dependentGroupName = function (batch) {
   if(!batch?.product_has_offer_id) return '';
   else {
     if(getBatchsList?.value && Array.isArray(getBatchsList.value)) {
@@ -62,7 +62,6 @@ const dependentBatchName = function (batch) {
     } else return '';
   }
 }
-
 </script>
 
 <template>
@@ -73,7 +72,7 @@ const dependentBatchName = function (batch) {
           <p class="text-[18px] font-bold text-input-color mb-2">{{ group?.name }}</p>
           <p class="text-[16px] font-[400] text-txt-color">
             <template v-if="dependsOnAnotherBatch(group)">
-              Vendas disponíveis após esgotamento do lote: <br> {{ dependentgroupName(group) }}
+              Vendas disponíveis após esgotamento do lote: <br> {{ dependentGroupName(group) }}
             </template>
             <template v-else-if="saleHasStarted(group)">
               Vendas {{ group?.has_sale_deadline ? `até ${moment(group?.sale_deadline).format('DD/MM/YYYY')}` : 'sem prazo limite' }}
@@ -89,8 +88,8 @@ const dependentBatchName = function (batch) {
           </span>
         </div>
         <div v-else class="mr-5">
-          <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
-            {{ group?.tickets }}
+          <span class="text-[12px] font-[600] text-main-color px-3 py-2 bg-main-transparent rounded-[5px]">
+            Disponível em breve
           </span>
         </div>
       </div>
