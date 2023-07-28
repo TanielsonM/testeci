@@ -88,13 +88,19 @@ onBeforeUnmount(() => {
 
     <section class="flex w-full flex-col xl:max-w-[780px]">
       <div class="flex justify-between items-center mb-5">
-        <div class="flex items-center px-3 bg-[#F7F7F7] rounded-lg">
+        <div
+          class="flex items-center px-3 bg-[#F7F7F7] rounded-lg"
+          :class="{
+            'bg-[#F7F7F7]': theme === 'light',
+            'bg-txt-color': theme === 'dark'
+          }"
+        >
           <img
             class="mr-2"
             src="@/assets/icons/credit_card.svg"
             alt="credit_card_icon"
           />
-          <h4 class="mb-[5px] mt-1 text-[14px] font-[600] text-input-color">
+          <h4 class="mb-[5px] mt-1 text-[14px] font-[600] text-black">
             Parcele sua compra em até 12x
           </h4>
         </div>

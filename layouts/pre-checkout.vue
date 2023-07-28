@@ -33,6 +33,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
   <main
     v-else
     class="flex min-h-screen w-full flex-col items-center gap-10"
+    :class="{'bg-background': custom_checkout.theme === 'dark'}"
     :data-theme="product.isValid() ? custom_checkout.theme : 'light'"
     :data-theme_color="
       product.isValid()

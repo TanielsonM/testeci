@@ -1,7 +1,6 @@
 <script setup>
 import moment from "@/plugins/moment";
 import { useProductStore } from "~~/store/product";
-console.log(moment().format('MMMM'))
 
 const { product } = useProductStore();
 </script>

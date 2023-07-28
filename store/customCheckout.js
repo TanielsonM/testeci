@@ -1,4 +1,3 @@
-import { useCheckoutStore } from "~/store/checkout.js";
 import Notifications from "~/components/Notifications";
 import * as Toast from "vue-toastification";
 

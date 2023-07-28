@@ -66,7 +66,7 @@ const dependentGroupName = function (batch) {
 
 <template>
   <div class="mb-3">
-    <PreCheckoutCard v-for="group in getGroups" :key="group.id" class="mb-5" :class="{'bg-gray-100': group?.dependent_batch}"> 
+    <PreCheckoutCard v-for="group in getGroups" :key="group.id" class="mb-5" :class="{'bg-checkout': group?.dependent_batch}"> 
       <div class="text-txt-color flex justify-between items-center mt-5" :class="{'mb-5': group?.dependent_batch}">
         <div class="ml-5">
           <p class="text-[18px] font-bold text-input-color mb-2">{{ group?.name }}</p>
