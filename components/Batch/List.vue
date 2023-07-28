@@ -67,7 +67,13 @@ const dependentGroupName = function (batch) {
 <template>
   <div class="mb-3">
     <PreCheckoutCard v-for="group in getGroups" :key="group.id" class="mb-5" :class="{'bg-checkout': group?.dependent_batch}"> 
-      <div class="text-txt-color flex justify-between items-center mt-5" :class="{'mb-5': group?.dependent_batch}">
+      <div
+        class="text-txt-color justify-between items-center mt-5"
+        :class="{
+          'mb-5 block sm:flex': group?.dependent_batch,
+          'flex': !group?.dependent_batch
+        }"
+      >
         <div class="ml-5">
           <p class="text-[18px] font-bold text-input-color mb-2">{{ group?.name }}</p>
           <p class="text-[16px] font-[400] text-txt-color">
@@ -85,12 +91,12 @@ const dependentGroupName = function (batch) {
             </template>
           </p>
         </div>
-        <div v-if="!group?.dependent_batch" class="mr-5">
+        <div v-if="!group?.dependent_batch" class="mr-5 ml-5 mt-5 sm:ml-0">
           <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
             {{ group?.tickets }}
           </span>
         </div>
-        <div v-else class="mr-5">
+        <div v-else class="mr-5 ml-5 mt-5 sm:ml-0">
           <span class="text-[12px] font-[600] text-main-color px-3 py-2 bg-main-transparent rounded-[5px]">
             Disponível em breve
           </span>
