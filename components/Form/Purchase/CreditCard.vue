@@ -148,6 +148,14 @@ function changeAmount(from) {
   let firstAmount = clearValue(first.value.amount) || 1;
   let secondAmount = clearValue(second.value.amount) || 1;
 
+  if (firstAmount <= 0 ) {
+    firstAmount = 1
+  }
+
+  if (secondAmount <= 0 ) {
+    secondAmount = 1
+  }
+
   if (from === "first") {
     if (firstAmount >= amount) {
       firstAmount = amount - 1;
