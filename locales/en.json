@@ -426,7 +426,8 @@
       "codigo_transacao": "Transaction Code",
       "id_assinatura": "Subscription ID",
       "frete": "Shipping",
-      "frete_selecionado": "Chosen shipping"
+      "frete_selecionado": "Chosen shipping",
+      "gratis": "Free"
     }
   },
   "locales": {

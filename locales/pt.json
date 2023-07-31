@@ -428,7 +428,8 @@
       "codigo_transacao": "Código da Transação",
       "id_assinatura": "ID da Assinatura",
       "frete": "Frete",
-      "frete_selecionado": "Frete escolhido"
+      "frete_selecionado": "Frete escolhido",
+      "gratis": "Grátis"
     }
   },
   "locales": {

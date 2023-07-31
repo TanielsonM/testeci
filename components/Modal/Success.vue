@@ -2,6 +2,7 @@
 import { useI18n } from "vue-i18n";
 import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
+import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
@@ -197,6 +198,30 @@ function openPix(id: number) {
         :id="data.sale.sales[0].id.toString()"
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
+        :sales="data.sale.sales"
+      />
+
+      <div class="actions mt-12 flex content-end justify-end">
+        <div class="action">
+          <BaseButton
+            color="blue"
+            size="md"
+            animation="pulse"
+            class="col-span-12 lg:col-span-4"
+            @click="modal.closeAtion"
+          >
+            {{ $t("pg_obrigado.modal.entendido") }}
+          </BaseButton>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container"
+      v-if="data.sale.sales[0].method === 'FREE'"
+    >
+      <ModalFreeInfos
+        :id="data.sale.sales[0].id.toString()"
+        :name="data.sale.sales[0].product.name"
         :sales="data.sale.sales"
       />
 
