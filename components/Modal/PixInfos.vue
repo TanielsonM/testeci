@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
             :size="!onlyButtons ? 'vsm' : 'md'"
             animation="pulse"
             class="col-span-2 md:col-span-1"
-            @click="!onlyButtons ? copy(code) : modal.closeAtion()"
+            @click="!onlyButtons ? copy(code) : modal.closeAction()"
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_text")

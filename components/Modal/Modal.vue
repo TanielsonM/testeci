@@ -13,7 +13,7 @@ const modal = useModalStore();
           <h2 class="title">
             {{ modal.title }}
           </h2>
-          <button @click="modal.closeAtion" class="close"></button>
+          <button @click="modal.closeAction" class="close"></button>
         </header>
         <slot />
       </div>
