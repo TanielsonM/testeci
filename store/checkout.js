@@ -137,7 +137,10 @@ export const useCheckoutStore = defineStore("checkout", {
       return () => {
         const product = useProductStore();
         return (
-          !!this.antifraud || !!product.showAddress || this.hasPhysicalProduct() || this.hasCheckoutAddressBump
+          !!this.antifraud ||
+          !!product.showAddress ||
+          (this.hasPhysicalProduct() && product?.method !== 'FREE') ||
+          this.hasCheckoutAddressBump
         );
       };
     },
@@ -226,7 +229,8 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (
               response.data.format === "PHYSICALPRODUCT" &&
-              !!response.data.has_shipping_fee
+              !!response.data.has_shipping_fee &&
+              response.data.method !== 'FREE'
             ) {
               const shipping = { amount: undefined };
               if (response.data.type_shipping_fee === "FIXED") {
@@ -517,7 +521,8 @@ export const useCheckoutStore = defineStore("checkout", {
 
         if (
           product.format === "PHYSICALPRODUCT" &&
-          !!product.has_shipping_fee
+          !!product.has_shipping_fee &&
+          product?.method !== 'FREE'
         ) {
           amountStore.setAmount(product?.shipping?.amount || 0);
           amountStore.setOriginalAmount(product?.shipping?.amount || 0);
@@ -536,7 +541,7 @@ export const useCheckoutStore = defineStore("checkout", {
           : product.amount * -1
       );
 
-      if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee) {
+      if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee && product?.method !== 'FREE') {
         amountStore.setAmount(product?.shipping?.amount * -1 || 0);
         amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
       }

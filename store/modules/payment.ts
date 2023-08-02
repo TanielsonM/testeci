@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement, Sale } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -35,7 +35,6 @@ const {
   selectedCountry,
   hasPhysicalProduct,
   product_list,
-  products_client_statistics,
   hasAffiliateId,
   installments,
   coupon,
@@ -48,9 +47,7 @@ const {
   productName,
   is_gift,
   gift_message,
-  isFixedShipping,
-  hasShippingFee,
-  FixedShippingAmount,
+  product,
   hasTicketInstallments,
   hasAffiliationLead,
 } = storeToRefs(productStore);

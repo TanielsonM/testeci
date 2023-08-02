@@ -133,7 +133,8 @@ const exceptionSellerId = computed(() => {
       v-if="
         product.type == 'TRANSACTION' &&
         product.format == 'PHYSICALPRODUCT' &&
-        productStore.canBeGifted
+        productStore.canBeGifted &&
+        product?.method !== 'FREE'
       "
     >
       <BaseBadge>
