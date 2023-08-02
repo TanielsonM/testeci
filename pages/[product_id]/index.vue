@@ -418,7 +418,7 @@ await checkout.init();
             </section>
             <!-- Bumps -->
             <template
-              v-if="checkout.getBumpList.length && !hasTicketInstallments"
+              v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE'"
             >
               <p class="my-5 w-full text-txt-color">
                 {{
