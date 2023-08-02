@@ -40,8 +40,7 @@ export const validateFirstStep = async (): Promise<boolean> => {
   const validName = await validateName.isValid(name.value);
   const validEmail = await validateEmail.isValid(email.value);
   const validPhone = await validatePhone.isValid(cellphone.value);
-
-  if (!isMobile) {
+  if (!isMobile.value) {
     const validDocument = await validateDocument.isValid(document.value);
     return validName && validEmail && validPhone && validDocument;
   }
@@ -137,7 +136,7 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
     const validCvcSecond = await validateCvc.isValid(second.value.cvv);
 
-    if (!isMobile) {
+    if (!isMobile.value) {
       const validDocument = validateDocument.isValidSync(document.value);
       return (
         validNameOnCard &&
@@ -168,7 +167,7 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
   }
 
-  if (!isMobile) {
+  if (!isMobile.value) {
     const validDocument = validateDocument.isValidSync(document.value);
     return (
       validNameOnCard &&
