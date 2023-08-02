@@ -5,6 +5,7 @@ import { useCheckoutStore } from "@/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useProductStore } from "~~/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
+import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout";
 
 // Utils
 import { formatMoney } from "~~/utils/money";
@@ -44,6 +45,11 @@ const amountText = computed(() => {
 
   return `${formatMoney(getInstallments.value(1))}`;
 });
+
+function openGoBackPreCheckoutModal() {
+  const goBackToPrecheckout = useGoBackToPrecheckoutStore();
+  goBackToPrecheckout.setShowModal(true);
+}
 </script>
 
 <template>
@@ -132,16 +138,19 @@ const amountText = computed(() => {
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="isPresentialEvent"
     >
-      <p class="infos-title">Ingressos</p>
+      <div class="flex justify-between">
+        <p class="infos-title">Ingressos</p>
+        <div class="btn-edit-tickets" @click="openGoBackPreCheckoutModal">
+          <span class="text-[12px] font-[600]">Editar</span>
+        </div>
+      </div>
       <span
         class="infos-content mt-2 flex w-full items-center justify-between"
         v-for="batch in ticketList"
         :key="batch?.id"
       >
         <p>
-          {{ batch?.name }}
-          <br>
-          {{ batch?.tickets }} ingresso{{ batch?.tickets > 1 ? 's' : '' }}
+          {{ batch?.tickets }}x {{ batch?.group?.name }} - {{ batch?.name }}
         </p>
         <p>
           +{{ formatMoney(batch?.total_amount) }}
@@ -164,3 +173,19 @@ const amountText = computed(() => {
     </section>
   </section>
 </template>
+
+<style scoped>
+.btn-edit-tickets {
+  width: 57px;
+  height: 25px;
+  border-radius: 5px;
+  background: rgba(52, 131, 250, 0.10);
+  color: #3483FA;
+  cursor: pointer;
+}
+
+.btn-edit-tickets:hover {
+  background: #3483FA;
+  color: rgba(52, 131, 250, 0.10);
+}
+</style>

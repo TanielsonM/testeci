@@ -52,10 +52,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="flex items-center justify-between rounded-b p-4 bg-gray-200">
+  <section class="rounded-b p-4 section-color">
     <Chronometer :tempoEmSegundos="tempoEmSegundos"/>
-    <span class="text-sm">
+    <span class="text-[14px] font-[400] leading-[21px] text-[#3483FA]">
       Após este tempo, os ingressos serão liberados para venda novamente.
     </span>
   </section>
 </template>
+
+<style scoped>
+.section-color {
+  background: rgba(52, 131, 250, 0.10);
+}
+</style>

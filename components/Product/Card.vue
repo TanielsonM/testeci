@@ -2,7 +2,6 @@
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
-import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout";
 
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
@@ -27,10 +26,7 @@ const trialMessage = computed({
   },
 });
 
-function openGoBackPreCheckoutModal() {
-  const goBackToPrecheckout = useGoBackToPrecheckoutStore();
-  goBackToPrecheckout.setShowModal(true);
-}
+
 
 const exceptionSellerId = computed(() => {
   if(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION) {
@@ -229,17 +225,7 @@ const exceptionSellerId = computed(() => {
       <!-- Coupon -->
       <ProductCoupon v-if="productStore.allowedCoupon" />
     </section>
-    <template v-if="product.format === 'PRESENTIAL_EVENT'">
-      <div class="mx-5">
-        <p
-          class="small-text text-xs cursor-pointer hover:scale-105 hover:mx-1"
-          @click="openGoBackPreCheckoutModal"
-        >
-          Alterar ingressos
-        </p>
-      </div>
-      <EventTimer />
-    </template>
+    <EventTimer v-if="product.format === 'PRESENTIAL_EVENT'"/>
   </BaseCard>
 </template>
 
