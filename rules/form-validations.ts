@@ -40,7 +40,11 @@ export const validateFirstStep = async (): Promise<boolean> => {
   const validName = await validateName.isValid(name.value);
   const validEmail = await validateEmail.isValid(email.value);
   const validPhone = await validatePhone.isValid(cellphone.value);
-  if (!isMobile.value) {
+  const currentCountry: any = useState("currentCountry");
+  const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+    currentCountry.value
+  );
+  if (!isMobile.value && showDocumentInput) {
     const validDocument = await validateDocument.isValid(document.value);
     return validName && validEmail && validPhone && validDocument;
   }
@@ -120,7 +124,10 @@ export const validateThristStep = async (): Promise<boolean> => {
   const validExpiryMonth = await validateExpiryMonth.isValid(first.value.month);
   const validExpiryYear = await validateExpiryYear.isValid(first.value.year);
   const validCvc = await validateCvc.isValid(first.value.cvv);
-
+  const currentCountry: any = useState("currentCountry");
+  const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+    currentCountry.value
+  );
   if (checkout.method === "TWO_CREDIT_CARDS") {
     const validNameOnCardSecond = await validateNameOnCard.isValid(
       second.value.holder_name
@@ -135,8 +142,7 @@ export const validateThristStep = async (): Promise<boolean> => {
       second.value.year
     );
     const validCvcSecond = await validateCvc.isValid(second.value.cvv);
-
-    if (!isMobile.value) {
+    if (!isMobile.value && showDocumentInput) {
       const validDocument = validateDocument.isValidSync(document.value);
       return (
         validNameOnCard &&
@@ -167,7 +173,7 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
   }
 
-  if (!isMobile.value) {
+  if (!isMobile.value && showDocumentInput) {
     const validDocument = validateDocument.isValidSync(document.value);
     return (
       validNameOnCard &&
