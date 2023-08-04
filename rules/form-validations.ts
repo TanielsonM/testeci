@@ -173,7 +173,7 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
   }
 
-  if (!isMobile.value && showDocumentInput) {
+  if (isMobile.value && showDocumentInput) {
     const validDocument = validateDocument.isValidSync(document.value);
     return (
       validNameOnCard &&
