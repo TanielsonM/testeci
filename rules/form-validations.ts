@@ -142,7 +142,7 @@ export const validateThristStep = async (): Promise<boolean> => {
       second.value.year
     );
     const validCvcSecond = await validateCvc.isValid(second.value.cvv);
-    if (!isMobile.value && showDocumentInput) {
+    if (isMobile.value && showDocumentInput) {
       const validDocument = validateDocument.isValidSync(document.value);
       return (
         validNameOnCard &&
@@ -175,6 +175,11 @@ export const validateThristStep = async (): Promise<boolean> => {
 
   if (isMobile.value && showDocumentInput) {
     const validDocument = validateDocument.isValidSync(document.value);
+
+    if (["PIX", "BOLETO"].includes(checkout.method)) {
+      return validDocument;
+    }
+
     return (
       validNameOnCard &&
       validCardNumber &&
@@ -196,6 +201,8 @@ export const validateThristStep = async (): Promise<boolean> => {
 
 export const validateAll = async (): Promise<boolean> => {
   const checkout = useCheckoutStore();
+  const stepStore = useStepStore();
+  const { isMobile } = storeToRefs(stepStore);
   const validStepOne = await validateFirstStep();
   const validStepTwo = await validateSecondStep();
   const validStepThree = await validateThristStep();
@@ -203,7 +210,8 @@ export const validateAll = async (): Promise<boolean> => {
   if (checkout.showAddressStep()) {
     if (
       checkout.method === "CREDIT_CARD" ||
-      checkout.method === "TWO_CREDIT_CARDS"
+      checkout.method === "TWO_CREDIT_CARDS" || 
+      isMobile.value
     ) {
       return validStepOne && validStepTwo && validStepThree;
     }
