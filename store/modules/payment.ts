@@ -151,8 +151,8 @@ export const usePaymentStore = defineStore("Payment", {
         data = {
           ...data,
           shipping_address_zip_code: sameAddress.value
-            ? charge.value.zipcode
-            : shipping.value.zipcode,
+            ? charge.value.zipcode.replace("-", "")
+            : shipping.value.zipcode.replace("-", ""),
           shipping_address_street: sameAddress.value
             ? charge.value.street
             : shipping.value.street,
