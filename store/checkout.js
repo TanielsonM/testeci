@@ -162,6 +162,11 @@ export const useCheckoutStore = defineStore("checkout", {
       )
     },
     getBumpList: (state) => state.bump_list,
+    getBumpsWithShippingFee(state) {
+      return state.bump_list.filter(
+        (bump) => !!bump.has_shipping_fee && bump.checkbox && bump.type_shipping_fee === "DYNAMIC"
+      )
+    },
     shippingProducts(state) {
       return () => {
         return this.product_list.filter(
@@ -675,8 +680,8 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     async calculateBumpsShipping(zip) {
-      if (this.bump_list.length) {
-        const promises = this.bump_list.map((bump) =>
+      if (this.getBumpsWithShippingFee.length) {
+        const promises = this.getBumpsWithShippingFee.map((bump) =>
           useApi()
             .create(`envios/calculate/${bump.id}`, {
               shipping_address_zip_code: zip,
@@ -690,7 +695,7 @@ export const useCheckoutStore = defineStore("checkout", {
             })
         );
         const results = await Promise.all(promises);
-        this.bump_list.forEach((bump, index) => {
+        this.getBumpsWithShippingFee.forEach((bump, index) => {
           if (results[index]) {
             bump.shipping_options = results[index].sort(
               (a, b) => parseFloat(a.price) - parseFloat(b.price)

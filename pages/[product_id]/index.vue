@@ -160,7 +160,7 @@ const tabs = computed(() => {
 });
 
 const handleResize = () => {
-  stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
 onMounted(() => {

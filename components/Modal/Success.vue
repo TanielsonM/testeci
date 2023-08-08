@@ -36,6 +36,37 @@ if (
   const sale: Sale = sales.value as Sale;
   data.value.sale = sale;
 
+  const thankYouData = sale.sales[0].product.custom_thank_you_pages || [];
+
+  const customUrl = ref({
+    PIX: "",
+    BOLETO: "",
+    PAYPAL: "",
+    CREDIT_CARD: "",
+    TWO_CREDIT_CARDS: "",
+  });
+
+
+  thankYouData.forEach(element => {
+    switch (element.type) {
+      case "PIX":
+        customUrl.value.PIX = element.url;
+        break;
+      case "BOLETO":
+        customUrl.value.BOLETO = element.url;
+        break;
+      case "PAYPAL":
+        customUrl.value.PAYPAL = element.url;
+        break;
+      case "CREDIT_CARD":
+        customUrl.value.CREDIT_CARD = element.url;
+        break;
+      case "TWO_CREDIT_CARD": 
+        customUrl.value.TWO_CREDIT_CARDS = element.url;
+        break;
+    }
+  });
+
   switch (sale.sales[0].method) {
     case "BOLETO":
       modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
@@ -52,8 +83,17 @@ if (
 
   const closeAction = () => {
     const current_query = new URLSearchParams(route.query);
-    window.location.href =
-      sale.sales[0].product.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
+
+    if (customUrl.value[sale.sales[0].method]) {
+      window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+    } 
+    else {
+      const redirectTo = sale.sales[0].product.thank_you_page 
+      ? sale.sales[0].product.thank_you_page + `?${current_query.toString()}` 
+      : `https://greenn.com.br/checkout-obrigado?${current_query.toString()}`;
+
+      window.location.href = redirectTo;
+    }
   };
 
   modal.setAction(closeAction);
@@ -135,7 +175,7 @@ function openPix(id: number) {
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
-            @click="modal.closeAtion"
+            @click="modal.closeAction"
           >
             {{ $t("pg_obrigado.modal.entendido") }}
           </BaseButton>
@@ -208,7 +248,7 @@ function openPix(id: number) {
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
-            @click="modal.closeAtion"
+            @click="modal.closeAction"
           >
             {{ $t("pg_obrigado.modal.entendido") }}
           </BaseButton>
@@ -265,7 +305,7 @@ function openPix(id: number) {
           size="md"
           animation="pulse"
           class="col-span-12 lg:col-span-4"
-          @click="modal.closeAtion"
+          @click="modal.closeAction"
         >
           {{ $t("pg_obrigado.modal.entendido") }}
         </BaseButton>
