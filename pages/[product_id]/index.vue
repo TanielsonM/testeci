@@ -332,7 +332,7 @@ await checkout.init();
             <LocaleSelect />
           </template>
           <template #content>
-            <FormPersonal />
+            <FormPersonal :class="product?.method !== 'FREE' ? 'mb-8' : ''" />
           </template>
         </Steps>
 
@@ -380,6 +380,7 @@ await checkout.init();
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep() ? '03' : '02'"
+          :free="product?.method !== 'FREE' ? false : true"
           v-if="
             (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)) ||
             !isMobile ||
@@ -440,7 +441,7 @@ await checkout.init();
               <BaseButton
                 @click="callPayment"
                 v-if="method !== 'PAYPAL'"
-                class="my-7"
+                :class="product?.method !== 'FREE' ? 'my-7' : 'mb-7'"
               >
                 <span class="text-[15px] font-semibold">
                   {{

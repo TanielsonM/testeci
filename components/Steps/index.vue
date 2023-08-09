@@ -16,12 +16,17 @@ defineProps({
     type: [String, Boolean],
     default: () => false,
   },
+  free: {
+    type: [Boolean],
+    default: () => false,
+  }
 });
+
 </script>
 
 <template>
   <section
-    class="flex w-full items-center justify-between border-b border-[#e4e4ec] pb-3"
+    :class="free ? '' : 'flex w-full items-center justify-between border-b border-[#e4e4ec] pb-3'"    
   >
     <span
       v-if="product?.method !== 'FREE'"
