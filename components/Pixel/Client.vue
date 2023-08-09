@@ -13,6 +13,7 @@ interface Props {
   cellphone?: string;
   sale_id?: number;
   chc_id?: number;
+  product_name?: string;
 }
 
 const pixelStore = usePixelStore();
@@ -37,6 +38,14 @@ onMounted(async () => {
         if (hasTagManager.length) {
           hasTagManager.forEach((item) => {
             handleGtag(item.pixel_id);
+
+            if (props.event === 'view') {
+              onCheckoutEvent();
+            }
+
+            if (props.event === 'conversion') {
+              onPurchaseEvent();
+            }
           });
         }
 
@@ -57,6 +66,38 @@ onMounted(async () => {
       }
     });
 
+    function onCheckoutEvent() {
+      dataLayer.push({
+        event: 'checkout',
+        checkout: {
+          products: [
+            {
+              amount: props.original_amount,
+              product_name: props.product_name,
+              product_id: props.product_id,
+            },
+          ],
+        },
+      });
+    }
+
+    function onPurchaseEvent() {
+      dataLayer.push({
+        event: "purchase",
+        purchase: {
+          sale_id: props.sale_id,
+          method: props.method,
+          products: [
+            {
+            amount: props.amount || props.original_amount,
+            product_id: props.product_id,
+            product_name: props.product_name,
+            }
+          ],
+        },
+      });
+    }
+  
     function handleGtag(pixel_id: string) {
       (function (w: any, d: any, s: any, l: any, i: any) {
         w[l] = w[l] || [];
