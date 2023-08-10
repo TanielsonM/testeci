@@ -19,7 +19,7 @@ export const validateDocument = yup
 export const validateZip = yup.string().min(5).required();
 export const validateStreet = yup.string().min(4).required();
 export const validateNumber = yup.string().required();
-export const validateCity = yup.string().min(5).required();
+export const validateCity = yup.string().min(3).required();
 export const validateNeighborhood = yup.string().min(3).required();
 export const validateState = yup.string().min(2).required();
 
