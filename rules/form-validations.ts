@@ -176,7 +176,7 @@ export const validateThristStep = async (): Promise<boolean> => {
   if (isMobile.value && showDocumentInput) {
     const validDocument = validateDocument.isValidSync(document.value);
 
-    if (["PIX", "BOLETO"].includes(checkout.method)) {
+    if (["PIX", "BOLETO", "FREE"].includes(checkout.method)) {     
       return validDocument;
     }
 
