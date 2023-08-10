@@ -77,6 +77,7 @@ export const useCheckoutStore = defineStore("checkout", {
     deliveryOptions: {},
     // Paypal details
     paypal_details: {},
+    allow_free_offers : 0,
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -204,6 +205,9 @@ export const useCheckoutStore = defineStore("checkout", {
     setUUID(uuid) {
       return (this.uuid = uuid);
     },
+    setAllowFreeOffers(allow_free_offers){
+      this.allow_free_offers = allow_free_offers
+    },
     async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
       const product = useProductStore();
       const { setProduct } = product;
@@ -225,6 +229,9 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then((response) => {
+            if(response.allow_free_offers){
+              this.setAllowFreeOffers(response.allow_free_offers)
+            }
             if (response?.checkout_payment?.data?.amount) {
               response.data.amount = response.checkout_payment.data.amount;
             }

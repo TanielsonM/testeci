@@ -300,7 +300,7 @@ await checkout.init();
 </script>
 
 <template>
-  <Head>
+  <Head>    
     <Title>{{ product.name }} | Checkout</Title>
     <Meta name="description" :content="product.description" />
   </Head>
@@ -340,6 +340,7 @@ await checkout.init();
         <Steps
           :title="$t('components.steps.address')"
           step="02"
+          :free="product?.method !== 'FREE' ? false : true"
           v-if="
             (checkout.showAddressStep() &&
               ((isMobile && currentStep == 2) || !isMobile)) ||
@@ -441,7 +442,7 @@ await checkout.init();
               <BaseButton
                 @click="callPayment"
                 v-if="method !== 'PAYPAL'"
-                :class="product?.method !== 'FREE' ? 'my-7' : 'mb-7'"
+                class="my-7"
               >
                 <span class="text-[15px] font-semibold">
                   {{

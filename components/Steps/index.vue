@@ -26,10 +26,10 @@ defineProps({
 
 <template>
   <section
+    v-if="! free"
     :class="free ? '' : 'flex w-full items-center justify-between border-b border-[#e4e4ec] pb-3'"    
   >
     <span
-      v-if="product?.method !== 'FREE'"
       class="flex flex-nowrap items-center gap-5 text-base font-semibold text-black"
     >
       <p class="text-2xl text-main-color" v-if="step">
