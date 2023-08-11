@@ -177,9 +177,9 @@ function changeAmount(from) {
 
 function formatAmount(from) {
   if (from === "first") {
-    first.value.amount = formatMoney(clearValue(first.value.amount));
+    first.value.amount = formatMoney(first.value.amount);
   } else {
-    second.value.amount = formatMoney(clearValue(second.value.amount));
+    second.value.amount = formatMoney(second.value.amount);
   }
 }
 
@@ -192,9 +192,7 @@ const showCreditCardsTabs = computed(() => {
 });
 
 function clearValue(value) {
-  const valorSemSimbolo = value.toString().replace("R$", "");
-  const numberValue = valorSemSimbolo.replace(",", ".");
-  return parseFloat(parseFloat(numberValue).toFixed(2));
+  return Number(parseFloat(value.toString().replace(/[^\d,-]/g, '').replace(',', '.')).toFixed(2));
 }
 
 watch(installments, () => {
