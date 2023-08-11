@@ -536,6 +536,7 @@ await checkout.init();
         :method="checkout.method"
         :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
       />
       <Captcha />
     </ClientOnly>

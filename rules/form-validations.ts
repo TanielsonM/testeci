@@ -19,7 +19,7 @@ export const validateDocument = yup
 export const validateZip = yup.string().min(5).required();
 export const validateStreet = yup.string().min(4).required();
 export const validateNumber = yup.string().required();
-export const validateCity = yup.string().min(5).required();
+export const validateCity = yup.string().min(3).required();
 export const validateNeighborhood = yup.string().min(3).required();
 export const validateState = yup.string().min(2).required();
 
@@ -40,8 +40,11 @@ export const validateFirstStep = async (): Promise<boolean> => {
   const validName = await validateName.isValid(name.value);
   const validEmail = await validateEmail.isValid(email.value);
   const validPhone = await validatePhone.isValid(cellphone.value);
-
-  if (!isMobile) {
+  const currentCountry: any = useState("currentCountry");
+  const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+    currentCountry.value
+  );
+  if (!isMobile.value && showDocumentInput) {
     const validDocument = await validateDocument.isValid(document.value);
     return validName && validEmail && validPhone && validDocument;
   }
@@ -121,7 +124,10 @@ export const validateThristStep = async (): Promise<boolean> => {
   const validExpiryMonth = await validateExpiryMonth.isValid(first.value.month);
   const validExpiryYear = await validateExpiryYear.isValid(first.value.year);
   const validCvc = await validateCvc.isValid(first.value.cvv);
-
+  const currentCountry: any = useState("currentCountry");
+  const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+    currentCountry.value
+  );
   if (checkout.method === "TWO_CREDIT_CARDS") {
     const validNameOnCardSecond = await validateNameOnCard.isValid(
       second.value.holder_name
@@ -136,8 +142,7 @@ export const validateThristStep = async (): Promise<boolean> => {
       second.value.year
     );
     const validCvcSecond = await validateCvc.isValid(second.value.cvv);
-
-    if (!isMobile) {
+    if (isMobile.value && showDocumentInput) {
       const validDocument = validateDocument.isValidSync(document.value);
       return (
         validNameOnCard &&
@@ -168,8 +173,13 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
   }
 
-  if (!isMobile) {
+  if (isMobile.value && showDocumentInput) {
     const validDocument = validateDocument.isValidSync(document.value);
+
+    if (["PIX", "BOLETO"].includes(checkout.method)) {
+      return validDocument;
+    }
+
     return (
       validNameOnCard &&
       validCardNumber &&
@@ -191,6 +201,8 @@ export const validateThristStep = async (): Promise<boolean> => {
 
 export const validateAll = async (): Promise<boolean> => {
   const checkout = useCheckoutStore();
+  const stepStore = useStepStore();
+  const { isMobile } = storeToRefs(stepStore);
   const validStepOne = await validateFirstStep();
   const validStepTwo = await validateSecondStep();
   const validStepThree = await validateThristStep();
@@ -198,7 +210,8 @@ export const validateAll = async (): Promise<boolean> => {
   if (checkout.showAddressStep()) {
     if (
       checkout.method === "CREDIT_CARD" ||
-      checkout.method === "TWO_CREDIT_CARDS"
+      checkout.method === "TWO_CREDIT_CARDS" || 
+      isMobile.value
     ) {
       return validStepOne && validStepTwo && validStepThree;
     }

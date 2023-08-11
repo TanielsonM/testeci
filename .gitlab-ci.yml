@@ -15,7 +15,6 @@ workflow:
     - when: never
 
 stages:
-  # - Env
   - Plan
   - Build
   - Deploy
@@ -40,10 +39,7 @@ Terraform Plan:
     name: tf-full
     paths:
       - ${TF_ROOT}/aws-checkout-ecr-address.txt
-      # - ${TF_ROOT}/aws-club-back-nginx-ecr-address.txt
       - ${TF_ROOT}/plan.cache
-  # needs:
-  #   - Create Secrets
 
 Build Images:
   image: docker:20.10.16-dind-alpine3.16
@@ -56,20 +52,29 @@ Build Images:
     DOCKER_BUILDKIT: "1"
   before_script:
     - cd ${CI_PROJECT_DIR}
-    - apk add python3 py3-pip
+    - apk add python3 py3-pip curl
     - pip3 install --upgrade pip
     - pip3 install --no-cache-dir awscli
+    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin latest
+    - export TRIVY_TS=$(date "+%Y-%m-%d-%H-%M-%S")
   script:
-    # php
+    # Nuxt
     - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):${DEPLOY_HASH}"
     - export LATEST_CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):latest"
     - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
     - docker pull $LATEST_CHECKOUT_IMAGE_TAG || true
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG .
+    - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
     - docker push $CHECKOUT_IMAGE_TAG
     - docker push $LATEST_CHECKOUT_IMAGE_TAG
   needs:
     - Terraform Plan
+  cache:
+    paths:
+      - .trivycache/
+  artifacts:
+    paths:
+      - "*_report.txt"  
 
 Terraform Deploy:
   image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
