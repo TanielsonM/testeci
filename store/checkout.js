@@ -136,7 +136,10 @@ export const useCheckoutStore = defineStore("checkout", {
       return () => {
         const product = useProductStore();
         return (
-          !!this.antifraud || !!product.showAddress || this.hasPhysicalProduct() || this.hasCheckoutAddressBump
+          !!this.antifraud ||
+          !!product.showAddress ||
+          this.hasPhysicalProduct() ||
+          this.hasCheckoutAddressBump
         );
       };
     },
@@ -154,13 +157,16 @@ export const useCheckoutStore = defineStore("checkout", {
     hasCheckoutAddressBump(state) {
       return state.bump_list.some(
         (bump) => !!bump.is_checkout_address && bump.checkbox
-      )
+      );
     },
     getBumpList: (state) => state.bump_list,
     getBumpsWithShippingFee(state) {
       return state.bump_list.filter(
-        (bump) => !!bump.has_shipping_fee && bump.checkbox && bump.type_shipping_fee === "DYNAMIC"
-      )
+        (bump) =>
+          !!bump.has_shipping_fee &&
+          bump.checkbox &&
+          bump.type_shipping_fee === "DYNAMIC"
+      );
     },
     shippingProducts(state) {
       return () => {
@@ -199,7 +205,13 @@ export const useCheckoutStore = defineStore("checkout", {
     setUUID(uuid) {
       return (this.uuid = uuid);
     },
-    async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
+    async getProduct(
+      id,
+      offer = null,
+      isBump = false,
+      configs = {},
+      bumpOrder = 0
+    ) {
       const product = useProductStore();
       const { setProduct } = product;
       /* Get country */
@@ -264,10 +276,14 @@ export const useCheckoutStore = defineStore("checkout", {
               this.checkoutPayment = response.checkout_payment;
               setProduct(response.data);
             } else {
-              this.bump_list.push({ ...response.data, checkbox: false, b_order: bumpOrder });
+              this.bump_list.push({
+                ...response.data,
+                checkbox: false,
+                b_order: bumpOrder,
+              });
               this.bump_list = this.bump_list.sort((bump1, bump2) => {
                 return bump1.b_order - bump2.b_order;
-              })
+              });
             }
           })
           .catch((err) => {
@@ -348,7 +364,13 @@ export const useCheckoutStore = defineStore("checkout", {
         this.products_client_statistics = [];
         bumpsWithOffers.forEach((bump) => {
           if (this.product_id !== bump.product_id)
-            this.getProduct(bump.product_id, bump.offer_hash, true, {}, Number(bump.bump_id));
+            this.getProduct(
+              bump.product_id,
+              bump.offer_hash,
+              true,
+              {},
+              Number(bump.bump_id)
+            );
         });
       }
     },
@@ -392,6 +414,9 @@ export const useCheckoutStore = defineStore("checkout", {
           loading: false,
           name: "",
         };
+        if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method)) {
+          purchaseStore.setCardsAmount();
+        }
         return;
       }
       if (!prodStore.allowedCoupon) return false;
@@ -408,6 +433,9 @@ export const useCheckoutStore = defineStore("checkout", {
             this.coupon.due_date = due_date;
             this.coupon.discount = amount;
             store.setAmount(this.coupon.amount * -1);
+            if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(this.method)) {
+              purchaseStore.setCardsAmount();
+            }
 
             this.coupon.error = false;
             this.coupon.applied = true;
@@ -464,7 +492,7 @@ export const useCheckoutStore = defineStore("checkout", {
       );
       /* credit card or two credit cards */
       if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method)) {
-        purchaseStore.setCardsAmount()
+        purchaseStore.setCardsAmount();
         return;
       }
     },
