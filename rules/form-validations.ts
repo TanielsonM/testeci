@@ -43,8 +43,6 @@ export const validateFirstStep = async (): Promise<boolean> => {
   const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
     currentCountry.value
   );
-  console.log({validPhone});
-  
   if (showDocumentInput) {
     const validDocument = await validateDocument.isValid(document.value);
     return validName && validEmail && validPhone && validDocument;

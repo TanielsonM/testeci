@@ -11,8 +11,6 @@ export const usePhoneValidation = defineStore("phone", {
   },
   actions: {
     setPhone(value: any) {
-        console.log({value});
-        
       this.phone = value;
     },
   },
