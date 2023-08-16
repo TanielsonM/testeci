@@ -340,7 +340,6 @@ await checkout.init();
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          :free="product?.method !== 'FREE' ? false : true"
           v-if="
             (checkout.showAddressStep() &&
               ((isMobile && currentStep == 2) || !isMobile)) ||
