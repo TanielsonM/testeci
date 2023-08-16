@@ -109,7 +109,7 @@ export const usePaymentStore = defineStore("Payment", {
         // proposal_id: proposal_id,
         // User details
         name: name.value,
-        email: email.value,
+        email: email.value.trim(),
         cellphone: cellphone.value.replace(/[^\d+]/g, ""),
         document: document.value,
         uuid: uuid.value,

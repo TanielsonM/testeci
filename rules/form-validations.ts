@@ -9,7 +9,7 @@ import { useCheckoutStore } from "@/store/checkout";
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
-export const validateEmail = yup.string().email().required();
+export const validateEmail = yup.string().trim().email().required();
 export const validatePhone = yup.string().min(8).required();
 export const validateDocument = yup
   .string()
