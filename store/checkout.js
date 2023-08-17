@@ -4,6 +4,8 @@ import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
 import { useInstallmentsStore } from "./modules/installments";
+import { GreennLogs } from "@/utils/greenn-logs";
+
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
@@ -188,6 +190,11 @@ export const useCheckoutStore = defineStore("checkout", {
       }
 
       const { params, query, fullPath } = useRoute();
+
+      GreennLogs.logger.info("🟢 Checkout init", {
+        params: params, query: query, fullPath: fullPath
+      });
+
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
@@ -485,8 +492,8 @@ export const useCheckoutStore = defineStore("checkout", {
       this.setInstallments(
         store.hasPreSelectedInstallments ?? store.resolveInstallments(),
         store.product.max_installments ||
-          store.product.max_subscription_installments ||
-          12,
+        store.product.max_subscription_installments ||
+        12,
         store.hasFixedInstallments,
         store.hasTicketInstallments > 1 ? store.hasTicketInstallments : 1
       );
