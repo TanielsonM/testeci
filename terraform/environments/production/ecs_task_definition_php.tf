@@ -34,6 +34,21 @@ resource "aws_ecs_task_definition" "node" {
         Timeout  = 2,
         Retries  = 2
       }
+      firelensConfiguration = null
+      logConfiguration = {
+        logDriver = "awsfirelens"
+        options = {
+          dd_message_key = "log"
+          provider       = "ecs"
+          dd_service     = "payfast-back"
+          dd_source      = "node"
+          Host           = "http-intake.logs.datadoghq.com"
+          TLS            = "on"
+          dd_tags        = "project:fluent-bit"
+          Name           = "datadog"
+          apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
+        }
+      }
     }
   ], local.default_sidecar_container_definition))
 }
