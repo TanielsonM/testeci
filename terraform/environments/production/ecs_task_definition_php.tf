@@ -11,7 +11,7 @@ resource "aws_ecs_task_definition" "node" {
   memory                   = local.memory
   task_role_arn            = aws_iam_role.ecs_exec_role.arn
   execution_role_arn       = aws_iam_role.ecs_exec_role.arn
-  container_definitions = jsonencode([
+  container_definitions = jsonencode(concat([
     {
       essential   = true
       image       = "${aws_ecr_repository.checkout-repository.repository_url}:${var.deploy_hash}",
@@ -35,5 +35,5 @@ resource "aws_ecs_task_definition" "node" {
         Retries  = 2
       }
     }
-  ])
+  ], local.default_sidecar_container_definition))
 }

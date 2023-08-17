@@ -14,4 +14,4 @@ COPY ./ ./
 
 RUN yarn build
 
-CMD [ "node", ".output/server/index.mjs" ]
+CMD [ "node", "--require", "dd-trace/init", ".output/server/index.mjs" ]
