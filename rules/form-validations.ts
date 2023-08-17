@@ -109,6 +109,10 @@ export const validateThristStep = async (): Promise<boolean> => {
   const checkout = useCheckoutStore();
   const { first, second } = storeToRefs(purchaseStore);
 
+  if (["PIX", "BOLETO"].includes(checkout.method)) {
+    return true;
+  }
+
   const validNameOnCard = await validateNameOnCard.isValid(
     first.value.holder_name
   );
