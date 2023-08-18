@@ -1,4 +1,6 @@
 <script setup>
+import { GreennLogs } from "@/utils/greenn-logs";
+
 const route = useRoute();
 await useApi()
   .read(`/link/${route.params.page}`)
@@ -12,6 +14,10 @@ await useApi()
       }
     }
     const fullURL = url.origin + url.pathname + "?" + query.toString();
+    GreennLogs.logger.info("redirect", {
+      route: route,
+      fullURL: fullURL,
+    });
     if (fullURL) {
       navigateTo(fullURL, {
         external: true,

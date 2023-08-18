@@ -80,7 +80,7 @@ Terraform Deploy:
   image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
   stage: Deploy
   environment: ${CI_COMMIT_BRANCH}
-  when: manual
+  # when: manual
   cache:
     key: terraform-${CI_COMMIT_BRANCH}
     paths:
