@@ -86,7 +86,7 @@ export const usePaymentStore = defineStore("Payment", {
           );
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return getInstallments.value() * installments.value;
+          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
         }
         return getInstallments.value(1);
       });
