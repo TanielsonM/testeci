@@ -45,7 +45,7 @@ resource "aws_appautoscaling_target" "node_target_v2" {
 
 }
 
-resource "aws_appautoscaling_policy" "node_cpu" {
+resource "aws_appautoscaling_policy" "node_cpu_v2" {
   name               = "node-cpu"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.node_target_v2.resource_id
