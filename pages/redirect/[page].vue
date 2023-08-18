@@ -1,30 +1,33 @@
 <script setup>
 // import { GreennLogs } from "@/utils/greenn-logs";
 
-// onMounted(() => {
-// if (process.client) {
-const route = useRoute();
-useApi()
-  .read(`/link/${route.params.page}`)
-  .then((res) => {
-    const url = new URL(res.url);
-    const currentQuery = new URLSearchParams(route.query);
-    const query = new URLSearchParams(url.searchParams);
-    if (currentQuery) {
-      for (let [key, value] of currentQuery.entries()) {
-        query.append(key, value);
-      }
-    }
-    const fullURL = url.origin + url.pathname + "?" + query.toString();
-    console.log("Redirecting ->>>>>> "+ JSON.stringify({ route: route, fullURL: fullURL }));
-    if (fullURL) {
-      navigateTo(fullURL, {
-        external: true,
+onMounted(() => {
+  if (process.client) {
+    const route = useRoute();
+    useApi()
+      .read(`/link/${route.params.page}`)
+      .then((res) => {
+        const url = new URL(res.url);
+        const currentQuery = new URLSearchParams(route.query);
+        const query = new URLSearchParams(url.searchParams);
+        if (currentQuery) {
+          for (let [key, value] of currentQuery.entries()) {
+            query.append(key, value);
+          }
+        }
+        const fullURL = url.origin + url.pathname + "?" + query.toString();
+        console.log(
+          "Redirecting ->>>>>> " +
+            JSON.stringify({ route: route, fullURL: fullURL })
+        );
+        if (fullURL) {
+          navigateTo(fullURL, {
+            external: true,
+          });
+        }
       });
-    }
-  });
-// }
-// });
+  }
+});
 </script>
 
 <template>

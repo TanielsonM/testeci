@@ -103,12 +103,16 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  handleResize();
-  window.addEventListener("resize", handleResize);
+  if(process.client){
+    handleResize();
+    window.addEventListener("resize", handleResize);
+  }
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
+  if(process.client){
+    window.removeEventListener("resize", handleResize);
+  }
 });
 </script>
 <template>
