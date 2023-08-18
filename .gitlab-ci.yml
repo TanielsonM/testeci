@@ -35,7 +35,7 @@ Terraform Plan:
     - gitlab-terraform validate
     - gitlab-terraform plan
     - gitlab-terraform output -raw aws-checkout-ecr-address > aws-checkout-ecr-address.txt
-    - gitlab-terraform output -raw aws-checkout-ecr-address-v2 > aws-checkout-ecr-address-v2.txt
+    # - gitlab-terraform output -raw aws-checkout-ecr-address-v2 > aws-checkout-ecr-address-v2.txt
   artifacts:
     name: tf-full
     paths:
