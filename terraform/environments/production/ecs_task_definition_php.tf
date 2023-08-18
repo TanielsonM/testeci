@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "node" {
       portMappings = [
         {
           protocol      = "tcp"
-          containerPort = 3000
+          containerPort = 80
         }
       ]
       volumesFrom = []
@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "node" {
       HealthCheck = {
         Command = [
           "CMD-SHELL",
-          "curl -f http://localhost:3000/ || exit 1"
+          "curl -f http://localhost:80/ || exit 1"
         ],
         Interval = 10,
         Timeout  = 2,
