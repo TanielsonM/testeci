@@ -1,7 +1,7 @@
-resource "aws_ecs_service" "node" {
-  name                   = "node"
-  cluster                = aws_ecs_cluster.node.id
-  task_definition        = aws_ecs_task_definition.node_v2.arn
+resource "aws_ecs_service" "node_v2" {
+  name                   = "node_v2"
+  cluster                = aws_ecs_cluster.node_v2.id
+  task_definition        = aws_ecs_task_definition.node.arn
   desired_count          = 2
   launch_type            = "FARGATE"
   enable_execute_command = true
@@ -13,7 +13,7 @@ resource "aws_ecs_service" "node" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.club-node-target-group.arn
+    target_group_arn = aws_lb_target_group.club-node-v2-target-group.arn
     container_name   = "node"
     container_port   = "80"
   }
