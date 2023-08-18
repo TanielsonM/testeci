@@ -3,7 +3,7 @@ resource "aws_ecr_repository" "checkout-repository-v2" {
   image_tag_mutability = "MUTABLE"
 }
 
-resource "aws_ecr_repository_policy" "checkout-repo-policy" {
+resource "aws_ecr_repository_policy" "checkout-repo-policy-v2" {
   repository = aws_ecr_repository.checkout-repository-v2.name
   policy     = file("./policys/checkout-repo-policy.json")
 }

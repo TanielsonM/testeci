@@ -57,7 +57,7 @@ resource "aws_lb_target_group" "club-node-v2-target-group" {
 
 
 
-resource "aws_lb_listener_rule" "checkout-https" {
+resource "aws_lb_listener_rule" "checkout-https-v2" {
   priority     = "1"
   listener_arn = aws_lb_listener.alb_listener_https_v2.arn
   action {
@@ -73,6 +73,6 @@ resource "aws_lb_listener_rule" "checkout-https" {
   }
 }
 
-output "elb_address" {
+output "elb_address-v2" {
   value = aws_lb.checkout-node-v2.dns_name
 }
