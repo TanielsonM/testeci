@@ -40,7 +40,7 @@ resource "aws_ecs_task_definition" "node_v2" {
         options = {
           dd_message_key = "log"
           provider       = "ecs"
-          dd_service     = "payfast-back"
+          dd_service     = "payfastdebug-back"
           dd_source      = "node"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
