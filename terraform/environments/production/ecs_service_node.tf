@@ -1,7 +1,7 @@
 resource "aws_ecs_service" "node" {
   name                   = "node"
   cluster                = aws_ecs_cluster.node.id
-  task_definition        = aws_ecs_task_definition.node_v2.arn
+  task_definition        = aws_ecs_task_definition.node.arn
   desired_count          = 2
   launch_type            = "FARGATE"
   enable_execute_command = true
@@ -39,7 +39,7 @@ resource "aws_ecs_service" "node" {
 resource "aws_appautoscaling_target" "node_target" {
   max_capacity       = 20
   min_capacity       = 2
-  resource_id        = "service/${aws_ecs_cluster.node_v2.name}/${aws_ecs_service.node_v2.name}"
+  resource_id        = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 
