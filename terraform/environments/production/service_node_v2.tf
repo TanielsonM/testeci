@@ -1,7 +1,7 @@
 resource "aws_ecs_service" "node_v2" {
   name                   = "node_v2"
   cluster                = aws_ecs_cluster.node_v2.id
-  task_definition        = aws_ecs_task_definition.node.arn
+  task_definition        = aws_ecs_task_definition.node_v2.arn
   desired_count          = 2
   launch_type            = "FARGATE"
   enable_execute_command = true
@@ -36,7 +36,7 @@ resource "aws_ecs_service" "node_v2" {
 }
 
 
-resource "aws_appautoscaling_target" "node_target" {
+resource "aws_appautoscaling_target" "node_target_v2" {
   max_capacity       = 20
   min_capacity       = 2
   resource_id        = "service/${aws_ecs_cluster.node_v2.name}/${aws_ecs_service.node_v2.name}"
@@ -48,9 +48,9 @@ resource "aws_appautoscaling_target" "node_target" {
 resource "aws_appautoscaling_policy" "node_cpu" {
   name               = "node-cpu"
   policy_type        = "TargetTrackingScaling"
-  resource_id        = aws_appautoscaling_target.node_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.node_target.scalable_dimension
-  service_namespace  = aws_appautoscaling_target.node_target.service_namespace
+  resource_id        = aws_appautoscaling_target.node_target_v2.resource_id
+  scalable_dimension = aws_appautoscaling_target.node_target_v2.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.node_target_v2.service_namespace
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"

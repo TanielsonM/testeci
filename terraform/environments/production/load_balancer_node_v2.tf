@@ -20,8 +20,8 @@ resource "aws_lb" "checkout-node-v2" {
   }
 }
 
-resource "aws_lb_listener" "alb_listener_https" {
-  load_balancer_arn = aws_lb.checkout-node.arn
+resource "aws_lb_listener" "alb_listener_https_v2" {
+  load_balancer_arn = aws_lb.checkout-node-v2.arn
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
@@ -51,7 +51,7 @@ resource "aws_lb_target_group" "club-node-v2-target-group" {
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = module.vpc.vpc_id
-  name                 = "checkout-node-target-group"
+  name                 = "checkout-node-v2-target-group"
   deregistration_delay = 5
 }
 
@@ -59,20 +59,20 @@ resource "aws_lb_target_group" "club-node-v2-target-group" {
 
 resource "aws_lb_listener_rule" "checkout-https" {
   priority     = "1"
-  listener_arn = aws_lb_listener.alb_listener_https.arn
+  listener_arn = aws_lb_listener.alb_listener_https_v2.arn
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.club-node-target-group.arn
+    target_group_arn = aws_lb_target_group.club-node-v2-target-group.arn
   }
   condition {
     host_header {
       values = [
-        "paynode.greenn.com.br",
+        "payfastdebug.greenn.com.br",
       ]
     }
   }
 }
 
 output "elb_address" {
-  value = aws_lb.checkout-node.dns_name
+  value = aws_lb.checkout-node-v2.dns_name
 }
