@@ -18,10 +18,6 @@ onMounted(async () => {
         }
       }
       const fullURL = url.origin + url.pathname + "?" + query.toString();
-      console.log(
-        "Redirecting ->>>>>> " +
-          JSON.stringify({ route: route, fullURL: fullURL })
-      );
       if (fullURL) {
         navigateTo(fullURL, {
           external: true,
