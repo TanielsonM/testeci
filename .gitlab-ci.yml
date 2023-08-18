@@ -35,10 +35,12 @@ Terraform Plan:
     - gitlab-terraform validate
     - gitlab-terraform plan
     - gitlab-terraform output -raw aws-checkout-ecr-address > aws-checkout-ecr-address.txt
+    - gitlab-terraform output -raw aws-checkout-ecr-address-v2 > aws-checkout-ecr-address-v2.txt
   artifacts:
     name: tf-full
     paths:
       - ${TF_ROOT}/aws-checkout-ecr-address.txt
+      - ${TF_ROOT}/aws-checkout-ecr-address-v2.txt
       - ${TF_ROOT}/plan.cache
 
 Build Images:
@@ -64,7 +66,17 @@ Build Images:
     - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
     - docker pull $LATEST_CHECKOUT_IMAGE_TAG || true
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG .
-    - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
+    # - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
+    - docker push $CHECKOUT_IMAGE_TAG
+    - docker push $LATEST_CHECKOUT_IMAGE_TAG
+    
+    # Nuxt_v2
+    - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address-v2.txt):${DEPLOY_HASH}"
+    - export LATEST_CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address-v2.txt):latest"
+    - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+    - docker pull $LATEST_CHECKOUT_IMAGE_TAG || true
+    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG .
+    # - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
     - docker push $CHECKOUT_IMAGE_TAG
     - docker push $LATEST_CHECKOUT_IMAGE_TAG
   needs:

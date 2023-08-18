@@ -1,10 +1,10 @@
 locals {
-  cpu    = 1024
-  memory = 2048
+  cpu_node_v2    = 1024
+  memory_node_v2 = 2048
 }
 
-resource "aws_ecs_task_definition" "node" {
-  family                   = "node"
+resource "aws_ecs_task_definition" "node_v2" {
+  family                   = "node_v2"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = local.cpu
@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "node" {
   container_definitions = jsonencode(concat([
     {
       essential   = true
-      image       = "${aws_ecr_repository.checkout-repository.repository_url}:${var.deploy_hash}",
+      image       = "${aws_ecr_repository.checkout-repository-v2.repository_url}:${var.deploy_hash}",
       name        = "node"
       networkMode = "awsvpc"
       portMappings = [
