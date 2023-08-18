@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { VueTelInput } from "vue-tel-input";
 import { usePersonalStore } from "@/store/forms/personal";
-import { phoneValidation } from "@/rules/form-validations";
+import { usePhoneValidation } from "@/store/modules/phoneInput";
 import { useCheckoutStore } from "~~/store/checkout";
 import "vue-tel-input/vue-tel-input.css";
 
@@ -74,6 +74,7 @@ const props = defineProps({
 
 const personalStore = usePersonalStore();
 const checkoutStore = useCheckoutStore();
+const phoneStore = usePhoneValidation();
 const { validPhone } = storeToRefs(personalStore);
 const { selectedCountry } = storeToRefs(checkoutStore);
 
@@ -117,8 +118,9 @@ const emit = defineEmits([
   "input",
 ]);
 
-const onInput = (event: any) => {
+const onInput = (event: any, phoneObject: any) => {
   emit("update:modelValue", event);
+  phoneStore.setPhone(phoneObject);
 };
 
 function validatePhone(phoneObject: object | any) {
@@ -155,8 +157,8 @@ onMounted(() => {
           :class="customClass"
           class="h-full w-full bg-checkout text-txt-color outline-none placeholder:opacity-75"
           @validate="validatePhone"
-          @on-input="onInput"
           @blur="emit('blur')"
+          @on-input="onInput"
         />
       </VeeField>
     </section>
