@@ -16,15 +16,7 @@ useApi()
       }
     }
     const fullURL = url.origin + url.pathname + "?" + query.toString();
-    try {
-      GreennLogs.logger.info("redirect", {
-        route: route,
-        fullURL: fullURL,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-    console.log("Redirecting ->>>>>>", { route: route, fullURL: fullURL });
+    console.log("Redirecting ->>>>>> "+ JSON.stringify({ route: route, fullURL: fullURL }));
     if (fullURL) {
       navigateTo(fullURL, {
         external: true,
