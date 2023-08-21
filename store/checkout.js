@@ -147,7 +147,7 @@ export const useCheckoutStore = defineStore("checkout", {
         return (
           product.isPhysicalProduct ||
           state.bump_list.some(
-            (bump) => (bump.format === "PHYSICALPRODUCT" || bump.product_type_id == 4) && bump.checkbox)
+            (bump) => (bump.format === "PHYSICALPRODUCT") && bump.checkbox)
         );
       };
     },
