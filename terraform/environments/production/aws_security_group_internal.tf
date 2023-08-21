@@ -33,9 +33,9 @@ resource "aws_security_group_rule" "ig_internal_lb" {
   type                     = "ingress"
   source_security_group_id = aws_security_group.lb.id
   description              = "Load Balancer"
-  from_port                = 3000
+  from_port                = 80
   protocol                 = "TCP"
-  to_port                  = 3000
+  to_port                  = 80
 }
 
 # resource "aws_security_group_rule" "eg_internal_http" {

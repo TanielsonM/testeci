@@ -171,25 +171,25 @@ const tabs = computed(() => {
 });
 
 const handleResize = () => {
-  stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
 onMounted(() => {
-  if(product?.value?.format === 'PRESENTIAL_EVENT') {
-    if(getReservations?.value?.length) {
-      window.addEventListener('beforeunload', showUnloadAlert);
-    } else {
-      const route = useRoute();
-      navigateTo(`/pre-checkout/${route.params?.product_id}`);
-    }
-  }
-  // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
-  handleResize();
-  window.addEventListener("resize", handleResize);
-  window.addEventListener("myRecaptchaCallback", () => {
-    payment.payment(locale.value);
-  });
   if (process.client) {
+    // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
+    if(product?.value?.format === 'PRESENTIAL_EVENT') {
+      if(getReservations?.value?.length) {
+        window.addEventListener('beforeunload', showUnloadAlert);
+      } else {
+        const route = useRoute();
+        navigateTo(`/pre-checkout/${route.params?.product_id}`);
+      }
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("myRecaptchaCallback", () => {
+      payment.payment(locale.value);
+    });
     if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
       let currentUrl = new URL(window.location.href);
       currentUrl.host = "payu.greenn.com.br";
@@ -411,27 +411,6 @@ await checkout.init();
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseInput
-                class="col-span-12"
-                @blur="updateLead"
-                :class="{ 'xl:col-span-6': showDocumentInput }"
-                :label="documentText.label"
-                :placeholder="documentText.placeholder"
-                v-if="showDocumentInput && isMobile"
-                input-name="document-field"
-                input-id="document-field"
-                v-model="document"
-                :mask="documentText.documentMask"
-                :error="
-                  document || hasSent
-                    ? !validateDocument.isValidSync(document)
-                    : undefined
-                "
-              >
-                <template #error>
-                  {{ $t("checkout.dados_pessoais.feedbacks.document") }}
-                </template>
-              </BaseInput>
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <template v-if="method !== 'PIX'">
                 <FormPurchase />
@@ -564,6 +543,7 @@ await checkout.init();
         :method="checkout.method"
         :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
       />
       <Captcha />
     </ClientOnly>

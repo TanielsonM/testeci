@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { useModalStore } from "~~/store/modal/success";
 import timer from "~~/assets/modal/timer.svg";
-
-const modal = useModalStore();
-const newCode = () => {
-  let path = window.location.href.replace("obrigado", "");
-  window.location.href = path;
-};
+onMounted(() => {
+  if (process.client) {
+    const modal = useModalStore();
+    const newCode = () => {
+      let path = window.location.href.replace("obrigado", "");
+      window.location.href = path;
+    };
+  }
+});
 </script>
 <template>
   <p class="paragraph">
