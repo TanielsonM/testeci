@@ -4,13 +4,11 @@ import { useProductStore } from "~/store/product";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
-import { useInstallmentsStore } from "./modules/installments";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
-const installmentsStore = useInstallmentsStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -182,7 +180,7 @@ export const useCheckoutStore = defineStore("checkout", {
   actions: {
     async init(byChangeCountry = false) {
       const { product } = useProductStore();
-      if(product.id && product.format === 'PRESENTIAL_EVENT') return
+      if(product.id && product.product_type_id === 3) return
       this.resetProducts();
       amountStore.reset();
       this.setLoading(true);
@@ -296,22 +294,31 @@ export const useCheckoutStore = defineStore("checkout", {
                 return bump1.b_order - bump2.b_order;
               });
             }
-
-            if (response.data.format === "PRESENTIAL_EVENT") {
+            // console.log(response)
+            if (response.data.product_type_id === 3) {
               const preCheckout = usePreCheckoutStore();
-              if(Array.isArray(response?.batch)) {
-                response.batch = response.batch.map(x => {
-                  return { ...x, selected_tickets: 0 }
+              if(Array.isArray(response?.batches)) {
+                response.batches.forEach(batch => {
+                  // Adicionar chave para contabilizar ingressos selecionados
+                  batch.tickets = batch.tickets.map(x => {
+                    return { ...x, selected_tickets: 0 }
+                  })
+                  // Ordenar ingressos
+                  batch.tickets.sort((a, b) => {
+                    if (a.batch_order < b.batch_order) return -1;
+                    if (a.batch_order > b.batch_order) return 1;
+                    return 0;
+                  });
                 })
+                // Ordenar lotes
+                response.batches.sort((a, b) => {
+                  if (a.order < b.order) return -1;
+                  if (a.order > b.order) return 1;
+                  return 0;
+                });
               }
 
-              response.batch.sort((a, b) => {
-                if (a.batch_order < b.batch_order) return -1;
-                if (a.batch_order > b.batch_order) return 1;
-                return 0;
-              });
-
-              // preCheckout.setBatchsList(response.batch);
+              preCheckout.setBatches(response.batches);
             }
           })
           .catch((err) => {

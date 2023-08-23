@@ -10,7 +10,6 @@ import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
 
-import { validateDocument } from "@/rules/form-validations";
 import { showUnloadAlert, getLessMethods } from "@/utils/validateBatch";
 
 import { storeToRefs } from "pinia";
@@ -52,7 +51,7 @@ const pixelComponentKey = 1;
 
 // Computeds
 const tabs = computed(() => {
-  if(product.value.format === 'PRESENTIAL_EVENT') {
+  if(product.value.product_type_id === 3) {
     // Lista os métodos de pagamento do lote que tiver a menor quantidade de métodos de pagamento
     allowed_methods.value = getLessMethods();
   }
@@ -177,7 +176,7 @@ const handleResize = () => {
 onMounted(() => {
   if (process.client) {
     // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
-    if(product?.value?.format === 'PRESENTIAL_EVENT') {
+    if(product?.value?.product_type_id === 3) {
       if(getReservations?.value?.length) {
         window.addEventListener('beforeunload', showUnloadAlert);
       } else {
@@ -201,7 +200,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if(product?.value?.format === 'PRESENTIAL_EVENT') {
+  if(product?.value?.product_type_id === 3) {
     window.removeEventListener('beforeunload', showUnloadAlert);
   }
   window.removeEventListener("resize", handleResize);
@@ -527,7 +526,7 @@ await checkout.init();
       </section>
     </BaseModal>
 
-    <template v-if="product.format === 'PRESENTIAL_EVENT'">
+    <template v-if="product.product_type_id === 3">
       <EventExpiredSessionModal />
       <EventGoBackWarningModal />
     </template>

@@ -125,7 +125,7 @@ export const useProductStore = defineStore("product", {
         this.hasFixedInstallments,
         this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
-      if (product.format !== "PRESENTIAL_EVENT") {
+      if (product.product_type_id !== 3) {
         checkout.setProductList(this.product);
       } else {
         amountStore.reset();

@@ -225,7 +225,7 @@ const exceptionSellerId = computed(() => {
       <!-- Coupon -->
       <ProductCoupon v-if="productStore.allowedCoupon" />
     </section>
-    <EventTimer v-if="product.format === 'PRESENTIAL_EVENT'"/>
+    <EventTimer v-if="product.product_type_id === 3"/>
   </BaseCard>
 </template>
 
