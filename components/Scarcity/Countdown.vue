@@ -1,7 +1,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
-
 const { product_id } = useProductStore();
 const cookie = useCookie(`time_scarcity-${product_id}`);
 const props = defineProps({
@@ -16,7 +15,6 @@ const props = defineProps({
     default: () => "",
   },
 });
-
 const date = new Date();
 date.setMinutes(parseInt(props.time));
 let minutes = cookie.value
@@ -74,15 +72,17 @@ watch(
 </script>
 
 <template>
-  <section
-    class="countdown flex items-center gap-1 rounded-md px-2 py-1 md:px-5 md:py-[10px]"
-  >
-    <span class="font-semibold text-white md:text-xl">00h :</span>
-    <span class="font-semibold text-white md:text-xl"
-      >{{ minutesText }}m :</span
+  <ClientOnly>
+    <section
+      class="countdown flex items-center gap-1 rounded-md px-2 py-1 md:px-5 md:py-[10px]"
     >
-    <span class="font-semibold text-white md:text-xl">{{ secondText }}s</span>
-  </section>
+      <span class="font-semibold text-white md:text-xl">00h :</span>
+      <span class="font-semibold text-white md:text-xl"
+        >{{ minutesText }}m :</span
+      >
+      <span class="font-semibold text-white md:text-xl">{{ secondText }}s</span>
+    </section>
+  </ClientOnly>
 </template>
 
 <style lang="scss" scoped>

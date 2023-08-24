@@ -8,6 +8,7 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { validateDocument } from "@/rules/form-validations";
+import { useLeadsStore } from "@/store/modules/leads";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -18,6 +19,7 @@ const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
+const leadsStore = useLeadsStore();
 
 // Variables
 const { t, locale } = useI18n();
@@ -158,15 +160,24 @@ const tabs = computed(() => {
 });
 
 const handleResize = () => {
-  stepsStore.isMobile = window.matchMedia("(max-width: 768px)").matches;
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
 onMounted(() => {
-  handleResize();
-  window.addEventListener("resize", handleResize);
-  window.addEventListener("myRecaptchaCallback", () => {
-    payment.payment(locale.value);
-  });
+  if (process.client) {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("myRecaptchaCallback", () => {
+      payment.payment(locale.value);
+    });
+    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+      let currentUrl = new URL(window.location.href);
+      currentUrl.host = "payu.greenn.com.br";
+      currentUrl.protocol = "https";
+      currentUrl.port = "";
+      window.location = currentUrl.href;
+    }
+  }
 });
 
 onBeforeUnmount(() => {
@@ -176,6 +187,18 @@ onBeforeUnmount(() => {
 // Watch`s
 watch(method, (method) => {
   checkout.setMethod(method);
+});
+
+watch(selectedCountry, () => {
+  if (process.client) {
+    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+      let currentUrl = new URL(window.location.href);
+      currentUrl.host = "payu.greenn.com.br";
+      currentUrl.protocol = "https";
+      currentUrl.port = "";
+      window.location = currentUrl.href;
+    }
+  }
 });
 
 watch(error_message, (val) => {
@@ -205,8 +228,10 @@ function closeModal() {
 
 async function callPayment() {
   if (captchaEnabled.value) {
-    await window.grecaptcha.reset();
-    await window.grecaptcha.execute();
+    //não colocar await pois nenhuma dessa funções retornam promises
+    //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
+    window.grecaptcha.reset();
+    window.grecaptcha.execute();
   } else {
     payment.payment(locale.value);
   }
@@ -252,6 +277,12 @@ const documentText = computed(() => {
   }
 });
 
+function updateLead() {
+  setTimeout(function () {
+    leadsStore.updateLead();
+  }, 1000);
+}
+
 function incrementSteps() {
   if (countSteps.value != 3) {
     stepsStore.incrementCount();
@@ -263,12 +294,6 @@ if (hasAffiliateId.value) {
   const affiliate = useCookie("affiliate");
   affiliate_id.value = hasAffiliateId.value;
   affiliate.value = hasAffiliateId.value;
-}
-
-if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-  if (process.client) {
-    window.location.href = `https://payu.greenn.com.br/${product_id.value}`;
-  }
 }
 
 await checkout.init();
@@ -363,29 +388,10 @@ await checkout.init();
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseInput
-                class="col-span-12"
-                @blur="updateLead"
-                :class="{ 'xl:col-span-6': showDocumentInput }"
-                :label="documentText.label"
-                :placeholder="documentText.placeholder"
-                v-if="showDocumentInput && isMobile"
-                input-name="document-field"
-                input-id="document-field"
-                v-model="document"
-                :mask="documentText.documentMask"
-                :error="
-                  document || hasSent
-                    ? !validateDocument.isValidSync(document)
-                    : undefined
-                "
-              >
-                <template #error>
-                  {{ $t("checkout.dados_pessoais.feedbacks.document") }}
-                </template>
-              </BaseInput>
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
-              <FormPurchase />
+              <template v-if="method !== 'PIX'">
+                <FormPurchase />
+              </template>
             </section>
             <!-- Bumps -->
             <template
@@ -421,6 +427,11 @@ await checkout.init();
                 </span>
               </BaseButton>
             </section>
+
+            <!-- Pix purchase infos -->
+            <template v-if="method === 'PIX'">
+              <FormPurchasePix />
+            </template>
 
             <span class="flex items-center gap-3">
               <Icon name="fa6-solid:lock" class="text-main-color" />
@@ -504,6 +515,7 @@ await checkout.init();
         :method="checkout.method"
         :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
       />
       <Captcha />
     </ClientOnly>

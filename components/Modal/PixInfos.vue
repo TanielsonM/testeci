@@ -9,7 +9,7 @@ const modal = useModalStore();
 const stepsStore = useStepStore();
 
 const { isMobile } = storeToRefs(stepsStore);
-
+const emit = defineEmits(['openedPixEvent']);
 const props = defineProps({
   name: {
     type: String,
@@ -27,8 +27,8 @@ const props = defineProps({
     required: true,
   },
   id: {
-    type: String,
-    default: "",
+    type: Number,
+    default: 0,
     required: true,
   },
   amount: {
@@ -73,7 +73,7 @@ const props = defineProps({
     default: () => false,
   },
   opened: {
-    type: String,
+    type: Number,
     required: false,
     default: 0,
   },
@@ -103,22 +103,22 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  handleResize();
-  window.addEventListener("resize", handleResize);
+  if(process.client){
+    handleResize();
+    window.addEventListener("resize", handleResize);
+  }
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
+  if(process.client){
+    window.removeEventListener("resize", handleResize);
+  }
 });
-
-watch(data, () => {});
-
-const emit = defineEmits(["openedPixEvent"]);
 </script>
 <template>
   <div v-if="!modal.expiredPix">
     <p class="paragraph" v-if="(!onlyButtons && !last) || salesLength == 1">
-      {{ $t("pg_obrigado.pix.efetuando") }} GD Marketing e Tecnologia LTDA
+      {{ $t("pg_obrigado.pix.efetuando") }} Greenn Pagamentos e Tecnologia LTDA
       {{ $t("pg_obrigado.pix.ref") }};
     </p>
     <hr class="my-5" v-if="(!onlyButtons && !last) || salesLength == 1" />
@@ -237,7 +237,7 @@ const emit = defineEmits(["openedPixEvent"]);
             :size="!onlyButtons ? 'vsm' : 'md'"
             animation="pulse"
             class="col-span-2 md:col-span-1"
-            @click="!onlyButtons ? copy(code) : modal.closeAtion()"
+            @click="!onlyButtons ? copy(code) : modal.closeAction()"
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_text")

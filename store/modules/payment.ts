@@ -59,7 +59,7 @@ const { name, email, document, cellphone } = storeToRefs(personalStore);
 const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
 const { getInstallments } = storeToRefs(installmentsStore);
-const { getOriginalAmount } = storeToRefs(amountStore);
+const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
 
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
@@ -86,7 +86,7 @@ export const usePaymentStore = defineStore("Payment", {
           );
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return getInstallments.value() * installments.value;
+          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
         }
         return getInstallments.value(1);
       });
@@ -109,7 +109,7 @@ export const usePaymentStore = defineStore("Payment", {
         // proposal_id: proposal_id,
         // User details
         name: name.value,
-        email: email.value,
+        email: email.value.trim(),
         cellphone: cellphone.value.replace(/[^\d+]/g, ""),
         document: document.value,
         uuid: uuid.value,
@@ -151,8 +151,8 @@ export const usePaymentStore = defineStore("Payment", {
         data = {
           ...data,
           shipping_address_zip_code: sameAddress.value
-            ? charge.value.zipcode
-            : shipping.value.zipcode,
+            ? charge.value.zipcode.replace("-", "")
+            : shipping.value.zipcode.replace("-", ""),
           shipping_address_street: sameAddress.value
             ? charge.value.street
             : shipping.value.street,
@@ -205,15 +205,22 @@ export const usePaymentStore = defineStore("Payment", {
       if (
         ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
       ) {
+        let parsedFirstAmount = Number(
+          first.value.amount
+            .toString()
+            .replace("R$", "")
+            .replace(".", "")
+            .replace(",", ".")
+        );
+        let firstCardAmountWithoutInterest = parsedFirstAmount;
+        if (method.value === "TWO_CREDIT_CARDS") {
+          let percentageFirstCard = parsedFirstAmount / total.value;
+          firstCardAmountWithoutInterest =
+            getAmount.value * percentageFirstCard;
+        }
         let cards = [];
         cards.push({
-          amount: parseFloat(
-            first.value.amount
-              .toString()
-              .replace("R$ ", "")
-              .replace(",", ".")
-              .replace("-", "")
-          ),
+          amount: Number(firstCardAmountWithoutInterest).toFixed(2),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
           card_holder_name: first.value.holder_name,
@@ -221,13 +228,9 @@ export const usePaymentStore = defineStore("Payment", {
         });
         if (method.value === "TWO_CREDIT_CARDS") {
           cards.push({
-            amount: parseFloat(
-              second.value.amount
-                .toString()
-                .replace("R$ ", "")
-                .replace(",", ".")
-                .replace("-", "")
-            ),
+            amount: Number(
+              getAmount.value - firstCardAmountWithoutInterest
+            ).toFixed(2),
             card_cvv: second.value.cvv,
             card_expiration_date: `${second.value.month}${second.value.year}`,
             card_holder_name: second.value.holder_name,
@@ -240,7 +243,7 @@ export const usePaymentStore = defineStore("Payment", {
 
       const allowed_installments = [
         "CREDIT_CARD",
-        "TWO_CREDIT_CARD",
+        "TWO_CREDIT_CARDS",
         "DEBIT_CARD",
         "BOLETO",
       ];
@@ -281,7 +284,6 @@ export const usePaymentStore = defineStore("Payment", {
             if (principal_product?.token) query.token = principal_product.token;
             if (principal_product?.sale_id) {
               delete query.chc;
-              delete query.token;
               query.s_id = res.sales[0].sale_id;
             }
             if (!!product_offer.value) query.offer = product_offer.value;

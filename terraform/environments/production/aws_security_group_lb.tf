@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "eg_lb_http" {
   type                     = "egress"
   source_security_group_id = aws_security_group.internal.id
   description              = "HTTP"
-  from_port                = 3000
+  from_port                = 80
   protocol                 = "TCP"
-  to_port                  = 3000
+  to_port                  = 80
 }

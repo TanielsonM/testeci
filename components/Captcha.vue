@@ -17,20 +17,18 @@ onMounted(() => {
               src: `https://www.google.com/recaptcha/api.js`,
               async: true,
               defer: true,
+              onload: () => {
+                window.grecaptcha.ready(function () {
+                  window.grecaptcha.render(recaptcha.value, {
+                    sitekey: config.public.RECAPTCHA_KEY,
+                    callback: recaptchaCallback,
+                    size: "invisible",
+                  });
+                });
+              },
             },
           ],
         });
-      }
-      if (window.grecaptcha) {
-        window.grecaptcha.render(recaptcha.value, {
-          sitekey: config.public.RECAPTCHA_KEY,
-          callback: recaptchaCallback,
-          size: "invisible",
-        });
-      } else {
-        setTimeout(() => {
-          loadRecaptcha();
-        }, 1000);
       }
     };
 

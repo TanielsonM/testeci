@@ -35,6 +35,37 @@ if (
   const sale: Sale = sales.value as Sale;
   data.value.sale = sale;
 
+  const thankYouData = sale.sales[0].product.custom_thank_you_pages || [];
+
+  const customUrl = ref({
+    PIX: "",
+    BOLETO: "",
+    PAYPAL: "",
+    CREDIT_CARD: "",
+    TWO_CREDIT_CARDS: "",
+  });
+
+
+  thankYouData.forEach(element => {
+    switch (element.type) {
+      case "PIX":
+        customUrl.value.PIX = element.url;
+        break;
+      case "BOLETO":
+        customUrl.value.BOLETO = element.url;
+        break;
+      case "PAYPAL":
+        customUrl.value.PAYPAL = element.url;
+        break;
+      case "CREDIT_CARD":
+        customUrl.value.CREDIT_CARD = element.url;
+        break;
+      case "TWO_CREDIT_CARD": 
+        customUrl.value.TWO_CREDIT_CARDS = element.url;
+        break;
+    }
+  });
+
   switch (sale.sales[0].method) {
     case "BOLETO":
       modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
@@ -50,8 +81,18 @@ if (
   }
 
   const closeAction = () => {
-    window.location.href =
-      sale.sales[0].product.thank_you_page || "https://greenn.com.br";
+    const current_query = new URLSearchParams(route.query);
+
+    if (customUrl.value[sale.sales[0].method]) {
+      window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+    } 
+    else {
+      const redirectTo = sale.sales[0].product.thank_you_page 
+      ? sale.sales[0].product.thank_you_page + `?${current_query.toString()}` 
+      : `https://greenn.com.br/checkout-obrigado?${current_query.toString()}`;
+
+      window.location.href = redirectTo;
+    }
   };
 
   modal.setAction(closeAction);
@@ -69,8 +110,9 @@ if (
   modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
 
   const closeAction = () => {
+    const current_query = new URLSearchParams(route.query);
     window.location.href =
-      data.value.productOffer.data.thank_you_page || "https://greenn.com.br";
+      data.value.productOffer.data.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
   };
 
   modal.setAction(closeAction);
@@ -100,6 +142,10 @@ if (
     })
   );
 }
+
+function openPix(id: number) {
+  data.value.pixOpened = id;
+}
 </script>
 
 <template>
@@ -128,7 +174,7 @@ if (
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
-            @click="modal.closeAtion"
+            @click="modal.closeAction"
           >
             {{ $t("pg_obrigado.modal.entendido") }}
           </BaseButton>
@@ -146,13 +192,15 @@ if (
         v-if="data.sale?.order"
         :code="data.sale?.order.qrcode"
         :url="data.sale?.order.imgQrcode"
-        :id="data.sale?.order.id.toString()"
+        :id="data.sale?.order.id"
         :amount="formatMoney(data.sale?.order.total)"
         :only-buttons="true"
         :sales-length="1"
         :created-at="data.sale?.order.created_at.toString()"
         :has-order="true"
         :sales="data.sale.sales"
+        :opened="data.pixOpened"
+        @openedPixEvent="openPix"
       />
       <template v-else>
         <ModalPixInfos
@@ -161,7 +209,7 @@ if (
           :name="sale.product.name"
           :code="sale.qrcode"
           :url="sale.imgQrcode"
-          :id="sale.id.toString()"
+          :id="sale.id"
           :amount="
             formatMoney(sale.total || sale.amount || sale.product?.amount)
           "
@@ -172,8 +220,8 @@ if (
           :shipping-amount="formatMoney(sale.shipping_amount)"
           :shipping-selected="sale.shipping_selected"
           :sales="data.sale.sales"
-          :opened="data.pixOpened.toString()"
-          @openedPixEvent="(e) => (data.pixOpened = e.toString())"
+          :opened="data.pixOpened"
+          @openedPixEvent="openPix"
         />
       </template>
     </div>
@@ -199,7 +247,7 @@ if (
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
-            @click="modal.closeAtion"
+            @click="modal.closeAction"
           >
             {{ $t("pg_obrigado.modal.entendido") }}
           </BaseButton>
@@ -232,7 +280,7 @@ if (
           size="md"
           animation="pulse"
           class="col-span-12 lg:col-span-4"
-          @click="modal.closeAtion"
+          @click="modal.closeAction"
         >
           {{ $t("pg_obrigado.modal.entendido") }}
         </BaseButton>
@@ -250,6 +298,7 @@ if (
       :original_amount="amountStore.getOriginalAmount"
       :sale_id="parseInt(saleId!.toString())"
       :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
     />
   </ClientOnly>
 </template>
