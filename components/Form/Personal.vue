@@ -8,7 +8,6 @@ import { useStepStore } from "@/store/modules/steps";
 import {
   validateName,
   validateEmail,
-  validatePhone,
   validateDocument,
   phoneValidation,
   validateRequired,
@@ -167,7 +166,7 @@ personalStore.setFields(useRoute().query);
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
-      v-if="showDocumentInput && !isMobile"
+      v-if="showDocumentInput"
       input-name="document-field"
       input-id="document-field"
       v-model="document"

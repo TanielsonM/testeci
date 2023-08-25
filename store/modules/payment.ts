@@ -83,7 +83,7 @@ export const usePaymentStore = defineStore("Payment", {
           );
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return getInstallments.value() * installments.value;
+          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
         }
         return getInstallments.value(1);
       });
@@ -106,7 +106,7 @@ export const usePaymentStore = defineStore("Payment", {
         // proposal_id: proposal_id,
         // User details
         name: name.value,
-        email: email.value,
+        email: email.value.trim(),
         cellphone: cellphone.value.replace(/[^\d+]/g, ""),
         document: document.value,
         uuid: uuid.value,

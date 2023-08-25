@@ -164,12 +164,12 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  handleResize();
-  window.addEventListener("resize", handleResize);
-  window.addEventListener("myRecaptchaCallback", () => {
-    payment.payment(locale.value);
-  });
   if (process.client) {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("myRecaptchaCallback", () => {
+      payment.payment(locale.value);
+    });
     if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
       let currentUrl = new URL(window.location.href);
       currentUrl.host = "payu.greenn.com.br";
@@ -539,6 +539,7 @@ await checkout.init();
         :method="checkout.method"
         :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
       />
       <Captcha />
     </ClientOnly>

@@ -323,6 +323,7 @@ function openPix(id: number) {
       :original_amount="amountStore.getOriginalAmount"
       :sale_id="parseInt(saleId!.toString())"
       :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
     />
   </ClientOnly>
 </template>

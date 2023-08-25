@@ -22,8 +22,10 @@ export const useProductStore = defineStore("product", {
         const checkout = useCheckoutStore();
         if (!state.product) return false;
         return (
+          (state.product?.status_product === "APPROVED" ||
+            state.product?.status_product === "PRE_APPROVED" ||
+            state.product?.status_product === "REVISION") &&
           state.product?.status_offer === "APPROVED" &&
-          state.product?.status_product === "APPROVED" &&
           state.product?.is_active == 1 &&
           checkout.isValid()
         );
