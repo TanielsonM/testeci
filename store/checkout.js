@@ -3,13 +3,11 @@ import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
-import { useInstallmentsStore } from "./modules/installments";
 import { storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
-const installmentsStore = useInstallmentsStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({

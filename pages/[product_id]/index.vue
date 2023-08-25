@@ -389,27 +389,6 @@ await checkout.init();
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseInput
-                class="col-span-12"
-                @blur="updateLead"
-                :class="{ 'xl:col-span-6': showDocumentInput }"
-                :label="documentText.label"
-                :placeholder="documentText.placeholder"
-                v-if="showDocumentInput && isMobile"
-                input-name="document-field"
-                input-id="document-field"
-                v-model="document"
-                :mask="documentText.documentMask"
-                :error="
-                  document || hasSent
-                    ? !validateDocument.isValidSync(document)
-                    : undefined
-                "
-              >
-                <template #error>
-                  {{ $t("checkout.dados_pessoais.feedbacks.document") }}
-                </template>
-              </BaseInput>
               <template v-if="product?.method !== 'FREE'">
                 <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
                 <template v-if="method !== 'PIX'">
