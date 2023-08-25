@@ -17,7 +17,8 @@ const getTicketInstallments = function (batch_group, ticket_hash) {
     coupon,
     installments,
   } = storeToRefs(checkout);
-  const batch = getBatches.value.find(x => x === batch_group);
+  const batch = getBatches.value.find(x => x.id === batch_group.id);
+  console.log(batch)
   const ticket = batch.tickets.find(x => x?.hash === ticket_hash);
 
   const getAmount = ticket.selected_tickets * ticket.amount;
@@ -82,7 +83,7 @@ const dependentBatchName = function (batch) {
           </p>
           <p class="text-[14px] font-[400] text-main-color">
             <template v-if="dependsOnAnotherBatch(batch)">
-              Vendas disponíveis após esgotamento do lote: <br> {{ dependentBatchName(batch) }}
+              Vendas disponíveis após encerramento do lote: <br> {{ dependentBatchName(batch) }}
             </template>
             <template v-else-if="saleHasStarted(batch)">
               Vendas disponíveis

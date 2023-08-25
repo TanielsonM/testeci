@@ -55,7 +55,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     updateAvailableTickets(batch_id, tickets) {
       let batch = this.batches.find(x => x.id === batch_id);
-      batch.tickets = tickets ?? 0;
+      batch.available_tickets = tickets ?? 0;
     },
     setReservations(value) {
       this.reservations = value;
@@ -81,7 +81,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.loadingReservation = value;
     },
     async addTicket(batch_group, hash) {
-      const batch = this.batches.find(x => x === batch_group);
+      const batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
       if(haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
@@ -99,7 +99,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       }
     },
     async subTicket(batch_group, hash) {
-      const batch = this.batches.find(x => x === batch_group);
+      const batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
       if(ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
         ticket.selected_tickets -= 1;

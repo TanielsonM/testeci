@@ -294,7 +294,7 @@ export const useCheckoutStore = defineStore("checkout", {
                 return bump1.b_order - bump2.b_order;
               });
             }
-            // console.log(response)
+
             if (response.data.product_type_id === 3) {
               const preCheckout = usePreCheckoutStore();
               if(Array.isArray(response?.batches)) {
