@@ -81,7 +81,8 @@ watch([name, email, cellphone, document], (value) => {
   leadsStore.syncPersonal();
 });
 
-function updateLead() {
+function updateLead(isEmail = false) {
+  if (isEmail) email.value = email.value.trim();
   setTimeout(function () {
     leadsStore.updateLead();
   }, 1000);
@@ -110,7 +111,7 @@ personalStore.setFields(useRoute().query);
 
     <BaseInput
       class="col-span-12"
-      @blur="updateLead"
+      @blur="updateLead(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
