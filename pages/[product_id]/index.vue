@@ -164,13 +164,13 @@ const handleResize = () => {
 };
 
 function setInternationalURL() {
-  if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+  if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven && !(useRuntimeConfig().public.INTERNATIONAL_URL).includes('localhost')) {
     let currentUrl = new URL(window.location.href);
     const international_url = useRuntimeConfig().public.INTERNATIONAL_URL;
     currentUrl.host = international_url.split('://')[1];
     currentUrl.protocol = international_url.split('://')[0];
     currentUrl.port = "";
-    window.location = currentUrl.href.includes('localhost') ? currentUrl.href.replace('localhost', international_url.split('://')[1]) : currentUrl.href;
+    window.location = currentUrl.href;
   }
 }
 
