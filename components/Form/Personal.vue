@@ -117,7 +117,7 @@ personalStore.setFields(useRoute().query);
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      :error="email || hasSent ? !validateEmail.isValidSync(email) : undefined"
+      :error="email && hasSent ? !validateEmail.isValidSync(email) : undefined"
       :disabled="forceEmail"
     >
       <template #error>
