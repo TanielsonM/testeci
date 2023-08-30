@@ -112,34 +112,34 @@ export const useLeadsStore = defineStore("Leads", {
         product_id: this.payment.product_id,
       };
 
-      await useApi()
-        .read("/lead", { query })
-        .then((response) => {
-          if (response.uuid) {
-            this.step = response.step;
-            this.uuid = response.uuid ?? this.uuid;
+      // await useApi()
+      //   .read("/lead", { query })
+      //   .then((response) => {
+      //     if (response.uuid) {
+      //       this.step = response.step;
+      //       this.uuid = response.uuid ?? this.uuid;
 
-            this.personal = {
-              name: response.name,
-              email: response.email,
-              cellphone: response.cellphone,
-              document: response.cpf,
-            };
+      //       this.personal = {
+      //         name: response.name,
+      //         email: response.email,
+      //         cellphone: response.cellphone,
+      //         document: response.cpf,
+      //       };
 
-            this.address = {
-              zip_code: response.zip_code,
-              state: response.state,
-              city: response.city,
-              street: response.street,
-              number: response.number,
-              neighborhood: response.neighborhood,
-              complement: response.complement,
-              country_code: response.country_code,
-            };
-          } else {
-            this.createLead();
-          }
-        });
+      //       this.address = {
+      //         zip_code: response.zip_code,
+      //         state: response.state,
+      //         city: response.city,
+      //         street: response.street,
+      //         number: response.number,
+      //         neighborhood: response.neighborhood,
+      //         complement: response.complement,
+      //         country_code: response.country_code,
+      //       };
+      //     } else {
+      //       this.createLead();
+      //     }
+      //   });
     },
     async createLead(): Promise<void> {
       const data = {
