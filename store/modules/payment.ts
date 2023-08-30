@@ -124,8 +124,7 @@ export const usePaymentStore = defineStore("Payment", {
         complement: charge.value.complement,
         neighborhood: charge.value.neighborhood,
         city: charge.value.city,
-        state:
-          selectedCountry.value === "US" ? document.value : charge.value.state,
+        state: charge.value.state,
         // Others
         language,
         upsell_id: hasUpsell.value,
