@@ -2,8 +2,10 @@
 // Core
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
+import { useStepStore } from "~~/store/modules/steps";
 // Utils
 import { formatMoney } from "~/utils/money";
+
 
 const { t } = useI18n();
 const props = defineProps({
@@ -13,8 +15,12 @@ const props = defineProps({
     default: () => {},
   },
 });
-const checkoutStore = useCheckoutStore();
 const checkout = useCustomCheckoutStore();
+const stepsStore = useStepStore();
+const checkoutStore = useCheckoutStore();
+
+const { countSteps, isMobile, currentStep } = storeToRefs(stepsStore);
+const { showAddressStep } = storeToRefs(checkoutStore)
 
 const shipping = ref({});
 const shippingOptions = ref([]);
@@ -86,8 +92,11 @@ const isFixedShipping = computed(
 // Watches
 watch(
   () => props.bump.checkbox,
-  () => {
-    checkoutStore.setProductList(props.bump);
+  async () => {
+    await checkoutStore.setProductList(props.bump);
+    if (countSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
+      stepsStore.back();
+    }
   }
 );
 

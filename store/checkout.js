@@ -134,23 +134,19 @@ export const useCheckoutStore = defineStore("checkout", {
         );
       };
     },
-    showAddressStep(state) {
-      return () => {
-        const product = useProductStore();
-        return (
-          !!this.antifraud ||
-          !!product.showAddress ||
-          this.hasPhysicalProduct ||
-          this.hasCheckoutAddressBump
-        );
-      };
+    showAddressStep() {
+      return (
+        !!this.antifraud ||
+        this.hasPhysicalProduct ||
+        this.hasCheckoutAddress
+      );
     },
     hasPhysicalProduct(state) {
       return state.product_list.some(
         (product) => product.format === "PHYSICALPRODUCT"
       );
     },
-    hasCheckoutAddressBump(state) {
+    hasCheckoutAddress(state) {
       return state.product_list.some((product) => !!product.is_checkout_address);
     },
     getBumpList: (state) => state.bump_list,

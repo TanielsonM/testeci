@@ -349,7 +349,7 @@ export type CheckoutState = {
   isHeaven?: boolean;
   isValid?: () => boolean;
   selectedCountry?: string;
-  showAddressStep?: () => boolean;
+  showAddressStep?: boolean;
   totalAmount?: () => number;
   shippingProducts?: () => Product[] | never[];
 };
