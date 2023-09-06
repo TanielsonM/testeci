@@ -343,7 +343,7 @@ export type CheckoutState = {
   product_id?: string;
   product_offer?: string;
   hasFees?: boolean | number;
-  hasPhysicalProduct?: () => boolean;
+  hasPhysicalProduct?: boolean;
   getBumpList?: Product[];
   isLoading?: boolean;
   isHeaven?: boolean;

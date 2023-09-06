@@ -289,6 +289,12 @@ function incrementSteps() {
   }
 }
 
+function decreaseCount() {
+  if (countSteps.value === 3) {
+    stepsStore.decreaseCount();
+  }
+}
+
 if (hasAffiliateId.value) {
   const affiliate_id = useCookie(`affiliate_${product_id.value}`);
   const affiliate = useCookie("affiliate");
@@ -346,11 +352,12 @@ await checkout.init();
             (isOneStep && checkout.showAddressStep())
           "
           @vnode-mounted="incrementSteps"
+          @vnode-before-unmount="decreaseCount"
         >
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct()"
+              v-if="checkout.hasPhysicalProduct"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"

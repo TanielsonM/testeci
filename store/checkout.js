@@ -140,25 +140,18 @@ export const useCheckoutStore = defineStore("checkout", {
         return (
           !!this.antifraud ||
           !!product.showAddress ||
-          this.hasPhysicalProduct() ||
+          this.hasPhysicalProduct ||
           this.hasCheckoutAddressBump
         );
       };
     },
     hasPhysicalProduct(state) {
-      return () => {
-        const product = useProductStore();
-        return (
-          product.isPhysicalProduct ||
-          state.bump_list.some(
-            (bump) => (bump.format === "PHYSICALPRODUCT") && bump.checkbox)
-        );
-      };
+      return state.product_list.some(
+        (product) => product.format === "PHYSICALPRODUCT"
+      );
     },
     hasCheckoutAddressBump(state) {
-      return state.bump_list.some(
-        (bump) => !!bump.is_checkout_address && bump.checkbox
-      );
+      return state.product_list.some((product) => !!product.is_checkout_address);
     },
     getBumpList: (state) => state.bump_list,
     getBumpsWithShippingFee(state) {
@@ -524,9 +517,8 @@ export const useCheckoutStore = defineStore("checkout", {
         .map((item) => item.id)
         .indexOf(product.id);
 
-      this.checkAllowedMethods();
+
       if (index === -1) {
-        this.product_list.push(product);
         amountStore.setAmount(
           !!product.custom_charges.length
             ? product.custom_charges[0].amount
@@ -545,6 +537,8 @@ export const useCheckoutStore = defineStore("checkout", {
           amountStore.setAmount(product?.shipping?.amount || 0);
           amountStore.setOriginalAmount(product?.shipping?.amount || 0);
         }
+        this.checkAllowedMethods();
+        this.product_list.push(product);
         return;
       }
       this.product_list.splice(index, 1);
@@ -563,6 +557,7 @@ export const useCheckoutStore = defineStore("checkout", {
         amountStore.setAmount(product?.shipping?.amount * -1 || 0);
         amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
       }
+      this.checkAllowedMethods();
     },
     resetProducts() {
       this.product_list = [];

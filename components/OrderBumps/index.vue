@@ -86,7 +86,7 @@ const isFixedShipping = computed(
 // Watches
 watch(
   () => props.bump.checkbox,
-  (isChecked) => {
+  () => {
     checkoutStore.setProductList(props.bump);
   }
 );
