@@ -166,9 +166,9 @@ const handleResize = () => {
 function setInternationalURL() {
   if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven && !(useRuntimeConfig().public.INTERNATIONAL_URL).includes('localhost')) {
     let currentUrl = new URL(window.location.href);
-    const international_url = useRuntimeConfig().public.INTERNATIONAL_URL;
-    currentUrl.host = international_url.split('://')[1];
-    currentUrl.protocol = international_url.split('://')[0];
+    const international_url = new URL(useRuntimeConfig().public.INTERNATIONAL_URL);
+    currentUrl.host = international_url.host;
+    currentUrl.protocol = international_url.protocol;
     currentUrl.port = "";
     window.location = currentUrl.href;
   }
