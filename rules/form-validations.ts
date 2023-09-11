@@ -160,7 +160,7 @@ export const validateAll = async (): Promise<boolean> => {
   const validStepTwo = await validateSecondStep();
   const validStepThree = await validateThristStep();
 
-  if (checkout.showAddressStep()) {
+  if (checkout.showAddressStep) {
     if (
       checkout.method === "CREDIT_CARD" ||
       checkout.method === "TWO_CREDIT_CARDS" || 

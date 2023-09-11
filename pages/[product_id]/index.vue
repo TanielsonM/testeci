@@ -288,6 +288,13 @@ function incrementSteps() {
   }
 }
 
+function decreaseCount() {
+  console.log("decreaseCount");
+  if (countSteps.value === 3) {
+    stepsStore.decreaseCount();
+  }
+}
+
 if (hasAffiliateId.value) {
   const affiliate_id = useCookie(`affiliate_${product_id.value}`);
   const affiliate = useCookie("affiliate");
@@ -340,16 +347,17 @@ await checkout.init();
           :title="$t('components.steps.address')"
           step="02"
           v-if="
-            (checkout.showAddressStep() &&
+            (checkout.showAddressStep &&
               ((isMobile && currentStep == 2) || !isMobile)) ||
-            (isOneStep && checkout.showAddressStep())
+            (isOneStep && checkout.showAddressStep)
           "
           @vnode-mounted="incrementSteps"
+          @vnode-before-unmount="decreaseCount"
         >
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct()"
+              v-if="checkout.hasPhysicalProduct"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -374,13 +382,12 @@ await checkout.init();
             />
           </template>
         </Steps>
-
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
-          :step="checkout.showAddressStep() ? '03' : '02'"
+          :step="checkout.showAddressStep ? '03' : '02'"
           v-if="
-            (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)) ||
+            (isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
             !isMobile ||
             isOneStep
           "
@@ -445,7 +452,7 @@ await checkout.init();
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="
             isMobile &&
-            currentStep < (checkout.showAddressStep() ? 3 : 2) &&
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
             !isOneStep
           "
         >

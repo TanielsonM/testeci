@@ -146,7 +146,7 @@ export const usePaymentStore = defineStore("Payment", {
       }
 
       // Physical product
-      if (hasPhysicalProduct.value()) {
+      if (hasPhysicalProduct.value) {
         data = {
           ...data,
           shipping_address_zip_code: sameAddress.value
