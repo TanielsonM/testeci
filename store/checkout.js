@@ -197,11 +197,12 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      if (!!this.hasCustomCheckout) {
+      await this.getProduct(this.product_id, this.product_offer);
+      const product = useProductStore();
+      if (!!this.hasCustomCheckout && product.isValid() && (product.product.method != 'FREE' || (product.product.method == 'FREE' && this.allow_free_offers != 0))) {
         const customCheckout = useCustomCheckoutStore();
         await customCheckout.getCustomCheckout();
       }
-      await this.getProduct(this.product_id, this.product_offer);
 
       /* Initial configs */
       this.setCoupon(true);
