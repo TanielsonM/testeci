@@ -397,7 +397,7 @@ await checkout.init();
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="
             isMobile &&
-            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            currentStep < (checkout.showAddressStep() ? 3 : 2) &&
             !isOneStep &&
             method !== 'FREE'
           "
@@ -410,7 +410,7 @@ await checkout.init();
         <template
           v-if="
             isMobile &&
-            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            currentStep < (checkout.showAddressStep() ? 3 : 2) &&
             !isOneStep &&
             method === 'FREE'
           "
