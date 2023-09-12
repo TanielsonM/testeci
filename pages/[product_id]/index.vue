@@ -392,16 +392,31 @@ await checkout.init();
           </template>
         </Steps>
 
+        <!-- Next step buttom -->
         <BaseButton
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="
             isMobile &&
-            currentStep < (checkout.showAddressStep() ? 3 : 2) &&
-            !isOneStep
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            !isOneStep &&
+            method !== 'FREE'
           "
         >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
+          </span>
+        </BaseButton>
+        <!-- Payment button -->
+        <BaseButton
+          @click="callPayment"
+          v-if="method === 'FREE'"
+          class="my-7"
+        >
+          <span class="text-[15px] font-semibold">
+            {{
+              customCheckoutStore.purchase_text ||
+              $t("checkout.footer.btn_compra")
+            }}
           </span>
         </BaseButton>
       </BaseCard>
