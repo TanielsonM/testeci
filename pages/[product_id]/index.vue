@@ -407,18 +407,32 @@ await checkout.init();
           </span>
         </BaseButton>
         <!-- Payment button -->
-        <BaseButton
-          @click="callPayment"
-          v-if="method === 'FREE'"
-          class="my-7"
+        <template
+          v-if="
+            isMobile &&
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            !isOneStep &&
+            method === 'FREE'
+          "
         >
-          <span class="text-[15px] font-semibold">
-            {{
-              customCheckoutStore.purchase_text ||
-              $t("checkout.footer.btn_compra")
-            }}
+          <BaseButton
+            @click="callPayment"
+            class="my-7"
+          >
+            <span class="text-[15px] font-semibold">
+              {{
+                customCheckoutStore.purchase_text ||
+                $t("checkout.footer.btn_compra")
+              }}
+            </span>
+          </BaseButton>
+          <span class="flex items-center gap-3">
+            <Icon name="fa6-solid:lock" class="text-main-color" />
+            <p class="text-[13px] font-normal text-txt-color">
+              {{ $t("checkout.footer.info_seguranca") }}
+            </p>
           </span>
-        </BaseButton>
+        </template>
       </BaseCard>
       <!-- End purchase card -->
 
