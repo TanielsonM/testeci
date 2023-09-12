@@ -197,6 +197,10 @@ export const useCheckoutStore = defineStore("checkout", {
       this.setCoupon(true);
       if (this.hasBump) this.getBumps();
       this.setLoading();
+
+      const preCheckout = usePreCheckoutStore();
+      const { getBatches } = storeToRefs(preCheckout);
+      if(getBatches?.value?.length) return getBatches?.value;
     },
     setUUID(uuid) {
       return (this.uuid = uuid);
@@ -222,7 +226,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
       /* Call api to get product */
       try {
-        await useApi()
+        return await useApi()
           .read(url, {
             ...configs,
             query,

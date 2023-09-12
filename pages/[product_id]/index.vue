@@ -312,7 +312,6 @@ function incrementSteps() {
 }
 
 function decreaseCount() {
-  console.log("decreaseCount");
   if (countSteps.value === 3) {
     stepsStore.decreaseCount();
   }

@@ -10,7 +10,11 @@ const expiredSession = useExpiredSessionStore();
 
 const { product_list } = storeToRefs(checkout);
 const route = useRoute();
-await checkout.init();
+const batches = await checkout.init();
+// por algum motivo o batches ta sumindo, código abaixo para persistir
+const preCheckout = usePreCheckoutStore();
+if(batches?.length) preCheckout.setBatches(batches);
+
 
 function byTickets() {
   expiredSession.setHaveFinished(false);

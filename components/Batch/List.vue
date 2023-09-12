@@ -8,6 +8,7 @@ import moment from "moment";
 const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
 const { getBatches, loadingReservation } = storeToRefs(preCheckout);
+const batches = getBatches?.value || [];
 
 const getTicketInstallments = function (batch_group, ticket_hash) {
   if(!getBatches?.value) return 0;
@@ -18,7 +19,6 @@ const getTicketInstallments = function (batch_group, ticket_hash) {
     installments,
   } = storeToRefs(checkout);
   const batch = getBatches.value.find(x => x.id === batch_group.id);
-  console.log(batch)
   const ticket = batch.tickets.find(x => x?.hash === ticket_hash);
 
   const getAmount = ticket.selected_tickets * ticket.amount;
@@ -68,7 +68,7 @@ const dependentBatchName = function (batch) {
 
 <template>
   <div class="mb-3">
-    <PreCheckoutCard v-for="batch in getBatches" :key="batch.id" class="mb-5" :class="{'bg-checkout': batch?.dependent_batch}">
+    <PreCheckoutCard v-for="batch in batches" :key="batch.id" class="mb-5" :class="{'bg-checkout': batch?.dependent_batch}">
       <div
         class="text-txt-color justify-between items-center mt-5"
         :class="{
