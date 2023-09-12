@@ -59,23 +59,15 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const validStreet = await validateStreet.isValid(charge.value.street);
   const validNumber = await validateNumber.isValid(charge.value.number);
   const validCity = await validateCity.isValid(charge.value.city);
-  const validNeighborhood = await validateNeighborhood.isValid(
-    charge.value.neighborhood
-  );
+  const validNeighborhood = await validateNeighborhood.isValid(charge.value.neighborhood);
   const validState = await validateState.isValid(charge.value.state);
 
   if (!sameAddress.value) {
     const validChargeZip = await validateZip.isValid(shipping.value.zipcode);
-    const validChargeStreet = await validateStreet.isValid(
-      shipping.value.street
-    );
-    const validChargeNumber = await validateNumber.isValid(
-      shipping.value.number
-    );
+    const validChargeStreet = await validateStreet.isValid(shipping.value.street);
+    const validChargeNumber = await validateNumber.isValid(shipping.value.number);
     const validChargeCity = await validateCity.isValid(shipping.value.city);
-    const validChargeNeighborhood = await validateNeighborhood.isValid(
-      shipping.value.neighborhood
-    );
+    const validChargeNeighborhood = await validateNeighborhood.isValid(shipping.value.neighborhood);
     const validChargeState = await validateState.isValid(shipping.value.state);
 
     return (
@@ -194,7 +186,7 @@ export const validateAll = async (): Promise<boolean> => {
   const validStepTwo = await validateSecondStep();
   const validStepThree = await validateThristStep();
 
-  if (checkout.showAddressStep()) {
+  if (checkout.showAddressStep) {
     if (
       checkout.method === "CREDIT_CARD" ||
       checkout.method === "TWO_CREDIT_CARDS" || 
