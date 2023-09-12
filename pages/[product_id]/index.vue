@@ -163,6 +163,17 @@ const handleResize = () => {
   isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
+function setInternationalURL() {
+  if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven && !(useRuntimeConfig().public.INTERNATIONAL_URL).includes('localhost')) {
+    let currentUrl = new URL(window.location.href);
+    const international_url = new URL(useRuntimeConfig().public.INTERNATIONAL_URL);
+    currentUrl.host = international_url.host;
+    currentUrl.protocol = international_url.protocol;
+    currentUrl.port = "";
+    window.location = currentUrl.href;
+  }
+}
+
 onMounted(() => {
   if (process.client) {
     handleResize();
@@ -170,13 +181,7 @@ onMounted(() => {
     window.addEventListener("myRecaptchaCallback", () => {
       payment.payment(locale.value);
     });
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
@@ -191,13 +196,7 @@ watch(method, (method) => {
 
 watch(selectedCountry, () => {
   if (process.client) {
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
