@@ -304,7 +304,7 @@ await checkout.init();
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct() && product?.method !== 'FREE'"
+              v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"

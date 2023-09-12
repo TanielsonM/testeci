@@ -47,7 +47,7 @@ const amountText = computed(() => {
     <!-- Shipping -->
     <section
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
-      v-if="checkout.hasPhysicalProduct() && product?.method !== 'FREE'"
+      v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
     >
       <span class="infos-title">Frete</span>
       <span
