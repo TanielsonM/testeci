@@ -191,16 +191,14 @@ export const useCheckoutStore = defineStore("checkout", {
         const customCheckout = useCustomCheckoutStore();
         await customCheckout.getCustomCheckout();
       }
-      await this.getProduct(this.product_id, this.product_offer);
+      const res = await this.getProduct(this.product_id, this.product_offer);
 
       /* Initial configs */
       this.setCoupon(true);
       if (this.hasBump) this.getBumps();
       this.setLoading();
 
-      const preCheckout = usePreCheckoutStore();
-      const { getBatches } = storeToRefs(preCheckout);
-      if(getBatches?.value?.length) return getBatches?.value;
+      if(res?.batches?.length) return res.batches;
     },
     setUUID(uuid) {
       return (this.uuid = uuid);
@@ -312,6 +310,8 @@ export const useCheckoutStore = defineStore("checkout", {
 
               preCheckout.setBatches(response.batches);
             }
+
+            return response
           })
           .catch((err) => {
             console.error(err);
