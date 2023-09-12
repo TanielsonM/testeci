@@ -133,32 +133,20 @@ export const useCheckoutStore = defineStore("checkout", {
         );
       };
     },
-    showAddressStep(state) {
-      return () => {
-        const product = useProductStore();
-        return (
-          !!this.antifraud ||
-          !!product.showAddress ||
-          this.hasPhysicalProduct() ||
-          this.hasCheckoutAddressBump
-        );
-      };
+    showAddressStep() {
+      return (
+        !!this.antifraud ||
+        this.hasPhysicalProduct ||
+        this.hasCheckoutAddress
+      );
     },
     hasPhysicalProduct(state) {
-      return () => {
-        const product = useProductStore();
-        return (
-          product.isPhysicalProduct ||
-          state.bump_list.some(
-            (bump) => bump.format === "PHYSICALPRODUCT" && bump.checkbox
-          )
-        );
-      };
-    },
-    hasCheckoutAddressBump(state) {
-      return state.bump_list.some(
-        (bump) => !!bump.is_checkout_address && bump.checkbox
+      return state.product_list.some(
+        (product) => product.format === "PHYSICALPRODUCT"
       );
+    },
+    hasCheckoutAddress(state) {
+      return state.product_list.some((product) => !!product.is_checkout_address);
     },
     getBumpList: (state) => state.bump_list,
     getBumpsWithShippingFee(state) {
@@ -553,49 +541,29 @@ export const useCheckoutStore = defineStore("checkout", {
         .map((item) => item.id)
         .indexOf(product.id);
 
-      this.checkAllowedMethods();
+
       if (index === -1) {
-        this.addProductList(product);
-      } else {
-        this.removeProductList(product, index);
-      }
-    },
-    addProductList(product) {
-      this.product_list.push(product);
+        amountStore.setAmount(
+          !!product.custom_charges.length
+            ? product.custom_charges[0].amount
+            : product.amount
+        );
+        amountStore.setOriginalAmount(
+          !!product.custom_charges.length
+            ? product.custom_charges[0].amount
+            : product.amount
+        );
 
-      amountStore.setAmount(
-        !!product?.custom_charges?.length
-          ? product.custom_charges[0].amount
-          : product.amount
-      );
-      amountStore.setOriginalAmount(
-        !!product?.custom_charges?.length
-          ? product.custom_charges[0].amount
-          : product.amount
-      );
-
-      if (product?.format === "PHYSICALPRODUCT" && !!product?.has_shipping_fee) {
-        amountStore.setAmount(product?.shipping?.amount || 0);
-        amountStore.setOriginalAmount(product?.shipping?.amount || 0);
-      }
-    },
-    removeProductList(product, index) {
-      this.product_list.splice(index, 1);
-
-      amountStore.setAmount(
-        !!product?.custom_charges?.length
-          ? product.custom_charges[0].amount * -1
-          : product.amount * -1
-      );
-      amountStore.setOriginalAmount(
-        !!product?.custom_charges?.length
-          ? product.custom_charges[0].amount * -1
-          : product.amount * -1
-      );
-
-      if (product?.format === "PHYSICALPRODUCT" && !!product?.has_shipping_fee) {
-        amountStore.setAmount(product?.shipping?.amount * -1 || 0);
-        amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
+        if (
+          product.format === "PHYSICALPRODUCT" &&
+          !!product.has_shipping_fee
+        ) {
+          amountStore.setAmount(product?.shipping?.amount || 0);
+          amountStore.setOriginalAmount(product?.shipping?.amount || 0);
+        }
+        this.checkAllowedMethods();
+        this.product_list.push(product);
+        return;
       }
     },
     resetProducts() {

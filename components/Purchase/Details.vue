@@ -57,7 +57,7 @@ function openGoBackPreCheckoutModal() {
     <!-- Shipping -->
     <section
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
-      v-if="checkout.hasPhysicalProduct()"
+      v-if="checkout.hasPhysicalProduct"
     >
       <span class="infos-title">Frete</span>
       <span
