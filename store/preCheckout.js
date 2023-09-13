@@ -86,7 +86,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       if(haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
         const checkoutStore = useCheckoutStore();
-        checkoutStore.addProductList(ticket);
+        checkoutStore.setProductList(ticket);
         if(this.reservations?.length && this.reservations.some(x => x.offer_id === ticket.id)) {
           // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
           const res = await this.putReservation(batch.id, ticket);
@@ -104,7 +104,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       if(ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
         ticket.selected_tickets -= 1;
         const checkoutStore = useCheckoutStore();
-        checkoutStore.removeProductList(ticket);
+        checkoutStore.setProductList(ticket);
         if(ticket.selected_tickets === 0) {
           // Deleta a reserva do lote existente, já que foram removidos todos ingressos
           const reservation = this.reservations.find(x => x.offer_id === ticket.id);

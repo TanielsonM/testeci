@@ -548,12 +548,12 @@ export const useCheckoutStore = defineStore("checkout", {
 
       if (index === -1) {
         amountStore.setAmount(
-          !!product.custom_charges.length
+          !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
         );
         amountStore.setOriginalAmount(
-          !!product.custom_charges.length
+          !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
         );

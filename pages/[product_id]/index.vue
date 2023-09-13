@@ -293,8 +293,7 @@ const documentText = computed(() => {
       return {
         label: "CPF ou CNPJ",
         placeholder: "Doc. do títular da compra",
-        documentMask:
-          document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
+        documentMask: document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
       };
   }
 });
