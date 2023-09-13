@@ -14,8 +14,8 @@ const saleHasStarted = function (batch) {
 }
 
 const haveAvailableTickets = function (batch) {
-  if(!batch?.max_paid_sales) return true;
-  else return batch?.max_paid_sales > 0;
+  if(!batch?.available_tickets && batch?.available_tickets !== 0) return true;
+  else return batch?.available_tickets > 0;
 }
 
 const dependsOnAnotherBatch = function (batch) {

@@ -68,12 +68,12 @@ const dependentBatchName = function (batch) {
 
 <template>
   <div class="mb-3">
-    <PreCheckoutCard v-for="batch in batches" :key="batch.id" class="mb-5" :class="{'bg-checkout': batch?.dependent_batch}">
+    <PreCheckoutCard v-for="batch in batches" :key="batch.id" class="mb-5" :class="{'bg-checkout': dependsOnAnotherBatch(batch)}">
       <div
         class="text-txt-color justify-between items-center mt-5"
         :class="{
-          'mb-5 block sm:flex': batch?.dependent_batch,
-          'flex': !batch?.dependent_batch
+          'mb-5 block sm:flex': dependsOnAnotherBatch(batch),
+          'flex': !dependsOnAnotherBatch(batch)
         }"
       >
         <div class="ml-5">
@@ -93,18 +93,18 @@ const dependentBatchName = function (batch) {
             </template>
           </p>
         </div>
-        <div v-if="!batch?.dependent_batch" class="mr-5 ml-5 mt-5 sm:ml-0">
+        <div v-if="!dependsOnAnotherBatch(batch)" class="mr-5 ml-5 mt-5 sm:ml-0">
           <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
-            {{ batch?.max_paid_sales }}
+            {{ batch?.available_tickets }}
           </span>
         </div>
         <div v-else class="mr-5 ml-5 mt-5 sm:ml-0">
-          <span class="text-[12px] font-[600] text-main-color px-3 py-2 bg-main-transparent rounded-[5px]">
+          <div class="text-center text-[12px] font-[600] text-main-color px-3 py-2 bg-main-transparent rounded-[5px]">
             Disponível em breve
-          </span>
+          </div>
         </div>
       </div>
-      <ul v-if="!batch?.dependent_batch" class="text-txt-color">
+      <ul v-if="!dependsOnAnotherBatch(batch)" class="text-txt-color">
         <li v-for="(ticket, i) in batch.tickets" :key="ticket?.hash" class="mb-6 pt-5 flex justify-between items-center border-[#E5E5E5]" :class="{'border-t': i !== 0}">
           <div class="ml-5" :class="{'line-through': !haveAvailableTickets(batch)}">
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ ticket?.name }}</h5>
