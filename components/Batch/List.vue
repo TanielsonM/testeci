@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/utils/validateBatch";
-import moment from "moment";
+import moment from "@/plugins/moment.js";
 
 const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
@@ -81,19 +81,19 @@ const dependentBatchName = function (batch) {
           <p class="text-[16px] font-[400] text-txt-color">
             A partir de R$ 157,20
           </p>
-          <p class="text-[14px] font-[400] text-main-color">
+          <p class="text-[14px] font-[400] text-main-color max-w-[330px]">
             <template v-if="dependsOnAnotherBatch(batch)">
               Vendas disponíveis após encerramento do lote: <br> {{ dependentBatchName(batch) }}
             </template>
             <template v-else-if="saleHasStarted(batch)">
-              Vendas disponíveis
+              Vendas disponíveis {{ saleHasStarted(batch) }}
             </template>
             <template v-else>
-              Vendas começarão em {{ moment(batch?.release_fixed_date).format('DD/MM/YYYY') }}
+              Vendas começarão em {{ moment(batch?.release_fixed_date).format('LLL') }}
             </template>
           </p>
         </div>
-        <div v-if="!dependsOnAnotherBatch(batch)" class="mr-5 ml-5 mt-5 sm:ml-0">
+        <div v-if="!dependsOnAnotherBatch(batch) && saleHasStarted(batch)" class="mr-5 ml-5 mt-5 sm:ml-0">
           <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
             {{ batch?.available_tickets }}
           </span>
@@ -104,7 +104,7 @@ const dependentBatchName = function (batch) {
           </div>
         </div>
       </div>
-      <ul v-if="!dependsOnAnotherBatch(batch)" class="text-txt-color">
+      <ul v-if="!dependsOnAnotherBatch(batch) && saleHasStarted(batch)" class="text-txt-color">
         <li v-for="(ticket, i) in batch.tickets" :key="ticket?.hash" class="mb-6 pt-5 flex justify-between items-center border-[#E5E5E5]" :class="{'border-t': i !== 0}">
           <div class="ml-5" :class="{'line-through': !haveAvailableTickets(batch)}">
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ ticket?.name }}</h5>
