@@ -261,8 +261,7 @@
                 option.value = x;
                 select.appendChild(option);
               } else {
-                option.text = x + "x de R$ " + Number(pmt).toFixed(2);
-                +" *";
+                option.text = x + "x de R$ " + Number(pmt).toFixed(2) +" *";
                 option.value = x;
                 select.appendChild(option);
               }
