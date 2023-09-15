@@ -87,15 +87,15 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         ticket.selected_tickets += 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.setProductList(ticket);
-        if(this.reservations?.length && this.reservations.some(x => x.offer_id === ticket.id)) {
-          // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
-          const res = await this.putReservation(batch.id, ticket);
-          localStorage.setItem('reservations', JSON.stringify(this.reservations));
-        } else {
+        // if(this.reservations?.length && this.reservations.some(x => x.offer_id === ticket.id)) {
+        //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
+        //   const res = await this.putReservation(batch.id, ticket);
+        //   localStorage.setItem('reservations', JSON.stringify(this.reservations));
+        // } else {
           // Cria nova reserva do ingresso do lote selecionado
           await this.createReservation(batch.id, ticket.id);
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
-        }
+        // }
       }
     },
     async subTicket(batch_group, hash) {
@@ -105,16 +105,16 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         ticket.selected_tickets -= 1;
         const checkoutStore = useCheckoutStore();
         checkoutStore.setProductList(ticket);
-        if(ticket.selected_tickets === 0) {
+        // if(ticket.selected_tickets === 0) {
           // Deleta a reserva do lote existente, já que foram removidos todos ingressos
           const reservation = this.reservations.find(x => x.offer_id === ticket.id);
           await this.deleteReservation(reservation);
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
-        } else {
-          // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
-          const res = await this.putReservation(batch.id, ticket);
-          localStorage.setItem('reservations', JSON.stringify(this.reservations))
-        }
+        // } else {
+        //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
+        //   const res = await this.putReservation(batch.id, ticket);
+        //   localStorage.setItem('reservations', JSON.stringify(this.reservations))
+        // }
       }
     },
     async createReservation(batch_id, offer_id) {
