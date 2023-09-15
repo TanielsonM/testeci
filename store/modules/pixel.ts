@@ -31,6 +31,7 @@ export const usePixelStore = defineStore("Pixel", {
       this.affiliate_id = checkoutStore.hasAffiliateId;
       this.email = personalStore.email;
       this.cellphone = personalStore.cellphone;
+      this.amount = checkoutStore.amount
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
@@ -42,6 +43,7 @@ export const usePixelStore = defineStore("Pixel", {
         chc_id: this.client_has_contract,
         em: this.email,
         ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
+        amount: this.amount
       };
 
       return await useApi()
