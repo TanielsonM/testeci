@@ -163,6 +163,17 @@ const handleResize = () => {
   isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
+function setInternationalURL() {
+  if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven && !(useRuntimeConfig().public.INTERNATIONAL_URL).includes('localhost')) {
+    let currentUrl = new URL(window.location.href);
+    const international_url = new URL(useRuntimeConfig().public.INTERNATIONAL_URL);
+    currentUrl.host = international_url.host;
+    currentUrl.protocol = international_url.protocol;
+    currentUrl.port = "";
+    window.location = currentUrl.href;
+  }
+}
+
 onMounted(() => {
   if (process.client) {
     handleResize();
@@ -170,13 +181,7 @@ onMounted(() => {
     window.addEventListener("myRecaptchaCallback", () => {
       payment.payment(locale.value);
     });
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
@@ -191,13 +196,7 @@ watch(method, (method) => {
 
 watch(selectedCountry, () => {
   if (process.client) {
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
@@ -289,6 +288,13 @@ function incrementSteps() {
   }
 }
 
+function decreaseCount() {
+  console.log("decreaseCount");
+  if (countSteps.value === 3) {
+    stepsStore.decreaseCount();
+  }
+}
+
 if (hasAffiliateId.value) {
   const affiliate_id = useCookie(`affiliate_${product_id.value}`);
   const affiliate = useCookie("affiliate");
@@ -341,16 +347,17 @@ await checkout.init();
           :title="$t('components.steps.address')"
           step="02"
           v-if="
-            (checkout.showAddressStep() &&
+            (checkout.showAddressStep &&
               ((isMobile && currentStep == 2) || !isMobile)) ||
-            (isOneStep && checkout.showAddressStep())
+            (isOneStep && checkout.showAddressStep)
           "
           @vnode-mounted="incrementSteps"
+          @vnode-before-unmount="decreaseCount"
         >
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct()"
+              v-if="checkout.hasPhysicalProduct"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -375,40 +382,18 @@ await checkout.init();
             />
           </template>
         </Steps>
-
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
-          :step="checkout.showAddressStep() ? '03' : '02'"
+          :step="checkout.showAddressStep ? '03' : '02'"
           v-if="
-            (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)) ||
+            (isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
             !isMobile ||
             isOneStep
           "
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseInput
-                class="col-span-12"
-                @blur="updateLead"
-                :class="{ 'xl:col-span-6': showDocumentInput }"
-                :label="documentText.label"
-                :placeholder="documentText.placeholder"
-                v-if="showDocumentInput && isMobile"
-                input-name="document-field"
-                input-id="document-field"
-                v-model="document"
-                :mask="documentText.documentMask"
-                :error="
-                  document || hasSent
-                    ? !validateDocument.isValidSync(document)
-                    : undefined
-                "
-              >
-                <template #error>
-                  {{ $t("checkout.dados_pessoais.feedbacks.document") }}
-                </template>
-              </BaseInput>
               <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
               <template v-if="method !== 'PIX'">
                 <FormPurchase />
@@ -467,7 +452,7 @@ await checkout.init();
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="
             isMobile &&
-            currentStep < (checkout.showAddressStep() ? 3 : 2) &&
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
             !isOneStep
           "
         >
