@@ -21,11 +21,7 @@ const { product } = useProductStore();
     <li class="flex items-center mb-5">
       <img class="mr-3" width="18" src="@/assets/icons/location.svg" alt="location">
       <span>
-        Allianz Parque | São Paulo
-            <!-- {{ product?.address?.street }},
-            {{ product?.address?.number }}
-          - {{ product?.address?.neighborhood }}
-          - {{ product?.address?.city }} -->
+        {{ product?.location }}
       </span>
     </li>
   </ul>
