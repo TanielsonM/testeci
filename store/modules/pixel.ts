@@ -29,7 +29,7 @@ export const usePixelStore = defineStore("Pixel", {
       this.product_id = productStore.product_id;
       this.method = checkoutStore.method;
       this.affiliate_id = checkoutStore.hasAffiliateId;
-      this.email = personalStore.name;
+      this.email = personalStore.email;
       this.cellphone = personalStore.cellphone;
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
