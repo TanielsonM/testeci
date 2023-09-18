@@ -52,14 +52,14 @@ const getLessMethods = function () {
   for (const batch of getBatches?.value) {
     for (const ticket of batch.tickets) {
       const methodsCount = ticket.method && ticket.method !== '' ? ticket.method.split(",").length : 0;
-      if (methodsCount < minMethods) {
+      if (methodsCount !== 0 && methodsCount < minMethods) {
         minMethods = methodsCount;
         ticketWithLessMethods = ticket;
       }
     }
   }
 
-  checkout.setMethod(ticketWithLessMethods?.method.split(',')[0])
+  ticketWithLessMethods?.method && checkout.setMethod(ticketWithLessMethods?.method.split(',')[0])
   return ticketWithLessMethods?.method.split(',');
 
   // let batchWithLessMethods = getBatches?.value[0];
