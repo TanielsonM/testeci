@@ -53,9 +53,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     setBatches(value) {
       this.batches = value;
     },
-    updateAvailableTickets(batch_id, tickets) {
-      let batch = this.batches.find(x => x.id === batch_id);
-      batch.available_tickets = tickets ?? 0;
+    updateAvailableTickets(tickets) {
+      tickets.forEach(x => {
+        let batch = this.batches.find(x => x.id === x.batch_id);
+        batch.available_tickets = x.tickets ?? 0;
+      })
     },
     setReservations(value) {
       this.reservations = value;
@@ -89,11 +91,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         checkoutStore.setProductList(ticket);
         // if(this.reservations?.length && this.reservations.some(x => x.offer_id === ticket.id)) {
         //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
-        //   const res = await this.putReservation(batch.id, ticket);
+        //   const res = await this.putReservation(ticket);
         //   localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // } else {
           // Cria nova reserva do ingresso do lote selecionado
-          await this.createReservation(batch.id, ticket.id);
+          await this.createReservation(ticket.id);
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // }
       }
@@ -112,12 +114,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // } else {
         //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
-        //   const res = await this.putReservation(batch.id, ticket);
+        //   const res = await this.putReservation(ticket);
         //   localStorage.setItem('reservations', JSON.stringify(this.reservations))
         // }
       }
     },
-    async createReservation(batch_id, offer_id) {
+    async createReservation(offer_id) {
       const start = new Date();
       const end = new Date(start.getTime());
       end.setMinutes(end.getMinutes() + 10);
@@ -126,7 +128,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         const res = await useApi().create('/event/reservation', payload);
         this.addReservation({ ...res, offer_id });
-        this.updateAvailableTickets(batch_id, res.tickets);
+        this.updateAvailableTickets(res.tickets);
         return res;
       } catch(err) {
         console.error(err);
@@ -135,14 +137,14 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         this.setLoadingReservation(false);
       }
     },
-    async putReservation(batch_id, ticket) {
+    async putReservation(ticket) {
       const reservation = this.reservations.find(x => x.offer_id === ticket.id);
       const payload = { ...reservation, quantity: ticket.selected_tickets };
       this.setLoadingReservation(true);
       try {
         const res = await useApi().update(`/event/reservation/${payload.token}`, payload);
         this.updateReservation({ ...res, offer_id: ticket.id });
-        this.updateAvailableTickets(batch_id, res.tickets);
+        this.updateAvailableTickets(res.tickets);
         return res;
       } catch(err) {
         console.error(err);
@@ -158,7 +160,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         if(this.reservations?.length) this.removeReservation(reservation);
         this.batches.forEach(batch => {
           if(batch.tickets.some(x => x.id === reservation.offer_id)) {
-            this.updateAvailableTickets(batch.id, res.tickets);
+            this.updateAvailableTickets(res.tickets);
           }
         })
         return res;
