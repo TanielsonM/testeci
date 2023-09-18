@@ -95,7 +95,8 @@ export default defineNuxtConfig({
       PAYPAL_CLIENT_ID_NATIONAL: process.env.PAYPAL_CLIENT_ID_NATIONAL,
       PAYPAL_CLIENT_ID_INTERNATIONAL: process.env.PAYPAL_CLIENT_ID_INTERNATIONAL,
       CUSTOM_CHARGES_EXCEPTION: process.env.CUSTOM_CHARGES_EXCEPTION,
-      PORT: process.env.PORT
+      PORT: process.env.PORT,
+      INTERNATIONAL_URL: process.env.INTERNATIONAL_URL
     },
   },
   i18n: {
