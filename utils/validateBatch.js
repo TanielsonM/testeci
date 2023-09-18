@@ -49,9 +49,9 @@ const getLessMethods = function () {
   let minMethods = Infinity;
   let ticketWithLessMethods = getBatches?.value[0]?.tickets[0];
 
-  for (const batch of getBatches) {
+  for (const batch of getBatches?.value) {
     for (const ticket of batch.tickets) {
-      const methodsCount = ticket.method ? ticket.method.split(",").length : 0;
+      const methodsCount = ticket.method && ticket.method !== '' ? ticket.method.split(",").length : 0;
       if (methodsCount < minMethods) {
         minMethods = methodsCount;
         ticketWithLessMethods = ticket;

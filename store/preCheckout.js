@@ -54,10 +54,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.batches = value;
     },
     updateAvailableTickets(tickets) {
-      tickets.forEach(x => {
-        let batch = this.batches.find(x => x.id === x.batch_id);
-        batch.available_tickets = x.tickets ?? 0;
-      })
+      if(Array.isArray(tickets)) {
+        tickets.forEach(ticket => {
+          let batch = this.batches.find(x => x.id === ticket.batch_id);
+          batch.available_tickets = ticket.tickets ?? 0;
+        })
+      }
     },
     setReservations(value) {
       this.reservations = value;

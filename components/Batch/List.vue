@@ -64,6 +64,10 @@ const dependentBatchName = function (batch) {
     } else return '';
   }
 }
+
+const getSmallerAmount = function (tickets) {
+  return Math.min(...tickets.map(x => x.amount));
+}
 </script>
 
 <template>
@@ -79,7 +83,7 @@ const dependentBatchName = function (batch) {
         <div class="ml-5">
           <p class="text-[18px] font-bold text-input-color mb-2">{{ batch?.name }}</p>
           <p class="text-[16px] font-[400] text-txt-color">
-            A partir de R$ 157,20
+            A partir de {{ formatMoney(getSmallerAmount(batch.tickets))}}
           </p>
           <p class="text-[14px] font-[400] text-main-color max-w-[330px]">
             <template v-if="dependsOnAnotherBatch(batch)">
