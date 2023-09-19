@@ -7,7 +7,7 @@ const amountStore = useAmountStore();
 
 export const useProductStore = defineStore("product", {
   state: () => ({
-    product: [],
+    product: {product_type_id: 0},
     amount: 0,
     original_amount: 0,
     is_gift: false,

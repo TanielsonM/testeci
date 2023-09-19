@@ -100,8 +100,8 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Others
      */
-    product_id: (state) => state.url.params.product_id,
-    product_offer: (state) => state.url.params.hash,
+    product_id: (state) => state?.url?.params?.product_id,
+    product_offer: (state) => state?.url?.params?.hash,
     /**
      * Global settings
      */

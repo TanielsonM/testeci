@@ -421,9 +421,7 @@ await checkout.init();
               </template>
             </section>
             <!-- Bumps -->
-            <template
-              v-if="checkout.getBumpList.length && !hasTicketInstallments"
-            >
+            <template v-if="checkout.getBumpList.length && !hasTicketInstallments">
               <p class="my-5 w-full text-txt-color">
                 {{
                   customCheckoutStore.hasCustomBump
@@ -442,9 +440,9 @@ await checkout.init();
             <!-- Payment button -->
             <section>
               <BaseButton
-                @click="callPayment"
                 v-if="method !== 'PAYPAL'"
                 class="my-7"
+                @click="callPayment"
               >
                 <span class="text-[15px] font-semibold">
                   {{

@@ -257,6 +257,7 @@ export type Product = {
   paypal: Paypal;
   checked?: boolean;
   shipping?: Shipping;
+  product_type_id?: number;
 };
 
 export type PurcharseCard = {

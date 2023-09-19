@@ -53,6 +53,7 @@ const {
   FixedShippingAmount,
   hasTicketInstallments,
   hasAffiliationLead,
+  product
 } = storeToRefs(productStore);
 
 const { name, email, document, cellphone } = storeToRefs(personalStore);
@@ -103,7 +104,7 @@ export const usePaymentStore = defineStore("Payment", {
         // product infos
         product_id: product_id.value,
         products: product_list.value.map((item: Product) => ({
-          product_id: item.id,
+          product_id: product.value.product_type_id === 3 ? item.product_id : item.id,
           product_offer: item.hash,
         })),
         // proposal_id: proposal_id,
@@ -263,7 +264,7 @@ export const usePaymentStore = defineStore("Payment", {
       // Payment request
       await useApi()
         .create("/payment", data)
-        .then((res) => {
+        .then(res => {
           if (
             res.sales !== undefined &&
             Array.isArray(res.sales) &&
@@ -273,7 +274,7 @@ export const usePaymentStore = defineStore("Payment", {
               name: "Compra concluída com sucesso",
               product_id: product_id.value,
             });
-            const query: any = {};
+            let query: any = {};
             const principal_product = res.sales
               .filter(
                 (item: SaleElement) => item.product.name === productName.value
@@ -290,35 +291,45 @@ export const usePaymentStore = defineStore("Payment", {
 
             // Set query bumps
             const route = useRoute();
-            const keys = Object.keys(route.query);
-            const bumps = product_list.value.filter(
-              (item: Product) => item.id !== parseInt(product_id.value)
-            );
 
-            bumps.forEach((bump: Product) => {
-              const index = keys
-                .filter((key) => route.query[key] === bump.id.toString())
-                .pop();
-              const sale = res.sales
-                .filter((item: any) => item.product.name === bump.name)
-                .pop();
-              if (!!sale && !!index) {
-                if (bump.type === "SUBSCRIPTION") {
-                  if (sale.sale_id) {
-                    query[index] =
-                      route.query[index] +
-                      "-chc_" +
-                      sale.chc +
-                      "-s_id_" +
-                      sale.sale_id;
+            // em desenvolvimento...
+            if(product?.value?.product_type_id === 3) {
+              product_list.value.forEach((ticket: {id: number, name: string}, i) => {
+                const sale = res.sales.find((item: any) => item.offer_id === ticket.id);
+                if(sale) query['ticket_id_'+i] = (ticket.id + "-s_id_" + sale.sale_id)
+              })
+            } else {
+              const keys = Object.keys(route.query);
+              const bumps = product_list.value.filter(
+                (item: Product) => item.id !== parseInt(product_id.value)
+              );
+
+              bumps.forEach((bump: Product) => {
+                const index = keys
+                  .filter((key) => route.query[key] === bump.id.toString())
+                  .pop();
+                const sale = res.sales
+                  .filter((item: any) => item.product.name === bump.name)
+                  .pop();
+                if (!!sale && !!index) {
+                  if (bump.type === "SUBSCRIPTION") {
+                    if (sale.sale_id) {
+                      query[index] =
+                        route.query[index] +
+                        "-chc_" +
+                        sale.chc +
+                        "-s_id_" +
+                        sale.sale_id;
+                    } else {
+                      query[index] = route.query[index] + "-chc_" + sale.chc;
+                    }
                   } else {
-                    query[index] = route.query[index] + "-chc_" + sale.chc;
+                    query[index] = route.query[index] + "-s_id_" + sale.sale_id;
                   }
-                } else {
-                  query[index] = route.query[index] + "-s_id_" + sale.sale_id;
                 }
-              }
-            });
+              });
+            }
+
             const router = useRouter();
             router.push({
               path: `/${product_id.value}/obrigado`,
@@ -339,7 +350,8 @@ export const usePaymentStore = defineStore("Payment", {
             return;
           }
         })
-        .catch(() => {
+        .catch(err => {
+          console.error(err)
           checkoutStore.setLoading(false);
         });
     },

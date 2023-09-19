@@ -90,7 +90,7 @@ const getSmallerAmount = function (tickets) {
               Vendas disponíveis após encerramento do lote: <br> {{ dependentBatchName(batch) }}
             </template>
             <template v-else-if="saleHasStarted(batch)">
-              Vendas disponíveis {{ saleHasStarted(batch) }}
+              Vendas disponíveis
             </template>
             <template v-else>
               Vendas começarão em {{ moment(batch?.release_fixed_date).format('LLL') }}
