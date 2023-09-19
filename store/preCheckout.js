@@ -32,17 +32,24 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           batchesObj[batch_order].tickets += 1;
         } else {
           // Cria um novo grupo com o valor total_amount e quantidade de ingressos inicializado
-          batchesObj[batch_order] = { id, name, total_amount: amount, tickets: 1 };
+          let batch_name = '';
+          this.batches.forEach(batch => {
+            batch.tickets.forEach(x => {
+              if(id === x.id) batch_name = batch.name;
+            })
+          })
+          batchesObj[batch_order] = { id, name, total_amount: amount, tickets: 1, batch_name };
         }
       });
 
       // Converte o objeto 'batchesObj' em um array de objetos
-      const batchesArry = Object.entries(batchesObj).map(([batch_order, { id, name, total_amount, tickets }]) => ({
+      const batchesArry = Object.entries(batchesObj).map(([batch_order, { id, name, total_amount, tickets, batch_name }]) => ({
         batch_order: parseInt(batch_order),
         id,
         name,
         total_amount,
-        tickets
+        tickets,
+        batch_name
       }));
 
       batchesArry.sort((a, b) => a.batch_order - b.batch_order);

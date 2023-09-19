@@ -138,22 +138,22 @@ function openGoBackPreCheckoutModal() {
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="isPresentialEvent"
     >
-      <div class="flex justify-between">
+      <div class="flex justify-between w-full">
         <p class="infos-title">Ingressos</p>
-        <div class="btn-edit-tickets" @click="openGoBackPreCheckoutModal">
+        <div class="btn-edit-tickets text-center ml-3" @click="openGoBackPreCheckoutModal">
           <span class="text-[12px] font-[600]">Editar</span>
         </div>
       </div>
       <span
         class="infos-content mt-2 flex w-full items-center justify-between"
-        v-for="batch in ticketList"
-        :key="batch?.id"
+        v-for="ticket in ticketList"
+        :key="ticket?.id"
       >
         <p>
-          {{ batch?.tickets }}x {{ batch?.group?.name }} - {{ batch?.name }}
+          {{ ticket?.tickets }}x {{ ticket?.batch_name }} - {{ ticket?.name }}
         </p>
         <p>
-          +{{ formatMoney(batch?.total_amount) }}
+          +{{ formatMoney(ticket?.total_amount) }}
         </p>
       </span>
     </section>
