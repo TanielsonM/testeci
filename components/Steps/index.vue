@@ -1,6 +1,9 @@
 <script setup>
 import { useStepStore } from "~~/store/modules/steps";
-
+import { storeToRefs } from "pinia";
+import { useProductStore } from "@/store/product";
+const productStore = useProductStore();
+const { product } = storeToRefs(productStore);
 const stepStore = useStepStore();
 
 defineProps({
@@ -13,12 +16,18 @@ defineProps({
     type: [String, Boolean],
     default: () => false,
   },
+  free: {
+    type: [Boolean],
+    default: () => false,
+  }
 });
+
 </script>
 
 <template>
   <section
-    class="flex w-full items-center justify-between border-b border-[#e4e4ec] pb-3"
+    v-if="! free"
+    :class="free ? '' : 'flex w-full items-center justify-between border-b border-[#e4e4ec] pb-3'"    
   >
     <span
       class="flex flex-nowrap items-center gap-5 text-base font-semibold text-black"

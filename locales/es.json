@@ -363,7 +363,8 @@
     "anos": "años",
     "apos_trial": "Después del período de evaluación",
     "vc_pagara": "Usted pagará",
-    "country_taxs": "Impuesto(s) del país"
+    "country_taxs": "Impuesto(s) del país",
+    "gratis": "Gratis"
   },
   "pg_obrigado": {
     "pix": {
@@ -427,7 +428,8 @@
       "codigo_transacao": "Codigo de transacción",
       "id_assinatura": "ID de suscripción",
       "frete": "Envío",
-      "frete_selecionado": "Envío elegido"
+      "frete_selecionado": "Envío elegido",
+      "gratis": "Gratis"
     }
   },
   "locales": {

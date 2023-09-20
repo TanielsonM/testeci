@@ -6,9 +6,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
-import { usePersonalStore } from "@/store/forms/personal";
-import { validateDocument } from "@/rules/form-validations";
-import { useLeadsStore } from "@/store/modules/leads";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -17,9 +14,7 @@ const checkout = useCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
-const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
-const leadsStore = useLeadsStore();
 
 // Variables
 const { t, locale } = useI18n();
@@ -34,9 +29,7 @@ const {
   selectedCountry,
 } = storeToRefs(checkout);
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
-const { error_message, hasSent } = storeToRefs(payment);
-const { document } = storeToRefs(personalStore);
-const currentCountry = useState("currentCountry");
+const { error_message } = storeToRefs(payment);
 const { isOneStep } = storeToRefs(customCheckoutStore);
 
 // Refs
@@ -236,52 +229,6 @@ async function callPayment() {
   }
 }
 
-const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
-  currentCountry.value
-);
-
-const documentText = computed(() => {
-  switch (currentCountry.value) {
-    case "AR":
-      return {
-        label: "CUIT/CUIL o DNI",
-        placeholder: "CUIT/CUIL o DNI",
-        mask: ["#####################"],
-      };
-    case "MX":
-      return {
-        label: "Número RFC",
-        placeholder: "Número RFC",
-        documentMask: ["########################"],
-      };
-    case "UY":
-      return {
-        label: "Número CI",
-        placeholder: "Número CI",
-        documentMask: ["########################"],
-      };
-    case "CL":
-      return {
-        label: "Añadir RUT",
-        placeholder: "Añadir RUT",
-        documentMask: ["#####################"],
-      };
-    default:
-      return {
-        label: "CPF ou CNPJ",
-        placeholder: "Doc. do títular da compra",
-        documentMask:
-          document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
-      };
-  }
-});
-
-function updateLead() {
-  setTimeout(function () {
-    leadsStore.updateLead();
-  }, 1000);
-}
-
 function incrementSteps() {
   if (countSteps.value != 3) {
     stepsStore.incrementCount();
@@ -338,7 +285,7 @@ await checkout.init();
             <LocaleSelect />
           </template>
           <template #content>
-            <FormPersonal />
+            <FormPersonal :class="product?.method !== 'FREE' ? 'mb-8' : ''" />
           </template>
         </Steps>
 
@@ -357,7 +304,7 @@ await checkout.init();
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct"
+              v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -386,6 +333,7 @@ await checkout.init();
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep ? '03' : '02'"
+          :free="product?.method !== 'FREE' ? false : true"
           v-if="
             (isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
             !isMobile ||
@@ -394,14 +342,16 @@ await checkout.init();
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
-              <template v-if="method !== 'PIX'">
-                <FormPurchase />
+              <template v-if="product?.method !== 'FREE'">
+                <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
+                <template v-if="method !== 'PIX'">
+                  <FormPurchase />
+                </template>
               </template>
             </section>
             <!-- Bumps -->
             <template
-              v-if="checkout.getBumpList.length && !hasTicketInstallments"
+              v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE' && !checkout.hasFreeBump"
             >
               <p class="my-5 w-full text-txt-color">
                 {{
@@ -448,18 +398,47 @@ await checkout.init();
           </template>
         </Steps>
 
+        <!-- Next step buttom -->
         <BaseButton
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="
             isMobile &&
             currentStep < (checkout.showAddressStep ? 3 : 2) &&
-            !isOneStep
+            !isOneStep &&
+            method !== 'FREE'
           "
         >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>
         </BaseButton>
+        <!-- Payment button -->
+        <template
+          v-if="
+            isMobile &&
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            !isOneStep &&
+            method === 'FREE'
+          "
+        >
+          <BaseButton
+            @click="callPayment"
+            class="my-7"
+          >
+            <span class="text-[15px] font-semibold">
+              {{
+                customCheckoutStore.purchase_text ||
+                $t("checkout.footer.btn_compra")
+              }}
+            </span>
+          </BaseButton>
+          <span class="flex items-center gap-3">
+            <Icon name="fa6-solid:lock" class="text-main-color" />
+            <p class="text-[13px] font-normal text-txt-color">
+              {{ $t("checkout.footer.info_seguranca") }}
+            </p>
+          </span>
+        </template>
       </BaseCard>
       <!-- End purchase card -->
 
