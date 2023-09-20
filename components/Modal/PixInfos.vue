@@ -103,12 +103,16 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  handleResize();
-  window.addEventListener("resize", handleResize);
+  if(process.client){
+    handleResize();
+    window.addEventListener("resize", handleResize);
+  }
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
+  if(process.client){
+    window.removeEventListener("resize", handleResize);
+  }
 });
 </script>
 <template>
@@ -233,7 +237,7 @@ onBeforeUnmount(() => {
             :size="!onlyButtons ? 'vsm' : 'md'"
             animation="pulse"
             class="col-span-2 md:col-span-1"
-            @click="!onlyButtons ? copy(code) : modal.closeAtion()"
+            @click="!onlyButtons ? copy(code) : modal.closeAction()"
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_text")

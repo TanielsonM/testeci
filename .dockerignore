@@ -1,3 +1,4 @@
 .dockerignore
 .gitlab-ci.yml
 Dockerfile
+node_modules

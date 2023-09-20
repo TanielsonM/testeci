@@ -47,7 +47,7 @@ resource "aws_lb_target_group" "club-node-target-group" {
     healthy_threshold   = 5
     matcher             = "200"
   }
-  port                 = 3000
+  port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = module.vpc.vpc_id
@@ -67,7 +67,8 @@ resource "aws_lb_listener_rule" "checkout-https" {
   condition {
     host_header {
       values = [
-        "payfast.greenn.com.br"
+        "payfast.greenn.com.br",
+        "payfastdebug.greenn.com.br"
       ]
     }
   }

@@ -86,7 +86,7 @@ export const usePaymentStore = defineStore("Payment", {
           );
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return getInstallments.value() * installments.value;
+          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
         }
         return getInstallments.value(1);
       });
@@ -109,7 +109,7 @@ export const usePaymentStore = defineStore("Payment", {
         // proposal_id: proposal_id,
         // User details
         name: name.value,
-        email: email.value,
+        email: email.value.trim(),
         cellphone: cellphone.value.replace(/[^\d+]/g, ""),
         document: document.value,
         uuid: uuid.value,
@@ -124,8 +124,7 @@ export const usePaymentStore = defineStore("Payment", {
         complement: charge.value.complement,
         neighborhood: charge.value.neighborhood,
         city: charge.value.city,
-        state:
-          selectedCountry.value === "US" ? document.value : charge.value.state,
+        state: charge.value.state,
         // Others
         language,
         upsell_id: hasUpsell.value,
@@ -147,12 +146,12 @@ export const usePaymentStore = defineStore("Payment", {
       }
 
       // Physical product
-      if (hasPhysicalProduct.value()) {
+      if (hasPhysicalProduct.value) {
         data = {
           ...data,
           shipping_address_zip_code: sameAddress.value
-            ? charge.value.zipcode
-            : shipping.value.zipcode,
+            ? charge.value.zipcode.replace("-", "")
+            : shipping.value.zipcode.replace("-", ""),
           shipping_address_street: sameAddress.value
             ? charge.value.street
             : shipping.value.street,
