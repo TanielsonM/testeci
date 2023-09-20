@@ -8,7 +8,6 @@ import { useStepStore } from "@/store/modules/steps";
 import {
   validateName,
   validateEmail,
-  validatePhone,
   validateDocument,
   phoneValidation,
   validateRequired,
@@ -82,7 +81,8 @@ watch([name, email, cellphone, document], (value) => {
   leadsStore.syncPersonal();
 });
 
-function updateLead() {
+function updateLead(isEmail = false) {
+  if (isEmail) email.value = email.value.trim();
   setTimeout(function () {
     leadsStore.updateLead();
   }, 1000);
@@ -111,13 +111,13 @@ personalStore.setFields(useRoute().query);
 
     <BaseInput
       class="col-span-12"
-      @blur="updateLead"
+      @blur="updateLead(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      :error="email || hasSent ? !validateEmail.isValidSync(email) : undefined"
+      :error="email && hasSent ? !validateEmail.isValidSync(email) : undefined"
       :disabled="forceEmail"
     >
       <template #error>
@@ -167,7 +167,7 @@ personalStore.setFields(useRoute().query);
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
-      v-if="showDocumentInput && !isMobile"
+      v-if="showDocumentInput"
       input-name="document-field"
       input-id="document-field"
       v-model="document"

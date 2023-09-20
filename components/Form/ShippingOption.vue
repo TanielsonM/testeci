@@ -47,7 +47,7 @@ watch(
   </div>
   <p
     class="flex-nowrap py-3 font-semibold text-txt-color"
-    v-if="!!options[0]?.price"
+    v-if="!!options.find((option) => option.price > 0)"
   >
     {{ $t("checkout.address.select_shipping") }}
   </p>
@@ -55,15 +55,12 @@ watch(
     class="item frete"
     :class="{ selected: isActive == index }"
     @click="selectOption(index, option?.price, option)"
-    v-for="(option, index) in options.sort(
-      (a, b) => parseFloat(a.price) - parseFloat(b.price)
-    )"
+    v-for="(option, index) in options
+      .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
+      .filter((option) => !option?.error)"
     :key="index"
   >
-    <div
-      class="grid grid-cols-12 items-center gap-3"
-      v-if="!!options[0]?.price"
-    >
+    <div class="grid grid-cols-12 items-center gap-3" v-if="option.price">
       <div class="col-span-3">
         <img :src="option.company.picture" width="80" />
       </div>

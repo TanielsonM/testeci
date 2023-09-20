@@ -2,7 +2,7 @@ export const useModalStore = defineStore("modal", {
   state: () => ({
     title: "",
     expiredPix: false,
-    closeAtion: () => {},
+    closeAction: () => { },
     iframe: "https://greenn.com.br/checkout-obrigado",
   }),
   getters: {},
@@ -14,7 +14,7 @@ export const useModalStore = defineStore("modal", {
       this.expiredPix = isExpired;
     },
     setAction(action: () => void) {
-      this.closeAtion = action;
+      this.closeAction = action;
     },
     setIframe(url?: string) {
       if (!!url) this.iframe = url;

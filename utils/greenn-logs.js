@@ -1,12 +1,11 @@
 import { datadogLogs } from "@datadog/browser-logs";
 
 datadogLogs.init({
-  applicationId: "ac47dde0-0af0-43dc-a387-4f688be495d9",
-  clientToken: "pub50c6ea627df0b5ed0776aa9a784b95a6",
+  clientToken: "puba58e2b765f79988ed1a6b3018c7b90d3",
   site: "datadoghq.com",
-  service: "greenn-pay",
+  service: "payfast",
   env: "production",
-  version: "1.5.0",
+  version: "1.0.0",
   sampleRate: 100,
   trackInteractions: true,
 });
