@@ -6,9 +6,10 @@ import { usePaymentStore } from "@/store/modules/payment";
 import { useStepStore } from "@/store/modules/steps";
 
 import {
+  validateFirstStep,
+  validateSecondStep,
   validateName,
   validateEmail,
-  validatePhone,
   validateDocument,
   phoneValidation,
   validateRequired,
@@ -78,8 +79,34 @@ const {
   forceCellphone,
 } = storeToRefs(personalStore);
 
-watch([name, email, cellphone, document], (value) => {
+watch([name, email, cellphone, document], async () => {
+
   leadsStore.syncPersonal();
+
+  let isPersonalValid = await validateFirstStep();
+  let isAddressValid = await validateSecondStep();
+
+  if (isPersonalValid && isAddressValid && (stepStore.currentStep === 1 || stepStore.currentStep === 2)) {
+      stepStore.setCurrentStep(3);
+      return;
+  } else if (isPersonalValid && !isAddressValid && stepStore.countSteps === 3 && (stepStore.currentStep === 1 || stepStore.currentStep === 2)) {
+      stepStore.setCurrentStep(2);
+      return;
+  }
+  else if (isPersonalValid && stepStore.countSteps === 2 && (stepStore.currentStep === 1 || stepStore.currentStep === 2)) {
+      stepStore.setCurrentStep(2);
+      return;
+  } 
+  else if (!isPersonalValid && isAddressValid && stepStore.currentStep === 2) {
+    stepStore.back();
+    return;
+  } else if (!isPersonalValid && isAddressValid && stepStore.currentStep === 3) {
+    stepStore.back();
+    return;
+  } else if (!isPersonalValid && stepStore.currentStep === 2) {
+    stepStore.back();
+    return;
+  }
 });
 
 function updateLead() {
