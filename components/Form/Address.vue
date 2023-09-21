@@ -53,23 +53,23 @@ watch(typeAddr.value, async () => {
 watch(deliveryOptions, () => {});
 
 watch([zipcode, number, neighborhood, city, state, street], async () => {
+  
+  let isPersonalValid = await validateFirstStep();
+  let isAddressValid = await validateSecondStep();
+  let currentStep = stepStore.currentStep;
 
-let isPersonalValid = await validateFirstStep();
-let isAddressValid = await validateSecondStep();
-
-  if (isPersonalValid && isAddressValid && (stepStore.currentStep === 1 || stepStore.currentStep === 2)) {
-      stepStore.setCurrentStep(3);
-      return;
-  } else if (!isPersonalValid && isAddressValid && (stepStore.currentStep === 1 || stepStore.currentStep === 2)) {
+  if (isPersonalValid) {
+    if (isAddressValid) {
+      if (currentStep === 1 || currentStep === 2) {
+        stepStore.setCurrentStep(3);
+      }
+    } else if (currentStep === 1 || currentStep === 2) {
       stepStore.setCurrentStep(2);
-      return;
-  }
-  else if (!isPersonalValid && !isAddressValid && stepStore.currentStep === 2) {
+    }
+  } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {
     stepStore.back();
-    return;
-  } else if (isPersonalValid && !isAddressValid && stepStore.currentStep === 3) {
+  } else if (isPersonalValid && !isAddressValid && currentStep === 3) {
     stepStore.back();
-    return;
   }
 });
 

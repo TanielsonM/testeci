@@ -194,7 +194,6 @@ watch(selectedCountry, () => {
 });
 
 watch(currentStep, (step) => {
-  console.log({ current: step, total: countSteps.value });
   if (step === countSteps.value) {
     stepsStore.changePaypalStep(true);
     return;
