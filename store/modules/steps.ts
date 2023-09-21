@@ -64,5 +64,8 @@ export const useStepStore = defineStore("Step", {
     incrementCount() {
       this.countSteps++;
     },
+    decreaseCount() {
+      this.countSteps--;
+    },
   },
 });

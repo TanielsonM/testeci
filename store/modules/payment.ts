@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement, Sale } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -35,7 +35,6 @@ const {
   selectedCountry,
   hasPhysicalProduct,
   product_list,
-  products_client_statistics,
   hasAffiliateId,
   installments,
   coupon,
@@ -48,9 +47,7 @@ const {
   productName,
   is_gift,
   gift_message,
-  isFixedShipping,
-  hasShippingFee,
-  FixedShippingAmount,
+  product,
   hasTicketInstallments,
   hasAffiliationLead,
 } = storeToRefs(productStore);
@@ -86,7 +83,7 @@ export const usePaymentStore = defineStore("Payment", {
           );
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return getInstallments.value() * installments.value;
+          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
         }
         return getInstallments.value(1);
       });
@@ -124,8 +121,7 @@ export const usePaymentStore = defineStore("Payment", {
         complement: charge.value.complement,
         neighborhood: charge.value.neighborhood,
         city: charge.value.city,
-        state:
-          selectedCountry.value === "US" ? document.value : charge.value.state,
+        state: charge.value.state,
         // Others
         language,
         upsell_id: hasUpsell.value,
@@ -147,7 +143,7 @@ export const usePaymentStore = defineStore("Payment", {
       }
 
       // Physical product
-      if (hasPhysicalProduct.value()) {
+      if (hasPhysicalProduct.value) {
         data = {
           ...data,
           shipping_address_zip_code: sameAddress.value
