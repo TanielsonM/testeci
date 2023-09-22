@@ -6,9 +6,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
-import { usePersonalStore } from "@/store/forms/personal";
-import { validateDocument } from "@/rules/form-validations";
-import { useLeadsStore } from "@/store/modules/leads";
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -17,9 +14,7 @@ const checkout = useCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
-const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
-const leadsStore = useLeadsStore();
 
 // Variables
 const { t, locale } = useI18n();
@@ -34,9 +29,7 @@ const {
   selectedCountry,
 } = storeToRefs(checkout);
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
-const { error_message, hasSent } = storeToRefs(payment);
-const { document } = storeToRefs(personalStore);
-const currentCountry = useState("currentCountry");
+const { error_message } = storeToRefs(payment);
 const { isOneStep } = storeToRefs(customCheckoutStore);
 
 // Refs
@@ -163,6 +156,17 @@ const handleResize = () => {
   isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
+function setInternationalURL() {
+  if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven && !(useRuntimeConfig().public.INTERNATIONAL_URL).includes('localhost')) {
+    let currentUrl = new URL(window.location.href);
+    const international_url = new URL(useRuntimeConfig().public.INTERNATIONAL_URL);
+    currentUrl.host = international_url.host;
+    currentUrl.protocol = international_url.protocol;
+    currentUrl.port = "";
+    window.location = currentUrl.href;
+  }
+}
+
 onMounted(() => {
   if (process.client) {
     handleResize();
@@ -170,13 +174,7 @@ onMounted(() => {
     window.addEventListener("myRecaptchaCallback", () => {
       payment.payment(locale.value);
     });
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
@@ -191,13 +189,7 @@ watch(method, (method) => {
 
 watch(selectedCountry, () => {
   if (process.client) {
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
@@ -237,55 +229,16 @@ async function callPayment() {
   }
 }
 
-const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
-  currentCountry.value
-);
-
-const documentText = computed(() => {
-  switch (currentCountry.value) {
-    case "AR":
-      return {
-        label: "CUIT/CUIL o DNI",
-        placeholder: "CUIT/CUIL o DNI",
-        mask: ["#####################"],
-      };
-    case "MX":
-      return {
-        label: "Número RFC",
-        placeholder: "Número RFC",
-        documentMask: ["########################"],
-      };
-    case "UY":
-      return {
-        label: "Número CI",
-        placeholder: "Número CI",
-        documentMask: ["########################"],
-      };
-    case "CL":
-      return {
-        label: "Añadir RUT",
-        placeholder: "Añadir RUT",
-        documentMask: ["#####################"],
-      };
-    default:
-      return {
-        label: "CPF ou CNPJ",
-        placeholder: "Doc. do títular da compra",
-        documentMask:
-          document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
-      };
-  }
-});
-
-function updateLead() {
-  setTimeout(function () {
-    leadsStore.updateLead();
-  }, 1000);
-}
-
 function incrementSteps() {
   if (countSteps.value != 3) {
     stepsStore.incrementCount();
+  }
+}
+
+function decreaseCount() {
+  console.log("decreaseCount");
+  if (countSteps.value === 3) {
+    stepsStore.decreaseCount();
   }
 }
 
@@ -332,7 +285,7 @@ await checkout.init();
             <LocaleSelect />
           </template>
           <template #content>
-            <FormPersonal />
+            <FormPersonal :class="product?.method !== 'FREE' ? 'mb-8' : ''" />
           </template>
         </Steps>
 
@@ -341,16 +294,17 @@ await checkout.init();
           :title="$t('components.steps.address')"
           step="02"
           v-if="
-            (checkout.showAddressStep() &&
+            (checkout.showAddressStep &&
               ((isMobile && currentStep == 2) || !isMobile)) ||
-            (isOneStep && checkout.showAddressStep())
+            (isOneStep && checkout.showAddressStep)
           "
           @vnode-mounted="incrementSteps"
+          @vnode-before-unmount="decreaseCount"
         >
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct()"
+              v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -375,27 +329,29 @@ await checkout.init();
             />
           </template>
         </Steps>
-
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
-          :step="checkout.showAddressStep() ? '03' : '02'"
+          :step="checkout.showAddressStep ? '03' : '02'"
+          :free="product?.method !== 'FREE' ? false : true"
           v-if="
-            (isMobile && currentStep == (checkout.showAddressStep() ? 3 : 2)) ||
+            (isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
             !isMobile ||
             isOneStep
           "
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
-              <template v-if="method !== 'PIX'">
-                <FormPurchase />
+              <template v-if="product?.method !== 'FREE'">
+                <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
+                <template v-if="method !== 'PIX'">
+                  <FormPurchase />
+                </template>
               </template>
             </section>
             <!-- Bumps -->
             <template
-              v-if="checkout.getBumpList.length && !hasTicketInstallments"
+              v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE' && !checkout.hasFreeBump"
             >
               <p class="my-5 w-full text-txt-color">
                 {{
@@ -442,18 +398,47 @@ await checkout.init();
           </template>
         </Steps>
 
+        <!-- Next step buttom -->
         <BaseButton
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="
             isMobile &&
-            currentStep < (checkout.showAddressStep() ? 3 : 2) &&
-            !isOneStep
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            !isOneStep &&
+            method !== 'FREE'
           "
         >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>
         </BaseButton>
+        <!-- Payment button -->
+        <template
+          v-if="
+            isMobile &&
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            !isOneStep &&
+            method === 'FREE'
+          "
+        >
+          <BaseButton
+            @click="callPayment"
+            class="my-7"
+          >
+            <span class="text-[15px] font-semibold">
+              {{
+                customCheckoutStore.purchase_text ||
+                $t("checkout.footer.btn_compra")
+              }}
+            </span>
+          </BaseButton>
+          <span class="flex items-center gap-3">
+            <Icon name="fa6-solid:lock" class="text-main-color" />
+            <p class="text-[13px] font-normal text-txt-color">
+              {{ $t("checkout.footer.info_seguranca") }}
+            </p>
+          </span>
+        </template>
       </BaseCard>
       <!-- End purchase card -->
 

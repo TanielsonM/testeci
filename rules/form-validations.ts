@@ -59,23 +59,15 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const validStreet = await validateStreet.isValid(charge.value.street);
   const validNumber = await validateNumber.isValid(charge.value.number);
   const validCity = await validateCity.isValid(charge.value.city);
-  const validNeighborhood = await validateNeighborhood.isValid(
-    charge.value.neighborhood
-  );
+  const validNeighborhood = await validateNeighborhood.isValid(charge.value.neighborhood);
   const validState = await validateState.isValid(charge.value.state);
 
   if (!sameAddress.value) {
     const validChargeZip = await validateZip.isValid(shipping.value.zipcode);
-    const validChargeStreet = await validateStreet.isValid(
-      shipping.value.street
-    );
-    const validChargeNumber = await validateNumber.isValid(
-      shipping.value.number
-    );
+    const validChargeStreet = await validateStreet.isValid(shipping.value.street);
+    const validChargeNumber = await validateNumber.isValid(shipping.value.number);
     const validChargeCity = await validateCity.isValid(shipping.value.city);
-    const validChargeNeighborhood = await validateNeighborhood.isValid(
-      shipping.value.neighborhood
-    );
+    const validChargeNeighborhood = await validateNeighborhood.isValid(shipping.value.neighborhood);
     const validChargeState = await validateState.isValid(shipping.value.state);
 
     return (
@@ -151,6 +143,32 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
   }
 
+  const stepStore = useStepStore();
+  const { isMobile } = storeToRefs(stepStore);
+  const currentCountry: any = useState("currentCountry");
+  const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+    currentCountry.value
+  );
+  const personalStore = usePersonalStore();
+  const { document } = storeToRefs(personalStore);
+
+  if (isMobile.value && showDocumentInput) {
+    const validDocument = validateDocument.isValidSync(document.value);
+
+    if (["PIX", "BOLETO", "FREE"].includes(checkout.method)) {
+      return validDocument;
+    }
+
+    return (
+      validNameOnCard &&
+      validCardNumber &&
+      validExpiryMonth &&
+      validExpiryYear &&
+      validCvc &&
+      validDocument
+    );
+  }
+
   return (
     validNameOnCard &&
     validCardNumber &&
@@ -168,7 +186,7 @@ export const validateAll = async (): Promise<boolean> => {
   const validStepTwo = await validateSecondStep();
   const validStepThree = await validateThristStep();
 
-  if (checkout.showAddressStep()) {
+  if (checkout.showAddressStep) {
     if (
       checkout.method === "CREDIT_CARD" ||
       checkout.method === "TWO_CREDIT_CARDS" || 
