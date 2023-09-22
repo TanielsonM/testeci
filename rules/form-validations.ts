@@ -143,6 +143,32 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
   }
 
+  const stepStore = useStepStore();
+  const { isMobile } = storeToRefs(stepStore);
+  const currentCountry: any = useState("currentCountry");
+  const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+    currentCountry.value
+  );
+  const personalStore = usePersonalStore();
+  const { document } = storeToRefs(personalStore);
+
+  if (isMobile.value && showDocumentInput) {
+    const validDocument = validateDocument.isValidSync(document.value);
+
+    if (["PIX", "BOLETO", "FREE"].includes(checkout.method)) {
+      return validDocument;
+    }
+
+    return (
+      validNameOnCard &&
+      validCardNumber &&
+      validExpiryMonth &&
+      validExpiryYear &&
+      validCvc &&
+      validDocument
+    );
+  }
+
   return (
     validNameOnCard &&
     validCardNumber &&

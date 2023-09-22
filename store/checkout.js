@@ -3,13 +3,11 @@ import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
-import { useInstallmentsStore } from "./modules/installments";
+import { storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
-
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
-const installmentsStore = useInstallmentsStore();
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -78,6 +76,7 @@ export const useCheckoutStore = defineStore("checkout", {
     deliveryOptions: {},
     // Paypal details
     paypal_details: {},
+    allow_free_offers : null,
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -98,6 +97,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasPhone: (state) => state.url.query?.ph,
     hasUpsell: (state) => state.url.query?.up_id,
     hasSelectedBump: (state) => state.bump_list.some((bump) => bump.checkbox),
+    hasFreeBump: (state) => state.bump_list.every(bump => bump.method === 'FREE'),
     /**
      * Others
      */
@@ -186,11 +186,12 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      if (!!this.hasCustomCheckout) {
+      await this.getProduct(this.product_id, this.product_offer);
+      const product = useProductStore();
+      if (!!this.hasCustomCheckout && product.isValid() && (product.product.method != 'FREE' || (product.product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
         const customCheckout = useCustomCheckoutStore();
         await customCheckout.getCustomCheckout();
       }
-      await this.getProduct(this.product_id, this.product_offer);
 
       /* Initial configs */
       this.setCoupon(true);
@@ -200,13 +201,10 @@ export const useCheckoutStore = defineStore("checkout", {
     setUUID(uuid) {
       return (this.uuid = uuid);
     },
-    async getProduct(
-      id,
-      offer = null,
-      isBump = false,
-      configs = {},
-      bumpOrder = 0
-    ) {
+    setAllowFreeOffers(allow_free_offers){
+      this.allow_free_offers = allow_free_offers
+    },
+    async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
       const product = useProductStore();
       const { setProduct } = product;
       /* Get country */
@@ -227,6 +225,9 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then((response) => {
+            if(response.allow_free_offers){
+              this.setAllowFreeOffers(response.allow_free_offers)
+            }
             if (response?.checkout_payment?.data?.amount) {
               response.data.amount = response.checkout_payment.data.amount;
             }
@@ -237,7 +238,8 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (
               response.data.format === "PHYSICALPRODUCT" &&
-              !!response.data.has_shipping_fee
+              !!response.data.has_shipping_fee &&
+              response.data.method !== 'FREE'
             ) {
               const shipping = { amount: undefined };
               if (response.data.type_shipping_fee === "FIXED") {
@@ -384,11 +386,17 @@ export const useCheckoutStore = defineStore("checkout", {
     setAllowedMethods(allowed_methods = []) {
       this.allowed_methods = [];
       this.allowed_methods = allowed_methods;
-      this.setMethod(
-        allowed_methods.includes("CREDIT_CARD")
-          ? "CREDIT_CARD"
-          : allowed_methods[0]
-      );
+      const productStore = useProductStore();
+      const { product } = storeToRefs(productStore);
+      if(product.method === 'FREE') {
+        this.setMethod("FREE");
+      } else {
+        if(allowed_methods.includes("CREDIT_CARD")) {
+          this.setMethod("CREDIT_CARD");
+        } else {
+          this.setMethod(allowed_methods[0]);
+        }
+      }
     },
     setAmount(amount = 0) {
       this.amount = amount;
@@ -528,7 +536,8 @@ export const useCheckoutStore = defineStore("checkout", {
 
         if (
           product.format === "PHYSICALPRODUCT" &&
-          !!product.has_shipping_fee
+          !!product.has_shipping_fee &&
+          product?.method !== 'FREE'
         ) {
           amountStore.setAmount(product?.shipping?.amount || 0);
           amountStore.setOriginalAmount(product?.shipping?.amount || 0);
@@ -549,7 +558,7 @@ export const useCheckoutStore = defineStore("checkout", {
           : product.amount * -1
       );
 
-      if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee) {
+      if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee && product?.method !== 'FREE') {
         amountStore.setAmount(product?.shipping?.amount * -1 || 0);
         amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
       }

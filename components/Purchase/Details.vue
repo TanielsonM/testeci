@@ -8,7 +8,7 @@ import { useInstallmentsStore } from "~~/store/modules/installments";
 import { formatMoney } from "~~/utils/money";
 
 const checkout = useCheckoutStore();
-const product = useProductStore();
+const productStore = useProductStore();
 const installmentsStore = useInstallmentsStore();
 const {
   coupon,
@@ -20,7 +20,7 @@ const {
   checkoutPayment,
 } = storeToRefs(checkout);
 const { getInstallments } = storeToRefs(installmentsStore);
-const { hasTicketInstallments } = storeToRefs(product);
+const { hasTicketInstallments, product } = storeToRefs(productStore);
 
 function formatAmountText(installments = 1) {
   return `${installments}x de ${formatMoney(
@@ -47,7 +47,7 @@ const amountText = computed(() => {
     <!-- Shipping -->
     <section
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
-      v-if="checkout.hasPhysicalProduct"
+      v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
     >
       <span class="infos-title">Frete</span>
       <span

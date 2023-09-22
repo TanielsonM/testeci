@@ -105,7 +105,7 @@ if (isFixedShipping.value)
 </script>
 
 <template>
-  <BaseCard class="order-bump-card" :style="stylesheet">
+  <BaseCard v-if="bump.method !== 'FREE'" class="order-bump-card" :style="stylesheet">
     <header
       class="flex h-[50px] w-full items-center justify-between rounded-t-lg bg-red-600"
     >

@@ -48,7 +48,7 @@ onMounted(() => {
     <section class="flex w-full max-w-[1240px] justify-center">
       <BaseCard
         class="mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-b-4 border-gray-200 border-b-error px-5 py-10 md:px-20"
-        v-if="!product.isValid()"
+        v-if="!product.isValid() || (product.product.method == 'FREE' && (checkout.allow_free_offers == null || checkout.allow_free_offers === 'DISABLED'))"
       >
         <Icon name="mdi:close-circle" size="120" class="text-error" />
         <h1 class="text-center text-2xl">{{ $t("general.error_message") }}</h1>
