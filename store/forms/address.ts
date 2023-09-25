@@ -22,7 +22,26 @@ export const useAddressStore = defineStore("address", {
       complement: "",
     },
   }),
-  getters: {},
+  getters: {
+    zipcode(): string | number {
+      return this.charge.zipcode;
+    },
+    number(): string | number {
+      return this.charge.number;
+    },
+    neighborhood(): string {
+      return this.charge.neighborhood;
+    },
+    city(): string {
+      return this.charge.city;
+    },
+    state(): string {
+      return this.charge.state;
+    },
+    street(): string {
+      return this.charge.street;
+    },
+  },
   actions: {
     setFields(form: Address, type = "charge") {
       if (type === "charge") {
