@@ -159,7 +159,7 @@ function openPix(id: number) {
         :url="data.sale?.order?.boleto_url ?? sale.boleto_url"
         :id="sale.id.toString()"
         :installments="sale?.installments"
-        :amount="formatMoney(sale.type === 'SUBSCRIPTION' && sale.offer.no_interest_installments ? sale.amount : (sale.total || sale.amount || sale.product?.amount))"
+        :amount="formatMoney(sale.type === 'SUBSCRIPTION' && sale.offer.no_interest_installments ? sale.offer.amount : sale.total || sale.amount || sale.product?.amount)"
         :last="i + 1 == data.sale.sales.length"
         :index="i"
         :name="sale.product.name"
