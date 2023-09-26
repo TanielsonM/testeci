@@ -22,6 +22,7 @@ const personalStore = usePersonalStore();
 const paymentStore = usePaymentStore();
 
 const { productName, seller_id } = storeToRefs(productStore);
+
 const {
   product_id,
   product_offer,

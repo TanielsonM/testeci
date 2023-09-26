@@ -49,4 +49,5 @@ export const usePersonalStore = defineStore("personal", {
       }
     },
   },
+
 });

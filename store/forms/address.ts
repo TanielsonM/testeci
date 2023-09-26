@@ -22,6 +22,7 @@ export const useAddressStore = defineStore("address", {
       complement: "",
     },
   }),
+
   getters: {
     zipcode(): string | number {
       return this.charge.zipcode;

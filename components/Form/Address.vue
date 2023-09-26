@@ -73,7 +73,6 @@ watch([zipcode, number, neighborhood, city, state, street], async () => {
   }
 });
 
-
 // methods
 async function getAddress(cep = "") {
   if (cep.length < 8) {

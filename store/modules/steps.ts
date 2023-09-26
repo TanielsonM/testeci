@@ -13,6 +13,7 @@ export const useStepStore = defineStore("Step", {
     format: "default",
     isMobile: false,
   }),
+
   actions: {
     async setStep(step = 1) {
       const paymentStore = usePaymentStore();

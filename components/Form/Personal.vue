@@ -88,6 +88,7 @@ watch([name, email, cellphone, document], async () => {
   let currentStep = stepStore.currentStep;
   let countSteps = stepStore.countSteps;
 
+  
   if (isPersonalValid) {
     if (isAddressValid) {
       if (currentStep === 1 || currentStep === 2) {
