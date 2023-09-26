@@ -41,6 +41,7 @@ export const useAddressStore = defineStore("address", {
     street(): string {
       return this.charge.street;
     },
+
   },
   actions: {
     setFields(form: Address, type = "charge") {

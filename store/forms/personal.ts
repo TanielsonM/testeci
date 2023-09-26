@@ -21,7 +21,9 @@ export const usePersonalStore = defineStore("personal", {
     forceCellphone: false,
     forceDocument: false,
   }),
+
   getters: {},
+
   actions: {
     setFields(fields: Fields) {
       this.force = fields.force === "true";
