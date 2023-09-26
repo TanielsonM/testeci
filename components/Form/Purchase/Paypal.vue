@@ -116,9 +116,9 @@ onMounted(async () => {
       <div
         ref="paypal"
         data-anima="top"
-        :class="{ hidden: !enablePaypal }"
+        :class="{ hidden:  !enablePaypal }"
       ></div>
-      <BaseButton color="paypal" :disabled="true" v-if="!enablePaypal">
+      <BaseButton color="paypal" :disabled="true" v-if="!enablePaypal ">
         <span class="mr-1 text-[15px] font-semibold">
           <img :src="logoPayPal" class="w-20" />
         </span>
