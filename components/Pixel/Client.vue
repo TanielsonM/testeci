@@ -116,8 +116,6 @@ onMounted(async () => {
         pixel_id: `${pixel_table_id}`
     };
 
-      console.log("ok");
-    
     fetch(`https://${host}/api/pixel/metrics`, {
       method: 'PUT',
       headers: {
