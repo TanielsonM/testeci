@@ -410,7 +410,6 @@ export type MethodsState = {
   allowedMethods: string[];
 };
 
-
 export type StepState = {
   currentStep: number;
   enablePaypal: boolean;
