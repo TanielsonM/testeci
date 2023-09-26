@@ -37,7 +37,7 @@ onMounted(async () => {
 
         if (hasTagManager.length) {
           hasTagManager.forEach((item) => {
-            handleGtag(item.pixel_id);
+            handleGtag(item.pixel_id, item.id, item.user_id, item.host);
 
             if (props.event === 'view') {
               onCheckoutEvent();
@@ -98,7 +98,7 @@ onMounted(async () => {
       });
     }
   
-    function handleGtag(pixel_id: string) {
+    function handleGtag(pixel_id: string, pixel_table_id: number, user_id: number, host: string,) {
       (function (w: any, d: any, s: any, l: any, i: any) {
         w[l] = w[l] || [];
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -109,6 +109,24 @@ onMounted(async () => {
         j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
         f.parentNode.insertBefore(j, f);
       })(window, document, "script", "dataLayer", pixel_id);
+
+      let data = {
+        column: 'events_triggered_count',
+        seller_id: `${user_id}`,
+        pixel_id: `${pixel_table_id}`
+    };
+
+      console.log("ok");
+    
+    fetch(`https://${host}/api/pixel/metrics`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+      
     }
 
     function handleIframe(
