@@ -13,7 +13,6 @@ import { validateFirstStep } from "@/rules/form-validations";
 const stepsStore = useStepStore();
 const { enablePaypal } = storeToRefs(stepsStore);
 
-
 const { locale } = useI18n();
 const paypal = ref(null);
 const productStore = useProductStore();
