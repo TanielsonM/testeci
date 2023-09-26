@@ -9,12 +9,14 @@ export const useStepStore = defineStore("Step", {
   state: (): StepState => ({
     currentStep: 1,
     countSteps: 2,
+
     enablePaypal: false,
     format: "default",
     isMobile: false,
   }),
 
   actions: {
+
     async setStep(step = 1) {
       const paymentStore = usePaymentStore();
       const { hasSent } = storeToRefs(paymentStore);
@@ -44,29 +46,37 @@ export const useStepStore = defineStore("Step", {
           this.enablePaypal = false;
           break;
       }
+
       hasSent.value = false;
       this.currentStep = step;
     },
     changePaypalStep(value: boolean) {
       this.enablePaypal = value;
     },
+
     setFormat(format: "default" | "one_step") {
       this.format = format;
     },
+
     setCurrentStep(step: number) {
       this.currentStep = step;
     },
+
     next() {
       this.currentStep++;
     },
+
     back() {
       this.currentStep--;
     },
+
     incrementCount() {
       this.countSteps++;
     },
+
     decreaseCount() {
       this.countSteps--;
     },
+
   },
 });
