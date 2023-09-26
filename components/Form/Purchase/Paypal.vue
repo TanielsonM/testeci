@@ -3,8 +3,6 @@ import { storeToRefs } from "pinia";
 import { usePersonalStore } from "~~/store/forms/personal";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useAmountStore } from "~~/store/modules/amount";
-import { useStepStore } from "~~/store/modules/steps";
-
 import logoPayPal from "@/assets/paypal/logo.svg";
 
 import { validateFirstStep } from "@/rules/form-validations";
@@ -36,7 +34,6 @@ const {
 const { email } = storeToRefs(personalStore);
 
 const config = useRuntimeConfig();
-
 useHead({
   script: [
     {
@@ -71,8 +68,8 @@ onMounted(async () => {
                   description: productName.value,
                   amount: {
                     value: coupon.value.applied
-                    ? getAmount.value
-                    : checkoutPayment.value.paypal.amount,
+                     ? getAmount.value
+                     : checkoutPayment.value.paypal.amount,
                     currency_code: checkoutPayment.value.paypal.currency,
                   },
                   reference_id: JSON.stringify({

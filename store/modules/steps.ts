@@ -13,6 +13,7 @@ export const useStepStore = defineStore("Step", {
     enablePaypal: false,
     format: "default",
     isMobile: false,
+    countSteps: 2,
   }),
 
   actions: {
@@ -24,26 +25,17 @@ export const useStepStore = defineStore("Step", {
       switch (step) {
         case 2:
           let validateOne = await validateFirstStep();
-
           if (!validateOne) {
-            this.enablePaypal = true;
             hasSent.value = true;
             return;
           }
-
-          this.enablePaypal = false;
           break;
-
         case 3:
           let validateSecond = await validateSecondStep();
-
           if (!validateSecond) {
-            this.enablePaypal = true;
             hasSent.value = true;
             return;
           }
-
-          this.enablePaypal = false;
           break;
       }
 
