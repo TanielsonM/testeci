@@ -9,15 +9,11 @@ export const useStepStore = defineStore("Step", {
   state: (): StepState => ({
     currentStep: 1,
     countSteps: 2,
-
     enablePaypal: false,
     format: "default",
     isMobile: false,
-    countSteps: 2,
   }),
-
   actions: {
-
     async setStep(step = 1) {
       const paymentStore = usePaymentStore();
       const { hasSent } = storeToRefs(paymentStore);
@@ -26,16 +22,24 @@ export const useStepStore = defineStore("Step", {
         case 2:
           let validateOne = await validateFirstStep();
           if (!validateOne) {
+            this.enablePaypal = true;
             hasSent.value = true;
             return;
           }
+
+          this.enablePaypal = false;
           break;
+
         case 3:
           let validateSecond = await validateSecondStep();
+
           if (!validateSecond) {
+            this.enablePaypal = true;
             hasSent.value = true;
             return;
           }
+
+          this.enablePaypal = false;
           break;
       }
 

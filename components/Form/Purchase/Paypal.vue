@@ -4,7 +4,7 @@ import { usePersonalStore } from "~~/store/forms/personal";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useAmountStore } from "~~/store/modules/amount";
 import logoPayPal from "@/assets/paypal/logo.svg";
-
+import { useStepStore } from "~~/store/modules/steps";
 import { validateFirstStep } from "@/rules/form-validations";
 
 

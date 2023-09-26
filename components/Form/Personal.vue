@@ -6,6 +6,8 @@ import { usePaymentStore } from "@/store/modules/payment";
 import { useStepStore } from "@/store/modules/steps";
 
 import {
+  validateFirstStep,
+  validateSecondStep,
   validateName,
   validateEmail,
   validateDocument,
@@ -77,15 +79,14 @@ const {
   forceCellphone,
 } = storeToRefs(personalStore);
 
-watch([name, email, cellphone, document], (value) => {
+watch([name, email, cellphone, document], async () => {
+  
   leadsStore.syncPersonal();
-
   let isPersonalValid = await validateFirstStep();
   let isAddressValid = await validateSecondStep();
   let currentStep = stepStore.currentStep;
   let countSteps = stepStore.countSteps;
 
-  
   if (isPersonalValid) {
     if (isAddressValid) {
       if (currentStep === 1 || currentStep === 2) {
