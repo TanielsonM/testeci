@@ -201,6 +201,10 @@ watch(currentStep, (step) => {
   stepsStore.changePaypalStep(false);
 });
 
+watch(error_message, (val) => {
+  if (val) alert_modal.value = true;
+});
+
 watch(sameAddress, (val) => {
   if (!val) {
     shipping.value.zipcode = "";
