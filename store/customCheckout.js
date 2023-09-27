@@ -35,18 +35,18 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
       parseInt(state.custom_checkout?.whatsapp_button) ?? null,
     /* scarcity */
     scarcity: (state) =>
-      ({
-        title: state.custom_checkout?.scarcity_title,
-        subtitle: state.custom_checkout?.scarcity_subtitle,
-        time: state.custom_checkout?.scarcity_time,
-        background: state.custom_checkout?.scarcity_background_color,
-      } || null),
+    ({
+      title: state.custom_checkout?.scarcity_title,
+      subtitle: state.custom_checkout?.scarcity_subtitle,
+      time: state.custom_checkout?.scarcity_time,
+      background: state.custom_checkout?.scarcity_background_color,
+    } || null),
     /* whatsapp_options */
     whatsapp_options: (state) =>
-      ({
-        number: state.custom_checkout?.whatsapp_number ?? null,
-        message: state.custom_checkout?.whatsapp_msg ?? null,
-      } || null),
+    ({
+      number: state.custom_checkout?.whatsapp_number ?? null,
+      message: state.custom_checkout?.whatsapp_msg ?? null,
+    } || null),
     /* Order bump */
     hasCustomBump: (state) => state.custom_checkout?.ob_custom ?? null,
     bump_options: (state) => ({
@@ -65,34 +65,21 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     isOneStep: (state) => state?.custom_checkout?.step_checkout === "one_step",
   },
   actions: {
-    async getCustomCheckout() {
-      const { query, params } = useRoute();
-      if (!query.ch_id) return;
+    setCustomCheckout(payload) {
+      this.custom_checkout = payload;
+      if (this.hasJivochatId) {
+        this.setJivochat(this.hasJivochatId);
+      }
 
-      let url = `/product/checkout/${params.product_id}/checkout/${query.ch_id}`;
-
-      try {
-        await useApi()
-          .read(url)
-          .then((response) => {
-            if (response?.custom_checkout) {
-              this.custom_checkout = response?.custom_checkout;
-              if (this.hasJivochatId) {
-                this.setJivochat(this.hasJivochatId);
-              }
-
-              if (this.hasNotifications) {
-                this.notifications = response?.purchase_notification;
-                this.setNotifications(
-                  `${this.custom_checkout?.maximum_purchase_notification_interval}, ${this.custom_checkout?.minimum_purchase_notification_interval}`,
-                  this.custom_checkout?.how_get_purchase_notification,
-                  this.custom_checkout?.quantity_purchase_notification,
-                  this.custom_checkout?.type_purchase_notification
-                );
-              }
-            }
-          });
-      } catch (error) {}
+      if (this.hasNotifications) {
+        this.notifications = payload?.purchase_notification;
+        this.setNotifications(
+          `${this.custom_checkout?.maximum_purchase_notification_interval}, ${this.custom_checkout?.minimum_purchase_notification_interval}`,
+          this.custom_checkout?.how_get_purchase_notification,
+          this.custom_checkout?.quantity_purchase_notification,
+          this.custom_checkout?.type_purchase_notification
+        );
+      }
     },
     setJivochat(id = "J0jlVX87X9") {
       const { query } = useRoute();
