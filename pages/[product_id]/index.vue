@@ -193,8 +193,12 @@ watch(selectedCountry, () => {
   }
 });
 
-watch(error_message, (val) => {
-  if (val) alert_modal.value = true;
+watch(currentStep, (step) => {
+  if (step === countSteps.value) {
+    stepsStore.changePaypalStep(true);
+    return;
+  }
+  stepsStore.changePaypalStep(false);
 });
 
 watch(sameAddress, (val) => {
