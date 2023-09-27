@@ -7,10 +7,7 @@ import { useCheckoutStore } from "@/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useLeadsStore } from "@/store/modules/leads";
 import { usePaymentStore } from "@/store/modules/payment";
-import { useStepStore } from "@/store/modules/steps";
 import {
-  validateFirstStep,
-  validateSecondStep,
   validateZip,
   validateStreet,
   validateNumber,
@@ -23,10 +20,9 @@ const store = useAddressStore();
 const checkout = useCheckoutStore();
 const leadsStore = useLeadsStore();
 const payment = usePaymentStore();
-const stepStore = useStepStore();
 
 const { hasSent } = storeToRefs(payment);
-const { shipping, charge, number, zipcode, neighborhood, city, state, street } = storeToRefs(store);
+const { shipping, charge } = storeToRefs(store);
 
 // Props
 const props = defineProps({
@@ -51,28 +47,6 @@ watch(typeAddr.value, async () => {
   leadsStore.syncAddress();
 });
 watch(deliveryOptions, () => {});
-
-
-watch([zipcode, number, neighborhood, city, state, street], async () => {
-  
-  let isPersonalValid = await validateFirstStep();
-  let isAddressValid = await validateSecondStep();
-  let currentStep = stepStore.currentStep;
-
-  if (isPersonalValid) {
-    if (isAddressValid) {
-      if (currentStep === 1 || currentStep === 2) {
-        stepStore.setCurrentStep(3);
-      }
-    } else if (currentStep === 1 || currentStep === 2) {
-      stepStore.setCurrentStep(2);
-    }
-  } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {
-    stepStore.back();
-  } else if (isPersonalValid && !isAddressValid && currentStep === 3) {
-    stepStore.back();
-  }
-});
 
 // methods
 async function getAddress(cep = "") {

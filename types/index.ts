@@ -412,7 +412,6 @@ export type MethodsState = {
 
 export type StepState = {
   currentStep: number;
-  enablePaypal: boolean;
   format: "one_step" | "default";
   isMobile: boolean;
   countSteps: number;
