@@ -8,7 +8,7 @@ const product = useProductStore();
 const checkout = useCheckoutStore();
 const installments = useInstallmentsStore();
 const { getInstallments } = storeToRefs(installments);
-const { ticket_installments } = storeToRefs(checkout);
+const { ticket_installments, hasFees } = storeToRefs(checkout);
 const { hasTicketInstallments, productType } = storeToRefs(product);
 
 const showInstallments = computed(() => {
@@ -41,12 +41,8 @@ const showInstallments = computed(() => {
         >
           {{
             index + 1 > 1
-              ? `${index + 1}x ${$t("order.de")} ${formatMoney(
-                  getInstallments(index + 1)
-                )}*`
-              : `${index + 1}x ${$t("order.de")} ${formatMoney(
-                  getInstallments(1)
-                )}`
+              ? `${index + 1}x ${hasFees ? "" : "(Sem juros)"} ${$t("order.de")} ${formatMoney(getInstallments(index + 1))}*`
+              : `${index + 1}x ${hasFees ? "" : "(Sem juros)"} ${$t("order.de")} ${formatMoney(getInstallments(1))}`
           }}
         </option>
       </BaseSelect>

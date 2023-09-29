@@ -117,7 +117,6 @@ const showInstallments = computed(() => {
             )} ${formatMoney(getInstallments())}${hasFees ? "*" : ""}`
           }}
         </option>
-        <!--  -->
         <!-- Installments -->
         <option
           v-else
