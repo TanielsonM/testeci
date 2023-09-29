@@ -3,9 +3,16 @@ import { storeToRefs } from "pinia";
 import { usePersonalStore } from "~~/store/forms/personal";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useAmountStore } from "~~/store/modules/amount";
+import { useStepStore } from "~~/store/modules/steps";
+
 import logoPayPal from "@/assets/paypal/logo.svg";
 
 import { validateFirstStep } from "@/rules/form-validations";
+
+
+const stepsStore = useStepStore();
+const { enablePaypal } = storeToRefs(stepsStore);
+
 
 const { locale } = useI18n();
 const paypal = ref(null);
@@ -29,6 +36,7 @@ const {
 const { email } = storeToRefs(personalStore);
 
 const config = useRuntimeConfig();
+
 useHead({
   script: [
     {
@@ -63,8 +71,8 @@ onMounted(async () => {
                   description: productName.value,
                   amount: {
                     value: coupon.value.applied
-                     ? getAmount.value
-                     : checkoutPayment.value.paypal.amount,
+                    ? getAmount.value
+                    : checkoutPayment.value.paypal.amount,
                     currency_code: checkoutPayment.value.paypal.currency,
                   },
                   reference_id: JSON.stringify({
@@ -108,9 +116,9 @@ onMounted(async () => {
       <div
         ref="paypal"
         data-anima="top"
-        :class="{ hidden: !validateFirstStep() }"
+        :class="{ hidden: !enablePaypal }"
       ></div>
-      <BaseButton color="paypal" :disabled="true" v-if="!validateFirstStep()">
+      <BaseButton color="paypal" :disabled="true" v-if="!enablePaypal">
         <span class="mr-1 text-[15px] font-semibold">
           <img :src="logoPayPal" class="w-20" />
         </span>
