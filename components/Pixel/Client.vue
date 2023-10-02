@@ -37,7 +37,7 @@ onMounted(async () => {
 
         if (hasTagManager.length) {
           hasTagManager.forEach((item) => {
-            handleGtag(item.pixel_id, item.id, item.user_id, item.host);
+            handleGtag(item.pixel_id, item.product_id, item.user_id, item.host);
 
             if (props.event === 'view') {
               onCheckoutEvent();
@@ -98,7 +98,7 @@ onMounted(async () => {
       });
     }
   
-    function handleGtag(pixel_id: string, pixel_table_id: number, user_id: number, host: string,) {
+    function handleGtag(pixel_id: string, product_id: number, user_id: number, host: string,) {
       (function (w: any, d: any, s: any, l: any, i: any) {
         w[l] = w[l] || [];
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -113,7 +113,8 @@ onMounted(async () => {
       let data = {
         column: 'events_triggered_count',
         seller_id: `${user_id}`,
-        pixel_id: `${pixel_id}`
+        pixel_id: `${pixel_id}`,
+        product_id: `${product_id}`,
     };
 
     fetch(`https://${host}/api/lexip/metrics`, {
