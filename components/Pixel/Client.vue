@@ -113,7 +113,7 @@ onMounted(async () => {
       let data = {
         column: 'events_triggered_count',
         seller_id: `${user_id}`,
-        pixel_id: `${pixel_table_id}`
+        pixel_id: `${pixel_id}`
     };
 
     fetch(`https://${host}/api/lexip/metrics`, {
