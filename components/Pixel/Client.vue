@@ -116,7 +116,7 @@ onMounted(async () => {
         pixel_id: `${pixel_table_id}`
     };
 
-    fetch(`https://${host}/api/pixel/metrics`, {
+    fetch(`https://${host}/api/lexip/metrics`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
