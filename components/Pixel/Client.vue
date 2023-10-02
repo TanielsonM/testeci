@@ -55,7 +55,7 @@ onMounted(async () => {
             pixel.product_id,
             props.event,
             event_id,
-            pixel.id,
+            pixel.pixel_id,
             props.method,
             props.amount,
             props.affiliate_id,
