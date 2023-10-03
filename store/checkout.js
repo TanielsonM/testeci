@@ -666,6 +666,7 @@ export const useCheckoutStore = defineStore("checkout", {
               });
 
             if (!!calculate) {
+              calculate = calculate.filter((option) => !option?.error)
               this.deliveryOptions = calculate.sort(
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
