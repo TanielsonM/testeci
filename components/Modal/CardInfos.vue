@@ -3,22 +3,18 @@ import { formatMoney } from "@/utils/money";
 
 const props = defineProps({
   name: {
-    type: String,
     default: null,
     required: false,
   },
   id: {
-    type: Number,
     default: null,
     required: false,
   },
   installments: {
-    type: Number,
     default: null,
     required: false,
   },
   sales: {
-    type: Array,
     default: null,
     required: false,
   },
