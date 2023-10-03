@@ -63,7 +63,7 @@ onBeforeUnmount(() => {
     @close="closeModal"
   >
     <section
-      class="flex -mt-[70px] w-full max-w-[400px] flex-col gap-5"
+      class="flex -mt-[10px] w-full max-w-[400px] flex-col gap-5"
     > 
       <section class="p-[5px]">
         <h6
@@ -123,13 +123,14 @@ onBeforeUnmount(() => {
 
 @media (min-width: 690px) {
   .modal__content {
-    margin-top: 100px;
+    margin-top: 30px;
   }
 }
 
 .image-fix {
   display: block;
   margin: 0 auto;
+  max-height: 420px;
 } 
 
 .margin-top-fix {
