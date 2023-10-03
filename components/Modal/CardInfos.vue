@@ -83,33 +83,33 @@ const data = ref({
         v-if="index + 1 !== sales.length"
       ></span>
       <div
-      class="details py-5"
-      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected"
-    >
-      <h6 class="title">
-        {{ $t("pg_obrigado.modal.frete_selecionado") }}
-      </h6>
+        class="details py-5"
+        v-if="!!shippingAmount && onlyButtons && data?.shippingSelected"
+      >
+        <h6 class="title">
+          {{ $t("pg_obrigado.modal.frete_selecionado") }}
+        </h6>
 
-      <div class="item frete">
-        <div class="grid grid-cols-12 items-center gap-3">
-          <div class="col-span-4">
-            <img
-              :src="data.shippingSelected.frete.company.picture"
-              width="80"
-            />
-          </div>
-          <div class="col-span-4">
-            {{ data.shippingSelected.frete.name }}
-          </div>
-          <div class="col-span-4">
-            {{ data.shippingSelected.frete.delivery_range.min }}
-            {{ $t("checkout.address.at") }}
-            {{ data.shippingSelected.frete.delivery_range.max }}
-            {{ $t("checkout.address.working_days") }}
+        <div class="item frete">
+          <div class="grid grid-cols-12 items-center gap-3">
+            <div class="col-span-4">
+              <img
+                :src="data.shippingSelected.frete.company.picture"
+                width="80"
+              />
+            </div>
+            <div class="col-span-4">
+              {{ data.shippingSelected.frete.name }}
+            </div>
+            <div class="col-span-4">
+              {{ data.shippingSelected.frete.delivery_range.min }}
+              {{ $t("checkout.address.at") }}
+              {{ data.shippingSelected.frete.delivery_range.max }}
+              {{ $t("checkout.address.working_days") }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </section>
   </section>
 </template>
