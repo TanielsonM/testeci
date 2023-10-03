@@ -53,7 +53,7 @@ watch(
     {{ $t("checkout.address.select_shipping") }}
   </p>
   <div
-    v-for="(option, index) in options.filter((option) => !option?.error)"
+    v-for="(option, index) in options"
     :key="index"
     class="item frete"
     :class="{ selected: isActive == index }"
