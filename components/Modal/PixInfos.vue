@@ -12,27 +12,22 @@ const { isMobile } = storeToRefs(stepsStore);
 const emit = defineEmits(['openedPixEvent']);
 const props = defineProps({
   name: {
-    type: String,
     default: "",
     required: false,
   },
   code: {
-    type: String,
     default: "",
     required: true,
   },
   url: {
-    type: String,
     default: "",
     required: true,
   },
   id: {
-    type: Number,
     default: 0,
     required: true,
   },
   amount: {
-    type: String,
     default: "",
     required: true,
   },
