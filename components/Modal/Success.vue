@@ -237,7 +237,7 @@ function openPix(id: number) {
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
         :sales="data.sale.sales"
-        :shipping-amount="formatMoney(data.sale.sales[0].shipping_amount)"
+        :shipping-amount="data.sale.sales && data.sale.sales.length ? formatMoney(data.sale.sales[0].shipping_amount) : 0"
         :shipping-selected="sale.shipping_selected"
         :only-buttons="data.sale.sales.length == 1"
       />
