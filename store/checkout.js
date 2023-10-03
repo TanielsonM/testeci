@@ -673,12 +673,6 @@ export const useCheckoutStore = defineStore("checkout", {
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
 
-              // product.value.shipping = {
-              //   amount: parseFloat(product.value.shipping_options[0].price),
-              //   name: product.value.shipping_options[0].name,
-              //   id: product.value.shipping_options[0].id
-              // }
-
               this.setSelectedShipping(product.value.id, product.value.shipping_options[0])
             }
           }
