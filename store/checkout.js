@@ -3,7 +3,7 @@ import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
-import { storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 const purchaseStore = usePurchaseStore();
@@ -673,11 +673,11 @@ export const useCheckoutStore = defineStore("checkout", {
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
 
-              product.value.shipping = {
-                amount: parseFloat(product.value.shipping_options[0].price),
-                name: product.value.shipping_options[0].name,
-                id: product.value.shipping_options[0].id
-              }
+              // product.value.shipping = {
+              //   amount: parseFloat(product.value.shipping_options[0].price),
+              //   name: product.value.shipping_options[0].name,
+              //   id: product.value.shipping_options[0].id
+              // }
 
               this.setSelectedShipping(product.value.id, product.value.shipping_options[0])
             }
