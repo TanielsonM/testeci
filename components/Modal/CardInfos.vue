@@ -27,6 +27,11 @@ const props = defineProps({
     default: null,
     required: false,
   },
+  shippingSelected: {
+    type: String,
+    default: null,
+    required: false,
+  },
   onlyButtons: {
     type: Boolean,
     default: false,
@@ -34,7 +39,7 @@ const props = defineProps({
 });
 
 const data = ref({
-  shippingSelected: JSON.parse(props.shippingSelected),
+  shippingSelected: props.shippingSelected ? JSON.parse(props.shippingSelected): {},
   showCode: false,
 });
 </script>
