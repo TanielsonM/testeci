@@ -86,6 +86,7 @@ export type Payment = {
     shipping_amount?: number;
     shipping_service_id?: number;
     shipping_service_name?: string;
+    shipping_selected?: any;
   }[];
 
   metas: any;

@@ -74,6 +74,7 @@ export const useCheckoutStore = defineStore("checkout", {
     sales: {},
     productOffer: {},
     deliveryOptions: {},
+    shipping_selected: {},
     // Paypal details
     paypal_details: {},
     allow_free_offers : null,
@@ -165,6 +166,7 @@ export const useCheckoutStore = defineStore("checkout", {
         );
       };
     },
+    getShippingSelected: (state) => state.shipping_selected
   },
   actions: {
     async init(byChangeCountry = false) {
@@ -670,6 +672,14 @@ export const useCheckoutStore = defineStore("checkout", {
               product.value.shipping_options = calculate.sort(
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
+
+              product.value.shipping = {
+                amount: parseFloat(product.value.shipping_options[0].price),
+                name: product.value.shipping_options[0].name,
+                id: product.value.shipping_options[0].id
+              }
+
+              this.setSelectedShipping(product.value.id, product.value.shipping_options[0])
             }
           }
 
@@ -750,6 +760,14 @@ export const useCheckoutStore = defineStore("checkout", {
           amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
         }
       });
-    },
-  },
+
+      this.shipping_selected = {
+        frete_anterior: +shipping.price,
+        service_name: shipping.name,
+        old_amount: amountStore.getAmount,
+        amount: +shipping.price,
+        frete: shipping
+      }
+    }
+  }
 });

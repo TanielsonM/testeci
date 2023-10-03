@@ -22,7 +22,9 @@ export const useAddressStore = defineStore("address", {
       complement: "",
     },
   }),
-  getters: {},
+  getters: {
+    getCharge: (state) => state.charge
+  },
   actions: {
     setFields(form: Address, type = "charge") {
       if (type === "charge") {
