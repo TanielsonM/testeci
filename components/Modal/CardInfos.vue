@@ -91,7 +91,7 @@ const data = ref({
           {{ $t("pg_obrigado.modal.frete_selecionado") }}
         </h6>
 
-        <div class="item frete">
+        <div v-if="data.shippingSelected && data.shippingSelected.frete" class="item frete">
           <div class="grid grid-cols-12 items-center gap-3">
             <div class="col-span-4">
               <img
