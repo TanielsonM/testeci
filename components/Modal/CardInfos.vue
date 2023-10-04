@@ -85,13 +85,13 @@ const data = ref({
       ></span>
       <div
         class="details py-5"
-        v-if="!!shippingAmount && onlyButtons && data?.shippingSelected"
+        v-if="!!shippingAmount && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
       >
         <h6 class="title">
           {{ $t("pg_obrigado.modal.frete_selecionado") }}
         </h6>
 
-        <div v-if="data.shippingSelected && data.shippingSelected.frete" class="item frete">
+        <div class="item frete">
           <div class="grid grid-cols-12 items-center gap-3">
             <div class="col-span-4">
               <img
