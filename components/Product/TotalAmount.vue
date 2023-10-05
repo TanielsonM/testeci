@@ -20,6 +20,7 @@ const {
   coupon,
   checkoutPayment,
   ticket_installments,
+  hasSelectedBump
 } = storeToRefs(checkout);
 
 const { getInstallments } = storeToRefs(installmentsStore);
@@ -58,7 +59,7 @@ function resolveSubscription() {
 
 /* computeds */
 const amountText = computed(() => {
-  if (isSubscription.value && parseInt(installments.value) === 1) {
+  if (isSubscription.value && parseInt(installments.value) === 1 && !hasSelectedBump.value) {
     return resolveSubscription();
   }
 
