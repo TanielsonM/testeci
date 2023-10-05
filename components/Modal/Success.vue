@@ -237,6 +237,9 @@ function openPix(id: number) {
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
         :sales="data.sale.sales"
+        :shipping-amount="data.sale.sales && data.sale.sales.length ? formatMoney(data.sale.sales[0].shipping_amount) : 0"
+        :shipping-selected="data.sale.sales[0].shipping_selected"
+        :only-buttons="data.sale.sales.length == 1"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
