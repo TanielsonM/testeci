@@ -42,6 +42,7 @@ const {
   ticket_installments,
   url,
   paypal_details,
+  shipping_selected
 } = storeToRefs(checkoutStore);
 const {
   productName,
@@ -144,29 +145,18 @@ export const usePaymentStore = defineStore("Payment", {
 
       // Physical product
       if (hasPhysicalProduct.value) {
+        const address: any = sameAddress.value ? charge.value : shipping.value;
+        address.zipcode.replace("-", "");
         data = {
           ...data,
-          shipping_address_zip_code: sameAddress.value
-            ? charge.value.zipcode.replace("-", "")
-            : shipping.value.zipcode.replace("-", ""),
-          shipping_address_street: sameAddress.value
-            ? charge.value.street
-            : shipping.value.street,
-          shipping_address_number: sameAddress.value
-            ? charge.value.number
-            : shipping.value.number,
-          shipping_address_complement: sameAddress.value
-            ? charge.value.complement
-            : shipping.value.complement,
-          shipping_address_neighborhood: sameAddress.value
-            ? charge.value.neighborhood
-            : shipping.value.neighborhood,
-          shipping_address_city: sameAddress.value
-            ? charge.value.city
-            : shipping.value.city,
-          shipping_address_state: sameAddress.value
-            ? charge.value.state
-            : shipping.value.state,
+          shipping_address_zip_code: address.zipcode,
+          shipping_address_street: address.street,
+          shipping_address_number: address.number,
+          shipping_address_complement: address.complement,
+          shipping_address_neighborhood: address.neighborhood,
+          shipping_address_city: address.city,
+          shipping_address_state: address.state,
+          shipping_selected: JSON.stringify({address, ...shipping_selected.value})
         };
 
         product_list.value.forEach((item: any) => {
@@ -178,6 +168,7 @@ export const usePaymentStore = defineStore("Payment", {
             data.products[index].shipping_amount = item.shipping.amount;
             data.products[index].shipping_service_id = item.shipping.id;
             data.products[index].shipping_service_name = item.shipping.name;
+            data.products[index].shipping_selected = JSON.stringify({address, ...shipping_selected.value});
           }
         });
       }

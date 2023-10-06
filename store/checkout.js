@@ -3,7 +3,7 @@ import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
-import { storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 const purchaseStore = usePurchaseStore();
@@ -74,6 +74,7 @@ export const useCheckoutStore = defineStore("checkout", {
     sales: {},
     productOffer: {},
     deliveryOptions: {},
+    shipping_selected: {},
     // Paypal details
     paypal_details: {},
     allow_free_offers : null,
@@ -165,6 +166,7 @@ export const useCheckoutStore = defineStore("checkout", {
         );
       };
     },
+    getShippingSelected: (state) => state.shipping_selected
   },
   actions: {
     async init(byChangeCountry = false) {
@@ -668,12 +670,15 @@ export const useCheckoutStore = defineStore("checkout", {
               });
 
             if (!!calculate) {
+              calculate = calculate.filter((option) => !option?.error)
               this.deliveryOptions = calculate.sort(
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
               product.value.shipping_options = calculate.sort(
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
+
+              this.setSelectedShipping(product.value.id, product.value.shipping_options[0])
             }
           }
 
@@ -754,6 +759,14 @@ export const useCheckoutStore = defineStore("checkout", {
           amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
         }
       });
-    },
-  },
+
+      this.shipping_selected = {
+        frete_anterior: +shipping.price,
+        service_name: shipping.name,
+        old_amount: amountStore.getAmount,
+        amount: +shipping.price,
+        frete: shipping
+      }
+    }
+  }
 });
