@@ -159,7 +159,7 @@ function openPix(id: number) {
         :url="data.sale?.order?.boleto_url ?? sale.boleto_url"
         :id="sale.id.toString()"
         :installments="sale?.installments"
-        :amount="formatMoney(sale.total || sale.amount || sale.product?.amount)"
+        :amount="formatMoney(sale.type === 'SUBSCRIPTION' && sale.offer.no_interest_installments ? sale.offer.amount : sale.total || sale.amount || sale.product?.amount)"
         :last="i + 1 == data.sale.sales.length"
         :index="i"
         :name="sale.product.name"
@@ -211,9 +211,7 @@ function openPix(id: number) {
           :code="sale.qrcode"
           :url="sale.imgQrcode"
           :id="sale.id"
-          :amount="
-            formatMoney(sale.total || sale.amount || sale.product?.amount)
-          "
+          :amount="formatMoney(sale.total || sale.amount || sale.product?.amount)"
           :last="i + 1 == data.sale.sales.length"
           :only-buttons="data.sale.sales.length == 1"
           :sales-length="data.sale.sales.length"
@@ -239,6 +237,9 @@ function openPix(id: number) {
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
         :sales="data.sale.sales"
+        :shipping-amount="data.sale.sales && data.sale.sales.length ? formatMoney(data.sale.sales[0].shipping_amount) : 0"
+        :shipping-selected="data.sale.sales[0].shipping_selected"
+        :only-buttons="data.sale.sales.length == 1"
       />
 
       <div class="actions mt-12 flex content-end justify-end">

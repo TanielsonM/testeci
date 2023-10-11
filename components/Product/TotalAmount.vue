@@ -8,6 +8,7 @@ import { useProductStore } from "@/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
 import { useAmountStore } from "~~/store/modules/amount";
 
+const { t } = useI18n();
 const checkout = useCheckoutStore();
 const productStore = useProductStore();
 const amountStore = useAmountStore();
@@ -19,6 +20,7 @@ const {
   coupon,
   checkoutPayment,
   ticket_installments,
+  hasSelectedBump
 } = storeToRefs(checkout);
 
 const { getInstallments } = storeToRefs(installmentsStore);
@@ -26,7 +28,9 @@ const {
   hasTicketInstallments,
   hasFixedInstallments,
   hasPreSelectedInstallments,
-  product
+  product,
+  isSubscription,
+  getPeriod,
 } = storeToRefs(productStore);
 
 function formatAmountText(installments = 1) {
@@ -35,8 +39,30 @@ function formatAmountText(installments = 1) {
   )} ${hasFees.value ? "" : "(Sem juros)"}`;
 }
 
+function resolveSubscription() {
+  switch (getPeriod.value) {
+    case 30:
+      return `${formatMoney(getInstallments.value(1))} ${t("order.por_mes")}`
+    case 90:
+      return `${formatMoney(getInstallments.value(1))} ${t("order.por_trimestre")}`
+    case 180:
+      return `${formatMoney(getInstallments.value(1))} ${t("order.por_semestre")}`
+    case 365:
+      return `${formatMoney(getInstallments.value(1))} ${t("order.por_ano")}`
+    default:
+      if (periodo > 365) {
+        return `/ ${Math.floor(periodo / 365)} ${t("order.anos")}`;
+      }
+      return `/ ${periodo} ${t("order.dias")}`;
+  }
+}
+
 /* computeds */
 const amountText = computed(() => {
+  if (isSubscription.value && parseInt(installments.value) === 1 && !hasSelectedBump.value) {
+    return resolveSubscription();
+  }
+
   if (
     method.value === "BOLETO" &&
     hasTicketInstallments.value > 1 &&
