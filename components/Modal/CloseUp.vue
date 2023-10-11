@@ -130,6 +130,7 @@ onBeforeUnmount(() => {
 .image-fix {
   display: block;
   margin: 0 auto;
+  max-height: 420px;
 } 
 
 .margin-top-fix {
