@@ -32,6 +32,7 @@ const baseClasses = computed(
   () =>
     "inline-flex items-center justify-center border rounded-md font-medium focus:outline-none transition ease-in-out duration-150"
 );
+
 const colorClasses = computed(() => {
   const colors = {
     primary: "border-transparent text-white bg-main-color",
@@ -47,6 +48,7 @@ const colorClasses = computed(() => {
   };
   return colors[props.color] || colors.primary;
 });
+
 const sizeClasses = computed(() => {
   const sizes = {
     vsm: "sm:px-4 sm:py-2 small leading-5",

@@ -4,10 +4,24 @@ import * as Toast from "vue-toastification";
 
 export const useCustomCheckoutStore = defineStore("customCheckout", {
   state: () => ({
+    greennWrapper: null,
     custom_checkout: null,
     notifications: null,
   }),
   getters: {
+    /* get wrapper */
+    getGreennWrapper: (state) => state.greennWrapper,
+
+    /* Exit Modal */
+    isPopUp: (state) => state.custom_checkout?.exit_pop_up,
+    popUpImage: (state) => state.custom_checkout?.image_exit_pop_up,
+    popUpTitle: (state) => state.custom_checkout?.title_exit_pop_up,
+    popUpLink: (state) => state.custom_checkout?.link_exit_pop_up,
+    popUpDescription: (state) => state.custom_checkout?.description_exit_pop_up,
+    popUpButton: (state) => state.custom_checkout?.button_exit_pop_up,
+    popUpButtonText: (state) =>
+      state.custom_checkout?.text_button_exit_pop_up || "Comprar agora",
+
     /* theme */
     theme: (state) => state.custom_checkout?.theme || "light",
     /* themeColor */

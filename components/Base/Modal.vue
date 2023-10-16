@@ -18,7 +18,7 @@ const emit = defineEmits(["close"]);
         </slot>
         <Icon
           name="mdi:close"
-          class="cursor-pointer text-gray-400"
+          class="close-button cursor-pointer text-gray-400"
           size="25"
           @click="emit('close')"
         />

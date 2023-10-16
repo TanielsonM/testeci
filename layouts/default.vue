@@ -8,6 +8,11 @@ const custom_checkout = useCustomCheckoutStore();
 const product = useProductStore();
 const checkout = useCheckoutStore();
 const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
+const greennWrapper = ref(null)
+
+onMounted(() => {
+  custom_checkout.greennWrapper = greennWrapper;
+});
 </script>
 
 <template>
@@ -32,6 +37,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
   </main>
   <main
     v-else
+    ref="greennWrapper" 
     class="flex min-h-screen w-full flex-col items-center gap-10 bg-background"
     :data-theme="product.isValid() ? custom_checkout.theme : 'light'"
     :data-theme_color="
