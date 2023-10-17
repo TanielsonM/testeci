@@ -5,6 +5,7 @@ variables:
   TF_VAR_environment: ${CI_COMMIT_BRANCH}
   DEPLOY_HASH: ${CI_COMMIT_SHORT_SHA}
   TF_VAR_deploy_hash: ${CI_COMMIT_SHORT_SHA}
+  CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
 
 workflow:
   rules:
@@ -106,8 +107,6 @@ Terraform Deploy:
     - python3 clear_cache.py
     - gitlab-terraform apply
     - python3 clear_cache.py
-  variables:
-    CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
   needs:
     - Terraform Plan
     - Build Images
