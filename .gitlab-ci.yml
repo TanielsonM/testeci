@@ -103,7 +103,6 @@ Terraform Deploy:
   script:
     - apk add python3 py3-pip
     - pip3 install requests
-    - echo "$CLOUDFLARE_API_TOKEN"
     - python3 clear_cache.py
     - gitlab-terraform apply
     - python3 clear_cache.py
