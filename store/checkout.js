@@ -189,6 +189,11 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.query = query;
       this.url.fullPath = fullPath;
       await this.getProduct(this.product_id, this.product_offer);
+      const product = useProductStore();
+      if (!!this.hasCustomCheckout && product.isValid() && (product.product.method != 'FREE' || (product.product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
+        const customCheckout = useCustomCheckoutStore();
+        await customCheckout.getCustomCheckout();
+      }
 
       /* Initial configs */
       this.setCoupon(true);
@@ -202,22 +207,17 @@ export const useCheckoutStore = defineStore("checkout", {
       this.allow_free_offers = allow_free_offers
     },
     async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
-      const productStore = useProductStore();
-      const { product, isValid } = storeToRefs(productStore);
-      const { setProduct } = productStore;
+      const product = useProductStore();
+      const { setProduct } = product;
       /* Get country */
       /* Set product url */
-      let url = offer
+      const url = offer
         ? `/product/test-checkout/${id}/offer/${offer}`
         : `/product/test-checkout/${id}`;
       /* Set country in query */
       const query = {
         country: this.selectedCountry,
       };
-      // check if has custom checkout
-      if (!!this.hasCustomCheckout && !isBump) {
-        url += `/checkout/${this.hasCustomCheckout}`;
-      }
 
       /* Call api to get product */
       try {
@@ -226,7 +226,7 @@ export const useCheckoutStore = defineStore("checkout", {
             ...configs,
             query,
           })
-          .then(async (response) => {
+          .then((response) => {
             if(response.allow_free_offers){
               this.setAllowFreeOffers(response.allow_free_offers)
             }
@@ -273,11 +273,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response?.data && !isBump) {
               this.checkoutPayment = response.checkout_payment;
-              await setProduct(response.data);
-              if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
-                const customCheckout = useCustomCheckoutStore();
-                customCheckout.setCustomCheckout(response.custom_checkout);
-              }
+              setProduct(response.data);
             } else {
               this.bump_list.push({
                 ...response.data,
