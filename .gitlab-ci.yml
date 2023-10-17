@@ -100,7 +100,7 @@ Terraform Deploy:
   before_script:
     - cd ${TF_ROOT}
   script:
-    - apk add python3
+    - apk add python3 py3-pip
     - pip3 install requests
     - python3 clear_cache.py
     - gitlab-terraform apply
