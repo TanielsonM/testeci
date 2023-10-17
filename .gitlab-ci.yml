@@ -5,7 +5,7 @@ variables:
   TF_VAR_environment: ${CI_COMMIT_BRANCH}
   DEPLOY_HASH: ${CI_COMMIT_SHORT_SHA}
   TF_VAR_deploy_hash: ${CI_COMMIT_SHORT_SHA}
-  CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+  # CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
 
 workflow:
   rules:
@@ -103,7 +103,7 @@ Terraform Deploy:
   script:
     - apk add python3 py3-pip
     - pip3 install requests
-    - echo "${CLOUDFLARE_API_TOKEN}"
+    - echo "$CLOUDFLARE_API_TOKEN"
     - python3 clear_cache.py
     - gitlab-terraform apply
     - python3 clear_cache.py
