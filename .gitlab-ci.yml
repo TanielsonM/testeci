@@ -100,8 +100,13 @@ Terraform Deploy:
   before_script:
     - cd ${TF_ROOT}
   script:
-    - ls -la
+    - apk add python3
+    - pip3 install requests
+    - python3 clear_cache.py
     - gitlab-terraform apply
+    - python3 clear_cache.py
+  variables:
+    CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
   needs:
     - Terraform Plan
     - Build Images
