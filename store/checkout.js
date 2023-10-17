@@ -207,18 +207,19 @@ export const useCheckoutStore = defineStore("checkout", {
       const { setProduct } = productStore;
       /* Get country */
       /* Set product url */
-      let url = offer
-        ? `/product/test-checkout/${id}/offer/${offer}`
-        : `/product/test-checkout/${id}`;
-      /* Set country in query */
-      const query = {
-        country: this.selectedCountry,
-      };
+      let url = `/product/test-checkout/${id}`;
       // check if has custom checkout
       if (!!this.hasCustomCheckout && !isBump) {
         url += `/checkout/${this.hasCustomCheckout}`;
       }
-
+      // Check if has offer
+      if (offer) {
+        url += `/offer/${offer}`;
+      }
+      /* Set country in query */
+      const query = {
+        country: this.selectedCountry,
+      };
       /* Call api to get product */
       try {
         await useApi()
