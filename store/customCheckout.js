@@ -79,20 +79,14 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     isOneStep: (state) => state?.custom_checkout?.step_checkout === "one_step",
   },
   actions: {
-    setCustomCheckout(payload) {
+    setCustomCheckout(payload, purchase_notification) {
       this.custom_checkout = payload;
       if (this.hasJivochatId) {
         this.setJivochat(this.hasJivochatId);
       }
 
       if (this.hasNotifications) {
-        this.notifications = payload?.purchase_notification;
-        this.setNotifications(
-          `${this.custom_checkout?.maximum_purchase_notification_interval}, ${this.custom_checkout?.minimum_purchase_notification_interval}`,
-          this.custom_checkout?.how_get_purchase_notification,
-          this.custom_checkout?.quantity_purchase_notification,
-          this.custom_checkout?.type_purchase_notification
-        );
+        this.notifications = purchase_notification || [];
       }
     },
     setJivochat(id = "J0jlVX87X9") {

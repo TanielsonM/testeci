@@ -277,7 +277,7 @@ export const useCheckoutStore = defineStore("checkout", {
               await setProduct(response.data);
               if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
                 const customCheckout = useCustomCheckoutStore();
-                customCheckout.setCustomCheckout(response.custom_checkout);
+                customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
               }
             } else {
               this.bump_list.push({
