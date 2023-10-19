@@ -3,12 +3,13 @@ import { HeadersState } from "@/types";
 
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
-
 import { useLoadingStore } from "@/store/loading/loading";
+
 const loading = useLoadingStore();
 const headStore = useHeadersStore();
 
 export default function () {
+
   async function instance<T>(
     url: string,
     method: "get" | "post" | "put" | "delete",
