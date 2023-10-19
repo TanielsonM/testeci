@@ -31,7 +31,10 @@ const {
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message } = storeToRefs(payment);
-const { isOneStep } = storeToRefs(customCheckoutStore);
+const { 
+  isOneStep, 
+  custom_checkout,
+} = storeToRefs(customCheckoutStore);
 
 // Refs
 const pixelComponentKey = 1;
@@ -258,6 +261,17 @@ if (hasAffiliateId.value) {
 }
 
 await checkout.init();
+
+onMounted(() => {
+  if (process.client) {
+    customCheckoutStore.setNotifications(
+      `${custom_checkout.value.maximum_purchase_notification_interval}, ${custom_checkout.value.minimum_purchase_notification_interval}`,
+      custom_checkout.value.how_get_purchase_notification,
+      custom_checkout.value.quantity_purchase_notification,
+      custom_checkout.value.type_purchase_notification
+    );
+  }
+});
 </script>
 
 <template>

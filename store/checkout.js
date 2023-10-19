@@ -226,7 +226,7 @@ export const useCheckoutStore = defineStore("checkout", {
             ...configs,
             query,
           })
-          .then((response) => {
+          .then(async (response) => {
             if(response.allow_free_offers){
               this.setAllowFreeOffers(response.allow_free_offers)
             }
@@ -273,7 +273,11 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response?.data && !isBump) {
               this.checkoutPayment = response.checkout_payment;
-              setProduct(response.data);
+              await setProduct(response.data);
+              if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
+                const customCheckout = useCustomCheckoutStore();
+                customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
+              }
             } else {
               this.bump_list.push({
                 ...response.data,
