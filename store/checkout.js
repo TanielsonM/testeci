@@ -189,11 +189,6 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.query = query;
       this.url.fullPath = fullPath;
       await this.getProduct(this.product_id, this.product_offer);
-      const product = useProductStore();
-      if (!!this.hasCustomCheckout && product.isValid() && (product.product.method != 'FREE' || (product.product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
-        const customCheckout = useCustomCheckoutStore();
-        await customCheckout.getCustomCheckout();
-      }
 
       /* Initial configs */
       this.setCoupon(true);
@@ -274,7 +269,7 @@ export const useCheckoutStore = defineStore("checkout", {
             if (response?.data && !isBump) {
               this.checkoutPayment = response.checkout_payment;
               await setProduct(response.data);
-              if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
+              if (!!this.hasCustomCheckout && this.isValid() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
                 const customCheckout = useCustomCheckoutStore();
                 customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
               }
