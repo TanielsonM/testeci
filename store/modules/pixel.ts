@@ -45,7 +45,8 @@ export const usePixelStore = defineStore("Pixel", {
         chc_id: this.client_has_contract,
         em: this.email,
         ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
-        amount: this.amount
+        amount: this.amount,
+        a_id: this.affiliate_id
       };
 
       return await useApi()
