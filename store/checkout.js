@@ -202,13 +202,21 @@ export const useCheckoutStore = defineStore("checkout", {
       this.allow_free_offers = allow_free_offers
     },
     async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
-      const product = useProductStore();
-      const { setProduct } = product;
+      const productStore = useProductStore();
+      const { product, isValid } = storeToRefs(productStore);
+      const { setProduct } = productStore;
       /* Get country */
       /* Set product url */
-      const url = offer
-        ? `/product/test-checkout/${id}/offer/${offer}`
-        : `/product/test-checkout/${id}`;
+      let url = `/product/test-checkout/${id}`;
+      // check if has custom checkout
+      if (!!this.hasCustomCheckout && !isBump) {
+        url += `/checkout/${this.hasCustomCheckout}`;
+      }
+      // Check if has offer
+      if (offer) {
+        url += `/offer/${offer}`;
+      }
+
       /* Set country in query */
       const query = {
         country: this.selectedCountry,
@@ -271,6 +279,7 @@ export const useCheckoutStore = defineStore("checkout", {
               await setProduct(response.data);
               if (!!this.hasCustomCheckout && this.isValid() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
                 const customCheckout = useCustomCheckoutStore();
+                console.log({ response });
                 customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
               }
             } else {
