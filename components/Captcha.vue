@@ -1,4 +1,7 @@
 <script setup>
+import { storeToRefs } from "pinia";
+import { useCheckoutStore } from "@/store/checkout";
+
 const checkStore = useCheckoutStore();
 const { captcha_code, captchaEnabled } = storeToRefs(checkStore);
 const recaptcha = ref(null);

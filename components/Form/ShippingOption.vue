@@ -1,6 +1,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useLoadingStore } from "~~/store/loading/loading";
+import { useCheckoutStore } from "@/store/checkout";
 
 const loading = useLoadingStore();
 const checkout = useCheckoutStore();
@@ -52,13 +53,11 @@ watch(
     {{ $t("checkout.address.select_shipping") }}
   </p>
   <div
+    v-for="(option, index) in options"
+    :key="index"
     class="item frete"
     :class="{ selected: isActive == index }"
     @click="selectOption(index, option?.price, option)"
-    v-for="(option, index) in options
-      .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
-      .filter((option) => !option?.error)"
-    :key="index"
   >
     <div class="grid grid-cols-12 items-center gap-3" v-if="option.price">
       <div class="col-span-3">

@@ -28,13 +28,17 @@ const {
   product_id,
   selectedCountry,
 } = storeToRefs(checkout);
+
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message } = storeToRefs(payment);
-const { isOneStep } = storeToRefs(customCheckoutStore);
+const { 
+  isOneStep, 
+  custom_checkout,
+} = storeToRefs(customCheckoutStore);
 
 // Refs
-const alert_modal = ref(false);
 const pixelComponentKey = 1;
+const alert_modal = ref(false);
 
 // Computeds
 const tabs = computed(() => {
@@ -193,6 +197,14 @@ watch(selectedCountry, () => {
   }
 });
 
+watch(currentStep, (step) => {
+  if (step === countSteps.value) {
+    stepsStore.changePaypalStep(true);
+    return;
+  }
+  stepsStore.changePaypalStep(false);
+});
+
 watch(error_message, (val) => {
   if (val) alert_modal.value = true;
 });
@@ -236,7 +248,6 @@ function incrementSteps() {
 }
 
 function decreaseCount() {
-  console.log("decreaseCount");
   if (countSteps.value === 3) {
     stepsStore.decreaseCount();
   }
@@ -268,6 +279,17 @@ await checkout.init().then(() => {
   });
 });
 await checkout.init();
+
+onMounted(() => {
+  if (process.client) {
+    customCheckoutStore.setNotifications(
+      `${custom_checkout.value.maximum_purchase_notification_interval}, ${custom_checkout.value.minimum_purchase_notification_interval}`,
+      custom_checkout.value.how_get_purchase_notification,
+      custom_checkout.value.quantity_purchase_notification,
+      custom_checkout.value.type_purchase_notification
+    );
+  }
+});
 </script>
 
 <template>
@@ -498,7 +520,7 @@ await checkout.init();
         <section class="mt-10 flex w-full justify-end">
           <BaseButton
             color="blue"
-            class="w-[40%] text-txt-color"
+            class="w-[40%] bg-main-color text-txt-color"
             @click="closeModal"
           >
             {{ $t("checkout.dados_pessoais.btn_error") }}
@@ -509,6 +531,7 @@ await checkout.init();
 
     <!-- Client Only section -->
     <ClientOnly class="hidden">
+      <ModalCloseUp />
       <LeadsClient />
       <PixelClient
         :key="pixelComponentKey"

@@ -86,6 +86,7 @@ export type Payment = {
     shipping_amount?: number;
     shipping_service_id?: number;
     shipping_service_name?: string;
+    shipping_selected?: any;
   }[];
 
   metas: any;
@@ -412,6 +413,7 @@ export type MethodsState = {
 
 export type StepState = {
   currentStep: number;
+  enablePaypal: boolean;
   format: "one_step" | "default";
   isMobile: boolean;
   countSteps: number;
