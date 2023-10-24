@@ -8,7 +8,7 @@ import en from "./locales/en.json";
 import es from "./locales/es.json";
 
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   image: {
     presets: {
       default: {

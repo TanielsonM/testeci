@@ -79,34 +79,15 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     isOneStep: (state) => state?.custom_checkout?.step_checkout === "one_step",
   },
   actions: {
-    async getCustomCheckout() {
-      const { query, params } = useRoute();
-      if (!query.ch_id) return;
+    setCustomCheckout(payload, purchase_notification) {
+      this.custom_checkout = payload;
+      if (this.hasJivochatId) {
+        this.setJivochat(this.hasJivochatId);
+      }
 
-      let url = `/product/checkout/${params.product_id}/checkout/${query.ch_id}`;
-
-      try {
-        await useApi()
-          .read(url)
-          .then((response) => {
-            if (response?.custom_checkout) {
-              this.custom_checkout = response?.custom_checkout;
-              if (this.hasJivochatId) {
-                this.setJivochat(this.hasJivochatId);
-              }
-
-              if (this.hasNotifications) {
-                this.notifications = response?.purchase_notification;
-                this.setNotifications(
-                  `${this.custom_checkout?.maximum_purchase_notification_interval}, ${this.custom_checkout?.minimum_purchase_notification_interval}`,
-                  this.custom_checkout?.how_get_purchase_notification,
-                  this.custom_checkout?.quantity_purchase_notification,
-                  this.custom_checkout?.type_purchase_notification
-                );
-              }
-            }
-          });
-      } catch (error) {}
+      if (this.hasNotifications) {
+        this.notifications = purchase_notification || [];
+      }
     },
     setJivochat(id = "J0jlVX87X9") {
       const { query } = useRoute();
