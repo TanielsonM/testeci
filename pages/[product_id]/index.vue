@@ -27,6 +27,7 @@ const {
   hasAffiliateId,
   product_id,
   selectedCountry,
+  hasCustomCheckout
 } = storeToRefs(checkout);
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
@@ -34,6 +35,7 @@ const { error_message } = storeToRefs(payment);
 const { 
   isOneStep, 
   custom_checkout,
+  hasNotifications
 } = storeToRefs(customCheckoutStore);
 
 // Refs
@@ -278,16 +280,17 @@ await checkout.init().then(() => {
     ogSiteName: "Checkout",
   });
 });
-await checkout.init();
 
 onMounted(() => {
   if (process.client) {
-    customCheckoutStore.setNotifications(
-      `${custom_checkout.value.maximum_purchase_notification_interval}, ${custom_checkout.value.minimum_purchase_notification_interval}`,
-      custom_checkout.value.how_get_purchase_notification,
-      custom_checkout.value.quantity_purchase_notification,
-      custom_checkout.value.type_purchase_notification
-    );
+    if (!!hasCustomCheckout.value && !!hasNotifications.value) {
+      customCheckoutStore.setNotifications(
+        `${custom_checkout.value.maximum_purchase_notification_interval}, ${custom_checkout.value.minimum_purchase_notification_interval}`,
+        custom_checkout.value.how_get_purchase_notification,
+        custom_checkout.value.quantity_purchase_notification,
+        custom_checkout.value.type_purchase_notification
+        );
+    }
   }
 });
 </script>
