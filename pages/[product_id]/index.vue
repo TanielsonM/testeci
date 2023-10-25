@@ -15,6 +15,7 @@ const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const amountStore = useAmountStore();
+const route = useRoute();
 
 // Variables
 const { t, locale } = useI18n();
@@ -269,15 +270,37 @@ if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
 }
 
 await checkout.init().then(() => {
+
+  let ogTitle = "Greenn";
+  if(product?.value?.name) {
+    ogTitle = `${product.value.name} | Greenn`;
+  }
+
+  let ogDescription = "A plataforma de pagamento simples";
+  if(product?.value?.description) {
+    ogDescription = product.value.description;
+  }
+
+  let currentUrlOg = ""
+  if(!process.client){
+    currentUrlOg = `https://payfast.greenn.com.br/${route.fullPath}`
+  }else{
+    currentUrlOg = window.location.href;
+  }
+  let urlForOG = new URL(currentUrlOg);
+  urlForOG.searchParams.forEach((value, key) => urlForOG.searchParams.delete(key));
+
+
+
   useSeoMeta({
-    ogTitle: product.value.name || "Checkout",
-    ogDescription: product.value.description || "Your payment platform!",
+    ogTitle: ogTitle,
+    ogDescription: ogDescription,
     ogType: "website",
-    ogUrl: "https://paystatic.greenn.com.br/",
-    ogImage: product.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
+    ogUrl: urlForOG.href,
+    ogImage: product?.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
     ogImageHeight: "500",
     ogImageWidth: "500",
-    ogSiteName: "Checkout",
+    ogSiteName: "Greenn - A plataforma de pagamentos simples",
   });
 });
 
@@ -297,7 +320,7 @@ onMounted(() => {
 
 <template>
   <Head>
-    <Title>{{ product.name }} | Checkout</Title>
+    <Title>{{ product.name }} | Greenn</Title>
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>

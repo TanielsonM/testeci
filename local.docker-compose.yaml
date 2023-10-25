@@ -1,0 +1,13 @@
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    # cap_add:
+      # - CAP_SYS_PTRACE
+    ports:
+      - "80:80"
+      # - "24678:24678"
+    volumes:
+      - './:/frontend'
