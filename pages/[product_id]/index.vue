@@ -486,7 +486,7 @@ onMounted(() => {
             <span class="text-[15px] font-semibold">
               {{
                 customCheckoutStore.purchase_text ||
-                $t("checkout.footer.btn_compra") + 'aaaa'
+                $t("checkout.footer.btn_compra")
               }}
             </span>
           </BaseButton>
