@@ -32,11 +32,7 @@ export const useStepStore = defineStore("Step", {
       const { showAddressStep } = storeToRefs(checkoutStore);
       let isPersonalValid = await validateFirstStep();
       let isAddressValid = await validateSecondStep();
-      console.log('isPersonalValid: ', isPersonalValid)
-      console.log('(!showAddressStep || (showAddressStep && isAddressValid)): ', (!showAddressStep || (showAddressStep && isAddressValid)))
-      console.log('showAddressStep: ', showAddressStep)
-      console.log('isAddressValid: ', isAddressValid)
-      if (isPersonalValid && (!showAddressStep || (showAddressStep && isAddressValid))) {
+      if (isPersonalValid && (!showAddressStep.value || (showAddressStep.value && isAddressValid))) {
         this.enablePaypal = true;
       } else {
         this.enablePaypal = false;
