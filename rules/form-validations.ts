@@ -43,12 +43,13 @@ export const validateFirstStep = async (): Promise<boolean> => {
   const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
     currentCountry.value
   );
+  const stepStore = useStepStore();
+  const { isEmailValid } = storeToRefs(stepStore);
   if (showDocumentInput) {
     const validDocument = await validateDocument.isValid(document.value);
-    return validName && validEmail && validPhone && validDocument;
+    return validName && (validEmail && isEmailValid.value) && validPhone && validDocument;
   }
-
-  return validName && validEmail && validPhone;
+  return validName && (validEmail && isEmailValid.value) && validPhone;
 };
 
 export const validateSecondStep = async (): Promise<boolean> => {
