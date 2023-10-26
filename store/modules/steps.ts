@@ -30,11 +30,6 @@ export const useStepStore = defineStore("Step", {
       let isPersonalValid = await validateFirstStep();
       let isAddressValid = await validateSecondStep();
 
-      console.log({
-        isValidPersonal: isPersonalValid,
-        isValidAddress: isAddressValid,
-      });
-
       if (isPersonalValid && isAddressValid) {
         this.enablePaypal = true;
       } else {
