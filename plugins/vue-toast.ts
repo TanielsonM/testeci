@@ -3,7 +3,9 @@ import "vue-toastification/dist/index.css";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const options: PluginOptions = {
-    timeout: 5000,
+    maxToasts: 1,
+    bodyClassName: ["custom_toast"],
+    toastClassName: "custom_toast",
   };
   nuxtApp.vueApp.use(VueToast, options);
 });

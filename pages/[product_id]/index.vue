@@ -15,6 +15,7 @@ const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const amountStore = useAmountStore();
+const route = useRoute();
 
 // Variables
 const { t, locale } = useI18n();
@@ -27,11 +28,16 @@ const {
   hasAffiliateId,
   product_id,
   selectedCountry,
+  hasCustomCheckout
 } = storeToRefs(checkout);
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message } = storeToRefs(payment);
-const { isOneStep } = storeToRefs(customCheckoutStore);
+const { 
+  isOneStep, 
+  custom_checkout,
+  hasNotifications
+} = storeToRefs(customCheckoutStore);
 
 // Refs
 const pixelComponentKey = 1;
@@ -194,6 +200,14 @@ watch(selectedCountry, () => {
   }
 });
 
+watch(currentStep, (step) => {
+  if (step === countSteps.value) {
+    stepsStore.changePaypalStep(true);
+    return;
+  }
+  stepsStore.changePaypalStep(false);
+});
+
 watch(error_message, (val) => {
   if (val) alert_modal.value = true;
 });
@@ -249,12 +263,64 @@ if (hasAffiliateId.value) {
   affiliate.value = hasAffiliateId.value;
 }
 
-await checkout.init();
+if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+  if (process.client) {
+    window.location.href = `https://payu.greenn.com.br/${product_id.value}`;
+  }
+}
+
+await checkout.init().then(() => {
+
+  let ogTitle = "Greenn";
+  if(product?.value?.name) {
+    ogTitle = `${product.value.name} | Greenn`;
+  }
+
+  let ogDescription = "A plataforma de pagamento simples";
+  if(product?.value?.description) {
+    ogDescription = product.value.description;
+  }
+
+  let currentUrlOg = ""
+  if(!process.client){
+    currentUrlOg = `https://payfast.greenn.com.br/${route.fullPath}`
+  }else{
+    currentUrlOg = window.location.href;
+  }
+  let urlForOG = new URL(currentUrlOg);
+  urlForOG.searchParams.forEach((value, key) => urlForOG.searchParams.delete(key));
+
+
+
+  useSeoMeta({
+    ogTitle: ogTitle,
+    ogDescription: ogDescription,
+    ogType: "website",
+    ogUrl: urlForOG.href,
+    ogImage: product?.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
+    ogImageHeight: "500",
+    ogImageWidth: "500",
+    ogSiteName: "Greenn - A plataforma de pagamentos simples",
+  });
+});
+
+onMounted(() => {
+  if (process.client) {
+    if (!!hasCustomCheckout.value && !!hasNotifications.value) {
+      customCheckoutStore.setNotifications(
+        `${custom_checkout.value.maximum_purchase_notification_interval}, ${custom_checkout.value.minimum_purchase_notification_interval}`,
+        custom_checkout.value.how_get_purchase_notification,
+        custom_checkout.value.quantity_purchase_notification,
+        custom_checkout.value.type_purchase_notification
+        );
+    }
+  }
+});
 </script>
 
 <template>
   <Head>
-    <Title>{{ product.name }} | Checkout</Title>
+    <Title>{{ product.name }} | Greenn</Title>
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>
