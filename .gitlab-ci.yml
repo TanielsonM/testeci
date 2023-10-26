@@ -67,8 +67,9 @@ Build Images:
     - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
       #docker hub
     - echo $DOCKER_HUB_PASSWORD | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
-    - export DOCKER_HUB_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]'):${CI_COMMIT_SHORT_SHA}"
-    - export DOCKER_HUB_LATEST_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]'):latest"
+
+    - export DOCKER_HUB_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]' | tr '/' '_'):${CI_COMMIT_SHORT_SHA}"
+    - export DOCKER_HUB_LATEST_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]' | tr '/' '_'):latest"
     
     - docker pull $LATEST_CHECKOUT_IMAGE_TAG || true
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG -t $DOCKER_HUB_IMAGE_TAG -t $DOCKER_HUB_LATEST_IMAGE_TAG .
