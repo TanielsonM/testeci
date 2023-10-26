@@ -144,6 +144,7 @@ personalStore.setFields(useRoute().query);
       v-model="email"
       :error="email && hasSent ? !validateEmail.isValidSync(email) : undefined"
       :disabled="forceEmail"
+      rules="email"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}

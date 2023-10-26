@@ -10,7 +10,7 @@ import { useCheckoutStore } from "@/store/checkout";
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
-export const validateEmail = yup.string().matches(/^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/, 'Email inválido').required();
+export const validateEmail = yup.string().email().required();
 export const validateDocument = yup
   .string()
   .test("cpfCnpj", "", (value) => validateCpfCnpj(value))
