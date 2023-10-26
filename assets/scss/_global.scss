@@ -104,3 +104,18 @@ textarea {
     align-self: flex-start;
   }
 }
+
+.Vue-Toastification__toast.custom_error {
+  --notification-title-color: #e40000;
+  --notification-text-color: #5f5c6b;
+  background-color: #fef2f2 !important;
+  border: 2px solid #e40000;
+  color: #e40000 !important;
+  width: 400px;
+
+  .Vue-Toastification__close-button {
+    color: #5f5c6b;
+    opacity: 0.5;
+    align-self: flex-start;
+  }
+}

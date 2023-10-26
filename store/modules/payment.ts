@@ -1,5 +1,6 @@
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
+import * as Toast from "vue-toastification";
 
 // Types
 import { Payment, Product, PaymentError, SaleElement } from "~~/types";
@@ -69,6 +70,18 @@ export const usePaymentStore = defineStore("Payment", {
   actions: {
     async payment(language: string) {
       const allValid = await validateAll();
+      if(allValid) {
+        var regex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,4}$/;
+        if (!regex.test(email.value)) {
+          const toast = Toast.useToast();
+          toast.error("E-mail não possui um formato válido.", {
+            bodyClassName: ["custom_error"],
+            toastClassName: "custom_error",
+          });
+          return;
+        }
+      }
+
       if (!allValid) {
         this.hasSent = true;
         return;
