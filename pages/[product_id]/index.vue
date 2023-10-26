@@ -200,14 +200,6 @@ watch(selectedCountry, () => {
   }
 });
 
-watch(currentStep, (step) => {
-  if (step === countSteps.value) {
-    stepsStore.changePaypalStep(true);
-    return;
-  }
-  stepsStore.changePaypalStep(false);
-});
-
 watch(error_message, (val) => {
   if (val) alert_modal.value = true;
 });
@@ -494,7 +486,7 @@ onMounted(() => {
             <span class="text-[15px] font-semibold">
               {{
                 customCheckoutStore.purchase_text ||
-                $t("checkout.footer.btn_compra")
+                $t("checkout.footer.btn_compra") + 'aaaa'
               }}
             </span>
           </BaseButton>

@@ -13,36 +13,33 @@ export const useStepStore = defineStore("Step", {
     format: "default",
     isMobile: false,
   }),
+  getters: {
+    isLastStep(state): boolean {
+      return state.currentStep >= state.countSteps ? true : false;
+    },
+  },
   actions: {
     async setStep(step = 1) {
       const paymentStore = usePaymentStore();
       const { hasSent } = storeToRefs(paymentStore);
 
-      switch (step) {
-        case 2:
-          let validateOne = await validateFirstStep();
-          if (!validateOne) {
-            this.enablePaypal = true;
-            hasSent.value = true;
-            return;
-          }
-          this.enablePaypal = false;
-          break;
-        case 3:
-          let validateSecond = await validateSecondStep();
-          if (!validateSecond) {
-            this.enablePaypal = true;
-            hasSent.value = true;
-            return;
-          }
-          this.enablePaypal = false;
-          break;
-      }
       hasSent.value = false;
       this.currentStep = step;
     },
-    changePaypalStep(value: boolean) {
-      this.enablePaypal = value;
+    async changePaypalStatus() {
+      let isPersonalValid = await validateFirstStep();
+      let isAddressValid = await validateSecondStep();
+
+      console.log({
+        isValidPersonal: isPersonalValid,
+        isValidAddress: isAddressValid,
+      });
+
+      if (isPersonalValid && isAddressValid) {
+        this.enablePaypal = true;
+      } else {
+        this.enablePaypal = false;
+      }
     },
     setFormat(format: "default" | "one_step") {
       this.format = format;

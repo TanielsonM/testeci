@@ -87,22 +87,18 @@ watch([name, email, cellphone, document], async () => {
   let currentStep = stepStore.currentStep;
   let countSteps = stepStore.countSteps;
 
+  stepStore.changePaypalStatus();
+
   if (isPersonalValid) {
     if (isAddressValid) {
       if (currentStep === 1 || currentStep === 2) {
-        stepStore.setCurrentStep(3);
+        stepStore.setCurrentStep(2);
       }
-    } else if (countSteps === 3 && (currentStep === 1 || currentStep === 2)) {
-      stepStore.setCurrentStep(2);
-    } else if (countSteps === 2 && (currentStep === 1 || currentStep === 2)) {
-      stepStore.setCurrentStep(2);
-    }
-  } else if (isAddressValid) {
-    if (currentStep === 2 || currentStep === 3) {
+    } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {
+      stepStore.back();
+    } else if (isPersonalValid && !isAddressValid && currentStep === 3) {
       stepStore.back();
     }
-  } else if (!isPersonalValid && currentStep === 2) {
-    stepStore.back();
   }
 });
 
