@@ -106,8 +106,10 @@ watch([name, email, cellphone, document], async () => {
   }
 });
 
-function getMetaToValidateEmail(isFormValid) {
-  stepStore.setIsEmailValid(isFormValid)
+function getMetaToValidateEmail(validateField) {
+  validateField('email-field').then(res => {
+    stepStore.setIsEmailValid(res.valid)
+  })
 }
 
 function updateLead(isEmail = false) {
@@ -121,7 +123,7 @@ personalStore.setFields(useRoute().query);
 </script>
 
 <template>
-  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form" v-slot="{ meta }">
+  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form" v-slot="{ validateField }">
     <BaseInput
       @blur="updateLead"
       class="col-span-12"
@@ -140,7 +142,7 @@ personalStore.setFields(useRoute().query);
 
     <BaseInput
       class="col-span-12"
-      @change="getMetaToValidateEmail(meta.valid)"
+      @change="getMetaToValidateEmail(validateField)"
       @blur="updateLead(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
