@@ -1,6 +1,5 @@
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
-import * as Toast from "vue-toastification";
 
 // Types
 import { Payment, Product, PaymentError, SaleElement } from "~~/types";
