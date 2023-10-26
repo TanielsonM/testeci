@@ -66,7 +66,7 @@ Build Images:
     - export LATEST_CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):latest"
     - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
       #docker hub
-    - echo "$DOCKER_HUB_PASSWORD" | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
+    - echo $DOCKER_HUB_PASSWORD | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
     - export DOCKER_HUB_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]'):${CI_COMMIT_SHORT_SHA}"
     - export DOCKER_HUB_LATEST_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]'):latest"
     
