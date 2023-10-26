@@ -66,8 +66,8 @@ onMounted(async () => {
                   description: productName.value,
                   amount: {
                     value: coupon.value.applied
-                     ? getAmount.value
-                     : checkoutPayment.value.paypal.amount,
+                    ? getAmount.value
+                    : checkoutPayment.value.paypal.amount,
                     currency_code: checkoutPayment.value.paypal.currency,
                   },
                   reference_id: JSON.stringify({
@@ -102,7 +102,7 @@ onMounted(async () => {
         })
         .render(paypal.value);
     }
-  }, 4000);
+  }, 1000);
 });
 </script>
 <template>
