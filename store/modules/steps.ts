@@ -4,6 +4,7 @@ import {
   validateFirstStep,
   validateSecondStep,
 } from "@/rules/form-validations";
+import { useCheckoutStore } from "~~/store/checkout";
 
 export const useStepStore = defineStore("Step", {
   state: (): StepState => ({
@@ -27,10 +28,12 @@ export const useStepStore = defineStore("Step", {
       this.currentStep = step;
     },
     async changePaypalStatus() {
+      const checkoutStore = useCheckoutStore();
+      const { showAddressStep } = storeToRefs(checkoutStore);
       let isPersonalValid = await validateFirstStep();
       let isAddressValid = await validateSecondStep();
 
-      if (isPersonalValid && isAddressValid) {
+      if (isPersonalValid && (!showAddressStep || (showAddressStep && isAddressValid))) {
         this.enablePaypal = true;
       } else {
         this.enablePaypal = false;
