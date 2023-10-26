@@ -30,28 +30,16 @@ const handleMouseOut = (event) => {
   }
 };
 
-const handleTouchOutside = (event) => {
-  const greennWrapper = customCheckoutStore.getGreennWrapper;
-
-  if (!greennWrapper.contains(event.target)) {
-    closeUpModal.value = true;
-    closeUpModalCookie.value = false;
-    closeUpModalCookie.expires = expirationDate.setDate(expirationDate.getDate() + 7);
-  }
-};
-
 function closeModal() {
   closeUpModal.value = false;
 }
 
 onMounted(() => {
   window.addEventListener('mouseout', handleMouseOut);
-  window.addEventListener('touchstart', handleTouchOutside);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('mouseout', handleMouseOut);
-  window.removeEventListener('touchstart', handleTouchOutside);
 });
 </script>
 
