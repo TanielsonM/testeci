@@ -107,7 +107,7 @@ watch([name, email, cellphone, document], async () => {
 });
 
 function getMetaToValidateEmail(isFormValid) {
-  if(isFormValid) stepStore.setIsEmailValid(isFormValid)
+  stepStore.setIsEmailValid(isFormValid)
 }
 
 function updateLead(isEmail = false) {
