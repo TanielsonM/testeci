@@ -8,7 +8,7 @@ import logoPayPal from "@/assets/paypal/logo.svg";
 import { useStepStore } from "~~/store/modules/steps";
 
 const stepsStore = useStepStore();
-const { enablePaypal, lastStep, isLastStep } = storeToRefs(stepsStore);
+const { enablePaypal, isLastStep } = storeToRefs(stepsStore);
 
 const { locale } = useI18n();
 const paypal = ref(null);
