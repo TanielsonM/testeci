@@ -145,10 +145,7 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
               toast.success(content, {
                 timeout: 5000,
                 icon: false,
-                appendChild: true,
-                position: position,
-                toastClassName: "custom",
-                bodyClassName: ["custom"],
+                position,
               });
             }, parseInt(time + "000"));
           }
