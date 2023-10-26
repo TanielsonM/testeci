@@ -107,11 +107,10 @@ watch([name, email, cellphone, document], async () => {
 });
 
 function getMetaToValidateEmail(isFormValid) {
-  stepStore.setIsEmailValid(isFormValid)
+  if(isFormValid) stepStore.setIsEmailValid(isFormValid)
 }
 
-function updateLead(isEmail = false, meta) {
-  if(meta) getMetaToValidateEmail(meta.valid);
+function updateLead(isEmail = false) {
   if (isEmail) email.value = email.value.trim();
   setTimeout(function () {
     leadsStore.updateLead();
@@ -141,7 +140,8 @@ personalStore.setFields(useRoute().query);
 
     <BaseInput
       class="col-span-12"
-      @blur="updateLead(true, meta)"
+      @change="getMetaToValidateEmail(meta.valid)"
+      @blur="updateLead(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"

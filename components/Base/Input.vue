@@ -88,11 +88,13 @@ const emit = defineEmits([
   "prepend-click",
   "append-click",
   "blur",
+  "change",
   "focus",
 ]);
 
 const onInput = (event) => {
   emit("update:modelValue", event.target.value);
+  emit("change")
 };
 </script>
 
@@ -149,6 +151,7 @@ const onInput = (event) => {
           :data-maska="mask"
           @input="onInput"
           @blur="emit('blur')"
+          @change="emit('change')"
           @focus="emit('focus')"
         />
       </VeeField>
