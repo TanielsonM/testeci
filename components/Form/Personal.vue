@@ -24,7 +24,6 @@ const payment = usePaymentStore();
 const stepStore = useStepStore();
 
 const { hasSent } = storeToRefs(payment);
-const { isMobile } = storeToRefs(stepStore);
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
@@ -85,24 +84,19 @@ watch([name, email, cellphone, document], async () => {
   let isPersonalValid = await validateFirstStep();
   let isAddressValid = await validateSecondStep();
   let currentStep = stepStore.currentStep;
-  let countSteps = stepStore.countSteps;
+
+  stepStore.changePaypalStatus();
 
   if (isPersonalValid) {
     if (isAddressValid) {
       if (currentStep === 1 || currentStep === 2) {
-        stepStore.setCurrentStep(3);
+        stepStore.setCurrentStep(2);
       }
-    } else if (countSteps === 3 && (currentStep === 1 || currentStep === 2)) {
-      stepStore.setCurrentStep(2);
-    } else if (countSteps === 2 && (currentStep === 1 || currentStep === 2)) {
-      stepStore.setCurrentStep(2);
-    }
-  } else if (isAddressValid) {
-    if (currentStep === 2 || currentStep === 3) {
+    } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {
+      stepStore.back();
+    } else if (isPersonalValid && !isAddressValid && currentStep === 3) {
       stepStore.back();
     }
-  } else if (!isPersonalValid && currentStep === 2) {
-    stepStore.back();
   }
 });
 
