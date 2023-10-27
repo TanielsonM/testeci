@@ -23,9 +23,22 @@ export const useStepStore = defineStore("Step", {
     async setStep(step = 1) {
       const paymentStore = usePaymentStore();
       const { hasSent } = storeToRefs(paymentStore);
-
       hasSent.value = false;
-      this.currentStep = step;
+      
+      let isPersonalValid = await validateFirstStep();
+      let isAddressValid = await validateSecondStep();
+
+      if(step === 2) {
+        if(isPersonalValid) {
+          this.currentStep = step;
+        }
+      } else if(step === 3) {
+        if(isPersonalValid && isAddressValid) {
+          this.currentStep = step;
+        }
+      } else {
+        this.currentStep = step;
+      }
     },
     async changePaypalStatus() {
       const checkoutStore = useCheckoutStore();
