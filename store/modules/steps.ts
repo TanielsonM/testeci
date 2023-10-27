@@ -12,6 +12,7 @@ export const useStepStore = defineStore("Step", {
     enablePaypal: false,
     format: "default",
     isMobile: false,
+    isEmailValid: false
   }),
   actions: {
     async setStep(step = 1) {
@@ -49,6 +50,9 @@ export const useStepStore = defineStore("Step", {
     },
     setCurrentStep(step: number) {
       this.currentStep = step;
+    },
+    setIsEmailValid(value: boolean) {
+      this.isEmailValid = value;
     },
     next() {
       this.currentStep++;
