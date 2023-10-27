@@ -102,7 +102,7 @@ onMounted(async () => {
         })
         .render(paypal.value);
     }
-  }, 1000);
+  }, 300);
 });
 </script>
 <template>
