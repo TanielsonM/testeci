@@ -417,6 +417,7 @@ export type StepState = {
   format: "one_step" | "default";
   isMobile: boolean;
   countSteps: number;
+  isEmailValid: boolean;
 };
 
 export type Sale = {

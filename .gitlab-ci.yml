@@ -65,11 +65,21 @@ Build Images:
     - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):${DEPLOY_HASH}"
     - export LATEST_CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):latest"
     - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+      #docker hub
+    - echo $DOCKER_HUB_PASSWORD | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
+
+    - export DOCKER_HUB_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]' | tr '/' '_'):${CI_COMMIT_SHORT_SHA}"
+    - export DOCKER_HUB_LATEST_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]' | tr '/' '_'):latest"
+    
     - docker pull $LATEST_CHECKOUT_IMAGE_TAG || true
-    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG .
+    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG -t $DOCKER_HUB_IMAGE_TAG -t $DOCKER_HUB_LATEST_IMAGE_TAG .
     # - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
     - docker push $CHECKOUT_IMAGE_TAG
     - docker push $LATEST_CHECKOUT_IMAGE_TAG
+    
+      #docker hub
+    - docker push $DOCKER_HUB_IMAGE_TAG
+    - docker push $DOCKER_HUB_LATEST_IMAGE_TAG
     
     # Nuxt_v2
     # - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address-v2.txt):${DEPLOY_HASH}"

@@ -100,6 +100,12 @@ watch([name, email, cellphone, document], async () => {
   }
 });
 
+function getMetaToValidateEmail(validateField) {
+  validateField('email-field').then(res => {
+    stepStore.setIsEmailValid(res.valid)
+  })
+}
+
 function updateLead(isEmail = false) {
   if (isEmail) email.value = email.value.trim();
   setTimeout(function () {
@@ -111,7 +117,7 @@ personalStore.setFields(useRoute().query);
 </script>
 
 <template>
-  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form">
+  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form" v-slot="{ validateField }">
     <BaseInput
       @blur="updateLead"
       class="col-span-12"
@@ -130,6 +136,7 @@ personalStore.setFields(useRoute().query);
 
     <BaseInput
       class="col-span-12"
+      @change="getMetaToValidateEmail(validateField)"
       @blur="updateLead(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
@@ -138,6 +145,7 @@ personalStore.setFields(useRoute().query);
       v-model="email"
       :error="email && hasSent ? !validateEmail.isValidSync(email) : undefined"
       :disabled="forceEmail"
+      rules="email"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}
