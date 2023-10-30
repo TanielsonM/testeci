@@ -231,7 +231,7 @@ export const useCheckoutStore = defineStore("checkout", {
           })
           .then(async (response) => {
             if(this.global_settings.country !== 'BR') {
-              this.redirectOfferPanel(response?.data)
+              this.redirectOfferPanel(response?.data, this.global_settings.country)
             }
 
             if (response.allow_free_offers){
@@ -776,11 +776,11 @@ export const useCheckoutStore = defineStore("checkout", {
         frete: shipping
       }
     },
-    redirectOfferPanel(product) {
+    redirectOfferPanel(product, country) {
       if(product.offer_redirect_id) {
         const urlAtual = new URL(window.location.href);
         const parametros = `/${product.offer_redirect.product_id}/offer/${product.offer_redirect.hash}`;
-        const queries = `${urlAtual.search}&country=${this.global_settings.country}`;
+        const queries = `${urlAtual.search}&country=${country}`;
         const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
         const novaUrl = `${novaRota}${parametros}${queries}`;
         window.location.href = novaUrl;
