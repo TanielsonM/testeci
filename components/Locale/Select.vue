@@ -36,7 +36,7 @@ locale.value = selectedCountry.value.language;
 const selectCountry = (country) => {
   if(product?.offer_redirect_id) {
     const urlAtual = new URL(window.location.href);
-    const parametros = `/${response.data.offer_redirect.product_id}/offer/${response.data.offer_redirect.hash}`;
+    const parametros = `/${product.offer_redirect.product_id}/offer/${product.offer_redirect.hash}`;
     const queries = `${urlAtual.search}&country=${this.global_settings.country}`;
     const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
     const novaUrl = `${novaRota}${parametros}${queries}`;
