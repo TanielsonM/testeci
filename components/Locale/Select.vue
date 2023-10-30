@@ -1,12 +1,15 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "~~/store/checkout";
+import { useProductStore } from "~~/store/product";
 
 // Store
 const checkout = useCheckoutStore();
+const productStore = useProductStore();
 // Composables
 const { locale } = useI18n();
 const { global_settings } = storeToRefs(checkout);
+const { product } = storeToRefs(productStore);
 const { alphabetical, searcher } = useCountrys();
 // Computeds
 const defaultCountry = computed(
@@ -31,6 +34,15 @@ const currentCountryAcronym = useState(
 locale.value = selectedCountry.value.language;
 
 const selectCountry = (country) => {
+  if(product?.offer_redirect_id) {
+    const urlAtual = new URL(window.location.href);
+    const parametros = `/${response.data.offer_redirect.product_id}/offer/${response.data.offer_redirect.hash}`;
+    const queries = `${urlAtual.search}&country=${this.global_settings.country}`;
+    const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
+    const novaUrl = `${novaRota}${parametros}${queries}`;
+    window.location.href = novaUrl;
+  }
+
   search.value = "";
   opened.value = !opened.value;
   selectedCountry.value = country;

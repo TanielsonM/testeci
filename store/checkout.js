@@ -229,24 +229,22 @@ export const useCheckoutStore = defineStore("checkout", {
             ...configs,
             query,
           })
-          .then(res => {
-            const product = res.data;
-
-            if(product.offer_redirect_id) {
-              const urlAtual = new URL(window.location.href);
-              const parametros = urlAtual.pathname;
-              const queries = urlAtual.search;
-              const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
-              const novaUrl = `${novaRota}${parametros}${queries}`;
-              window.location.href = novaUrl;
+          .then(async (response) => {
+            if(this.global_settings.country !== 'BR') {
+              if(response?.data?.offer_redirect_id) {
+                const urlAtual = new URL(window.location.href);
+                const parametros = `/${response.data.offer_redirect.product_id}/offer/${response.data.offer_redirect.hash}`;
+                const queries = `${urlAtual.search}&country=${this.global_settings.country}`;
+                const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
+                const novaUrl = `${novaRota}${parametros}${queries}`;
+                window.location.href = novaUrl;
+              }
             }
 
-            return res;
-          })
-          .then(async (response) => {
-            if(response.allow_free_offers){
+            if (response.allow_free_offers){
               this.setAllowFreeOffers(response.allow_free_offers)
             }
+
             if (response?.checkout_payment?.data?.amount) {
               response.data.amount = response.checkout_payment.data.amount;
             }
