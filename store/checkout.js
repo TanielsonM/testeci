@@ -777,7 +777,7 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     redirectOfferPanel(product, country) {
-      if(product.offer_redirect_id) {
+      if(product.seller.is_heaven && product.offer_redirect_id) {
         const urlAtual = new URL(window.location.href);
         const parametros = `/${product.offer_redirect.product_id}/offer/${product.offer_redirect.hash}`;
         const queries = `${urlAtual.search}&country=${country}`;
