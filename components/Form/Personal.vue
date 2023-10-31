@@ -78,6 +78,9 @@ const {
   forceCellphone,
 } = storeToRefs(personalStore);
 
+const { isEmailValid } = storeToRefs(stepStore);
+const queryParams = useRoute().query;
+
 watch([name, email, cellphone, document], async () => {
   
   leadsStore.syncPersonal();
@@ -100,7 +103,8 @@ watch([name, email, cellphone, document], async () => {
   }
 });
 
-function getMetaToValidateEmail(validateField) {
+function validateEmailWithVeeValidate(validateField) {
+  console.log('validateEmailWithVeeValidate')
   validateField('email-field').then(res => {
     stepStore.setIsEmailValid(res.valid)
   })
@@ -113,11 +117,21 @@ function updateLead(isEmail = false) {
   }, 1000);
 }
 
-personalStore.setFields(useRoute().query);
+personalStore.setFields(queryParams);
+
+const personalForm = ref(null);
+onMounted(() => {
+  if(queryParams.em) {
+    personalForm.value.setFieldValue('email-field', queryParams.em);
+    personalForm.value.validateField('email-field').then(res => {
+      stepStore.setIsEmailValid(res.valid)
+    })
+  }
+})
 </script>
 
 <template>
-  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personal-form" v-slot="{ validateField }">
+  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personalForm" v-slot="{ validateField }">
     <BaseInput
       @blur="updateLead"
       class="col-span-12"
@@ -136,14 +150,14 @@ personalStore.setFields(useRoute().query);
 
     <BaseInput
       class="col-span-12"
-      @change="getMetaToValidateEmail(validateField)"
+      @change="validateEmailWithVeeValidate(validateField)"
       @blur="updateLead(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      :error="email && hasSent ? !validateEmail.isValidSync(email) : undefined"
+      :error="email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.em && !isEmailValid)) : undefined"
       :disabled="forceEmail"
       rules="email"
     >
