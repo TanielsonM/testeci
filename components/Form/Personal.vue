@@ -104,7 +104,6 @@ watch([name, email, cellphone, document], async () => {
 });
 
 function validateEmailWithVeeValidate(validateField) {
-  console.log('validateEmailWithVeeValidate')
   validateField('email-field').then(res => {
     stepStore.setIsEmailValid(res.valid)
   })
