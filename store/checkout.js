@@ -780,9 +780,9 @@ export const useCheckoutStore = defineStore("checkout", {
       if(product.seller.is_heaven && product.seller.is_greenn && product.offer_redirect_id) {
         const urlAtual = new URL(window.location.href);
         const parametros = `/${product.offer_redirect.product_id}/offer/${product.offer_redirect.hash}`;
-        let queries = urlAtual.search || '?'; 
-        queries += queries.includes('?') ? '&' : '?';
-        queries += `country=${country}`;
+        const queryConcat = urlAtual.search ? '&' : '?';
+        const queries = urlAtual.search; 
+        queries = `${urlAtual.search}${queryConcat}country=${country}`
         const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
         const novaUrl = `${novaRota}${parametros}${queries}`;
         window.location.href = novaUrl;
