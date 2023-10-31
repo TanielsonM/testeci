@@ -34,7 +34,7 @@ const currentCountryAcronym = useState(
 locale.value = selectedCountry.value.language;
 
 const selectCountry = (country) => {
-  checkout.redirectOfferPanel(product, country.sigla)
+  checkout.redirectOfferPanel(product.value, country.sigla)
 
   search.value = "";
   opened.value = !opened.value;

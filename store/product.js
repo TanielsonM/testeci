@@ -2,8 +2,7 @@ import { useCheckoutStore } from "@/store/checkout";
 import { useCustomCheckoutStore } from "@/store/customCheckout";
 import { formatMoney } from "~~/utils/money";
 import { useInstallmentsStore } from "./modules/installments";
-import { useAmountStore } from "./modules/amount";
-const amountStore = useAmountStore();
+import { defineStore } from "pinia";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
