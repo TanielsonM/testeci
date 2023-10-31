@@ -781,8 +781,7 @@ export const useCheckoutStore = defineStore("checkout", {
         const urlAtual = new URL(window.location.href);
         const parametros = `/${product.offer_redirect.product_id}/offer/${product.offer_redirect.hash}`;
         const queryConcat = urlAtual.search ? '&' : '?';
-        const queries = urlAtual.search; 
-        queries = `${urlAtual.search}${queryConcat}country=${country}`
+        const queries = `${urlAtual.search}${queryConcat}country=${country}`
         const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
         const novaUrl = `${novaRota}${parametros}${queries}`;
         window.location.href = novaUrl;
