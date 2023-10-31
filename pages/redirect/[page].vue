@@ -1,7 +1,7 @@
 <script setup>
 const route = useRoute();
 const router = useRouter();
-const isExternalPage = ref(false);
+const isGreennPage = ref(false);
 const externalPage = ref("");
 
 await useApi()
@@ -15,26 +15,35 @@ await useApi()
         query.append(key, value);
       }
     }
-    
-    isExternalPage.value = !["payfast.greenn", "pay.greenn", "payu.greenn"].includes(url.hostname);
-    
-    externalPage.value = url.origin + "?" + query.toString();
+
+    isGreennPage.value = [
+      "payfast.greenn.com.br",
+      "pay.greenn.com.br",
+      "payu.greenn.com.br",
+    ].includes(url.hostname);
+
+    if (!isGreennPage.value) {
+      externalPage.value = url.origin + "?" + query.toString();
+    }
+
     const fullURL = url.pathname + "?" + query.toString();
-    if (fullURL && !isExternalPage.value) {
+    if (fullURL && isGreennPage.value) {
       router.push(fullURL);
     }
   });
 
 onMounted(() => {
-  if(process.client) {
+  if (process.client && !isGreennPage.value) {
     window.location.href = externalPage.value;
   }
-})
+});
 </script>
 
 <template>
-  <main class="flex h-screen w-screen items-center justify-center flex-col gap-5">
-    <img src="@/assets/logos/logo.png" alt="Logo do Greenn" class="w-[200px]">
+  <main
+    class="flex h-screen w-screen flex-col items-center justify-center gap-5"
+  >
+    <img src="@/assets/logos/logo.png" alt="Logo do Greenn" class="w-[200px]" />
     <section class="custom-loading">
       <span class="loading"></span>
     </section>
