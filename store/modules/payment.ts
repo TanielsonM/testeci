@@ -146,10 +146,9 @@ export const usePaymentStore = defineStore("Payment", {
       // Physical product
       if (hasPhysicalProduct.value) {
         const address: any = sameAddress.value ? charge.value : shipping.value;
-        address.zipcode.replace("-", "");
         data = {
           ...data,
-          shipping_address_zip_code: address.zipcode,
+          shipping_address_zip_code: address.zipcode.replace(/[-]/g, ''),
           shipping_address_street: address.street,
           shipping_address_number: address.number,
           shipping_address_complement: address.complement,
