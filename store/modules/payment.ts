@@ -165,10 +165,12 @@ export const usePaymentStore = defineStore("Payment", {
               .map((prod) => prod.product_id)
               .indexOf(item.id);
 
-            data.products[index].shipping_amount = item.shipping.amount;
-            data.products[index].shipping_service_id = item.shipping.id;
-            data.products[index].shipping_service_name = item.shipping.name;
-            data.products[index].shipping_selected = JSON.stringify({address, ...shipping_selected.value});
+            const shippingSelected: any = shipping_selected
+
+            data.products[index].shipping_amount = item.shipping.amount || shippingSelected.amount;
+            data.products[index].shipping_service_id = item.shipping.id || shippingSelected.service_id;
+            data.products[index].shipping_service_name = item.shipping.name || shippingSelected.service_name;
+            data.products[index].shipping_selected = JSON.stringify({address, ...shippingSelected.value});
           }
         });
       }
