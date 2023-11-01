@@ -202,7 +202,7 @@ watch(installments, () => {
 
 <template>
   <section class="flex flex-col gap-5">
-    <section
+    <section v-show=false
       class="flex w-full items-center justify-between gap-5"
       v-if="showCreditCardsTabs"
     >
