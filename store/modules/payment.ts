@@ -207,6 +207,7 @@ export const usePaymentStore = defineStore("Payment", {
         }
         let cards = [];
         cards.push({
+          total: Number(parsedFirstAmount).toFixed(2),
           amount: Number(firstCardAmountWithoutInterest).toFixed(2),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
@@ -214,7 +215,15 @@ export const usePaymentStore = defineStore("Payment", {
           card_number: first.value.number,
         });
         if (method.value === "TWO_CREDIT_CARDS") {
+          let parsedSecondAmount = Number(
+            second.value.amount
+              .toString()
+              .replace("R$", "")
+              .replace(".", "")
+              .replace(",", ".")
+          );
           cards.push({
+            total: Number(parsedSecondAmount).toFixed(2),
             amount: Number(
               getAmount.value - firstCardAmountWithoutInterest
             ).toFixed(2),
