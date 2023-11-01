@@ -43,6 +43,7 @@ export const useProductStore = defineStore("product", {
       state.product.format !== "PHYSICALPRODUCT",
     isHeaven: (state) => !!state.product.is_heaven,
     isFixedShipping: (state) => state.product.type_shipping_fee === "FIXED",
+    isDynamicShipping: (state) => state.product.type_shipping_fee === "DYNAMIC",
     FixedShippingAmount: (state) => state.product.amount_fixed_shipping_fee,
     showAddress: (state) => state.product.is_checkout_address,
     hasTrial: (state) => state.product.trial,

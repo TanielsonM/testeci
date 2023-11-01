@@ -78,6 +78,7 @@ export const useCheckoutStore = defineStore("checkout", {
     // Paypal details
     paypal_details: {},
     allow_free_offers : null,
+    hasIntegrationWithGreennEnvios: false
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -662,13 +663,17 @@ export const useCheckoutStore = defineStore("checkout", {
           ) {
             let calculate = await useApi()
               .create(`envios/calculate/${this.product_id}`, {
-                shipping_address_zip_code: zip,
+                shipping_address_zip_code: zip
+              })
+              .then(() => {
+                this.hasIntegrationWithGreennEnvios = true
               })
               .catch((err) => {
                 // Product does not have integration with "Greenn envios"
                 if (err.value.statusCode) {
                   const toast = Toast.useToast();
                   toast.error("Esse produto não possui integração para envio");
+                  this.hasIntegrationWithGreennEnvios = false
                 }
               });
 
@@ -710,11 +715,15 @@ export const useCheckoutStore = defineStore("checkout", {
             .create(`envios/calculate/${bump.id}`, {
               shipping_address_zip_code: zip,
             })
+            .then(() => {
+              this.hasIntegrationWithGreennEnvios = true;
+            })
             .catch((err) => {
               // Product does not have integration with "Greenn envios"
               if (err.value.statusCode) {
                 const toast = Toast.useToast();
                 toast.error("Esse produto não possui integração para envio");
+                this.hasIntegrationWithGreennEnvios = false;
               }
             })
         );
