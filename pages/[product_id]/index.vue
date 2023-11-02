@@ -526,6 +526,14 @@ onMounted(() => {
         class="hidden w-full rounded-lg lg:block"
       />
       <!-- End side Thumb -->
+      <!-- Side Thumb Mobile -->
+      <img
+        v-if="customCheckoutStore.sideThumbMobile"
+        :src="customCheckoutStore.sideThumbMobile"
+        alt="Thumb lateral mobile"
+        class="w-full rounded-lg lg:hidden"
+      />
+      <!-- End side Thumb Mobile-->
     </section>
 
     <!-- Alert modal -->
