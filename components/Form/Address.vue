@@ -59,12 +59,10 @@ watch([zipcode, number, neighborhood, city, state, street], async () => {
   let isAddressValid = await validateSecondStep();
   let currentStep = stepStore.currentStep;
 
+  stepStore.changePaypalStatus();
+
   if (isPersonalValid) {
-    if (isAddressValid) {
-      if (currentStep === 1 || currentStep === 2) {
-        stepStore.setCurrentStep(3);
-      }
-    } else if (currentStep === 1 || currentStep === 2) {
+    if (currentStep === 1 || currentStep === 2) {
       stepStore.setCurrentStep(2);
     }
   } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {

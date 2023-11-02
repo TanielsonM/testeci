@@ -146,10 +146,9 @@ export const usePaymentStore = defineStore("Payment", {
       // Physical product
       if (hasPhysicalProduct.value) {
         const address: any = sameAddress.value ? charge.value : shipping.value;
-        address.zipcode.replace("-", "");
         data = {
           ...data,
-          shipping_address_zip_code: address.zipcode,
+          shipping_address_zip_code: address?.zipcode?.replace(/[-]/g, ''),
           shipping_address_street: address.street,
           shipping_address_number: address.number,
           shipping_address_complement: address.complement,
@@ -207,6 +206,7 @@ export const usePaymentStore = defineStore("Payment", {
         }
         let cards = [];
         cards.push({
+          total: Number(parsedFirstAmount).toFixed(2),
           amount: Number(firstCardAmountWithoutInterest).toFixed(2),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
@@ -214,7 +214,15 @@ export const usePaymentStore = defineStore("Payment", {
           card_number: first.value.number,
         });
         if (method.value === "TWO_CREDIT_CARDS") {
+          let parsedSecondAmount = Number(
+            second.value.amount
+              .toString()
+              .replace("R$", "")
+              .replace(".", "")
+              .replace(",", ".")
+          );
           cards.push({
+            total: Number(parsedSecondAmount).toFixed(2),
             amount: Number(
               getAmount.value - firstCardAmountWithoutInterest
             ).toFixed(2),

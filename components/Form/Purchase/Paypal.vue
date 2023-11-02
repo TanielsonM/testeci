@@ -6,10 +6,9 @@ import { useAmountStore } from "~~/store/modules/amount";
 import logoPayPal from "@/assets/paypal/logo.svg";
 
 import { useStepStore } from "~~/store/modules/steps";
-import { validateFirstStep } from "@/rules/form-validations";
 
 const stepsStore = useStepStore();
-const { enablePaypal } = storeToRefs(stepsStore);
+const { enablePaypal, isMobile, isLastStep } = storeToRefs(stepsStore);
 
 const { locale } = useI18n();
 const paypal = ref(null);
@@ -67,8 +66,8 @@ onMounted(async () => {
                   description: productName.value,
                   amount: {
                     value: coupon.value.applied
-                     ? getAmount.value
-                     : checkoutPayment.value.paypal.amount,
+                    ? getAmount.value
+                    : checkoutPayment.value.paypal.amount,
                     currency_code: checkoutPayment.value.paypal.currency,
                   },
                   reference_id: JSON.stringify({
@@ -112,9 +111,9 @@ onMounted(async () => {
       <div
         ref="paypal"
         data-anima="top"
-        :class="{ hidden:  !enablePaypal }"
+        :class="{ hidden: (!isMobile && !enablePaypal) || (isMobile && !isLastStep && !enablePaypal)}"
       ></div>
-      <BaseButton color="paypal" :disabled="true" v-if="!enablePaypal">
+      <BaseButton color="paypal" :disabled="true" v-if="(!isMobile && !enablePaypal) || (isMobile && !isLastStep)">
         <span class="mr-1 text-[15px] font-semibold">
           <img :src="logoPayPal" class="w-20" />
         </span>

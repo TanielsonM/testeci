@@ -200,14 +200,6 @@ watch(selectedCountry, () => {
   }
 });
 
-watch(currentStep, (step) => {
-  if (step === countSteps.value) {
-    stepsStore.changePaypalStep(true);
-    return;
-  }
-  stepsStore.changePaypalStep(false);
-});
-
 watch(error_message, (val) => {
   if (val) alert_modal.value = true;
 });
