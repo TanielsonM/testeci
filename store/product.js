@@ -38,8 +38,7 @@ export const useProductStore = defineStore("product", {
       state.product.pre_selected_installment ?? null,
     hasShippingFee: (state) => !!state.product.has_shipping_fee,
     allowedCoupon: (state) =>
-      state.product.allowed_coupon &&
-      state.product.format !== "PHYSICALPRODUCT",
+      state.product.allowed_coupon,
     isHeaven: (state) => !!state.product.is_heaven,
     isFixedShipping: (state) => state.product.type_shipping_fee === "FIXED",
     FixedShippingAmount: (state) => state.product.amount_fixed_shipping_fee,
