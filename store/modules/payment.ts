@@ -159,19 +159,19 @@ export const usePaymentStore = defineStore("Payment", {
 
         if(isDynamicShipping.value) {
           data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
-
-          product_list.value.forEach((item: any) => {
-            if (item?.shipping) {
-              const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
-              const shippingSelected: any = shipping_selected;
-  
-              data.products[index].shipping_amount = item.shipping.amount || shippingSelected.amount;
-              data.products[index].shipping_service_id = item.shipping.id || shippingSelected.service_id;
-              data.products[index].shipping_service_name = item.shipping.name || shippingSelected.service_name;
-              data.products[index].shipping_selected = JSON.stringify({address, ...shippingSelected.value});
-            }
-          });
         }
+
+        product_list.value.forEach((item: any) => {
+          if (item?.shipping) {
+            const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
+            const shippingSelected: any = shipping_selected;
+
+            data.products[index].shipping_amount = item.shipping.amount || shippingSelected.amount;
+            data.products[index].shipping_service_id = item.shipping.id || shippingSelected.service_id;
+            data.products[index].shipping_service_name = item.shipping.name || shippingSelected.service_name;
+            if(isDynamicShipping.value) data.products[index].shipping_selected = JSON.stringify({address, ...shippingSelected.value});
+          }
+        });
       }
       // Affiliate id
       const affiliate_id = useCookie(`affiliate_${product_id.value}`);
