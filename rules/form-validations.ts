@@ -57,12 +57,11 @@ export const validateFirstStep = async (): Promise<boolean> => {
 export const validateSecondStep = async (): Promise<boolean> => {
   const productStore = useProductStore();
   const checkout = useCheckoutStore();
-  const { hasIntegrationWithGreennEnvios, shipping_selected } = storeToRefs(checkout);
-  const shippingSelected: any = shipping_selected.value
+  const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
   let validShippingIntegration = false;
 
   if(!!checkout.getBumpsWithShippingFee.length || productStore.isDynamicShipping) {
-    if(!hasIntegrationWithGreennEnvios.value || !shippingSelected.service_id) {
+    if(!hasIntegrationWithGreennEnvios.value) {
       validShippingIntegration = false;
     } else {
       validShippingIntegration = true;
@@ -210,10 +209,9 @@ export const validateAll = async (): Promise<boolean> => {
   if (checkout.showAddressStep) {
 
     const productStore = useProductStore();
-    const { hasIntegrationWithGreennEnvios, shipping_selected } = storeToRefs(checkout);
-    const shippingSelected: any = shipping_selected.value;
+    const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
     if(!validStepTwo && (!!checkout.getBumpsWithShippingFee.length || productStore.isDynamicShipping)) {
-      if(!hasIntegrationWithGreennEnvios.value || !shippingSelected.service_id) {
+      if(!hasIntegrationWithGreennEnvios.value) {
         const toast = Toast.useToast();
         toast.error("Esse produto não possui integração para envio");
         return false;
