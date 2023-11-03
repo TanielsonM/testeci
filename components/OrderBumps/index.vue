@@ -98,7 +98,7 @@ watch(
   async () => {
     checkoutStore.setProductList(props.bump);
     if(props.bump.type_shipping_fee === 'DYNAMIC' && props.bump.has_shipping_fee === 1) {
-      await checkoutStore.calculateBumpsShipping(addressStore.value.zipcode);
+      await checkoutStore.calculateBumpsShipping(addressStore.zipcode);
     }
     if (countSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
       stepsStore.back();
