@@ -60,8 +60,8 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
   let validShippingIntegration = false;
 
-  if(!!checkout.getBumpsWithShippingFee.length || productStore.isDynamicShipping) {
-    if(!hasIntegrationWithGreennEnvios.value) {
+  if(productStore.isDynamicShipping || !!checkout.getBumpsWithShippingFee.length) {
+    if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
       validShippingIntegration = false;
     } else {
       validShippingIntegration = true;
@@ -210,8 +210,8 @@ export const validateAll = async (): Promise<boolean> => {
 
     const productStore = useProductStore();
     const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
-    if(!validStepTwo && (!!checkout.getBumpsWithShippingFee.length || productStore.isDynamicShipping)) {
-      if(!hasIntegrationWithGreennEnvios.value) {
+    if(!validStepTwo && (productStore.isDynamicShipping || !!checkout.getBumpsWithShippingFee.length)) {
+      if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
         const toast = Toast.useToast();
         toast.error("Esse produto não possui integração para envio");
         return false;

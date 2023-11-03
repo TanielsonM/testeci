@@ -153,12 +153,16 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     getBumpList: (state) => state.bump_list,
     getBumpsWithShippingFee(state) {
-      return state.bump_list.filter(
+      let filter = state.bump_list.filter(
         (bump) =>
           !!bump.has_shipping_fee &&
           bump.checkbox &&
           bump.type_shipping_fee === "DYNAMIC"
       );
+      filter.map(b => {
+        return {...b, hasIntegrationWithGreennEnvios: b.hasIntegrationWithGreennEnvios || false}
+      });
+      return filter;
     },
     shippingProducts(state) {
       return () => {
@@ -722,7 +726,7 @@ export const useCheckoutStore = defineStore("checkout", {
               shipping_address_zip_code: zip,
             })
             .then(res => {
-              this.hasIntegrationWithGreennEnvios = true;
+              bump.hasIntegrationWithGreennEnvios = true;
               return res;
             })
             .catch((err) => {
@@ -730,7 +734,7 @@ export const useCheckoutStore = defineStore("checkout", {
               if (err.value.statusCode) {
                 const toast = Toast.useToast();
                 toast.error("Esse produto não possui integração para envio");
-                this.hasIntegrationWithGreennEnvios = false;
+                bump.hasIntegrationWithGreennEnvios = false;
               }
             })
         );
