@@ -721,8 +721,9 @@ export const useCheckoutStore = defineStore("checkout", {
             .create(`envios/calculate/${bump.id}`, {
               shipping_address_zip_code: zip,
             })
-            .then(() => {
+            .then(res => {
               this.hasIntegrationWithGreennEnvios = true;
+              return res;
             })
             .catch((err) => {
               // Product does not have integration with "Greenn envios"
