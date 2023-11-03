@@ -137,6 +137,12 @@ export type Payment = {
   upsell_id?: number;
   // Installments
   installments?: number;
+  currency_data?: CurrencyData;
+};
+
+export type CurrencyData = {
+  local_currency: string;
+  base_currency: string;
 };
 
 export type PaymentError = {

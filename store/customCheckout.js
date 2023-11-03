@@ -33,6 +33,8 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     bottomThumb: (state) => state.custom_checkout?.bottom_thumb || null,
     /* sideThumb */
     sideThumb: (state) => state.custom_checkout?.side_thumb || null,
+    /* sideThumbMobile */
+    sideThumbMobile: (state) => state.custom_checkout?.side_thumb_mobile || null,
     /* hasScarcity */
     hasScarcity: (state) => state.custom_checkout?.scarcity === "on" ?? null,
     /* hasConfirmationEmail */

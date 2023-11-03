@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, CurrencyData } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -247,6 +247,12 @@ export const usePaymentStore = defineStore("Payment", {
       if (!allowed_installments.includes(method.value)) {
         delete data.installments;
       }
+
+      const currency_data: CurrencyData = {
+        local_currency: 'BRL',
+        base_currency: 'BRL'
+      };
+      data.currency_data = currency_data;
 
       // Registrando log boleto
       let dataLog = Object.assign({}, data);
