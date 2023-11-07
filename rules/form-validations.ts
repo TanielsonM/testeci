@@ -60,7 +60,7 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
   let validShippingIntegration = false;
 
-  if(productStore.isDynamicShipping || !!checkout.getBumpsWithShippingFee.length) {
+  if((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length) {
     if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
       validShippingIntegration = false;
     } else {
