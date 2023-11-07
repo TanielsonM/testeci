@@ -139,6 +139,12 @@ export type Payment = {
   installments?: number;
   // Gateway
   gateway?: string;
+  currency_data?: CurrencyData;
+};
+
+export type CurrencyData = {
+  local_currency: string;
+  base_currency: string;
 };
 
 export type PaymentError = {
