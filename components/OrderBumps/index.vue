@@ -3,8 +3,6 @@
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useStepStore } from "~~/store/modules/steps";
-import { useAddressStore } from "@/store/forms/address";
-
 // Utils
 import { formatMoney } from "~/utils/money";
 
@@ -20,7 +18,6 @@ const props = defineProps({
 const checkout = useCustomCheckoutStore();
 const stepsStore = useStepStore();
 const checkoutStore = useCheckoutStore();
-const addressStore = useAddressStore();
 
 const { countSteps, isMobile, currentStep } = storeToRefs(stepsStore);
 const { showAddressStep } = storeToRefs(checkoutStore)
@@ -96,10 +93,7 @@ const isFixedShipping = computed(
 watch(
   () => props.bump.checkbox,
   async () => {
-    checkoutStore.setProductList(props.bump);
-    if(props.bump.type_shipping_fee === 'DYNAMIC' && props.bump.has_shipping_fee === 1 && addressStore.zipcode) {
-      await checkoutStore.calculateBumpsShipping(addressStore.zipcode);
-    }
+    await checkoutStore.setProductList(props.bump);
     if (countSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
       stepsStore.back();
     }
