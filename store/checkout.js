@@ -78,7 +78,6 @@ export const useCheckoutStore = defineStore("checkout", {
     // Paypal details
     paypal_details: {},
     allow_free_offers : null,
-    hasIntegrationWithGreennEnvios: false
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -153,16 +152,12 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     getBumpList: (state) => state.bump_list,
     getBumpsWithShippingFee(state) {
-      let filter = state.bump_list.filter(
+      return state.bump_list.filter(
         (bump) =>
           !!bump.has_shipping_fee &&
           bump.checkbox &&
           bump.type_shipping_fee === "DYNAMIC"
       );
-      filter.map(b => {
-        return {...b, hasIntegrationWithGreennEnvios: b.hasIntegrationWithGreennEnvios || false}
-      });
-      return filter;
     },
     shippingProducts(state) {
       return () => {
@@ -672,23 +667,18 @@ export const useCheckoutStore = defineStore("checkout", {
           ) {
             let calculate = await useApi()
               .create(`envios/calculate/${this.product_id}`, {
-                shipping_address_zip_code: zip
-              })
-              .then(res => {
-                this.hasIntegrationWithGreennEnvios = true;
-                return res;
+                shipping_address_zip_code: zip,
               })
               .catch((err) => {
                 // Product does not have integration with "Greenn envios"
                 if (err.value.statusCode) {
                   const toast = Toast.useToast();
                   toast.error("Esse produto não possui integração para envio");
-                  this.hasIntegrationWithGreennEnvios = false;
                 }
               });
 
             if (!!calculate) {
-              calculate = calculate.filter((option) => !option?.error);
+              calculate = calculate.filter((option) => !option?.error)
               this.deliveryOptions = calculate.sort(
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
@@ -696,7 +686,7 @@ export const useCheckoutStore = defineStore("checkout", {
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
 
-              this.setSelectedShipping(product.value.id, product.value.shipping_options[0]);
+              this.setSelectedShipping(product.value.id, product.value.shipping_options[0])
             }
           }
 
@@ -725,16 +715,11 @@ export const useCheckoutStore = defineStore("checkout", {
             .create(`envios/calculate/${bump.id}`, {
               shipping_address_zip_code: zip,
             })
-            .then(res => {
-              bump.hasIntegrationWithGreennEnvios = true;
-              return res;
-            })
             .catch((err) => {
               // Product does not have integration with "Greenn envios"
               if (err.value.statusCode) {
                 const toast = Toast.useToast();
                 toast.error("Esse produto não possui integração para envio");
-                bump.hasIntegrationWithGreennEnvios = false;
               }
             })
         );
