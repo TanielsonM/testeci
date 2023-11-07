@@ -209,7 +209,7 @@ export const validateAll = async (): Promise<boolean> => {
   if (checkout.showAddressStep) {
     const productStore = useProductStore();
     const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
-    if(!validStepTwo && (productStore.isDynamicShipping || !!checkout.getBumpsWithShippingFee.length)) {
+    if(!validStepTwo && ((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length)) {
       if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
         const toast = Toast.useToast();
         toast.error("Esse produto não possui integração para envio");
