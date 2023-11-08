@@ -48,7 +48,7 @@ const {
   productName,
   is_gift,
   gift_message,
-  isDynamicShipping,
+  product,
   hasTicketInstallments,
   hasAffiliationLead,
 } = storeToRefs(productStore);
@@ -154,22 +154,20 @@ export const usePaymentStore = defineStore("Payment", {
           shipping_address_complement: address.complement,
           shipping_address_neighborhood: address.neighborhood,
           shipping_address_city: address.city,
-          shipping_address_state: address.state
+          shipping_address_state: address.state,
+          shipping_selected: JSON.stringify({address, ...shipping_selected.value})
         };
-
-        if(isDynamicShipping.value) {
-          data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
-        }
 
         product_list.value.forEach((item: any) => {
           if (item?.shipping) {
-            const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
-            const shippingSelected: any = shipping_selected;
+            const index = data.products
+              .map((prod) => prod.product_id)
+              .indexOf(item.id);
 
-            data.products[index].shipping_amount = item.shipping.amount || shippingSelected.amount;
-            data.products[index].shipping_service_id = item.shipping.id || shippingSelected.service_id;
-            data.products[index].shipping_service_name = item.shipping.name || shippingSelected.service_name;
-            if(isDynamicShipping.value) data.products[index].shipping_selected = JSON.stringify({address, ...shippingSelected.value});
+            data.products[index].shipping_amount = item.shipping.amount;
+            data.products[index].shipping_service_id = item.shipping.id;
+            data.products[index].shipping_service_name = item.shipping.name;
+            data.products[index].shipping_selected = JSON.stringify({address, ...shipping_selected.value});
           }
         });
       }

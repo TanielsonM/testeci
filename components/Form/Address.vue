@@ -113,7 +113,6 @@ function updateLead() {
 
 <template>
   <form class="mb-8 grid w-full grid-cols-12 gap-3">
-    <!-- Zip Code -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.zipcode.label')"
@@ -135,7 +134,6 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.zipcode") }}
       </template>
     </BaseInput>
-    <!-- Street -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.public_place.label')"
@@ -154,7 +152,6 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.street") }}
       </template>
     </BaseInput>
-    <!-- Number -->
     <BaseInput
       @blur="updateLead"
       :inputId="`number-address-${type}`"
@@ -174,7 +171,6 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.number") }}
       </template>
     </BaseInput>
-    <!-- City -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.city.label')"
@@ -193,7 +189,6 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.city") }}
       </template>
     </BaseInput>
-    <!-- Neighborhood -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.neighborhood.label')"
@@ -212,7 +207,6 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.neighborhood") }}
       </template>
     </BaseInput>
-    <!-- Complement -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.complement.label')"
@@ -220,7 +214,6 @@ function updateLead() {
       class="col-span-12 xl:col-span-7"
       v-model="typeAddr.complement"
     />
-    <!-- State National -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.state.label')"
@@ -240,7 +233,6 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.state") }}
       </template>
     </BaseInput>
-    <!-- State International -->
     <BaseInput
       v-else
       @blur="updateLead"
