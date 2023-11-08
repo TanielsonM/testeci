@@ -234,7 +234,7 @@ export const usePaymentStore = defineStore("Payment", {
             identificationNumber: document.value.replace(/[^\d]/g, ""),
           });          
 
-          Promise.resolve(firstCardToken).then(function(res) {
+          await Promise.resolve(firstCardToken).then(function(res) {
             cards[0].card_hash = res.id;
             data.gateway = "MERCADOPAGO";
           });
@@ -271,14 +271,13 @@ export const usePaymentStore = defineStore("Payment", {
               identificationNumber: document.value.replace(/[^\d]/g, ""),
             });
   
-            Promise.resolve(secondCardToken).then(function(res) {
+            await Promise.resolve(secondCardToken).then(function(res) {
               cards[1].card_hash = res.id;
             });
           }
         }
         data.cards = cards;
       }
-      console.log(data);
       
       const allowed_installments = [
         "CREDIT_CARD",
