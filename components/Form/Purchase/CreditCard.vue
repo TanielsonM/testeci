@@ -144,7 +144,7 @@ function verifyCard(from) {
 function changeAmount(from) {
   // When method is diff of two credit cards, stop function
   if (method.value !== "TWO_CREDIT_CARDS") return;
-  const amount = instStore.getInstallments() * installments.value;
+  const amount = instStore.getTotal() * installments.value;
   let firstAmount = clearValue(first.value.amount) || 1;
   let secondAmount = clearValue(second.value.amount) || 1;
 
