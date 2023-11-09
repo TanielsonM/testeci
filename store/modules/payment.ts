@@ -56,7 +56,7 @@ const {
 const { name, email, document, cellphone } = storeToRefs(personalStore);
 const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
-const { getInstallments } = storeToRefs(installmentsStore);
+const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
 
 export const usePaymentStore = defineStore("Payment", {
@@ -78,13 +78,10 @@ export const usePaymentStore = defineStore("Payment", {
 
       const total = computed(() => {
         if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
-          return (
-            getInstallments.value(ticket_installments.value) *
-            ticket_installments.value
-          );
+          return (getTotal.value(ticket_installments.value));
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
+          return getTotal.value();
         }
         return getInstallments.value(1);
       });

@@ -30,14 +30,14 @@ export const usePurchaseStore = defineStore("purchase", {
 
       if (method.value === "TWO_CREDIT_CARDS") {
         this.first.amount = formatMoney(
-          (instStore.getInstallments() * installments.value) / 2
+          instStore.getTotal() / 2
         );
         this.second.amount = formatMoney(
-          (instStore.getInstallments() * installments.value) / 2
+          instStore.getTotal() / 2
         );
         return;
       }
-      this.first.amount = instStore.getInstallments() * installments.value;
+      this.first.amount = instStore.getTotal();
     },
   },
 });
