@@ -59,6 +59,7 @@ export const useInstallmentsStore = defineStore("installments", {
               ((Math.pow(i + 1, n) - 1) / (Math.pow(i + 1, n) * i));
           }
         });
+        total = Math.round(total * 100) / 100;
         return Number(Number((total + frete) / n));
       };
     },
