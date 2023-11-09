@@ -21,9 +21,13 @@ await useApi()
       "pay.greenn.com.br",
       "payu.greenn.com.br",
     ].includes(url.hostname);
-
     if (!isGreennPage.value) {
-      externalPage.value = url.origin + "?" + query.toString();
+      if (!!url.searchParams.size) { 
+        const urlRoute = url.href.split("?")[0];
+        externalPage.value = urlRoute + "?" + query.toString();
+      } else {
+        externalPage.value = url.href + "?" + query.toString();
+      }
     }
 
     const fullURL = url.pathname + "?" + query.toString();
