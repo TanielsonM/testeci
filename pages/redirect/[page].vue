@@ -21,7 +21,6 @@ await useApi()
       "pay.greenn.com.br",
       "payu.greenn.com.br",
     ].includes(url.hostname);
-
     if (!isGreennPage.value) {
       externalPage.value = url.origin + url.pathname + "?" + query.toString();
     }
