@@ -23,7 +23,7 @@ await useApi()
     ].includes(url.hostname);
 
     if (!isGreennPage.value) {
-      externalPage.value = url.origin + "?" + query.toString();
+      externalPage.value = url.origin + url.pathname + "?" + query.toString();
     }
 
     const fullURL = url.pathname + "?" + query.toString();
