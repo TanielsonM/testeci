@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useLoadingStore } from "~~/store/loading/loading";
 import { useCheckoutStore } from "@/store/checkout";
+import shippingFree from "@/assets/icons/shipping_free.svg";
 
 const loading = useLoadingStore();
 const checkout = useCheckoutStore();
@@ -61,12 +62,14 @@ watch(
   >
     <div class="grid grid-cols-12 items-center gap-3" v-if="option.price">
       <div class="col-span-3">
-        <img :src="option.company.picture" width="80" />
+        <img v-if="option.id === 0" :src="shippingFree" width="26" />
+        <img v-else :src="option.company.picture" width="80" />
       </div>
       <div class="col-span-3">
         {{ option.name }}
       </div>
       <div class="col-span-3">
+      
         {{ option.delivery_range.min }}
         {{ $t("checkout.address.at") }}
         {{ option.delivery_range.max }}
