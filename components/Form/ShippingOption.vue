@@ -61,8 +61,8 @@ watch(
     @click="selectOption(index, option?.price, option)"
   >
     <div class="grid grid-cols-12 items-center gap-3" v-if="option.price">
-      <div class="col-span-3">
-        <img v-if="option.id === 0" :src="shippingFree" width="26" />
+      <div class="col-span-3 flex justify-center items-center">
+        <img class="justify-center" v-if="option.id === 0" :src="shippingFree" width="26" />
         <img v-else :src="option.company.picture" width="80" />
       </div>
       <div class="col-span-3">
