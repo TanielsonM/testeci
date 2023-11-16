@@ -26,18 +26,15 @@ export const usePurchaseStore = defineStore("purchase", {
       const instStore = useInstallmentsStore();
       const chekStore = useCheckoutStore();
 
-      const { installments, method } = storeToRefs(chekStore);
+      const { method } = storeToRefs(chekStore);
 
       if (method.value === "TWO_CREDIT_CARDS") {
-        this.first.amount = formatMoney(
-          (instStore.getInstallments() * installments.value) / 2
-        );
-        this.second.amount = formatMoney(
-          (instStore.getInstallments() * installments.value) / 2
-        );
+        const firstRound = Math.round((instStore.getTotal() / 2) * 100) / 100
+        this.first.amount = formatMoney(firstRound);
+        this.second.amount = formatMoney(instStore.getTotal() - firstRound);
         return;
       }
-      this.first.amount = instStore.getInstallments() * installments.value;
+      this.first.amount = instStore.getTotal();
     },
   },
 });
