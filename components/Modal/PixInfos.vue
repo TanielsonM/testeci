@@ -37,7 +37,7 @@ const props = defineProps({
     required: true,
   },
   shippingAmount: {
-    type: String,
+    type: [String, Number],
     default: null,
     required: false,
   },
