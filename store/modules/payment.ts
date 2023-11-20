@@ -194,8 +194,9 @@ export const usePaymentStore = defineStore("Payment", {
       if (
         ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
       ) {
+        const config = useRuntimeConfig();
         await loadMercadoPago();
-        const mp = new window.MercadoPago("APP_USR-7b72e384-6c0c-4354-a95a-4a7458cdce68", {
+        const mp = new window.MercadoPago(config.public.MERCADOPAGO_KEY, {
           locale: "pt-BR",
         });
         
