@@ -97,7 +97,7 @@ export default defineNuxtConfig({
       CUSTOM_CHARGES_EXCEPTION: process.env.CUSTOM_CHARGES_EXCEPTION,
       PORT: process.env.PORT,
       INTERNATIONAL_URL: process.env.INTERNATIONAL_URL,
-      MERCADOPAGO_KEY: process.env.MERCADO_PAGO_PUBLIC_KEY
+      MERCADOPAGO_API_PUBLIC_KEY: process.env.MERCADOPAGO_API_PUBLIC_KEY,
     },
   },
   i18n: {
