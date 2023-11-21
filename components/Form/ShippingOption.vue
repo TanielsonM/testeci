@@ -60,13 +60,15 @@ watch(
     @click="selectOption(index, option?.price, option)"
   >
     <div class="grid grid-cols-12 items-center gap-3" v-if="option.price">
-      <div class="col-span-3">
-        <img :src="option.company.picture" width="80" />
+      <div class="col-span-3 flex justify-center items-center">
+        <img class="justify-center" v-if="option.id === 0" :src="option.company.picture" width="50" />
+        <img class="justify-center" v-else :src="option.company.picture" width="80" />
       </div>
       <div class="col-span-3">
         {{ option.name }}
       </div>
       <div class="col-span-3">
+      
         {{ option.delivery_range.min }}
         {{ $t("checkout.address.at") }}
         {{ option.delivery_range.max }}
