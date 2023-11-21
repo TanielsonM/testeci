@@ -75,7 +75,7 @@ const data = ref({
           {{ formatMoney(sale.total || sale.amount || sale.product.amount) }}
         </p>
       </template>
-      <section class="item" v-if="!!shippingAmount || (!shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')">
+      <section class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ formatMoney(sale.shipping_amount) || "Grátis"}}</p>
       </section>
@@ -85,7 +85,7 @@ const data = ref({
       ></span>
       <div
         class="details py-5"
-        v-if="(!!shippingAmount || (!shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')) && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
+        v-if="(!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')) && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
       >
         <h6 class="title">
           {{ $t("pg_obrigado.modal.frete_selecionado") }}

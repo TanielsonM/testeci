@@ -207,7 +207,7 @@ onBeforeUnmount(() => {
             <p>{{ name }}</p>
             <p>{{ amount }}</p>
           </div>
-          <div class="item" v-if="!!shippingAmount || (!shippingAmount && shippingSelected.service_name === 'GRÁTIS')">
+          <div class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && shippingSelected.service_name === 'GRÁTIS')">
             <p>{{ $t("pg_obrigado.modal.frete") }}</p>
             <p>{{ shippingAmount || `Grátis` }}</p>
           </div>
