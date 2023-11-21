@@ -7,7 +7,7 @@ import target_cashback from "@/assets/icons/target_cashback.svg";
 
 const product = useProductStore();
 const { cashback } = storeToRefs(product);
-const hasCashback = Object.keys(cashback || {}).length;
+const hasCashback = cashback.meta && cashback.months;
 
 const { t } = useI18n();
 
