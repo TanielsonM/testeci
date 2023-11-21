@@ -102,7 +102,7 @@ export const useProductStore = defineStore("product", {
     },
     productName: (state) => state.product.name,
     hasCashback: (state) => state.product.has_cashback === 1,
-    cashback: (state) => state.product.cashback ?? null,
+    cashback: (state) => state.product.cashback ?? {},
     hasAffiliationLead: (state) => state.product.affiliation_lead,
   },
   actions: {
