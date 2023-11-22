@@ -51,7 +51,7 @@ const {
   productName,
   is_gift,
   gift_message,
-  product,
+  isDynamicShipping,
   hasTicketInstallments,
   hasAffiliationLead,
 } = storeToRefs(productStore);
@@ -59,7 +59,7 @@ const {
 const { name, email, document, cellphone } = storeToRefs(personalStore);
 const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
-const { getInstallments } = storeToRefs(installmentsStore);
+const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
 
 export const usePaymentStore = defineStore("Payment", {
@@ -81,13 +81,10 @@ export const usePaymentStore = defineStore("Payment", {
 
       const total = computed(() => {
         if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
-          return (
-            getInstallments.value(ticket_installments.value) *
-            ticket_installments.value
-          );
+          return (getTotal.value(ticket_installments.value));
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
+          return getTotal.value();
         }
         return getInstallments.value(1);
       });
@@ -161,11 +158,14 @@ export const usePaymentStore = defineStore("Payment", {
           shipping_selected: JSON.stringify({ address, ...shipping_selected.value })
         };
 
+        if(isDynamicShipping.value) {
+          data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
+        }
+
         product_list.value.forEach((item: any) => {
           if (item?.shipping) {
-            const index = data.products
-              .map((prod) => prod.product_id)
-              .indexOf(item.id);
+            const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
+            const shippingSelected: any = shipping_selected;
 
             data.products[index].shipping_amount = item.shipping.amount;
             data.products[index].shipping_service_id = item.shipping.id;

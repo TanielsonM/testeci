@@ -238,6 +238,7 @@ const exceptionSellerId = computed(() => {
       </p>
       <!-- Coupon -->
       <ProductCoupon v-if="productStore.allowedCoupon" />
+      <ProductCashback />
     </section>
   </BaseCard>
 </template>
