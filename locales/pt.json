@@ -104,6 +104,13 @@
     "obrigado": "obrigado"
   },
   "checkout": {
+    "sell": "Venda",
+    "in": "em",
+    "month": "mês",
+    "months": "meses",
+    "to_get_cashbash": "para ter 100% de volta*",
+    "with_cashback": "Produto com Cashback de 100%",
+    "sponsored_by_greenn": "patrocinado pela Greenn",
     "captcha": "Este site é protegido pelo Google reCAPTCHA",
     "captcha2": "Política de Privacidade",
     "captcha3": "Termos de serviço",

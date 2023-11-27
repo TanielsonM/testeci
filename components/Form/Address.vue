@@ -7,7 +7,10 @@ import { useCheckoutStore } from "@/store/checkout";
 import { useAddressStore } from "@/store/forms/address";
 import { useLeadsStore } from "@/store/modules/leads";
 import { usePaymentStore } from "@/store/modules/payment";
+import { useStepStore } from "@/store/modules/steps";
 import {
+  validateFirstStep,
+  validateSecondStep,
   validateZip,
   validateStreet,
   validateNumber,
@@ -20,9 +23,10 @@ const store = useAddressStore();
 const checkout = useCheckoutStore();
 const leadsStore = useLeadsStore();
 const payment = usePaymentStore();
+const stepStore = useStepStore();
 
 const { hasSent } = storeToRefs(payment);
-const { shipping, charge } = storeToRefs(store);
+const { shipping, charge, number, zipcode, neighborhood, city, state, street } = storeToRefs(store);
 
 // Props
 const props = defineProps({
@@ -47,6 +51,26 @@ watch(typeAddr.value, async () => {
   leadsStore.syncAddress();
 });
 watch(deliveryOptions, () => {});
+
+
+watch([zipcode, number, neighborhood, city, state, street], async () => {
+  
+  let isPersonalValid = await validateFirstStep();
+  let isAddressValid = await validateSecondStep();
+  let currentStep = stepStore.currentStep;
+
+  stepStore.changePaypalStatus();
+
+  if (isPersonalValid) {
+    if (currentStep === 1 || currentStep === 2) {
+      stepStore.setCurrentStep(2);
+    }
+  } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {
+    stepStore.back();
+  } else if (isPersonalValid && !isAddressValid && currentStep === 3) {
+    stepStore.back();
+  }
+});
 
 // methods
 async function getAddress(cep = "") {
@@ -89,6 +113,7 @@ function updateLead() {
 
 <template>
   <form class="mb-8 grid w-full grid-cols-12 gap-3">
+    <!-- Zip Code -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.zipcode.label')"
@@ -110,6 +135,7 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.zipcode") }}
       </template>
     </BaseInput>
+    <!-- Street -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.public_place.label')"
@@ -128,6 +154,7 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.street") }}
       </template>
     </BaseInput>
+    <!-- Number -->
     <BaseInput
       @blur="updateLead"
       :inputId="`number-address-${type}`"
@@ -147,6 +174,7 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.number") }}
       </template>
     </BaseInput>
+    <!-- City -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.city.label')"
@@ -165,6 +193,7 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.city") }}
       </template>
     </BaseInput>
+    <!-- Neighborhood -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.neighborhood.label')"
@@ -183,6 +212,7 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.neighborhood") }}
       </template>
     </BaseInput>
+    <!-- Complement -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.complement.label')"
@@ -190,6 +220,7 @@ function updateLead() {
       class="col-span-12 xl:col-span-7"
       v-model="typeAddr.complement"
     />
+    <!-- State National -->
     <BaseInput
       @blur="updateLead"
       :label="$t('forms.address.inputs.state.label')"
@@ -209,6 +240,7 @@ function updateLead() {
         {{ $t("checkout.address.feedbacks.state") }}
       </template>
     </BaseInput>
+    <!-- State International -->
     <BaseInput
       v-else
       @blur="updateLead"

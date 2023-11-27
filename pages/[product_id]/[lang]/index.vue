@@ -66,7 +66,9 @@ const props = defineProps({
   <Modal>
     <ModalSuccess />
   </Modal>
-  <iframe :src="modal.iframe"></iframe>
+  <ClientOnly>
+    <iframe :src="modal.iframe"></iframe>
+  </ClientOnly>
 </template>
 <style>
 .body {

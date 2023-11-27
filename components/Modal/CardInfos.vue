@@ -1,16 +1,45 @@
-<script setup lang="ts">
-import { SaleElement } from "@/types";
+<script setup>
 import { formatMoney } from "@/utils/money";
 
-interface InfosProps {
-  name: string;
-  id: string | number;
-  installments: number;
-  sales: SaleElement[];
-}
+const props = defineProps({
+  name: {
+    default: null,
+    required: false,
+  },
+  id: {
+    default: null,
+    required: false,
+  },
+  installments: {
+    default: null,
+    required: false,
+  },
+  sales: {
+    default: null,
+    required: false,
+  },
+  shippingAmount: {
+    type: String,
+    default: null,
+    required: false,
+  },
+  shippingSelected: {
+    type: String,
+    default: null,
+    required: false,
+  },
+  onlyButtons: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-defineProps<InfosProps>();
+const data = ref({
+  shippingSelected: props.shippingSelected ? JSON.parse(props.shippingSelected): {},
+  showCode: false,
+});
 </script>
+
 <template>
   <h6 class="subtitle">
     {{ $t("pg_obrigado.modal.agradecemos") }}
@@ -54,6 +83,34 @@ defineProps<InfosProps>();
         class="my-5 block h-[1px] w-full bg-slate-300"
         v-if="index + 1 !== sales.length"
       ></span>
+      <div
+        class="details py-5"
+        v-if="!!shippingAmount && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
+      >
+        <h6 class="title">
+          {{ $t("pg_obrigado.modal.frete_selecionado") }}
+        </h6>
+
+        <div class="item frete">
+          <div class="grid grid-cols-12 items-center gap-3">
+            <div class="col-span-4">
+              <img
+                :src="data.shippingSelected.frete.company.picture"
+                width="80"
+              />
+            </div>
+            <div class="col-span-4">
+              {{ data.shippingSelected.frete.name }}
+            </div>
+            <div class="col-span-4">
+              {{ data.shippingSelected.frete.delivery_range.min }}
+              {{ $t("checkout.address.at") }}
+              {{ data.shippingSelected.frete.delivery_range.max }}
+              {{ $t("checkout.address.working_days") }}
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </section>
 </template>

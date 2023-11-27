@@ -3,7 +3,7 @@ import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
-import { storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 const purchaseStore = usePurchaseStore();
@@ -74,9 +74,11 @@ export const useCheckoutStore = defineStore("checkout", {
     sales: {},
     productOffer: {},
     deliveryOptions: {},
+    shipping_selected: {},
     // Paypal details
     paypal_details: {},
     allow_free_offers : null,
+    hasIntegrationWithGreennEnvios: false
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -151,12 +153,16 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     getBumpList: (state) => state.bump_list,
     getBumpsWithShippingFee(state) {
-      return state.bump_list.filter(
+      let filter = state.bump_list.filter(
         (bump) =>
           !!bump.has_shipping_fee &&
           bump.checkbox &&
           bump.type_shipping_fee === "DYNAMIC"
       );
+      filter.map(b => {
+        return {...b, hasIntegrationWithGreennEnvios: b.hasIntegrationWithGreennEnvios || false}
+      });
+      return filter;
     },
     shippingProducts(state) {
       return () => {
@@ -165,6 +171,7 @@ export const useCheckoutStore = defineStore("checkout", {
         );
       };
     },
+    getShippingSelected: (state) => state.shipping_selected
   },
   actions: {
     async init(byChangeCountry = false) {
@@ -187,11 +194,6 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.query = query;
       this.url.fullPath = fullPath;
       await this.getProduct(this.product_id, this.product_offer);
-      const product = useProductStore();
-      if (!!this.hasCustomCheckout && product.isValid() && (product.product.method != 'FREE' || (product.product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
-        const customCheckout = useCustomCheckoutStore();
-        await customCheckout.getCustomCheckout();
-      }
 
       /* Initial configs */
       this.setCoupon(true);
@@ -205,13 +207,21 @@ export const useCheckoutStore = defineStore("checkout", {
       this.allow_free_offers = allow_free_offers
     },
     async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
-      const product = useProductStore();
-      const { setProduct } = product;
+      const productStore = useProductStore();
+      const { product, isValid } = storeToRefs(productStore);
+      const { setProduct } = productStore;
       /* Get country */
       /* Set product url */
-      const url = offer
-        ? `/product/test-checkout/${id}/offer/${offer}`
-        : `/product/test-checkout/${id}`;
+      let url = `/product/test-checkout/${id}`;
+      // check if has custom checkout
+      if (!!this.hasCustomCheckout && !isBump) {
+        url += `/checkout/${this.hasCustomCheckout}`;
+      }
+      // Check if has offer
+      if (offer) {
+        url += `/offer/${offer}`;
+      }
+
       /* Set country in query */
       const query = {
         country: this.selectedCountry,
@@ -224,10 +234,15 @@ export const useCheckoutStore = defineStore("checkout", {
             ...configs,
             query,
           })
-          .then((response) => {
-            if(response.allow_free_offers){
+          .then(async (response) => {
+            if(this.global_settings.country !== 'BR') {
+              this.redirectOfferPanel(response?.data, this.global_settings.country)
+            }
+
+            if (response.allow_free_offers){
               this.setAllowFreeOffers(response.allow_free_offers)
             }
+
             if (response?.checkout_payment?.data?.amount) {
               response.data.amount = response.checkout_payment.data.amount;
             }
@@ -271,7 +286,11 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response?.data && !isBump) {
               this.checkoutPayment = response.checkout_payment;
-              setProduct(response.data);
+              await setProduct(response.data);
+              if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
+                const customCheckout = useCustomCheckoutStore();
+                customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
+              }
             } else {
               this.bump_list.push({
                 ...response.data,
@@ -653,23 +672,31 @@ export const useCheckoutStore = defineStore("checkout", {
           ) {
             let calculate = await useApi()
               .create(`envios/calculate/${this.product_id}`, {
-                shipping_address_zip_code: zip,
+                shipping_address_zip_code: zip
+              })
+              .then(res => {
+                this.hasIntegrationWithGreennEnvios = true;
+                return res;
               })
               .catch((err) => {
                 // Product does not have integration with "Greenn envios"
                 if (err.value.statusCode) {
                   const toast = Toast.useToast();
                   toast.error("Esse produto não possui integração para envio");
+                  this.hasIntegrationWithGreennEnvios = false;
                 }
               });
 
             if (!!calculate) {
+              calculate = calculate.filter((option) => !option?.error);
               this.deliveryOptions = calculate.sort(
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
               product.value.shipping_options = calculate.sort(
                 (a, b) => parseFloat(a.price) - parseFloat(b.price)
               );
+
+              this.setSelectedShipping(product.value.id, product.value.shipping_options[0]);
             }
           }
 
@@ -698,11 +725,16 @@ export const useCheckoutStore = defineStore("checkout", {
             .create(`envios/calculate/${bump.id}`, {
               shipping_address_zip_code: zip,
             })
+            .then(res => {
+              bump.hasIntegrationWithGreennEnvios = true;
+              return res;
+            })
             .catch((err) => {
               // Product does not have integration with "Greenn envios"
               if (err.value.statusCode) {
                 const toast = Toast.useToast();
                 toast.error("Esse produto não possui integração para envio");
+                bump.hasIntegrationWithGreennEnvios = false;
               }
             })
         );
@@ -750,6 +782,25 @@ export const useCheckoutStore = defineStore("checkout", {
           amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
         }
       });
+
+      this.shipping_selected = {
+        frete_anterior: +shipping.price,
+        service_name: shipping.name,
+        old_amount: amountStore.getAmount,
+        amount: +shipping.price,
+        frete: shipping
+      }
     },
-  },
+    redirectOfferPanel(product, country) {
+      if(product.seller.is_heaven && product.seller.is_greenn && product.offer_redirect_id) {
+        const urlAtual = new URL(window.location.href);
+        const parametros = `/${product.offer_redirect.product_id}/offer/${product.offer_redirect.hash}`;
+        const queryConcat = urlAtual.search ? '&' : '?';
+        const queries = `${urlAtual.search}${queryConcat}country=${country}`
+        const novaRota = useRuntimeConfig().public.HEAVEN_CHECKOUT_PAGE;
+        const novaUrl = `${novaRota}${parametros}${queries}`;
+        window.location.href = novaUrl;
+      }
+    }
+  }
 });
