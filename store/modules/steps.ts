@@ -4,40 +4,71 @@ import {
   validateFirstStep,
   validateSecondStep,
 } from "@/rules/form-validations";
+import { useCheckoutStore } from "~~/store/checkout";
 
 export const useStepStore = defineStore("Step", {
   state: (): StepState => ({
     currentStep: 1,
+    countSteps: 2,
+    enablePaypal: false,
     format: "default",
     isMobile: false,
-    countSteps: 2,
+    isEmailValid: false
   }),
+  getters: {
+    isLastStep(state): boolean {
+      return state.currentStep >= state.countSteps ? true : false;
+    },
+  },
   actions: {
     async setStep(step = 1) {
       const paymentStore = usePaymentStore();
       const { hasSent } = storeToRefs(paymentStore);
+      
+      let isPersonalValid = await validateFirstStep();
+      let isAddressValid = await validateSecondStep();
 
-      switch (step) {
-        case 2:
-          let validateOne = await validateFirstStep();
-          if (!validateOne) {
-            hasSent.value = true;
-            return;
-          }
-          break;
-        case 3:
-          let validateSecond = await validateSecondStep();
-          if (!validateSecond) {
-            hasSent.value = true;
-            return;
-          }
-          break;
+      if(step === 2) {
+        if(isPersonalValid) {
+          this.currentStep = step;
+          hasSent.value = false;
+        } else {
+          hasSent.value = true;
+        }
+      } else if(step === 3) {
+        if(isPersonalValid && isAddressValid) {
+          this.currentStep = step;
+          hasSent.value = false;
+        } else {
+          hasSent.value = true;
+        }
+      } else {
+        this.currentStep = step;
+        hasSent.value = false;
       }
-      hasSent.value = false;
-      this.currentStep = step;
+    },
+    async changePaypalStatus() {
+      const checkoutStore = useCheckoutStore();
+      const { showAddressStep } = storeToRefs(checkoutStore);
+      let isPersonalValid = await validateFirstStep();
+      let isAddressValid = await validateSecondStep();
+      if (isPersonalValid && (!showAddressStep.value || (showAddressStep.value && isAddressValid))) {
+        this.enablePaypal = true;
+      } else {
+        this.enablePaypal = false;
+      }
     },
     setFormat(format: "default" | "one_step") {
       this.format = format;
+    },
+    setCurrentStep(step: number) {
+      this.currentStep = step;
+    },
+    setIsEmailValid(value: boolean) {
+      this.isEmailValid = value;
+    },
+    next() {
+      this.currentStep++;
     },
     back() {
       this.currentStep--;

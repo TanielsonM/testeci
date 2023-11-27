@@ -12,11 +12,12 @@ const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
 
-const route = useRoute();
+const route: any = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
 
 const saleId = route.query.s_id;
+const current_query = new URLSearchParams(route.query);
 
 const data = ref({
   sale: {} as Sale,
@@ -38,7 +39,7 @@ if (
 
   const thankYouData = sale.sales[0].product.custom_thank_you_pages || [];
 
-  const customUrl = ref({
+  const customUrl: any = ref({
     PIX: "",
     BOLETO: "",
     PAYPAL: "",
@@ -82,8 +83,6 @@ if (
   }
 
   const closeAction = () => {
-    const current_query = new URLSearchParams(route.query);
-
     if (customUrl.value[sale.sales[0].method]) {
       window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
     } 
@@ -97,7 +96,12 @@ if (
   };
 
   modal.setAction(closeAction);
-  modal.setIframe(sale.sales[0].product.thank_you_page);
+  
+  if (customUrl.value[sale.sales[0].method]) {
+    modal.setIframe(customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`);
+  } else {
+    modal.setIframe(sale.sales[0].product.thank_you_page);
+  }
 } else {
   const chc = route.query.chc;
   if (!!chc) data.value.chc = chc.toString();
@@ -237,6 +241,9 @@ function openPix(id: number) {
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
         :sales="data.sale.sales"
+        :shipping-amount="data.sale.sales && data.sale.sales.length ? formatMoney(data.sale.sales[0].shipping_amount) : 0"
+        :shipping-selected="data.sale.sales[0].shipping_selected"
+        :only-buttons="data.sale.sales.length == 1"
       />
 
       <div class="actions mt-12 flex content-end justify-end">

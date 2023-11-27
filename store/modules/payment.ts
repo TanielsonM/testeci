@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, CurrencyData } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -42,12 +42,13 @@ const {
   ticket_installments,
   url,
   paypal_details,
+  shipping_selected
 } = storeToRefs(checkoutStore);
 const {
   productName,
   is_gift,
   gift_message,
-  product,
+  isDynamicShipping,
   hasTicketInstallments,
   hasAffiliationLead,
 } = storeToRefs(productStore);
@@ -55,7 +56,7 @@ const {
 const { name, email, document, cellphone } = storeToRefs(personalStore);
 const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
-const { getInstallments } = storeToRefs(installmentsStore);
+const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
 
 export const usePaymentStore = defineStore("Payment", {
@@ -77,13 +78,10 @@ export const usePaymentStore = defineStore("Payment", {
 
       const total = computed(() => {
         if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
-          return (
-            getInstallments.value(ticket_installments.value) *
-            ticket_installments.value
-          );
+          return (getTotal.value(ticket_installments.value));
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
+          return getTotal.value();
         }
         return getInstallments.value(1);
       });
@@ -144,40 +142,31 @@ export const usePaymentStore = defineStore("Payment", {
 
       // Physical product
       if (hasPhysicalProduct.value) {
+        const address: any = sameAddress.value ? charge.value : shipping.value;
         data = {
           ...data,
-          shipping_address_zip_code: sameAddress.value
-            ? charge.value.zipcode.replace("-", "")
-            : shipping.value.zipcode.replace("-", ""),
-          shipping_address_street: sameAddress.value
-            ? charge.value.street
-            : shipping.value.street,
-          shipping_address_number: sameAddress.value
-            ? charge.value.number
-            : shipping.value.number,
-          shipping_address_complement: sameAddress.value
-            ? charge.value.complement
-            : shipping.value.complement,
-          shipping_address_neighborhood: sameAddress.value
-            ? charge.value.neighborhood
-            : shipping.value.neighborhood,
-          shipping_address_city: sameAddress.value
-            ? charge.value.city
-            : shipping.value.city,
-          shipping_address_state: sameAddress.value
-            ? charge.value.state
-            : shipping.value.state,
+          shipping_address_zip_code: address?.zipcode?.replace(/[-]/g, ''),
+          shipping_address_street: address.street,
+          shipping_address_number: address.number,
+          shipping_address_complement: address.complement,
+          shipping_address_neighborhood: address.neighborhood,
+          shipping_address_city: address.city,
+          shipping_address_state: address.state
         };
+
+        if(isDynamicShipping.value) {
+          data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
+        }
 
         product_list.value.forEach((item: any) => {
           if (item?.shipping) {
-            const index = data.products
-              .map((prod) => prod.product_id)
-              .indexOf(item.id);
+            const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
+            const shippingSelected: any = shipping_selected;
 
-            data.products[index].shipping_amount = item.shipping.amount;
-            data.products[index].shipping_service_id = item.shipping.id;
-            data.products[index].shipping_service_name = item.shipping.name;
+            data.products[index].shipping_amount = item.shipping.amount ?? shippingSelected.amount;
+            data.products[index].shipping_service_id = item.shipping.id ?? shippingSelected.service_id;
+            data.products[index].shipping_service_name = item.shipping.name || shippingSelected.service_name;
+            if(isDynamicShipping.value) data.products[index].shipping_selected = JSON.stringify({address, ...shippingSelected.value});
           }
         });
       }
@@ -216,6 +205,7 @@ export const usePaymentStore = defineStore("Payment", {
         }
         let cards = [];
         cards.push({
+          total: Number(parsedFirstAmount).toFixed(2),
           amount: Number(firstCardAmountWithoutInterest).toFixed(2),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
@@ -223,7 +213,15 @@ export const usePaymentStore = defineStore("Payment", {
           card_number: first.value.number,
         });
         if (method.value === "TWO_CREDIT_CARDS") {
+          let parsedSecondAmount = Number(
+            second.value.amount
+              .toString()
+              .replace("R$", "")
+              .replace(".", "")
+              .replace(",", ".")
+          );
           cards.push({
+            total: Number(parsedSecondAmount).toFixed(2),
             amount: Number(
               getAmount.value - firstCardAmountWithoutInterest
             ).toFixed(2),
@@ -246,6 +244,12 @@ export const usePaymentStore = defineStore("Payment", {
       if (!allowed_installments.includes(method.value)) {
         delete data.installments;
       }
+
+      const currency_data: CurrencyData = {
+        local_currency: 'BRL',
+        base_currency: 'BRL'
+      };
+      data.currency_data = currency_data;
 
       // Registrando log boleto
       let dataLog = Object.assign({}, data);

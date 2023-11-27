@@ -2,8 +2,7 @@ import { useCheckoutStore } from "@/store/checkout";
 import { useCustomCheckoutStore } from "@/store/customCheckout";
 import { formatMoney } from "~~/utils/money";
 import { useInstallmentsStore } from "./modules/installments";
-import { useAmountStore } from "./modules/amount";
-const amountStore = useAmountStore();
+import { defineStore } from "pinia";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
@@ -39,10 +38,10 @@ export const useProductStore = defineStore("product", {
       state.product.pre_selected_installment ?? null,
     hasShippingFee: (state) => !!state.product.has_shipping_fee,
     allowedCoupon: (state) =>
-      state.product.allowed_coupon &&
-      state.product.format !== "PHYSICALPRODUCT",
+      state.product.allowed_coupon,
     isHeaven: (state) => !!state.product.is_heaven,
     isFixedShipping: (state) => state.product.type_shipping_fee === "FIXED",
+    isDynamicShipping: (state) => state.product.type_shipping_fee === "DYNAMIC",
     FixedShippingAmount: (state) => state.product.amount_fixed_shipping_fee,
     showAddress: (state) => state.product.is_checkout_address,
     hasTrial: (state) => state.product.trial,
@@ -103,7 +102,8 @@ export const useProductStore = defineStore("product", {
       };
     },
     productName: (state) => state.product.name,
-    seller_id: (state) => state.product.seller_id,
+    hasCashback: (state) => state.product.has_cashback === 1,
+    cashback: (state) => state.product.cashback ?? {},
     hasAffiliationLead: (state) => state.product.affiliation_lead,
   },
   actions: {
