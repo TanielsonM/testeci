@@ -137,6 +137,8 @@ export type Payment = {
   upsell_id?: number;
   // Installments
   installments?: number;
+  // Gateway
+  gateway?: string;
   currency_data?: CurrencyData;
 };
 

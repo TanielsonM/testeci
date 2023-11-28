@@ -16,6 +16,9 @@ import { useCheckoutStore } from "../checkout";
 import { useInstallmentsStore } from "./installments";
 import { useAmountStore } from "./amount";
 
+// External SDK
+import { loadMercadoPago } from "@mercadopago/sdk-js";
+
 const leadsStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
 const productStore = useProductStore();
@@ -151,7 +154,8 @@ export const usePaymentStore = defineStore("Payment", {
           shipping_address_complement: address.complement,
           shipping_address_neighborhood: address.neighborhood,
           shipping_address_city: address.city,
-          shipping_address_state: address.state
+          shipping_address_state: address.state,
+          shipping_selected: JSON.stringify({ address, ...shipping_selected.value })
         };
 
         if(isDynamicShipping.value) {
@@ -163,10 +167,10 @@ export const usePaymentStore = defineStore("Payment", {
             const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
             const shippingSelected: any = shipping_selected;
 
-            data.products[index].shipping_amount = item.shipping.amount ?? shippingSelected.amount;
-            data.products[index].shipping_service_id = item.shipping.id ?? shippingSelected.service_id;
-            data.products[index].shipping_service_name = item.shipping.name || shippingSelected.service_name;
-            if(isDynamicShipping.value) data.products[index].shipping_selected = JSON.stringify({address, ...shippingSelected.value});
+            data.products[index].shipping_amount = item.shipping.amount;
+            data.products[index].shipping_service_id = item.shipping.id;
+            data.products[index].shipping_service_name = item.shipping.name;
+            data.products[index].shipping_selected = JSON.stringify({ address, ...shipping_selected.value });
           }
         });
       }
@@ -190,6 +194,12 @@ export const usePaymentStore = defineStore("Payment", {
       if (
         ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
       ) {
+        const config = useRuntimeConfig();
+        await loadMercadoPago();
+        const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
+          locale: "pt-BR",
+        });
+
         let parsedFirstAmount = Number(
           first.value.amount
             .toString()
@@ -203,7 +213,7 @@ export const usePaymentStore = defineStore("Payment", {
           firstCardAmountWithoutInterest =
             getAmount.value * percentageFirstCard;
         }
-        let cards = [];
+        let cards: any = [];
         cards.push({
           total: Number(parsedFirstAmount).toFixed(2),
           amount: Number(firstCardAmountWithoutInterest).toFixed(2),
@@ -212,6 +222,25 @@ export const usePaymentStore = defineStore("Payment", {
           card_holder_name: first.value.holder_name,
           card_number: first.value.number,
         });
+
+        // Mercado Pago token - First Card
+        if (installments.value >= 10) {
+          const firstCardToken = mp.createCardToken({
+            cardNumber: first.value.number.replaceAll(" ", ""),
+            cardholderName: first.value.holder_name,
+            cardExpirationMonth: first.value.month,
+            cardExpirationYear: first.value.year,
+            securityCode: first.value.cvv,
+            identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
+            identificationNumber: document.value.replace(/[^\d]/g, ""),
+          });
+
+          await Promise.resolve(firstCardToken).then(function (res) {
+            cards[0].card_hash = res.id;
+            data.gateway = "MERCADOPAGO";
+          });
+        }
+
         if (method.value === "TWO_CREDIT_CARDS") {
           let parsedSecondAmount = Number(
             second.value.amount
@@ -230,8 +259,24 @@ export const usePaymentStore = defineStore("Payment", {
             card_holder_name: second.value.holder_name,
             card_number: second.value.number,
           });
-        }
 
+          // Mercado Pago token - Second Card
+          if (installments.value >= 10) {
+            const secondCardToken = mp.createCardToken({
+              cardNumber: second.value.number.replaceAll(" ", ""),
+              cardholderName: second.value.holder_name,
+              cardExpirationMonth: second.value.month,
+              cardExpirationYear: second.value.year,
+              securityCode: second.value.cvv,
+              identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
+              identificationNumber: document.value.replace(/[^\d]/g, ""),
+            });
+
+            await Promise.resolve(secondCardToken).then(function (res) {
+              cards[1].card_hash = res.id;
+            });
+          }
+        }
         data.cards = cards;
       }
 
