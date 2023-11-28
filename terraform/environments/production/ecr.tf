@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "checkout-repository" {
-  name                 = "checkout-repo"
+  name                 = "checkout-repo-${var.environment}"
   image_tag_mutability = "MUTABLE"
 }
 

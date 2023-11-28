@@ -12,3 +12,8 @@ variable "environment" {
 variable "deploy_hash" {
   type = string
 }
+
+variable "host_lb" {
+  type        = string
+  description = "Host do loadbalancer"
+}
