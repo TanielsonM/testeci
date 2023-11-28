@@ -45,6 +45,7 @@
   "dependencies": {
     "@datadog/browser-logs": "^4.39.0",
     "@datadog/browser-rum": "^4.47.0",
+    "@mercadopago/sdk-js": "^0.0.3",
     "@nuxtjs/robots": "^3.0.0",
     "@nuxtjs/tailwindcss": "^6.3.1",
     "@pinia/nuxt": "^0.4.6",
