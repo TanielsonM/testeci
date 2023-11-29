@@ -45,6 +45,11 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  selectName: {
+    type: String,
+    required: false,
+    default: () => "",
+  },
   data: {
     type: Array,
     required: false,
@@ -73,6 +78,7 @@ const onChange = (event) => {
       :disabled="disabled"
       :value="modelValue"
       :id="selectId"
+      :name="selectName"
       @change="onChange"
     >
       <option v-if="placeholder" selected disabled value="" class="opacity-75">
