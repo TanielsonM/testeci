@@ -271,7 +271,8 @@ watch(installments, () => {
           class="col-span-12"
           @click="onFocus('number')"
           v-model="first.number"
-          input-id="first-number-field"
+          input-id="card_number"
+          input-name="card_number"
           :error="
             first.number || hasSent
               ? !validateCardNumber.isValidSync(first.number.replace(/\s/g, ''))
@@ -292,7 +293,8 @@ watch(installments, () => {
           v-model="first.holder_name"
           @click="onFocus('name')"
           @blur="onFocus('')"
-          input-id="first-holder_name-field"
+          input-id="card_holder_name"
+          input-name="card_holder_name"
           :error="
             first.holder_name || hasSent
               ? !validateNameOnCard.isValidSync(first.holder_name)
@@ -310,7 +312,8 @@ watch(installments, () => {
           class="col-span-6 sm:col-span-4"
           :data="months"
           v-model="first.month"
-          input-id="first-month-field"
+          select-id="card_month"
+          select-name="card_month"
           :error="
             first.month || hasSent
               ? !validateExpiryMonth.isValidSync(first.month)
@@ -328,7 +331,8 @@ watch(installments, () => {
           class="col-span-6 sm:col-span-4"
           :data="years"
           v-model="first.year"
-          input-id="first-year-field"
+          select-id="card_year"
+          select-name="card_year"
           :error="
             first.year || hasSent
               ? !validateExpiryYear.isValidSync(first.year)
@@ -345,7 +349,8 @@ watch(installments, () => {
           mask="####"
           class="col-span-12 sm:col-span-4"
           v-model="first.cvv"
-          input-id="first-cvv-field"
+          input-id="card_cvv"
+          input-name="card_cvv"
           :error="
             first.cvv || hasSent
               ? !validateCvc.isValidSync(first.cvv)
@@ -398,6 +403,7 @@ watch(installments, () => {
           class="col-span-12"
           v-model="second.number"
           input-id="second-number-field"
+          input-name="card_number"
           :error="
             second.number || hasSent
               ? !validateCardNumber.isValidSync(
@@ -419,6 +425,7 @@ watch(installments, () => {
           class="col-span-12"
           v-model="second.holder_name"
           input-id="second-holder_name-field"
+          input-name="card_holder_name"
           :error="
             second.holder_name || hasSent
               ? !validateNameOnCard.isValidSync(second.holder_name)
@@ -436,7 +443,8 @@ watch(installments, () => {
           class="col-span-6 sm:col-span-4"
           :data="months"
           v-model="second.month"
-          input-id="second-month-field"
+          select-id="second-month-field"
+          select-name="card_month"
           :error="
             second.month || hasSent
               ? !validateExpiryMonth.isValidSync(second.month)
@@ -454,7 +462,8 @@ watch(installments, () => {
           class="col-span-6 sm:col-span-4"
           :data="years"
           v-model="second.year"
-          input-id="second-year-field"
+          select-id="second-year-field"
+          select-name="card_year"
           :error="
             second.year || hasSent
               ? !validateExpiryYear.isValidSync(second.year)
@@ -472,6 +481,7 @@ watch(installments, () => {
           rules="required"
           v-model="second.cvv"
           input-id="second-cvv-field"
+          input-name="card_cvv"
           :error="
             second.cvv || hasSent
               ? !validateCvc.isValidSync(second.cvv)
