@@ -67,7 +67,8 @@ resource "aws_lb_listener_rule" "checkout-https" {
   condition {
     host_header {
       values = [
-        var.host_lb
+        "payfast.greenn.com.br",
+        "payfastdebug.greenn.com.br"
       ]
     }
   }
