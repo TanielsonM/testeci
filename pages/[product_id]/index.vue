@@ -32,7 +32,7 @@ const {
 } = storeToRefs(checkout);
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
-const { error_message } = storeToRefs(payment);
+const { error_message, isPaymentLoading } = storeToRefs(payment);
 const { 
   isOneStep, 
   custom_checkout,
@@ -226,13 +226,15 @@ function closeModal() {
 }
 
 async function callPayment() {
+  payment.setPaymentLoading(true);
   if (captchaEnabled.value) {
     //não colocar await pois nenhuma dessa funções retornam promises
     //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
     window.grecaptcha.reset();
     window.grecaptcha.execute();
   } else {
-    payment.payment(locale.value);
+    await payment.payment(locale.value)
+    payment.setPaymentLoading(false);
   }
 }
 
@@ -432,6 +434,7 @@ onMounted(() => {
                 @click="callPayment"
                 v-if="method !== 'PAYPAL'"
                 class="my-7"
+                :loading="isPaymentLoading"
               >
                 <span class="text-[15px] font-semibold">
                   {{
@@ -482,6 +485,7 @@ onMounted(() => {
           <BaseButton
             @click="callPayment"
             class="my-7"
+            :loading="isPaymentLoading"
           >
             <span class="text-[15px] font-semibold">
               {{

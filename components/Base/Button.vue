@@ -64,7 +64,7 @@ const sizeClasses = computed(() => {
   <button
     class="button w-full px-3 py-2"
     :class="[baseClasses, colorClasses, sizeClasses]"
-    :disabled="disabled"
+    :disabled="disabled || loading"
   >
     <Icon name="mdi:loading" class="animate-spin" v-if="loading" size="20" />
     <slot v-else />
