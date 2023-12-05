@@ -71,7 +71,7 @@ const { t } = useI18n();
 .badge-cashback {
   position: absolute;
   margin-top: -35px;
-  margin-right: -240px;
+  margin-right: -180px;
   background: #006B63;
   border-radius: 5px;
   color: #fff;
