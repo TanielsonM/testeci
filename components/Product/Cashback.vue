@@ -18,7 +18,7 @@ const { t } = useI18n();
     <section
       class="cashback-item flex w-full flex-col items-center gap-5 rounded border border-bd-color p-5 mb-3"
     > 
-      <span class="badge-cashback">💰 Cashback</span>
+      <span class="badge-cashback">✅ Garantia de sucesso</span>
       <span
         class="pl-1 flex w-full flex-nowrap items-center justify-start gap-2"
       >
@@ -72,7 +72,7 @@ const { t } = useI18n();
   position: absolute;
   margin-top: -35px;
   margin-right: -240px;
-  background: #000000;
+  background: #006B63;
   border-radius: 5px;
   color: #fff;
   padding: 11px;
