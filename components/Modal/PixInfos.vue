@@ -37,7 +37,7 @@ const props = defineProps({
     required: true,
   },
   shippingAmount: {
-    type: String,
+    type: [String, Number],
     default: null,
     required: false,
   },
@@ -207,9 +207,9 @@ onBeforeUnmount(() => {
             <p>{{ name }}</p>
             <p>{{ amount }}</p>
           </div>
-          <div class="item" v-if="!!shippingAmount">
+          <div class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && shippingSelected.service_name === 'GRÁTIS')">
             <p>{{ $t("pg_obrigado.modal.frete") }}</p>
-            <p>{{ shippingAmount }}</p>
+            <p>{{ shippingAmount || `Grátis` }}</p>
           </div>
         </div>
 
