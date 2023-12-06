@@ -308,7 +308,7 @@ onBeforeUnmount(() => {
     </div>
     <div
       class="details py-5"
-      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected"
+      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected.frete"
     >
       <h6 class="title">
         {{ $t("pg_obrigado.modal.frete_selecionado") }}
