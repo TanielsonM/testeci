@@ -18,7 +18,7 @@ const { t } = useI18n();
     <section
       class="cashback-item flex w-full flex-col items-center gap-5 rounded border border-bd-color p-5 mb-3"
     > 
-      <span class="badge-cashback">✅ Garantia de sucesso</span>
+      <span class="badge-cashback">✅ {{ $t("checkout.guarantee_of_success") }}</span>
       <span
         class="pl-1 flex w-full flex-nowrap items-center justify-start gap-2"
       >
@@ -67,11 +67,10 @@ const { t } = useI18n();
 .cashback-item {
   background-color: rgba(0, 148, 136, 0.1);
   color: #009488;
+  position: relative;
 }
 .badge-cashback {
   position: absolute;
-  margin-top: -35px;
-  margin-right: -180px;
   background: #006B63;
   border-radius: 5px;
   color: #fff;
@@ -83,6 +82,8 @@ const { t } = useI18n();
   line-height: 15px;
   letter-spacing: 0em;
   text-align: left;
+  top: -15px;
+  right: -10px;
 }
 .cashback-target {
   background-color: #F7F7F7;
