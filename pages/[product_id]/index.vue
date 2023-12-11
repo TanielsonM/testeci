@@ -233,8 +233,9 @@ async function callPayment() {
     window.grecaptcha.reset();
     window.grecaptcha.execute();
   } else {
-    await payment.payment(locale.value)
-    payment.setPaymentLoading(false);
+    await payment.payment(locale.value).finally(() => {
+      payment.setPaymentLoading(false);
+    })
   }
 }
 
