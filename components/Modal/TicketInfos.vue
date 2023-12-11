@@ -27,12 +27,7 @@ const props = defineProps({
     required: true,
   },
   shippingAmount: {
-    type: [String, Number],
-    default: null,
-    required: false,
-  },
-  shippingSelected: {
-    type: Object,
+    type: String,
     default: null,
     required: false,
   },
@@ -60,10 +55,6 @@ const props = defineProps({
     type: Object,
     default: {},
   },
-  sale: {
-    type: Object,
-    default: {},
-  },
 });
 
 const openTicket = (url: any) => {
@@ -82,12 +73,6 @@ const copy = (id: string) => {
     )}`
   );
 };
-
-onMounted(() => {
-  console.log(props.shippingAmount);
-  console.log(props.shippingSelected);
-  console.log(props.sale);
-})
 </script>
 <template>
   <div v-if="!onlyCode">
@@ -129,9 +114,9 @@ onMounted(() => {
         <p>{{ name }}</p>
         <p>{{ amount }}</p>
       </div>
-      <div class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && shippingSelected.service_name === 'GRÁTIS')">
+      <div class="item" v-if="!!shippingAmount">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
-        <p>{{ shippingAmount || `Grátis` }}</p>
+        <p>{{ shippingAmount }}</p>
       </div>
     </div>
   </div>

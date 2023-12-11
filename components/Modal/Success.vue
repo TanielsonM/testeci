@@ -168,7 +168,6 @@ function openPix(id: number) {
         :index="i"
         :name="sale.product.name"
         :shipping-amount="formatMoney(sale.shipping_amount)"
-        :shipping-selected="JSON.parse(sale.shipping_selected)"
         :order="data.sale.order"
         :status="sale.status"
       />
@@ -222,7 +221,7 @@ function openPix(id: number) {
           :sales-length="data.sale.sales.length"
           :created-at="sale.created_at.toString()"
           :shipping-amount="formatMoney(sale.shipping_amount)"
-          :shipping-selected="JSON.parse(sale.shipping_selected)"
+          :shipping-selected="sale.shipping_selected"
           :sales="data.sale.sales"
           :opened="data.pixOpened"
           @openedPixEvent="openPix"
