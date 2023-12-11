@@ -61,8 +61,7 @@ watch(
   >
     <div class="grid grid-cols-12 items-center gap-3" v-if="option.price">
       <div class="col-span-3 flex justify-center items-center">
-        <img class="justify-center" v-if="option.id === 0" :src="option.company.picture" width="50" />
-        <img class="justify-center" v-else :src="option.company.picture" width="80" />
+        <img class="justify-center" :src="option.company.picture" width="80" />
       </div>
       <div class="col-span-3">
         {{ option.name }}
