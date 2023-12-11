@@ -37,7 +37,7 @@ const props = defineProps({
     required: true,
   },
   shippingAmount: {
-    type: [String, Number],
+    type: String,
     default: null,
     required: false,
   },
@@ -90,7 +90,7 @@ const copy = async (code: string) => {
 };
 
 const data = ref({
-  shippingSelected: props.shippingSelected,
+  shippingSelected: JSON.parse(props.shippingSelected) as ShippingSelected,
   showCode: false,
 });
 
@@ -207,9 +207,9 @@ onBeforeUnmount(() => {
             <p>{{ name }}</p>
             <p>{{ amount }}</p>
           </div>
-          <div class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && shippingSelected.service_name === 'GRÁTIS')">
+          <div class="item" v-if="!!shippingAmount">
             <p>{{ $t("pg_obrigado.modal.frete") }}</p>
-            <p>{{ shippingAmount || `Grátis` }}</p>
+            <p>{{ shippingAmount }}</p>
           </div>
         </div>
 
@@ -308,13 +308,13 @@ onBeforeUnmount(() => {
     </div>
     <div
       class="details py-5"
-      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected.frete"
+      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected"
     >
       <h6 class="title">
         {{ $t("pg_obrigado.modal.frete_selecionado") }}
       </h6>
 
-      <div class="item frete" v-if="data.shippingSelected.frete">
+      <div class="item frete">
         <div class="grid grid-cols-12 items-center gap-3">
           <div class="col-span-4">
             <img
