@@ -98,6 +98,8 @@ export default defineNuxtConfig({
       PORT: process.env.PORT,
       INTERNATIONAL_URL: process.env.INTERNATIONAL_URL,
       MERCADOPAGO_API_PUBLIC_KEY: process.env.MERCADOPAGO_API_PUBLIC_KEY,
+      VUE_APP_ENVIRONMENT: process.env.VUE_APP_ENVIRONMENT,
+      VUE_APP_COMMIT_SHA: process.env.VUE_APP_COMMIT_SHA
     },
   },
   i18n: {
