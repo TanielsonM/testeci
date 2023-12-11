@@ -90,7 +90,7 @@ const copy = async (code: string) => {
 };
 
 const data = ref({
-  shippingSelected: JSON.parse(props.shippingSelected) as ShippingSelected,
+  shippingSelected: props.shippingSelected,
   showCode: false,
 });
 
@@ -308,13 +308,13 @@ onBeforeUnmount(() => {
     </div>
     <div
       class="details py-5"
-      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected"
+      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected.frete"
     >
       <h6 class="title">
         {{ $t("pg_obrigado.modal.frete_selecionado") }}
       </h6>
 
-      <div class="item frete">
+      <div class="item frete" v-if="data.shippingSelected.frete">
         <div class="grid grid-cols-12 items-center gap-3">
           <div class="col-span-4">
             <img
