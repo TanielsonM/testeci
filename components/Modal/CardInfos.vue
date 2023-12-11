@@ -19,12 +19,12 @@ const props = defineProps({
     required: false,
   },
   shippingAmount: {
-    type: String,
+    type: [String, Number],
     default: null,
     required: false,
   },
   shippingSelected: {
-    type: String,
+    type: [String, Object],
     default: null,
     required: false,
   },
@@ -75,9 +75,9 @@ const data = ref({
           {{ formatMoney(sale.total || sale.amount || sale.product.amount) }}
         </p>
       </template>
-      <section class="item" v-if="!!sale.shipping_amount">
+      <section class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
-        <p>{{ formatMoney(sale.shipping_amount) }}</p>
+        <p>{{ formatMoney(sale.shipping_amount) || "Grátis"}}</p>
       </section>
       <span
         class="my-5 block h-[1px] w-full bg-slate-300"
@@ -85,7 +85,7 @@ const data = ref({
       ></span>
       <div
         class="details py-5"
-        v-if="!!shippingAmount && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
+        v-if="(!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')) && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
       >
         <h6 class="title">
           {{ $t("pg_obrigado.modal.frete_selecionado") }}
