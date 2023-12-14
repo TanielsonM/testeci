@@ -37,8 +37,8 @@ resource "aws_ecs_service" "node" {
 
 
 resource "aws_appautoscaling_target" "node_target" {
-  max_capacity       = 20
-  min_capacity       = 2 #normal
+  max_capacity       = 64
+  min_capacity       = 20 #normal
   # min_capacity       = 8 #lancamento
   resource_id        = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_dimension = "ecs:service:DesiredCount"
