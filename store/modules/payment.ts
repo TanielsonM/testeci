@@ -67,13 +67,21 @@ export const usePaymentStore = defineStore("Payment", {
     error: false,
     error_message: "",
     hasSent: false,
+    // Payment button loading
+    loading: false
   }),
-  getters: {},
+  getters: {
+    isPaymentLoading: state => state.loading
+  },
   actions: {
+    setPaymentLoading(value = false) {
+      this.loading = value;
+    },
     async payment(language: string) {
       const allValid = await validateAll();
       if (!allValid) {
         this.hasSent = true;
+        this.setPaymentLoading(false);
         return;
       }
 
@@ -386,10 +394,12 @@ export const usePaymentStore = defineStore("Payment", {
         })
         .catch(() => {
           checkoutStore.setLoading(false);
+          this.setPaymentLoading(false);
         });
     },
     validateError(error: PaymentError) {
       checkoutStore.setLoading(false);
+      this.loading = false;
       switch (error.code) {
         case "0001":
           this.error_message = "error.0001";
