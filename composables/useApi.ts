@@ -46,13 +46,11 @@ export default function () {
             headers.set("Trans-Token-", headStore["trans-token-"]);
           }
           // wd-token-
-          if (headStore["wd-token-"]) {
-            headers.set(
-              "Wd-Token-",
-              document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
-                "wd_not_found"
-            );
-          }
+          headers.set(
+            "Wd-Token-",
+            document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
+              "wd_not_found"
+          );
 
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
