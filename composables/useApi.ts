@@ -47,7 +47,11 @@ export default function () {
           }
           // wd-token-
           if (headStore["wd-token-"]) {
-            headers.set("Wd-Token-", headStore["wd-token-"]);
+            headers.set(
+              "Wd-Token-",
+              document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
+                "wd_not_found"
+            );
           }
 
           GreennLogs.logger.info("axiosRequest", {
