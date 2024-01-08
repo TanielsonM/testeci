@@ -63,7 +63,7 @@ resource "aws_appautoscaling_policy" "node_cpu" {
 }
 
 resource "aws_appautoscaling_scheduled_action" "scheduled_action" {
-  count               = var.ci_commit_branch == "production" ? 1 : 0
+  count               = var.environment == "production" ? 1 : 0
   name                = "scheduled_scaling"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"
@@ -76,6 +76,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action" {
 }
 
 resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_10" {
+  count               = var.environment == "production" ? 1 : 0
   name                = "scheduled_scaling_min_10"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"
@@ -88,6 +89,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_10" {
 }
 
 resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_40" {
+  count               = var.environment == "production" ? 1 : 0
   name                = "scheduled_scaling_min_10"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"

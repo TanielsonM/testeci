@@ -18,8 +18,5 @@ variable "host_lb" {
   description = "Host do loadbalancer"
 }
 
-variable "ci_commit_branch" {
-  description = "The name of the CI/CD commit branch"
-  type        = string
-}
+
  
