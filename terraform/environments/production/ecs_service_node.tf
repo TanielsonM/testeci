@@ -91,7 +91,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_10" {
 
 resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_40" {
   count               = var.environment == "production" ? 1 : 0
-  name                = "scheduled_scaling_min_10"
+  name                = "scheduled_scaling_min_40"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"
   resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
