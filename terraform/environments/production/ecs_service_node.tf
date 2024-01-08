@@ -67,7 +67,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action" {
   name                = "scheduled_scaling"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"
-  resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.php.name}"
+  resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_target_action {
     min_capacity      = 2
     max_capacity      = 20
@@ -79,7 +79,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_10" {
   name                = "scheduled_scaling_min_10"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"
-  resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.php.name}"
+  resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_target_action {
     min_capacity      = 10
     max_capacity      = 50
@@ -91,7 +91,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_40" {
   name                = "scheduled_scaling_min_10"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"
-  resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.php.name}"
+  resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_target_action {
     min_capacity      = 40
     max_capacity      = 100
