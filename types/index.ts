@@ -64,6 +64,7 @@ export type Payment = {
     shipping_amount?: number;
     shipping_service_id?: number;
     shipping_service_name?: string;
+    shipping_selected?: any;
   }[];
 
   metas: any;
@@ -114,6 +115,14 @@ export type Payment = {
   upsell_id?: number;
   // Installments
   installments?: number;
+  // Gateway
+  gateway?: string;
+  currency_data?: CurrencyData;
+};
+
+export type CurrencyData = {
+  local_currency: string;
+  base_currency: string;
 };
 
 export type PaymentError = {
@@ -671,9 +680,11 @@ export type Price = {
 
 export type StepState = {
   currentStep: number;
+  enablePaypal: boolean;
   format: "one_step" | "default";
   isMobile: boolean;
   countSteps: number;
+  isEmailValid: boolean;
 };
 
 export type Sale = {

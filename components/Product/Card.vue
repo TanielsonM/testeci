@@ -129,7 +129,8 @@ const exceptionSellerId = computed(() => {
       v-if="
         product.type == 'TRANSACTION' &&
         product.format == 'PHYSICALPRODUCT' &&
-        productStore.canBeGifted
+        productStore.canBeGifted &&
+        product?.method !== 'FREE'
       "
     >
       <BaseBadge>
@@ -224,6 +225,7 @@ const exceptionSellerId = computed(() => {
       </p>
       <!-- Coupon -->
       <ProductCoupon v-if="productStore.allowedCoupon" />
+      <ProductCashback />
     </section>
     <EventTimer v-if="product.product_type_id === 3"/>
   </BaseCard>

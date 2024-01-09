@@ -3,10 +3,24 @@ import * as Toast from "vue-toastification";
 
 export const useCustomCheckoutStore = defineStore("customCheckout", {
   state: () => ({
+    greennWrapper: null,
     custom_checkout: null,
     notifications: null,
   }),
   getters: {
+    /* get wrapper */
+    getGreennWrapper: (state) => state.greennWrapper,
+
+    /* Exit Modal */
+    isPopUp: (state) => state.custom_checkout?.exit_pop_up,
+    popUpImage: (state) => state.custom_checkout?.image_exit_pop_up,
+    popUpTitle: (state) => state.custom_checkout?.title_exit_pop_up,
+    popUpLink: (state) => state.custom_checkout?.link_exit_pop_up,
+    popUpDescription: (state) => state.custom_checkout?.description_exit_pop_up,
+    popUpButton: (state) => state.custom_checkout?.button_exit_pop_up,
+    popUpButtonText: (state) =>
+      state.custom_checkout?.text_button_exit_pop_up || "Comprar agora",
+
     /* theme */
     theme: (state) => state.custom_checkout?.theme || "light",
     /* themeColor */
@@ -19,6 +33,8 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     bottomThumb: (state) => state.custom_checkout?.bottom_thumb || null,
     /* sideThumb */
     sideThumb: (state) => state.custom_checkout?.side_thumb || null,
+    /* sideThumbMobile */
+    sideThumbMobile: (state) => state.custom_checkout?.side_thumb_mobile || null,
     /* hasScarcity */
     hasScarcity: (state) => state.custom_checkout?.scarcity === "on" ?? null,
     /* hasConfirmationEmail */
@@ -64,34 +80,15 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     isOneStep: (state) => state?.custom_checkout?.step_checkout === "one_step",
   },
   actions: {
-    async getCustomCheckout() {
-      const { query, params } = useRoute();
-      if (!query.ch_id) return;
+    setCustomCheckout(payload, purchase_notification) {
+      this.custom_checkout = payload;
+      if (this.hasJivochatId) {
+        this.setJivochat(this.hasJivochatId);
+      }
 
-      let url = `/product/checkout/${params.product_id}/checkout/${query.ch_id}`;
-
-      try {
-        await useApi()
-          .read(url)
-          .then((response) => {
-            if (response?.custom_checkout) {
-              this.custom_checkout = response?.custom_checkout;
-              if (this.hasJivochatId) {
-                this.setJivochat(this.hasJivochatId);
-              }
-
-              if (this.hasNotifications) {
-                this.notifications = response?.purchase_notification;
-                this.setNotifications(
-                  `${this.custom_checkout?.maximum_purchase_notification_interval}, ${this.custom_checkout?.minimum_purchase_notification_interval}`,
-                  this.custom_checkout?.how_get_purchase_notification,
-                  this.custom_checkout?.quantity_purchase_notification,
-                  this.custom_checkout?.type_purchase_notification
-                );
-              }
-            }
-          });
-      } catch (error) {}
+      if (this.hasNotifications) {
+        this.notifications = purchase_notification || [];
+      }
     },
     setJivochat(id = "J0jlVX87X9") {
       const { query } = useRoute();
@@ -149,10 +146,7 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
               toast.success(content, {
                 timeout: 5000,
                 icon: false,
-                appendChild: true,
-                position: position,
-                toastClassName: "custom",
-                bodyClassName: ["custom"],
+                position,
               });
             }, parseInt(time + "000"));
           }

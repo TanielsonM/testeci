@@ -1,12 +1,15 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { useCheckoutStore } from "@/store/checkout";
+import { useCheckoutStore } from "~~/store/checkout";
+import { useProductStore } from "~~/store/product";
 
 // Store
 const checkout = useCheckoutStore();
+const productStore = useProductStore();
 // Composables
 const { locale } = useI18n();
 const { global_settings } = storeToRefs(checkout);
+const { product } = storeToRefs(productStore);
 const { alphabetical, searcher } = useCountrys();
 // Computeds
 const defaultCountry = computed(
@@ -31,6 +34,8 @@ const currentCountryAcronym = useState(
 locale.value = selectedCountry.value.language;
 
 const selectCountry = (country) => {
+  checkout.redirectOfferPanel(product.value, country.sigla)
+
   search.value = "";
   opened.value = !opened.value;
   selectedCountry.value = country;

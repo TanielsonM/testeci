@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement, Sale } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, CurrencyData } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -15,6 +15,9 @@ import { useLeadsStore } from "../modules/leads";
 import { useCheckoutStore } from "../checkout";
 import { useInstallmentsStore } from "./installments";
 import { useAmountStore } from "./amount";
+
+// External SDK
+import { loadMercadoPago } from "@mercadopago/sdk-js";
 
 const leadsStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
@@ -35,7 +38,6 @@ const {
   selectedCountry,
   hasPhysicalProduct,
   product_list,
-  products_client_statistics,
   hasAffiliateId,
   installments,
   coupon,
@@ -43,14 +45,13 @@ const {
   ticket_installments,
   url,
   paypal_details,
+  shipping_selected
 } = storeToRefs(checkoutStore);
 const {
   productName,
   is_gift,
   gift_message,
-  isFixedShipping,
-  hasShippingFee,
-  FixedShippingAmount,
+  isDynamicShipping,
   hasTicketInstallments,
   hasAffiliationLead,
   product
@@ -59,7 +60,7 @@ const {
 const { name, email, document, cellphone } = storeToRefs(personalStore);
 const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
-const { getInstallments } = storeToRefs(installmentsStore);
+const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
 
 export const usePaymentStore = defineStore("Payment", {
@@ -67,13 +68,21 @@ export const usePaymentStore = defineStore("Payment", {
     error: false,
     error_message: "",
     hasSent: false,
+    // Payment button loading
+    loading: false
   }),
-  getters: {},
+  getters: {
+    isPaymentLoading: state => state.loading
+  },
   actions: {
+    setPaymentLoading(value = false) {
+      this.loading = value;
+    },
     async payment(language: string) {
       const allValid = await validateAll();
       if (!allValid) {
         this.hasSent = true;
+        this.setPaymentLoading(false);
         return;
       }
 
@@ -81,13 +90,10 @@ export const usePaymentStore = defineStore("Payment", {
 
       const total = computed(() => {
         if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
-          return (
-            getInstallments.value(ticket_installments.value) *
-            ticket_installments.value
-          );
+          return (getTotal.value(ticket_installments.value));
         }
         if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return parseFloat((getInstallments.value() * installments.value).toFixed(2));
+          return getTotal.value();
         }
         return getInstallments.value(1);
       });
@@ -125,8 +131,7 @@ export const usePaymentStore = defineStore("Payment", {
         complement: charge.value.complement,
         neighborhood: charge.value.neighborhood,
         city: charge.value.city,
-        state:
-          selectedCountry.value === "US" ? document.value : charge.value.state,
+        state: charge.value.state,
         // Others
         language,
         upsell_id: hasUpsell.value,
@@ -149,40 +154,32 @@ export const usePaymentStore = defineStore("Payment", {
 
       // Physical product
       if (hasPhysicalProduct.value) {
+        const address: any = sameAddress.value ? charge.value : shipping.value;
         data = {
           ...data,
-          shipping_address_zip_code: sameAddress.value
-            ? charge.value.zipcode.replace("-", "")
-            : shipping.value.zipcode.replace("-", ""),
-          shipping_address_street: sameAddress.value
-            ? charge.value.street
-            : shipping.value.street,
-          shipping_address_number: sameAddress.value
-            ? charge.value.number
-            : shipping.value.number,
-          shipping_address_complement: sameAddress.value
-            ? charge.value.complement
-            : shipping.value.complement,
-          shipping_address_neighborhood: sameAddress.value
-            ? charge.value.neighborhood
-            : shipping.value.neighborhood,
-          shipping_address_city: sameAddress.value
-            ? charge.value.city
-            : shipping.value.city,
-          shipping_address_state: sameAddress.value
-            ? charge.value.state
-            : shipping.value.state,
+          shipping_address_zip_code: address?.zipcode?.replace(/[-]/g, ''),
+          shipping_address_street: address.street,
+          shipping_address_number: address.number,
+          shipping_address_complement: address.complement,
+          shipping_address_neighborhood: address.neighborhood,
+          shipping_address_city: address.city,
+          shipping_address_state: address.state,
+          shipping_selected: JSON.stringify({ address, ...shipping_selected.value })
         };
+
+        if(isDynamicShipping.value) {
+          data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
+        }
 
         product_list.value.forEach((item: any) => {
           if (item?.shipping) {
-            const index = data.products
-              .map((prod) => prod.product_id)
-              .indexOf(item.id);
+            const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
+            const shippingSelected: any = shipping_selected;
 
             data.products[index].shipping_amount = item.shipping.amount;
             data.products[index].shipping_service_id = item.shipping.id;
             data.products[index].shipping_service_name = item.shipping.name;
+            data.products[index].shipping_selected = JSON.stringify({ address, ...shipping_selected.value });
           }
         });
       }
@@ -206,6 +203,12 @@ export const usePaymentStore = defineStore("Payment", {
       if (
         ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
       ) {
+        const config = useRuntimeConfig();
+        await loadMercadoPago();
+        const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
+          locale: "pt-BR",
+        });
+
         let parsedFirstAmount = Number(
           first.value.amount
             .toString()
@@ -219,16 +222,44 @@ export const usePaymentStore = defineStore("Payment", {
           firstCardAmountWithoutInterest =
             getAmount.value * percentageFirstCard;
         }
-        let cards = [];
+        let cards: any = [];
         cards.push({
+          total: Number(parsedFirstAmount).toFixed(2),
           amount: Number(firstCardAmountWithoutInterest).toFixed(2),
           card_cvv: first.value.cvv,
           card_expiration_date: `${first.value.month}${first.value.year}`,
           card_holder_name: first.value.holder_name,
           card_number: first.value.number,
         });
+
+        // Mercado Pago token - First Card
+        if (installments.value >= 10) {
+          const firstCardToken = mp.createCardToken({
+            cardNumber: first.value.number.replaceAll(" ", ""),
+            cardholderName: first.value.holder_name,
+            cardExpirationMonth: first.value.month,
+            cardExpirationYear: first.value.year,
+            securityCode: first.value.cvv,
+            identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
+            identificationNumber: document.value.replace(/[^\d]/g, ""),
+          });
+
+          await Promise.resolve(firstCardToken).then(function (res) {
+            cards[0].card_hash = res.id;
+            data.gateway = "MERCADOPAGO";
+          });
+        }
+
         if (method.value === "TWO_CREDIT_CARDS") {
+          let parsedSecondAmount = Number(
+            second.value.amount
+              .toString()
+              .replace("R$", "")
+              .replace(".", "")
+              .replace(",", ".")
+          );
           cards.push({
+            total: Number(parsedSecondAmount).toFixed(2),
             amount: Number(
               getAmount.value - firstCardAmountWithoutInterest
             ).toFixed(2),
@@ -237,8 +268,24 @@ export const usePaymentStore = defineStore("Payment", {
             card_holder_name: second.value.holder_name,
             card_number: second.value.number,
           });
-        }
 
+          // Mercado Pago token - Second Card
+          if (installments.value >= 10) {
+            const secondCardToken = mp.createCardToken({
+              cardNumber: second.value.number.replaceAll(" ", ""),
+              cardholderName: second.value.holder_name,
+              cardExpirationMonth: second.value.month,
+              cardExpirationYear: second.value.year,
+              securityCode: second.value.cvv,
+              identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
+              identificationNumber: document.value.replace(/[^\d]/g, ""),
+            });
+
+            await Promise.resolve(secondCardToken).then(function (res) {
+              cards[1].card_hash = res.id;
+            });
+          }
+        }
         data.cards = cards;
       }
 
@@ -251,6 +298,12 @@ export const usePaymentStore = defineStore("Payment", {
       if (!allowed_installments.includes(method.value)) {
         delete data.installments;
       }
+
+      const currency_data: CurrencyData = {
+        local_currency: 'BRL',
+        base_currency: 'BRL'
+      };
+      data.currency_data = currency_data;
 
       // Registrando log boleto
       let dataLog = Object.assign({}, data);
@@ -353,10 +406,12 @@ export const usePaymentStore = defineStore("Payment", {
         .catch(err => {
           console.error(err)
           checkoutStore.setLoading(false);
+          this.setPaymentLoading(false);
         });
     },
     validateError(error: PaymentError) {
       checkoutStore.setLoading(false);
+      this.loading = false;
       switch (error.code) {
         case "0001":
           this.error_message = "error.0001";

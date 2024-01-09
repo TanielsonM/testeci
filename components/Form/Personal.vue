@@ -6,6 +6,8 @@ import { usePaymentStore } from "@/store/modules/payment";
 import { useStepStore } from "@/store/modules/steps";
 
 import {
+  validateFirstStep,
+  validateSecondStep,
   validateName,
   validateEmail,
   validateDocument,
@@ -22,7 +24,6 @@ const payment = usePaymentStore();
 const stepStore = useStepStore();
 
 const { hasSent } = storeToRefs(payment);
-const { isMobile } = storeToRefs(stepStore);
 
 const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
   currentCountry.value
@@ -77,9 +78,36 @@ const {
   forceCellphone,
 } = storeToRefs(personalStore);
 
-watch([name, email, cellphone, document], (value) => {
+const { isEmailValid } = storeToRefs(stepStore);
+const queryParams = useRoute().query;
+
+watch([name, email, cellphone, document], async () => {
+  
   leadsStore.syncPersonal();
+  let isPersonalValid = await validateFirstStep();
+  let isAddressValid = await validateSecondStep();
+  let currentStep = stepStore.currentStep;
+
+  stepStore.changePaypalStatus();
+
+  if (isPersonalValid) {
+    if (isAddressValid) {
+      if (currentStep === 1 || currentStep === 2) {
+        stepStore.setCurrentStep(2);
+      }
+    } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {
+      stepStore.back();
+    } else if (isPersonalValid && !isAddressValid && currentStep === 3) {
+      stepStore.back();
+    }
+  }
 });
+
+function validateEmailWithVeeValidate(validateField) {
+  validateField('email-field').then(res => {
+    stepStore.setIsEmailValid(res.valid)
+  })
+}
 
 function updateLead(isEmail = false) {
   if (isEmail) email.value = email.value.trim();
@@ -88,11 +116,21 @@ function updateLead(isEmail = false) {
   }, 1000);
 }
 
-personalStore.setFields(useRoute().query);
+personalStore.setFields(queryParams);
+
+const personalForm = ref(null);
+onMounted(() => {
+  if(queryParams.em) {
+    personalForm.value.setFieldValue('email-field', queryParams.em);
+    personalForm.value.validateField('email-field').then(res => {
+      stepStore.setIsEmailValid(res.valid)
+    })
+  }
+})
 </script>
 
 <template>
-  <VeeForm class="mb-8 grid w-full grid-cols-12 gap-3" ref="personal-form">
+  <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personalForm" v-slot="{ validateField }">
     <BaseInput
       @blur="updateLead"
       class="col-span-12"
@@ -111,14 +149,16 @@ personalStore.setFields(useRoute().query);
 
     <BaseInput
       class="col-span-12"
+      @change="validateEmailWithVeeValidate(validateField)"
       @blur="updateLead(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      :error="email && hasSent ? !validateEmail.isValidSync(email) : undefined"
+      :error="email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.em && !isEmailValid)) : undefined"
       :disabled="forceEmail"
+      rules="email"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.email") }}

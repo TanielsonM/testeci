@@ -9,9 +9,7 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
-
 import { showUnloadAlert, getLessMethods } from "@/utils/validateBatch";
-
 import { storeToRefs } from "pinia";
 
 // Stores
@@ -22,9 +20,8 @@ const preCheckout = usePreCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
-const personalStore = usePersonalStore();
 const amountStore = useAmountStore();
-const leadsStore = useLeadsStore();
+const route = useRoute();
 
 // Variables
 const { t, locale } = useI18n();
@@ -38,16 +35,20 @@ const {
   hasAffiliateId,
   product_id,
   selectedCountry,
+  hasCustomCheckout
 } = storeToRefs(checkout);
+
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
-const { error_message, hasSent } = storeToRefs(payment);
-const { document } = storeToRefs(personalStore);
-const currentCountry = useState("currentCountry");
-const { isOneStep } = storeToRefs(customCheckoutStore);
+const { error_message, isPaymentLoading } = storeToRefs(payment);
+const { 
+  isOneStep, 
+  custom_checkout,
+  hasNotifications
+} = storeToRefs(customCheckoutStore);
 
 // Refs
-const alert_modal = ref(false);
 const pixelComponentKey = 1;
+const alert_modal = ref(false);
 
 // Computeds
 const tabs = computed(() => {
@@ -173,6 +174,17 @@ const handleResize = () => {
   isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
+function setInternationalURL() {
+  if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven && !(useRuntimeConfig().public.INTERNATIONAL_URL).includes('localhost')) {
+    let currentUrl = new URL(window.location.href);
+    const international_url = new URL(useRuntimeConfig().public.INTERNATIONAL_URL);
+    currentUrl.host = international_url.host;
+    currentUrl.protocol = international_url.protocol;
+    currentUrl.port = "";
+    window.location = currentUrl.href;
+  }
+}
+
 onMounted(() => {
   if (process.client) {
     // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
@@ -189,13 +201,7 @@ onMounted(() => {
     window.addEventListener("myRecaptchaCallback", () => {
       payment.payment(locale.value);
     });
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
@@ -213,13 +219,7 @@ watch(method, (method) => {
 
 watch(selectedCountry, () => {
   if (process.client) {
-    if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
-      let currentUrl = new URL(window.location.href);
-      currentUrl.host = "payu.greenn.com.br";
-      currentUrl.protocol = "https";
-      currentUrl.port = "";
-      window.location = currentUrl.href;
-    }
+    setInternationalURL()
   }
 });
 
@@ -249,59 +249,17 @@ function closeModal() {
 }
 
 async function callPayment() {
+  payment.setPaymentLoading(true);
   if (captchaEnabled.value) {
     //não colocar await pois nenhuma dessa funções retornam promises
     //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
     window.grecaptcha.reset();
     window.grecaptcha.execute();
   } else {
-    payment.payment(locale.value);
+    await payment.payment(locale.value).finally(() => {
+      payment.setPaymentLoading(false);
+    })
   }
-}
-
-const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
-  currentCountry.value
-);
-
-const documentText = computed(() => {
-  switch (currentCountry.value) {
-    case "AR":
-      return {
-        label: "CUIT/CUIL o DNI",
-        placeholder: "CUIT/CUIL o DNI",
-        mask: ["#####################"],
-      };
-    case "MX":
-      return {
-        label: "Número RFC",
-        placeholder: "Número RFC",
-        documentMask: ["########################"],
-      };
-    case "UY":
-      return {
-        label: "Número CI",
-        placeholder: "Número CI",
-        documentMask: ["########################"],
-      };
-    case "CL":
-      return {
-        label: "Añadir RUT",
-        placeholder: "Añadir RUT",
-        documentMask: ["#####################"],
-      };
-    default:
-      return {
-        label: "CPF ou CNPJ",
-        placeholder: "Doc. do títular da compra",
-        documentMask: document.value.length <= 14 ? "###.###.###-##" : "##.###.###/####-##",
-      };
-  }
-});
-
-function updateLead() {
-  setTimeout(function () {
-    leadsStore.updateLead();
-  }, 1000);
 }
 
 function incrementSteps() {
@@ -323,12 +281,64 @@ if (hasAffiliateId.value) {
   affiliate.value = hasAffiliateId.value;
 }
 
-await checkout.init();
+if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
+  if (process.client) {
+    window.location.href = `https://payu.greenn.com.br/${product_id.value}`;
+  }
+}
+
+await checkout.init().then(() => {
+
+  let ogTitle = "Greenn";
+  if(product?.value?.name) {
+    ogTitle = `${product.value.name} | Greenn`;
+  }
+
+  let ogDescription = "A plataforma de pagamento simples";
+  if(product?.value?.description) {
+    ogDescription = product.value.description;
+  }
+
+  let currentUrlOg = ""
+  if(!process.client){
+    currentUrlOg = `https://payfast.greenn.com.br/${route.fullPath}`
+  }else{
+    currentUrlOg = window.location.href;
+  }
+  let urlForOG = new URL(currentUrlOg);
+  urlForOG.searchParams.forEach((value, key) => urlForOG.searchParams.delete(key));
+
+
+
+  useSeoMeta({
+    ogTitle: ogTitle,
+    ogDescription: ogDescription,
+    ogType: "website",
+    ogUrl: urlForOG.href,
+    ogImage: product?.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
+    ogImageHeight: "500",
+    ogImageWidth: "500",
+    ogSiteName: "Greenn - A plataforma de pagamentos simples",
+  });
+});
+
+onMounted(() => {
+  if (process.client) {
+    if (!!hasCustomCheckout.value && !!hasNotifications.value) {
+      customCheckoutStore.setNotifications(
+        `${custom_checkout.value.maximum_purchase_notification_interval}, ${custom_checkout.value.minimum_purchase_notification_interval}`,
+        custom_checkout.value.how_get_purchase_notification,
+        custom_checkout.value.quantity_purchase_notification,
+        custom_checkout.value.type_purchase_notification
+        );
+    }
+  }
+});
 </script>
 
 <template>
   <Head>
-    <Title>{{ product.name }} | Checkout</Title>
+    <Title>{{ product.name }} | Greenn</Title>
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>
@@ -359,7 +369,7 @@ await checkout.init();
             <LocaleSelect />
           </template>
           <template #content>
-            <FormPersonal />
+            <FormPersonal :class="product?.method !== 'FREE' ? 'mb-8' : ''" />
           </template>
         </Steps>
 
@@ -378,7 +388,7 @@ await checkout.init();
           <template #content>
             <FormAddress />
             <BaseToogle
-              v-if="checkout.hasPhysicalProduct"
+              v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
               class="my-5"
               v-model:checked="sameAddress"
               id="address-form"
@@ -407,6 +417,7 @@ await checkout.init();
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="checkout.showAddressStep ? '03' : '02'"
+          :free="product?.method !== 'FREE' ? false : true"
           v-if="
             (isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
             !isMobile ||
@@ -415,13 +426,17 @@ await checkout.init();
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
-              <template v-if="method !== 'PIX'">
-                <FormPurchase />
+              <template v-if="product?.method !== 'FREE'">
+                <BaseTabs v-model="method" :tabs="tabs" :is-mobile="isMobile" />
+                <template v-if="method !== 'PIX'">
+                  <FormPurchase />
+                </template>
               </template>
             </section>
             <!-- Bumps -->
-            <template v-if="checkout.getBumpList.length && !hasTicketInstallments">
+            <template
+              v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE' && !checkout.hasFreeBump"
+            >
               <p class="my-5 w-full text-txt-color">
                 {{
                   customCheckoutStore.hasCustomBump
@@ -442,6 +457,7 @@ await checkout.init();
               <BaseButton
                 v-if="method !== 'PAYPAL'"
                 class="my-7"
+                :loading="isPaymentLoading"
                 @click="callPayment"
               >
                 <span class="text-[15px] font-semibold">
@@ -467,18 +483,48 @@ await checkout.init();
           </template>
         </Steps>
 
+        <!-- Next step buttom -->
         <BaseButton
           @click="stepsStore.setStep(currentStep + 1)"
           v-if="
             isMobile &&
             currentStep < (checkout.showAddressStep ? 3 : 2) &&
-            !isOneStep
+            !isOneStep &&
+            method !== 'FREE'
           "
         >
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>
         </BaseButton>
+        <!-- Payment button -->
+        <template
+          v-if="
+            isMobile &&
+            currentStep < (checkout.showAddressStep ? 3 : 2) &&
+            !isOneStep &&
+            method === 'FREE'
+          "
+        >
+          <BaseButton
+            @click="callPayment"
+            class="my-7"
+            :loading="isPaymentLoading"
+          >
+            <span class="text-[15px] font-semibold">
+              {{
+                customCheckoutStore.purchase_text ||
+                $t("checkout.footer.btn_compra")
+              }}
+            </span>
+          </BaseButton>
+          <span class="flex items-center gap-3">
+            <Icon name="fa6-solid:lock" class="text-main-color" />
+            <p class="text-[13px] font-normal text-txt-color">
+              {{ $t("checkout.footer.info_seguranca") }}
+            </p>
+          </span>
+        </template>
       </BaseCard>
       <!-- End purchase card -->
 
@@ -508,6 +554,14 @@ await checkout.init();
         class="hidden w-full rounded-lg lg:block"
       />
       <!-- End side Thumb -->
+      <!-- Side Thumb Mobile -->
+      <img
+        v-if="customCheckoutStore.sideThumbMobile"
+        :src="customCheckoutStore.sideThumbMobile"
+        alt="Thumb lateral mobile"
+        class="w-full rounded-lg lg:hidden"
+      />
+      <!-- End side Thumb Mobile-->
     </section>
 
     <!-- Alert modal -->
@@ -520,7 +574,7 @@ await checkout.init();
         <section class="mt-10 flex w-full justify-end">
           <BaseButton
             color="blue"
-            class="w-[40%] text-txt-color"
+            class="w-[40%] bg-main-color text-txt-color"
             @click="closeModal"
           >
             {{ $t("checkout.dados_pessoais.btn_error") }}
@@ -536,6 +590,7 @@ await checkout.init();
 
     <!-- Client Only section -->
     <ClientOnly class="hidden">
+      <ModalCloseUp />
       <LeadsClient />
       <PixelClient
         :key="pixelComponentKey"

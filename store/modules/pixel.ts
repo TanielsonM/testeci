@@ -3,10 +3,12 @@ import { v4 as uuidv4 } from "uuid";
 import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
 import { usePersonalStore } from "./../forms/personal";
+import { useAmountStore } from "./amount";
 
 const productStore = useProductStore();
 const checkoutStore = useCheckoutStore();
 const personalStore = usePersonalStore();
+const amountStore = useAmountStore();
 
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
@@ -29,8 +31,9 @@ export const usePixelStore = defineStore("Pixel", {
       this.product_id = productStore.product_id;
       this.method = checkoutStore.method;
       this.affiliate_id = checkoutStore.hasAffiliateId;
-      this.email = personalStore.name;
+      this.email = personalStore.email;
       this.cellphone = personalStore.cellphone;
+      this.amount = amountStore.amount;
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
@@ -41,7 +44,9 @@ export const usePixelStore = defineStore("Pixel", {
         sale_id: this.sale_id,
         chc_id: this.client_has_contract,
         em: this.email,
-        ph: this.cellphone,
+        ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
+        amount: this.amount,
+        a_id: this.affiliate_id
       };
 
       return await useApi()

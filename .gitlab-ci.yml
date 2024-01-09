@@ -1,10 +1,13 @@
 variables:
   TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${CI_COMMIT_BRANCH}
-  TF_ROOT: ${CI_PROJECT_DIR}/terraform/environments/${CI_COMMIT_BRANCH}
+  TF_ROOT: ${CI_PROJECT_DIR}/terraform/environments/${TF_BASE_FOLDER}
   ANSIBLE_ROOT: ${CI_PROJECT_DIR}/ansible/environments/${CI_COMMIT_BRANCH}
   TF_VAR_environment: ${CI_COMMIT_BRANCH}
   DEPLOY_HASH: ${CI_COMMIT_SHORT_SHA}
   TF_VAR_deploy_hash: ${CI_COMMIT_SHORT_SHA}
+  VUE_APP_COMMIT_SHA: "${CI_COMMIT_SHORT_SHA}"
+  VUE_APP_ENVIRONMENT: "${CI_COMMIT_BRANCH}"
+
 
 workflow:
   rules:
@@ -12,7 +15,13 @@ workflow:
       when: always
     - if: $CI_COMMIT_BRANCH == 'production' && $CI_PIPELINE_SOURCE == 'web'
       when: always
+    - if: $CI_COMMIT_BRANCH == 'staging' && $CI_PIPELINE_SOURCE == 'push'
+      when: always
+    - if: $CI_COMMIT_BRANCH == 'staging' && $CI_PIPELINE_SOURCE == 'web'
+      when: always
     - when: never
+    - when: never
+
 
 stages:
   - Plan
@@ -64,11 +73,21 @@ Build Images:
     - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):${DEPLOY_HASH}"
     - export LATEST_CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):latest"
     - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+      #docker hub
+    - echo $DOCKER_HUB_PASSWORD | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
+
+    - export DOCKER_HUB_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]' | tr '/' '_'):${CI_COMMIT_SHORT_SHA}"
+    - export DOCKER_HUB_LATEST_IMAGE_TAG="$DOCKER_HUB_USERNAME/$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]' | tr '/' '_'):latest"
+    
     - docker pull $LATEST_CHECKOUT_IMAGE_TAG || true
-    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG .
+    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG -t $DOCKER_HUB_IMAGE_TAG -t $DOCKER_HUB_LATEST_IMAGE_TAG .
     # - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
     - docker push $CHECKOUT_IMAGE_TAG
     - docker push $LATEST_CHECKOUT_IMAGE_TAG
+    
+      #docker hub
+    - docker push $DOCKER_HUB_IMAGE_TAG
+    - docker push $DOCKER_HUB_LATEST_IMAGE_TAG
     
     # Nuxt_v2
     # - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address-v2.txt):${DEPLOY_HASH}"
@@ -100,8 +119,11 @@ Terraform Deploy:
   before_script:
     - cd ${TF_ROOT}
   script:
-    - ls -la
+    - apk add python3 py3-pip
+    - pip3 install requests
+    # - python3 clear_cache.py
     - gitlab-terraform apply
+    # - python3 clear_cache.py
   needs:
     - Terraform Plan
     - Build Images

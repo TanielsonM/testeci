@@ -2,6 +2,7 @@
 import { useI18n } from "vue-i18n";
 import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
+import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
@@ -11,11 +12,12 @@ const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
 
-const route = useRoute();
+const route: any = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
 
 const saleId = route.query.s_id;
+const current_query = new URLSearchParams(route.query);
 
 const data = ref({
   sale: {} as Sale,
@@ -37,7 +39,7 @@ if (
 
   const thankYouData = sale.sales[0].product.custom_thank_you_pages || [];
 
-  const customUrl = ref({
+  const customUrl: any = ref({
     PIX: "",
     BOLETO: "",
     PAYPAL: "",
@@ -81,8 +83,6 @@ if (
   }
 
   const closeAction = () => {
-    const current_query = new URLSearchParams(route.query);
-
     if (customUrl.value[sale.sales[0].method]) {
       window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
     } 
@@ -96,7 +96,12 @@ if (
   };
 
   modal.setAction(closeAction);
-  modal.setIframe(sale.sales[0].product.thank_you_page);
+  
+  if (customUrl.value[sale.sales[0].method]) {
+    modal.setIframe(customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`);
+  } else {
+    modal.setIframe(sale.sales[0].product.thank_you_page);
+  }
 } else {
   const chc = route.query.chc;
   if (!!chc) data.value.chc = chc.toString();
@@ -158,11 +163,12 @@ function openPix(id: number) {
         :url="data.sale?.order?.boleto_url ?? sale.boleto_url"
         :id="sale.id.toString()"
         :installments="sale?.installments"
-        :amount="formatMoney(sale.total || sale.amount || sale.product?.amount)"
+        :amount="formatMoney(sale.type === 'SUBSCRIPTION' && sale.offer.no_interest_installments ? sale.offer.amount : sale.total || sale.amount || sale.product?.amount)"
         :last="i + 1 == data.sale.sales.length"
         :index="i"
         :name="sale.product.name"
         :shipping-amount="formatMoney(sale.shipping_amount)"
+        :shipping-selected="JSON.parse(sale.shipping_selected)"
         :order="data.sale.order"
         :status="sale.status"
       />
@@ -210,15 +216,13 @@ function openPix(id: number) {
           :code="sale.qrcode"
           :url="sale.imgQrcode"
           :id="sale.id"
-          :amount="
-            formatMoney(sale.total || sale.amount || sale.product?.amount)
-          "
+          :amount="formatMoney(sale.total || sale.amount || sale.product?.amount)"
           :last="i + 1 == data.sale.sales.length"
           :only-buttons="data.sale.sales.length == 1"
           :sales-length="data.sale.sales.length"
           :created-at="sale.created_at.toString()"
           :shipping-amount="formatMoney(sale.shipping_amount)"
-          :shipping-selected="sale.shipping_selected"
+          :shipping-selected="JSON.parse(sale.shipping_selected)"
           :sales="data.sale.sales"
           :opened="data.pixOpened"
           @openedPixEvent="openPix"
@@ -238,6 +242,9 @@ function openPix(id: number) {
         :name="data.sale.sales[0].product.name"
         :installments="data.sale.sales[0].installments"
         :sales="data.sale.sales"
+        :shipping-amount="data.sale.sales && data.sale.sales.length ? formatMoney(data.sale.sales[0].shipping_amount) : 0"
+        :shipping-selected="data.sale.sales[0].shipping_selected"
+        :only-buttons="data.sale.sales.length == 1"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
@@ -248,6 +255,30 @@ function openPix(id: number) {
             animation="pulse"
             class="col-span-12 lg:col-span-4"
             @click="modal.closeAction"
+          >
+            {{ $t("pg_obrigado.modal.entendido") }}
+          </BaseButton>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container"
+      v-if="data.sale.sales[0].method === 'FREE'"
+    >
+      <ModalFreeInfos
+        :id="data.sale.sales[0].id.toString()"
+        :name="data.sale.sales[0].product.name"
+        :sales="data.sale.sales"
+      />
+
+      <div class="actions mt-12 flex content-end justify-end">
+        <div class="action">
+          <BaseButton
+            color="blue"
+            size="md"
+            animation="pulse"
+            class="col-span-12 lg:col-span-4"
+            @click="modal.closeAtion"
           >
             {{ $t("pg_obrigado.modal.entendido") }}
           </BaseButton>

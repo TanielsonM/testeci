@@ -104,6 +104,14 @@
     "obrigado": "thanks"
   },
   "checkout": {
+    "sell": "Sale",
+    "in": "in",
+    "month": "month",
+    "months": "months",
+    "to_get_cashbash": "to get 100% cashback*",
+    "with_cashback": "Product with Cashback of 100%",
+    "sponsored_by_greenn": "sponsored by Greenn",
+    "guarantee_of_success": "Guarantee of success",
     "captcha": "This site is protected by reCAPTCHA and the Google",
     "captcha2": "Privacy Policy",
     "captcha3": "Terms of Service",
@@ -362,7 +370,8 @@
     "anos": "years",
     "apos_trial": "After evaluation period",
     "vc_pagara": "You will pay",
-    "country_taxs": "Country tax(s)"
+    "country_taxs": "Country tax(s)",
+    "gratis": "Free"
   },
   "pg_obrigado": {
     "pix": {
@@ -425,7 +434,8 @@
       "codigo_transacao": "Transaction Code",
       "id_assinatura": "Subscription ID",
       "frete": "Shipping",
-      "frete_selecionado": "Chosen shipping"
+      "frete_selecionado": "Chosen shipping",
+      "gratis": "Free"
     }
   },
   "locales": {

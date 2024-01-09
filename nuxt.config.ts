@@ -62,6 +62,9 @@ export default defineNuxtConfig({
           "http-equiv": "x-ua-compatible",
           content: "IE=edge",
         },
+        {
+          "data-wd": "{{wd}}",
+        },
       ],
       link: [
         {
@@ -93,9 +96,14 @@ export default defineNuxtConfig({
       CHECKOUT_PAGE: process.env.VUE_CHECKOUT_PAGE,
       HEAVEN_CHECKOUT_PAGE: process.env.VUE_CHECKOUT_HEAVEN_PAGE,
       PAYPAL_CLIENT_ID_NATIONAL: process.env.PAYPAL_CLIENT_ID_NATIONAL,
-      PAYPAL_CLIENT_ID_INTERNATIONAL: process.env.PAYPAL_CLIENT_ID_INTERNATIONAL,
+      PAYPAL_CLIENT_ID_INTERNATIONAL:
+        process.env.PAYPAL_CLIENT_ID_INTERNATIONAL,
       CUSTOM_CHARGES_EXCEPTION: process.env.CUSTOM_CHARGES_EXCEPTION,
-      PORT: process.env.PORT
+      PORT: process.env.PORT,
+      INTERNATIONAL_URL: process.env.INTERNATIONAL_URL,
+      MERCADOPAGO_API_PUBLIC_KEY: process.env.MERCADOPAGO_API_PUBLIC_KEY,
+      VUE_APP_ENVIRONMENT: process.env.VUE_APP_ENVIRONMENT,
+      VUE_APP_COMMIT_SHA: process.env.VUE_APP_COMMIT_SHA,
     },
   },
   i18n: {

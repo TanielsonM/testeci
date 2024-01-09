@@ -8,6 +8,11 @@ const custom_checkout = useCustomCheckoutStore();
 const product = useProductStore();
 const checkout = useCheckoutStore();
 const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
+const greennWrapper = ref(null)
+
+onMounted(() => {
+  custom_checkout.greennWrapper = greennWrapper;
+});
 </script>
 
 <template>
@@ -32,6 +37,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
   </main>
   <main
     v-else
+    ref="greennWrapper" 
     class="flex min-h-screen w-full flex-col items-center gap-10 bg-background"
     :data-theme="product.isValid() ? custom_checkout.theme : 'light'"
     :data-theme_color="
@@ -42,7 +48,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
     <section class="flex w-full max-w-[1240px] justify-center">
       <BaseCard
         class="mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-b-4 border-gray-200 border-b-error px-5 py-10 md:px-20"
-        v-if="!product.isValid()"
+        v-if="!product.isValid() || (product.product.method == 'FREE' && (checkout.allow_free_offers == null || checkout.allow_free_offers === 'DISABLED'))"
       >
         <Icon name="mdi:close-circle" size="120" class="text-error" />
         <h1 class="text-center text-2xl">{{ $t("general.error_message") }}</h1>

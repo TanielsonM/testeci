@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import * as Toast from "vue-toastification";
 
 // Stores
 import { useStepStore } from "@/store/modules/steps";
@@ -7,6 +8,7 @@ import { usePersonalStore } from "@/store/forms/personal";
 import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useCheckoutStore } from "@/store/checkout";
+import { useProductStore } from "~~/store/product";
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
@@ -43,15 +45,31 @@ export const validateFirstStep = async (): Promise<boolean> => {
   const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
     currentCountry.value
   );
+  const stepStore = useStepStore();
+  const { isEmailValid } = storeToRefs(stepStore);
   if (showDocumentInput) {
     const validDocument = await validateDocument.isValid(document.value);
-    return validName && validEmail && validPhone && validDocument;
+    return validName && (validEmail && isEmailValid.value) && validPhone && validDocument;
   }
-
-  return validName && validEmail && validPhone;
+  return validName && (validEmail && isEmailValid.value) && validPhone;
 };
 
 export const validateSecondStep = async (): Promise<boolean> => {
+  const productStore = useProductStore();
+  const checkout = useCheckoutStore();
+  const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
+  let validShippingIntegration = false;
+
+  if((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length) {
+    if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
+      validShippingIntegration = false;
+    } else {
+      validShippingIntegration = true;
+    }
+  } else {
+    validShippingIntegration = true;
+  }
+
   const addressStore = useAddressStore();
   const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 
@@ -59,23 +77,15 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const validStreet = await validateStreet.isValid(charge.value.street);
   const validNumber = await validateNumber.isValid(charge.value.number);
   const validCity = await validateCity.isValid(charge.value.city);
-  const validNeighborhood = await validateNeighborhood.isValid(
-    charge.value.neighborhood
-  );
+  const validNeighborhood = await validateNeighborhood.isValid(charge.value.neighborhood);
   const validState = await validateState.isValid(charge.value.state);
 
   if (!sameAddress.value) {
     const validChargeZip = await validateZip.isValid(shipping.value.zipcode);
-    const validChargeStreet = await validateStreet.isValid(
-      shipping.value.street
-    );
-    const validChargeNumber = await validateNumber.isValid(
-      shipping.value.number
-    );
+    const validChargeStreet = await validateStreet.isValid(shipping.value.street);
+    const validChargeNumber = await validateNumber.isValid(shipping.value.number);
     const validChargeCity = await validateCity.isValid(shipping.value.city);
-    const validChargeNeighborhood = await validateNeighborhood.isValid(
-      shipping.value.neighborhood
-    );
+    const validChargeNeighborhood = await validateNeighborhood.isValid(shipping.value.neighborhood);
     const validChargeState = await validateState.isValid(shipping.value.state);
 
     return (
@@ -90,7 +100,8 @@ export const validateSecondStep = async (): Promise<boolean> => {
       validChargeNumber &&
       validChargeCity &&
       validChargeNeighborhood &&
-      validChargeState
+      validChargeState &&
+      validShippingIntegration
     );
   }
 
@@ -100,7 +111,8 @@ export const validateSecondStep = async (): Promise<boolean> => {
     validNumber &&
     validCity &&
     validNeighborhood &&
-    validState
+    validState &&
+    validShippingIntegration
   );
 };
 
@@ -151,6 +163,32 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
   }
 
+  const stepStore = useStepStore();
+  const { isMobile } = storeToRefs(stepStore);
+  const currentCountry: any = useState("currentCountry");
+  const showDocumentInput = ["BR", "MX", "UY", "AR", "CL"].includes(
+    currentCountry.value
+  );
+  const personalStore = usePersonalStore();
+  const { document } = storeToRefs(personalStore);
+
+  if (isMobile.value && showDocumentInput) {
+    const validDocument = validateDocument.isValidSync(document.value);
+
+    if (["PIX", "BOLETO", "FREE"].includes(checkout.method)) {
+      return validDocument;
+    }
+
+    return (
+      validNameOnCard &&
+      validCardNumber &&
+      validExpiryMonth &&
+      validExpiryYear &&
+      validCvc &&
+      validDocument
+    );
+  }
+
   return (
     validNameOnCard &&
     validCardNumber &&
@@ -169,6 +207,16 @@ export const validateAll = async (): Promise<boolean> => {
   const validStepThree = await validateThristStep();
 
   if (checkout.showAddressStep) {
+    const productStore = useProductStore();
+    const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
+    if(!validStepTwo && ((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length)) {
+      if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
+        const toast = Toast.useToast();
+        toast.error("Esse produto não possui integração para envio");
+        return false;
+      }
+    }
+
     if (
       checkout.method === "CREDIT_CARD" ||
       checkout.method === "TWO_CREDIT_CARDS" || 

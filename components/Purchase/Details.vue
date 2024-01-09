@@ -25,7 +25,7 @@ const {
 } = storeToRefs(checkout);
 const { ticketList, isPresentialEvent } = storeToRefs(preCheckout);
 const { getInstallments } = storeToRefs(installmentsStore);
-const { hasTicketInstallments } = storeToRefs(productStore);
+const { hasTicketInstallments, product } = storeToRefs(productStore);
 
 function formatAmountText(installments = 1) {
   return `${installments}x de ${formatMoney(
@@ -57,7 +57,7 @@ function openGoBackPreCheckoutModal() {
     <!-- Shipping -->
     <section
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
-      v-if="checkout.hasPhysicalProduct"
+      v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
     >
       <span class="infos-title">Frete</span>
       <span
