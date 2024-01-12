@@ -68,7 +68,8 @@ resource "aws_lb_listener_rule" "checkout-https" {
     host_header {
       values = [
         "payfast.greenn.com.br",
-        "payfastdebug.greenn.com.br"
+        "payfastdebug.greenn.com.br",
+        "pay-staging.greenn.com.br"
       ]
     }
   }
