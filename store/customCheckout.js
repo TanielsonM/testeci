@@ -93,10 +93,12 @@ export const useCustomCheckoutStore = defineStore("customCheckout", {
     setJivochat(id = "J0jlVX87X9") {
       const { query } = useRoute();
       if (!!query.b || this.hasJivochatId) {
-        const jivoScript = document.createElement("script");
-        jivoScript.src = `//code-eu1.jivosite.com/widget/${id}`;
-        jivoScript.async = true;
-        document.head.appendChild(jivoScript);
+        if (process.client) {
+          const jivoScript = document.createElement("script");
+          jivoScript.src = `//code-eu1.jivosite.com/widget/${id}`;
+          jivoScript.async = true;
+          document.head.appendChild(jivoScript);
+        }
       }
     },
     setNotifications(interval, howGet, quantity, type) {
