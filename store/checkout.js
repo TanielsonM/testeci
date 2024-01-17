@@ -712,7 +712,7 @@ export const useCheckoutStore = defineStore("checkout", {
               .create(`envios/calculate/${this.product_id}`, {
                 shipping_address_zip_code: zip
               })
-              .then(res => {
+              .then((res) => {
                 this.hasIntegrationWithGreennEnvios = true;
                 return res;
               })
@@ -763,7 +763,7 @@ export const useCheckoutStore = defineStore("checkout", {
             .create(`envios/calculate/${bump.id}`, {
               shipping_address_zip_code: zip,
             })
-            .then(res => {
+            .then((res) => {
               bump.hasIntegrationWithGreennEnvios = true;
               return res;
             })
@@ -826,8 +826,8 @@ export const useCheckoutStore = defineStore("checkout", {
         service_name: shipping.name,
         old_amount: amountStore.getAmount,
         amount: +shipping.price,
-        frete: shipping
-      }
+        frete: shipping,
+      };
     },
     redirectOfferPanel(product, country) {
       if(product.seller.is_heaven && product.seller.is_greenn && product.offer_redirect_id) {
