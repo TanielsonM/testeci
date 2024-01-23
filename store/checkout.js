@@ -335,6 +335,11 @@ export const useCheckoutStore = defineStore("checkout", {
                 });
               }
 
+              console.log(
+                response,
+                response.batches
+              );
+
               preCheckout.setBatches(response.batches);
             }
 
@@ -578,7 +583,6 @@ export const useCheckoutStore = defineStore("checkout", {
         .map((item) => item.id)
         .indexOf(product.id);
 
-
       if (index === -1) {
         amountStore.setAmount(
           !!product?.custom_charges?.length
@@ -605,12 +609,12 @@ export const useCheckoutStore = defineStore("checkout", {
       }
       this.product_list.splice(index, 1);
       amountStore.setAmount(
-        !!product.custom_charges.length
+        !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
       amountStore.setOriginalAmount(
-        !!product.custom_charges.length
+        !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
