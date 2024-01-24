@@ -32,7 +32,7 @@ const {
 } = storeToRefs(checkout);
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
-const { error_message, isPaymentLoading } = storeToRefs(payment);
+const { error_message, isPaymentLoading, isAlreadyClicked } = storeToRefs(payment);
 const { 
   isOneStep, 
   custom_checkout,
@@ -42,6 +42,7 @@ const {
 // Refs
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
+
 
 // Computeds
 const tabs = computed(() => {
@@ -226,7 +227,10 @@ function closeModal() {
 }
 
 async function callPayment() {
+  payment.setClicked(true);
+
   payment.setPaymentLoading(true);
+
   if (captchaEnabled.value) {
     //não colocar await pois nenhuma dessa funções retornam promises
     //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
@@ -235,6 +239,7 @@ async function callPayment() {
   } else {
     await payment.payment(locale.value).finally(() => {
       payment.setPaymentLoading(false);
+      payment.setClicked(false);
     })
   }
 }
@@ -436,6 +441,7 @@ onMounted(() => {
                 v-if="method !== 'PAYPAL'"
                 class="my-7"
                 :loading="isPaymentLoading"
+                :disabled="isAlreadyClicked"
               >
                 <span class="text-[15px] font-semibold">
                   {{
@@ -487,6 +493,7 @@ onMounted(() => {
             @click="callPayment"
             class="my-7"
             :loading="isPaymentLoading"
+            :disabled="isAlreadyClicked"
           >
             <span class="text-[15px] font-semibold">
               {{
