@@ -37,9 +37,10 @@ resource "aws_ecs_service" "node" {
 
 
 resource "aws_appautoscaling_target" "node_target" {
-  max_capacity       = 20
+  max_capacity       = 20 #normal
   min_capacity       = 2 #normal
-  # min_capacity       = 8 #lancamento
+  # max_capacity       = 100 #lancamento
+  # min_capacity       = 40 #lancamento
   resource_id        = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
@@ -90,13 +91,13 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_10" {
 
 resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_40" {
   count               = var.environment == "production" ? 1 : 0
-  name                = "scheduled_scaling_min_10"
+  name                = "scheduled_scaling_min_40"
   service_namespace   = "ecs"
   scalable_dimension  = "ecs:service:DesiredCount"
   resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_target_action {
-    min_capacity      = 40
-    max_capacity      = 100
+    min_capacity      = 10
+    max_capacity      = 50
   }
   schedule            = "cron(30 21 * * ?)"
 }
