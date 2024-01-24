@@ -7,7 +7,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
     batches: [],
     reservations: [],
-    loadingReservation: false
+    loadingReservation: false,
   }),
   getters: {
     getBatches: (state) => state.batches,

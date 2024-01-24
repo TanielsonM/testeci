@@ -3,6 +3,7 @@ import { useCustomCheckoutStore } from "@/store/customCheckout";
 import { formatMoney } from "~~/utils/money";
 import { useInstallmentsStore } from "./modules/installments";
 import { defineStore } from "pinia";
+import { useAmountStore } from "./modules/amount";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
@@ -108,6 +109,8 @@ export const useProductStore = defineStore("product", {
   },
   actions: {
     setProduct(product) {
+     const amountStore = useAmountStore();
+
       this.product = product;
 
       if (this.product.status_product === "CHANGED")

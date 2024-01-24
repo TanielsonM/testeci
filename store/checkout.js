@@ -93,6 +93,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasNewBump: (state) => state.url.fullPath.includes("b_id_1"),
     hasCoupon: (state) => state.url.query?.cupom ?? "",
     hasCustomCheckout: (state) => state.url.query?.ch_id,
+    hasBatches: (state) => state.url.query?.batchs,
     hasDocument: (state) => state.url.query?.document,
     hasDebugPixel: (state) => state.url.query?.debugPixel === "true",
     hasEmail: (state) => state.url.query?.em,
@@ -201,7 +202,6 @@ export const useCheckoutStore = defineStore("checkout", {
         await customCheckout.getCustomCheckout();
       }
       const res = await this.getProduct(this.product_id, this.product_offer);
-
       /* Initial configs */
       this.setCoupon(true);
       if (this.hasBump) this.getBumps();
@@ -230,7 +230,13 @@ export const useCheckoutStore = defineStore("checkout", {
       if (offer) {
         url += `/offer/${offer}`;
       }
-
+      // Check if has batches
+      // const batches = JSON.parse(this.hasBatches?.length)
+      // const array2 = JSON.parse(this.hasBatches?.length);
+      console.log('batches          ',url,`/batches/${this.hasBatches}`);
+      // if(this.hasBatches){
+      //   url += `/batches/${this.hasBatches}`;
+      // }
       /* Set country in query */
       const query = {
         country: this.selectedCountry,
