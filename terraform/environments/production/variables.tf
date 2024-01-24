@@ -17,6 +17,3 @@ variable "host_lb" {
   type        = string
   description = "Host do loadbalancer"
 }
-
-
- 

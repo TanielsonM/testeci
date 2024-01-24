@@ -69,11 +69,6 @@ Build Images:
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin latest
     - export TRIVY_TS=$(date "+%Y-%m-%d-%H-%M-%S")
   script:
-    - echo "env before replace:"
-    - cat .env
-    - cp $ENV_FILE .env
-    - echo "env after replace:"
-    - cat .env
     # Nuxt
     - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):${DEPLOY_HASH}"
     - export LATEST_CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address.txt):latest"
