@@ -1,6 +1,6 @@
 locals {
-  cpu    = 2048
-  memory = 4096
+  cpu    = 1024
+  memory = 2048
 }
 
 resource "aws_ecs_task_definition" "node" {
