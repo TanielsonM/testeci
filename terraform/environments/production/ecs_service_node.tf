@@ -57,7 +57,7 @@ resource "aws_appautoscaling_policy" "node_cpu" {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value       = 60
+    target_value       = 15
     scale_in_cooldown  = 60
     scale_out_cooldown = 120
   }
