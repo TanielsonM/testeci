@@ -207,10 +207,7 @@ export const useCheckoutStore = defineStore("checkout", {
       this.setCoupon(true);
       if (this.hasBatches) this.getBatches()
       if (this.hasBump) this.getBumps();
-      const res = 
-        !this.getBatcheList?.length ?
-          await this.getProduct(this.product_id, this.product_offer) :
-            await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
+      const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       this.setLoading();
 
       if(res?.batches?.length) return res.batches;
@@ -238,7 +235,7 @@ export const useCheckoutStore = defineStore("checkout", {
         url += `/offer/${offer}`;
       }
       // Check if has batches
-      if(batches){
+      if(batches?.length){
         url += `/batches/[${batches}]`;
       }
       /* Set country in query */
@@ -446,12 +443,8 @@ export const useCheckoutStore = defineStore("checkout", {
       });
 
       if (bumpsWithOffers.length) {
-        const forceGetListBatches = 
-          !this.getBatcheList?.length ?
-           this.getBatches() :
-            this.getBatcheList
         this.products_client_statistics = [];
-        bumpsWithOffers.forEach((bump) => {
+        bumpsWithOffers.forEach((bump,index) => {
           if (this.product_id !== bump.product_id)
             this.getProduct(
               bump.product_id,
@@ -459,7 +452,6 @@ export const useCheckoutStore = defineStore("checkout", {
               true,
               {},
               Number(bump.bump_id),
-              forceGetListBatches
             );
         });
       }

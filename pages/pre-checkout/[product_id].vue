@@ -18,7 +18,8 @@ if(batches?.length) preCheckout.setBatches(batches);
 
 function byTickets() {
   expiredSession.setHaveFinished(false);
-  navigateTo(`/${route.params?.product_id}`);
+  const queryParams = new URLSearchParams(route.query).toString();
+  navigateTo(`/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
 }
 
 onMounted(() => {
