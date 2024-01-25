@@ -2,7 +2,7 @@ resource "aws_ecs_service" "node" {
   name                   = "node"
   cluster                = aws_ecs_cluster.node.id
   task_definition        = aws_ecs_task_definition.node.arn
-  desired_count          = 2
+  desired_count          = 10
   launch_type            = "FARGATE"
   enable_execute_command = true
 
@@ -57,7 +57,7 @@ resource "aws_appautoscaling_policy" "node_cpu" {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value       = 60
+    target_value       = 15
     scale_in_cooldown  = 60
     scale_out_cooldown = 120
   }
@@ -70,8 +70,10 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action" {
   scalable_dimension  = "ecs:service:DesiredCount"
   resource_id         = "service/${aws_ecs_cluster.node.name}/${aws_ecs_service.node.name}"
   scalable_target_action {
-    min_capacity      = 2
-    max_capacity      = 20
+    # min_capacity      = 2 #normal
+    # max_capacity      = 20 #normal
+    min_capacity      = 10 #lançamento
+    max_capacity      = 50 #lançamento
   }
   schedule            = "cron(0 13,03 * * ?)"
 }
