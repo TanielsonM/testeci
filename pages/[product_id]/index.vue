@@ -222,13 +222,14 @@ watch(sameAddress, (val) => {
 
 // Functions
 function closeModal() {
+  payment.setClicked(false);
   alert_modal.value = false;
   error_message.value = "";
 }
 
 async function callPayment() {
+  
   payment.setClicked(true);
-
   payment.setPaymentLoading(true);
 
   if (captchaEnabled.value) {
