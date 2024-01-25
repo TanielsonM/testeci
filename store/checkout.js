@@ -67,6 +67,7 @@ export const useCheckoutStore = defineStore("checkout", {
      */
     order_bumps: [],
     bump_list: [],
+    batches_list: [],
     /* Payment details */
     checkoutPayment: null,
     // Captcha
@@ -93,7 +94,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasNewBump: (state) => state.url.fullPath.includes("b_id_1"),
     hasCoupon: (state) => state.url.query?.cupom ?? "",
     hasCustomCheckout: (state) => state.url.query?.ch_id,
-    hasBatches: (state) => state.url.query?.batchs,
+    hasBatches: (state) => state.url.fullPath.includes("bt_id"),
     hasDocument: (state) => state.url.query?.document,
     hasDebugPixel: (state) => state.url.query?.debugPixel === "true",
     hasEmail: (state) => state.url.query?.em,
@@ -154,6 +155,7 @@ export const useCheckoutStore = defineStore("checkout", {
       return state.product_list.some((product) => !!product.is_checkout_address);
     },
     getBumpList: (state) => state.bump_list,
+    getBatcheList:(state) => state.batches_list,
     getBumpsWithShippingFee(state) {
       let filter = state.bump_list.filter(
         (bump) =>
@@ -201,10 +203,14 @@ export const useCheckoutStore = defineStore("checkout", {
         const customCheckout = useCustomCheckoutStore();
         await customCheckout.getCustomCheckout();
       }
-      const res = await this.getProduct(this.product_id, this.product_offer);
       /* Initial configs */
       this.setCoupon(true);
+      if (this.hasBatches) this.getBatches()
       if (this.hasBump) this.getBumps();
+      const res = 
+        !this.getBatcheList?.length ?
+          await this.getProduct(this.product_id, this.product_offer) :
+            await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       this.setLoading();
 
       if(res?.batches?.length) return res.batches;
@@ -215,7 +221,8 @@ export const useCheckoutStore = defineStore("checkout", {
     setAllowFreeOffers(allow_free_offers){
       this.allow_free_offers = allow_free_offers
     },
-    async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
+    async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0 , batches = null) {
+
       const productStore = useProductStore();
       const { product, isValid } = storeToRefs(productStore);
       const { setProduct } = productStore;
@@ -231,17 +238,13 @@ export const useCheckoutStore = defineStore("checkout", {
         url += `/offer/${offer}`;
       }
       // Check if has batches
-      // const batches = JSON.parse(this.hasBatches?.length)
-      // const array2 = JSON.parse(this.hasBatches?.length);
-console.log('batches          ',url,`/batches/${this.hasBatches}`);
-      // if(this.hasBatches){
-      //   url += `/batches/${this.hasBatches}`;
-      // }
+      if(batches){
+        url += `/batches/[${batches}]`;
+      }
       /* Set country in query */
       const query = {
         country: this.selectedCountry,
       };
-
       /* Call api to get product */
       try {
         return await useApi()
@@ -341,11 +344,6 @@ console.log('batches          ',url,`/batches/${this.hasBatches}`);
                 });
               }
 
-              console.log(
-                response,
-                response.batches
-              );
-
               preCheckout.setBatches(response.batches);
             }
 
@@ -381,6 +379,28 @@ console.log('batches          ',url,`/batches/${this.hasBatches}`);
       } finally {
         this.coupon.loading = false;
       }
+    },
+    async getBatches() {
+      this.batches_list = [];
+      // parse apenas dos params
+      let searchParams = new URLSearchParams(this.url.query);
+      // instancia o array final
+      let batchesWithOffers = [];
+      // regex para pegar ids dos batches
+      let batcheRegex = new RegExp("(bt_id_)(\\d*$)", "i");
+      // passamos uma vez apenas pegando o id dos lotes
+      searchParams.forEach((value, key) => {
+        let matches = key.match(batcheRegex);
+        console.log('matchesmatchesmatches', matches)
+        if (matches) {
+          // caso esteja repetido, ignoramos
+          if (!batchesWithOffers.find((item) => item.batche_id === value)) {
+            // setamos o id do lote
+            batchesWithOffers.push( value );
+          }
+        }
+      });
+      this.batches_list = batchesWithOffers;
     },
     async getBumps() {
       if (!this.hasNewBump) {
@@ -426,6 +446,10 @@ console.log('batches          ',url,`/batches/${this.hasBatches}`);
       });
 
       if (bumpsWithOffers.length) {
+        const forceGetListBatches = 
+          !this.getBatcheList?.length ?
+           this.getBatches() :
+            this.getBatcheList
         this.products_client_statistics = [];
         bumpsWithOffers.forEach((bump) => {
           if (this.product_id !== bump.product_id)
@@ -434,7 +458,8 @@ console.log('batches          ',url,`/batches/${this.hasBatches}`);
               bump.offer_hash,
               true,
               {},
-              Number(bump.bump_id)
+              Number(bump.bump_id),
+              forceGetListBatches
             );
         });
       }
