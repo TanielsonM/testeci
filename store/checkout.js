@@ -199,12 +199,12 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      if (!!this.hasCustomCheckout) {
-        const customCheckout = useCustomCheckoutStore();
-        await customCheckout.getCustomCheckout();
-      }
+      // if (!!this.hasCustomCheckout) {
+      //   const customCheckout = useCustomCheckoutStore();
+      //   await customCheckout.getCustomCheckout();
+      // }
       /* Initial configs */
-      this.setCoupon(true);
+      await this.setCoupon(true);
       if (this.hasBatches) this.getBatches()
       if (this.hasBump) this.getBumps();
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
@@ -388,7 +388,6 @@ export const useCheckoutStore = defineStore("checkout", {
       // passamos uma vez apenas pegando o id dos lotes
       searchParams.forEach((value, key) => {
         let matches = key.match(batcheRegex);
-        console.log('matchesmatchesmatches', matches)
         if (matches) {
           // caso esteja repetido, ignoramos
           if (!batchesWithOffers.find((item) => item.batche_id === value)) {
@@ -528,6 +527,9 @@ export const useCheckoutStore = defineStore("checkout", {
             this.coupon.error = false;
             this.coupon.applied = true;
             this.coupon.is_valid = true;
+            console.log('prodStore.amount',prodStore.amount)
+            console.log('getCoupon.amount',amount)
+            console.log('coupons ',this.coupon);
           })
           .catch((error) => {
             this.coupon = {

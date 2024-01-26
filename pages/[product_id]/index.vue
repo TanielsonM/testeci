@@ -191,6 +191,7 @@ onMounted(() => {
     if(product?.value?.product_type_id === 3) {
       if(getReservations?.value?.length) {
         window.addEventListener('beforeunload', showUnloadAlert);
+        checkout.setCoupon(true);
       } else {
         const route = useRoute();
         const queryParams = new URLSearchParams(route.query).toString();
