@@ -41,66 +41,77 @@ useHead({
   ],
 });
 
+const mountButton = () => {
+  const amountStore = useAmountStore();
+  const { getAmount } = storeToRefs(amountStore);
+  window.paypal
+    .Buttons({
+      locale: "pt_BR",
+      style: {
+        size: "responsive",
+        color: "black",
+        label: "buynow",
+        branding: true,
+      },
+      onClick: (data, actions) => {
+        actions.reject();
+        return actions.resolve();
+      },
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          purchase_units: [
+            {
+              description: productName.value,
+              amount: {
+                value: coupon.value.applied
+                ? getAmount.value
+                : checkoutPayment.value.paypal.amount,
+                currency_code: checkoutPayment.value.paypal.currency,
+              },
+              reference_id: JSON.stringify({
+                product_id: product_id.value,
+                affiliate_id: hasAffiliateId.value || null,
+                seller_id: seller_id.value,
+                offer_hash: product_offer.value || null,
+                // rate: this.rate.token,
+                country: selectedCountry.value,
+                email: email.value,
+              }),
+            },
+          ],
+          application_context: {
+            shipping_preference: "NO_SHIPPING",
+          },
+        });
+      },
+      onApprove: async (data, actions) => {
+        await actions.order.capture().then(async function (details) {
+          paypal_details.value = details;
+          if (captchaEnabled.value) {
+            await window.grecaptcha.execute();
+          } else {
+            paymentStore.payment(locale.value);
+          }
+        });
+      },
+      onError: (err) => {
+        paymentStore.validateError("PayPal");
+      },
+    })
+    .render(paypal.value);
+}
+const verifyIfPaypalExist = () => {
+  if (window.paypal) {
+    mountButton();
+  } else {
+    setTimeout(() => verifyIfPaypalExist(), 300)
+  }
+}
+
 onMounted(async () => {
   setTimeout(() => {
     if (process.client) {
-      const amountStore = useAmountStore();
-      const { getAmount } = storeToRefs(amountStore);
-      window.paypal
-        .Buttons({
-          locale: "pt_BR",
-          style: {
-            size: "responsive",
-            color: "black",
-            label: "buynow",
-            branding: true,
-          },
-          onClick: (data, actions) => {
-            actions.reject();
-            return actions.resolve();
-          },
-          createOrder: (data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  description: productName.value,
-                  amount: {
-                    value: coupon.value.applied
-                    ? getAmount.value
-                    : checkoutPayment.value.paypal.amount,
-                    currency_code: checkoutPayment.value.paypal.currency,
-                  },
-                  reference_id: JSON.stringify({
-                    product_id: product_id.value,
-                    affiliate_id: hasAffiliateId.value || null,
-                    seller_id: seller_id.value,
-                    offer_hash: product_offer.value || null,
-                    // rate: this.rate.token,
-                    country: selectedCountry.value,
-                    email: email.value,
-                  }),
-                },
-              ],
-              application_context: {
-                shipping_preference: "NO_SHIPPING",
-              },
-            });
-          },
-          onApprove: async (data, actions) => {
-            await actions.order.capture().then(async function (details) {
-              paypal_details.value = details;
-              if (captchaEnabled.value) {
-                await window.grecaptcha.execute();
-              } else {
-                paymentStore.payment(locale.value);
-              }
-            });
-          },
-          onError: (err) => {
-            paymentStore.validateError("PayPal");
-          },
-        })
-        .render(paypal.value);
+      verifyIfPaypalExist();
     }
   }, 300);
 });
