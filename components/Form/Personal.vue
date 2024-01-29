@@ -148,6 +148,7 @@ onMounted(() => {
     </BaseInput>
 
     <BaseInput
+      type="email"
       class="col-span-12"
       @change="validateEmailWithVeeValidate(validateField)"
       @blur="updateLead(true)"
