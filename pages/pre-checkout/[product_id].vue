@@ -15,6 +15,7 @@ const batches = await checkout.init();
 const preCheckout = usePreCheckoutStore();
 if(batches?.length) preCheckout.setBatches(batches);
 
+const hasReservations = preCheckout.$state
 
 function byTickets() {
   expiredSession.setHaveFinished(false);
@@ -91,10 +92,10 @@ onBeforeUnmount(() => {
         <BatchList />
         <div class="flex flex-col justify-between items-start mb-12 md:flex-row md:items-center">
           <BatchTotal />
-          <div class="w-full md:w-fit">
+          <div class="w-full md:w-fit" :key="hasReservations">
             <BaseButton
               color="primary"
-              :disabled="!product_list?.length"
+              :disabled="!hasReservations.reservations.length"
               @click="byTickets"
             >
               Comprar ingressos
