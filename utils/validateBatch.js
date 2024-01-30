@@ -86,6 +86,8 @@ const goBackToPreCheckout = function() {
     });
   });
   preCheckout.setBatches(batchs);
+  const checkout = useCheckoutStore();
+  checkout.setCoupon(false, true)
   const route = useRoute();
   const queryParams = new URLSearchParams(route.query).toString();
   navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
