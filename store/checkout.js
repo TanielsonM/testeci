@@ -80,7 +80,8 @@ export const useCheckoutStore = defineStore("checkout", {
     // Paypal details
     paypal_details: {},
     allow_free_offers : null,
-    hasIntegrationWithGreennEnvios: false
+    hasIntegrationWithGreennEnvios: false,
+    isCreditCard: false
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -175,7 +176,8 @@ export const useCheckoutStore = defineStore("checkout", {
         );
       };
     },
-    getShippingSelected: (state) => state.shipping_selected
+    getShippingSelected: (state) => state.shipping_selected,
+    getIsCreditCard: (state) => state.isCreditCard
   },
   actions: {
     async init(byChangeCountry = false) {
@@ -250,6 +252,10 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           })
           .then(async (response) => {
+            if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
+              this.isCreditCard = true
+            }
+
             if(this.global_settings.country !== 'BR') {
               this.redirectOfferPanel(response?.data, this.global_settings.country)
             }

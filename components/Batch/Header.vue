@@ -2,9 +2,11 @@
 import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useAmountStore } from "~~/store/modules/amount";
+import { useCheckoutStore } from "~~/store/checkout";
 
 const custom_checkout = useCustomCheckoutStore();
 const amountStore = useAmountStore();
+const checkout = useCheckoutStore();
 const { amount } = storeToRefs(amountStore);
 const theme = custom_checkout.theme;
 </script>
@@ -12,6 +14,7 @@ const theme = custom_checkout.theme;
 <template>
   <div class="block justify-between items-center mb-5 sm:flex">
     <div
+      v-if="checkout.getIsCreditCard"
       class="flex items-center px-3 bg-[#F7F7F7] rounded-lg w-fit mb-3 sm:mb-0"
       :class="{
         'bg-[#F7F7F7]': theme === 'light',
