@@ -113,7 +113,9 @@ const getSmallerAmount = function (tickets) {
           <div class="ml-5" :class="{'line-through': !haveAvailableTickets(batch)}">
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ ticket?.name }}</h5>
             <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(ticket?.amount) }} + taxas</p>
-            <small class="text-[14px] font-[400] text-main-color">em até {{ ticket?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch, ticket?.hash)) }}</small>
+            <small v-if="ticket?.selected_tickets > 0" class="text-[14px] font-[400] text-main-color">
+              em até {{ ticket?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch, ticket?.hash)) }}
+            </small>
           </div>
           <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)" class="flex items-center mr-5">
             <template v-if="!loadingReservation">
