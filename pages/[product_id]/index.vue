@@ -39,7 +39,7 @@ const {
 } = storeToRefs(checkout);
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
-const { error_message, isPaymentLoading, isAlreadyClicked } = storeToRefs(payment);
+const { error_message, isPaymentLoading } = storeToRefs(payment);
 const { 
   isOneStep, 
   custom_checkout,
@@ -247,14 +247,13 @@ watch(sameAddress, (val) => {
 
 // Functions
 function closeModal() {
-  payment.setClicked(false);
+  payment.setPaymentLoading(false);
   alert_modal.value = false;
   error_message.value = "";
 }
 
 async function callPayment() {
   
-  payment.setClicked(true);
   payment.setPaymentLoading(true);
 
   if (captchaEnabled.value) {
@@ -263,10 +262,11 @@ async function callPayment() {
     window.grecaptcha.reset();
     window.grecaptcha.execute();
   } else {
-    await payment.payment(locale.value).finally(() => {
-      payment.setPaymentLoading(false);
-      payment.setClicked(false);
-    })
+    if(isPaymentLoading.value === true) {
+      await payment.payment(locale.value).finally(() => {
+        payment.setPaymentLoading(false);
+      })
+    }
   }
 }
 
@@ -466,7 +466,7 @@ onMounted(() => {
                 v-if="method !== 'PAYPAL'"
                 class="my-7"
                 :loading="isPaymentLoading"
-                :disabled="isAlreadyClicked"
+                :disabled="isPaymentLoading"
               >
                 <span class="text-[15px] font-semibold">
                   {{
@@ -518,7 +518,7 @@ onMounted(() => {
             @click="callPayment"
             class="my-7"
             :loading="isPaymentLoading"
-            :disabled="isAlreadyClicked"
+            :disabled="isPaymentLoading"
           >
             <span class="text-[15px] font-semibold">
               {{

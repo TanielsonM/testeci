@@ -70,16 +70,11 @@ export const usePaymentStore = defineStore("Payment", {
     hasSent: false,
     // Payment button loading
     loading: false,
-    clicked: false,
   }),
   getters: {
     isPaymentLoading: state => state.loading,
-    isAlreadyClicked: state => state.clicked
   },
   actions: {
-    setClicked(value = false) {
-      this.clicked = value;
-    },
     setPaymentLoading(value = false) {
       this.loading = value;
     },
@@ -88,7 +83,6 @@ export const usePaymentStore = defineStore("Payment", {
       if (!allValid) {
         this.hasSent = true;
         this.setPaymentLoading(false);
-        this.setClicked(false);
         return;
       }
 
@@ -412,7 +406,6 @@ export const usePaymentStore = defineStore("Payment", {
         .catch(err => {
           console.error(err)
           checkoutStore.setLoading(false);
-          this.setClicked(false);
           this.setPaymentLoading(false);
         });
     },
