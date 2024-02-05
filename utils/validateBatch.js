@@ -81,6 +81,7 @@ const goBackToPreCheckout = function() {
   const { getBatches } = storeToRefs(preCheckout);
   let batchs = getBatches.value;
   batchs.forEach(batch => {
+    batch.selectedt_batch_tickets = 0;
     batch.tickets.forEach(ticket => {
       ticket.selected_tickets = 0;
     });

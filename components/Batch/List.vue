@@ -97,12 +97,12 @@ const getSmallerAmount = function (tickets) {
             </template>
           </p>
         </div>
-        <div v-if="!dependsOnAnotherBatch(batch) && saleHasStarted(batch)" class="mr-5 ml-5 mt-5 sm:ml-0">
+        <div v-if="!dependsOnAnotherBatch(batch) && saleHasStarted(batch) && batch?.selectedt_batch_tickets > 0" class="mr-5 ml-5 mt-5 sm:ml-0">
           <span class="text-main-color font-bold px-2 py-1 text-[18px] bg-main-transparent rounded-full">
-            {{ batch?.available_tickets }}
+            {{ batch?.selectedt_batch_tickets }}
           </span>
         </div>
-        <div v-else class="mr-5 ml-5 mt-5 sm:ml-0">
+        <div v-else-if="(!dependsOnAnotherBatch(batch) && !saleHasStarted(batch) || dependsOnAnotherBatch(batch) && saleHasStarted(batch))" class="mr-5 ml-5 mt-5 sm:ml-0">
           <div class="text-center text-[12px] font-[600] text-main-color px-3 py-2 bg-main-transparent rounded-[5px]">
             Disponível em breve
           </div>
