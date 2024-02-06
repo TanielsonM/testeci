@@ -88,8 +88,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         this.reservations.splice(index, 1);
       }
     },
-    setLoadingReservation(value) {
-      this.loadingReservation = value;
+    setLoadingReservation(value, ticket) {
+      ticket.load = value;
     },
     someTotalTicket(array){
       let totalSelectedTickets = 0;
@@ -101,7 +101,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         return totalSelectedTickets;
     },
     async addTicket(batch_group, hash) {
-      const batch = this.batches.find(x => x.id === batch_group.id);
+      let batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
       if(haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
@@ -114,7 +114,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         //   localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // } else {
           // Cria nova reserva do ingresso do lote selecionado
-          await this.createReservation(ticket.id);
+          await this.createReservation(ticket.id, ticket);
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // }
       }
@@ -131,7 +131,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         // if(ticket.selected_tickets === 0) {
           // Deleta a reserva do lote existente, já que foram removidos todos ingressos
           const reservation = this.reservations.find(x => x.offer_id === ticket.id);
-          await this.deleteReservation(reservation);
+          await this.deleteReservation(reservation, ticket);
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // } else {
         //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
@@ -140,12 +140,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         // }
       }
     },
-    async createReservation(offer_id) {
+    async createReservation(offer_id, ticket) {
       const start = new Date();
       const end = new Date(start.getTime());
       end.setMinutes(end.getMinutes() + 10);
       const payload = { start, end, offer_id, quantity: 1 };
-      this.setLoadingReservation(true);
+      this.setLoadingReservation(true, ticket);
       try {
         const res = await useApi().create('/event/reservation', payload);
         this.addReservation({ ...res, offer_id });
@@ -155,13 +155,13 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         console.error(err);
         return err;
       } finally {
-        this.setLoadingReservation(false);
+        this.setLoadingReservation(false, ticket);
       }
     },
     async putReservation(ticket) {
       const reservation = this.reservations.find(x => x.offer_id === ticket.id);
       const payload = { ...reservation, quantity: ticket.selected_tickets };
-      this.setLoadingReservation(true);
+      this.setLoadingReservation(true, ticket);
       try {
         const res = await useApi().update(`/event/reservation/${payload.token}`, payload);
         this.updateReservation({ ...res, offer_id: ticket.id });
@@ -171,11 +171,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         console.error(err);
         return err;
       } finally {
-        this.setLoadingReservation(false);
+        this.setLoadingReservation(false, ticket);
       }
     },
-    async deleteReservation(reservation) {
-      this.setLoadingReservation(true);
+    async deleteReservation(reservation, ticket) {
+      this.setLoadingReservation(true, ticket);
       try {
         const res = await useApi().remove(`/event/reservation/${reservation.token}`);
         if(this.reservations?.length) this.removeReservation(reservation);
@@ -189,7 +189,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         console.error(err)
         return err;
       } finally {
-        this.setLoadingReservation(false);
+        this.setLoadingReservation(false, ticket);
       }
     }
   }

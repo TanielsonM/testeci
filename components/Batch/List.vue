@@ -118,7 +118,7 @@ const getSmallerAmount = function (tickets) {
             </small>
           </div>
           <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)" class="flex items-center mr-5">
-            <template v-if="!loadingReservation">
+            <template v-if="!ticket.load">
               <Icon
                 name="mdi:minus-circle-outline"
                 size="20"
