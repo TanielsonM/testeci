@@ -117,6 +117,11 @@
     "captcha3": "Terms of Service",
     "captcha4": "and",
     "captcha5": "apply",
+    "modal": {
+      "text_expiration": "Attention, your session has expired",
+      "text_loading": "You will need to reload the page to continue purchasing this event.",
+      "text_button": "Reload the page"
+    },
     "dados_pessoais": {
       "title": "Personal Data",
       "nome": "Full Name",

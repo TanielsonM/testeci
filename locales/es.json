@@ -117,6 +117,11 @@
     "captcha3": "Términos de servicio",
     "captcha4": "y",
     "captcha5": "aplicar",
+    "modal": {
+      "text_expiration": "Atención, tu sesión ha caducado",
+      "text_loading": "Deberá recargar la página para continuar comprando este evento.",
+      "text_button": "Recargar la pagina"
+    },
     "dados_pessoais": {
       "title": "Datos personales",
       "nome": "Nombre completo",

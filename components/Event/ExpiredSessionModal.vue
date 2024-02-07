@@ -1,6 +1,7 @@
 <script setup>
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
 import { showUnloadAlert, goBackToPreCheckout } from "@/utils/validateBatch";
+import moment from "moment";
 
 const expiredSession = useExpiredSessionStore();
 const route = useRoute();
@@ -19,19 +20,23 @@ function closeModal() {
 </script>
 
 <template>
-  <BaseModal :title="product.name" :is-open="expiredSession.getHaveFinished" @close="closeModal">
+  <BaseModal :title="product.name + ' | ' + moment(product.start_date).format('MM') + ' de ' + moment(product.start_date).format('MMM').toUpperCase().charAt(0) + moment(product.start_date).format('MMM').slice(1)" :is-open="expiredSession.getHaveFinished" @close="closeModal" class="w-1/2">
     <section class="flex w-full max-w-[400px] flex-col gap-5">
-      <h6 class="text-[15px] font-semibold text-txt-color">
-        Sessão expirada
-      </h6>
-      <p class="text-txt-color text-justify">A sua sessão expirou, favor feche esse modal ou recarregue a página.</p>
-      <section class="mt-10 flex w-full justify-end">
+      <p class="flex justify-center items-center my-4">
+        <img
+          src="@/assets/icons/warning.svg"
+          alt="warning"
+        />
+      </p>
+      <p class="text-txt-color text-center font-bold">{{ $t("checkout.modal.text_expiration") }}</p>
+      <p class="text-center text-gray-500">{{ $t("checkout.modal.text_loading") }}</p>
+      <section class="mt-10 flex w-full">
         <BaseButton
-          color="blue"
+          color="light"
           class="w-[40%] text-txt-color"
           @click="closeModal"
         >
-          {{ $t("checkout.dados_pessoais.btn_error") }}
+          {{ $t("checkout.modal.text_button") }}
         </BaseButton>
       </section>
     </section>
