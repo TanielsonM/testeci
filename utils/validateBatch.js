@@ -2,6 +2,7 @@ import moment from "moment";
 import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
+import { useAmountStore } from "~~/store/modules/amount";
 
 const saleHasStarted = function (batch) {
   if(batch.release_type && batch.release_type === 'fixed_date') {
@@ -80,12 +81,15 @@ const goBackToPreCheckout = function() {
   const preCheckout = usePreCheckoutStore();
   const { getBatches } = storeToRefs(preCheckout);
   let batchs = getBatches.value;
+  const amountStore = useAmountStore();
+
   batchs.forEach(batch => {
     batch.selectedt_batch_tickets = 0;
     batch.tickets.forEach(ticket => {
       ticket.selected_tickets = 0;
     });
   });
+  amountStore.reset();
   preCheckout.setBatches(batchs);
   const checkout = useCheckoutStore();
   checkout.setCoupon(false, true)

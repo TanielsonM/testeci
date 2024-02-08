@@ -7,7 +7,7 @@ import moment from "@/plugins/moment.js";
 
 const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
-const { getBatches, loadingReservation } = storeToRefs(preCheckout);
+const { getBatches } = storeToRefs(preCheckout);
 const batches = getBatches?.value || [];
 
 const getTicketInstallments = function (batch_group, ticket_hash) {
