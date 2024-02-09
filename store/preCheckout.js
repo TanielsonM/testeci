@@ -64,7 +64,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       if(Array.isArray(tickets)) {
         tickets.forEach(ticket => {
           let batch = this.batches.find(x => x.id === ticket.batch_id);
-          batch.selectedt_batch_tickets = batch?.selectedt_batch_tickets ?? 0
+          batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0
         })
       }
     },
@@ -105,7 +105,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       let ticket = batch.tickets.find(x => x.hash === hash);
       if(haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
-        batch.selectedt_batch_tickets = this.someTotalTicket(batch.tickets);
+        batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
         const checkoutStore = useCheckoutStore();
         checkoutStore.setProductListPreCheckout(ticket);
         // if(this.reservations?.length && this.reservations.some(x => x.offer_id === ticket.id)) {
@@ -124,7 +124,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       let ticket = batch.tickets.find(x => x.hash === hash);
       if(ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
         ticket.selected_tickets -= 1;
-        batch.selectedt_batch_tickets = this.someTotalTicket(batch.tickets);
+        batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
         const checkoutStore = useCheckoutStore();
         const addProduct = false
         checkoutStore.setProductListPreCheckout(ticket, addProduct);

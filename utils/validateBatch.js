@@ -16,8 +16,9 @@ const saleHasStarted = function (batch) {
 }
 
 const haveAvailableTickets = function (batch) {
-  if(!batch?.available_tickets && batch?.available_tickets !== 0) return true;
-  else return batch?.available_tickets > 0;
+  // if(!batch?.available_tickets && batch?.available_tickets !== 0) return true;
+  // else return batch?.available_tickets > 0;
+  return !(batch.selected_batch_tickets >= batch?.available_tickets)
 }
 
 const dependsOnAnotherBatch = function (batch) {
@@ -52,7 +53,7 @@ const goBackToPreCheckout = function() {
   const goBackToPrecheckout = useGoBackToPrecheckoutStore();
 
   batchs.forEach((batch) => {
-    batch.selectedt_batch_tickets = 0;
+    batch.selected_batch_tickets = 0;
     batch.tickets.forEach((ticket) => {
       ticket.selected_tickets = 0;
     });
