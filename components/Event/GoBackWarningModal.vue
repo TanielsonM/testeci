@@ -1,6 +1,7 @@
 <script setup>
 import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout";
 import { goBackToPreCheckout } from "@/utils/validateBatch";
+import moment from "moment";
 
 const goBackToPrecheckout = useGoBackToPrecheckoutStore();
 const productStore = useProductStore();
@@ -12,26 +13,17 @@ function closeModal() {
 </script>
 
 <template>
-  <BaseModal :title="product.name" :is-open="goBackToPrecheckout.showModal" @close="closeModal">
-    <section class="flex w-full max-w-[400px] flex-col gap-5">
-      <h6 class="text-[15px] font-semibold text-txt-color">
-        Alterar ingressos
-      </h6>
-      <p class="text-txt-color text-justify">A sua sessão ainda não expirou, caso volte a tela de pré-checkout para alterar seus ingressos irá perder seus dados salvos.</p>
-      <section class="mt-10 flex w-full justify-end">
+  <BaseModal :title="product.name + ' | ' + moment(product.start_date).format('DD') + ' de ' + moment(product.start_date).format('MMM').toUpperCase().charAt(0) + moment(product.start_date).format('MMM').slice(1)" :is-open="goBackToPrecheckout.showModal" @close="closeModal">
+    <section class="flex w-full max-w-[400px] flex-col gap-5 p-6">
+      <p class="text-txt-color text-center font-bold">{{ $t("checkout.modal.text_ticket") }}</p>
+      <p class="text-center text-gray-500">{{ $t("checkout.modal.text_session") }}</p>
+      <section class="mt-1 grid w-full gap-2 ">
         <BaseButton
-          color="blue"
-          class="w-[40%] text-txt-color mr-3"
+          color="light"
+          class="w-[100%] text-txt-color"
           @click="goBackToPreCheckout"
         >
-          Voltar para o Pré-checkout
-        </BaseButton>
-        <BaseButton
-          color="secondary"
-          class="w-[60%] text-txt-color"
-          @click="closeModal"
-        >
-          Cancelar
+        {{ $t("checkout.modal.text_button_pre") }}
         </BaseButton>
       </section>
     </section>

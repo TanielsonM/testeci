@@ -42,41 +42,6 @@ const showUnloadAlert = async function (evt) {
   }
 }
 
-const getLessMethods = function () {
-  const checkout = useCheckoutStore();
-  const preCheckout = usePreCheckoutStore();
-  const { getBatches } = storeToRefs(preCheckout);
-
-  let minMethods = Infinity;
-  let ticketWithLessMethods = getBatches?.value[0]?.tickets[0];
-
-  for (const batch of getBatches?.value) {
-    for (const ticket of batch.tickets) {
-      const methodsCount = ticket.method && ticket.method !== '' ? ticket.method.split(",").length : 0;
-      if (methodsCount !== 0 && methodsCount < minMethods) {
-        minMethods = methodsCount;
-        ticketWithLessMethods = ticket;
-      }
-    }
-  }
-
-  ticketWithLessMethods?.method && checkout.setMethod(ticketWithLessMethods?.method.split(',')[0])
-  return ticketWithLessMethods?.method.split(',');
-
-  // let batchWithLessMethods = getBatches?.value[0];
-  // for (let i = 1; i < getBatches?.value?.length; i++) {
-  //   const obj = getBatches?.value[i];
-  //   const qtdCurrentMethods = obj?.method.split(',').length;
-  //   const qtdLessMethods = batchWithLessMethods?.method.split(',').length;
-
-  //   if (qtdCurrentMethods < qtdLessMethods) {
-  //     batchWithLessMethods = obj;
-  //   }
-  // }
-  // checkout.setMethod(batchWithLessMethods?.method.split(',')[0])
-  // return batchWithLessMethods?.method.split(',');
-}
-
 const goBackToPreCheckout = function() {
   const preCheckout = usePreCheckoutStore();
   const { getBatches } = storeToRefs(preCheckout);
@@ -93,6 +58,7 @@ const goBackToPreCheckout = function() {
   preCheckout.setBatches(batchs);
   const checkout = useCheckoutStore();
   checkout.setCoupon(false, true)
+  checkout.resetProducts();
   const route = useRoute();
   const queryParams = new URLSearchParams(route.query).toString();
   navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
@@ -103,6 +69,5 @@ export {
   haveAvailableTickets,
   dependsOnAnotherBatch,
   showUnloadAlert,
-  getLessMethods,
   goBackToPreCheckout
 }

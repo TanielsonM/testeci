@@ -120,7 +120,10 @@
     "modal": {
       "text_expiration": "Atenção, sua sessão foi expirada",
       "text_loading": "Será necessário recarregar a página para continuar comprando este evento.",
-      "text_button": "Recarregar a página"
+      "text_button": "Recarregar a página",
+      "text_ticket": "Alterar ingressos",
+      "text_session": "A sua sessão ainda não expirou, caso volte a tela de pré-checkout para alterar seus ingressos irá perder seus dados salvos.",
+      "text_button_pre": " Voltar para o Pré-checkout"
     },
     "dados_pessoais": {
       "title": "Dados Pessoais",

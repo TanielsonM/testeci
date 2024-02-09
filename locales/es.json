@@ -120,7 +120,10 @@
     "modal": {
       "text_expiration": "Atención, tu sesión ha caducado",
       "text_loading": "Deberá recargar la página para continuar comprando este evento.",
-      "text_button": "Recargar la pagina"
+      "text_button": "Recargar la pagina",
+      "text_ticket": "Cambiar billetes",
+      "text_session": "Tu sesión aún no ha expirado, si regresas a la pantalla de pre-pago para cambiar tus boletos perderás tus datos guardados.",
+      "text_button_pre": "Volver al pago previo"
     },
     "dados_pessoais": {
       "title": "Datos personales",

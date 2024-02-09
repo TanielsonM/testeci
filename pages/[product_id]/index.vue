@@ -9,7 +9,7 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
-import { showUnloadAlert, getLessMethods } from "@/utils/validateBatch";
+import { showUnloadAlert } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
 
 // Stores
@@ -53,10 +53,6 @@ const alert_modal = ref(false);
 
 // Computeds
 const tabs = computed(() => {
-  if(product.value.product_type_id === 3) {
-    // Lista os métodos de pagamento do lote que tiver a menor quantidade de métodos de pagamento
-    allowed_methods.value = getLessMethods();
-  }
   return allowed_methods.value.map((item) => {
     switch (item) {
       case "CREDIT_CARD":
@@ -217,7 +213,7 @@ onBeforeUnmount(() => {
 
 // Watch`s
 watch(method, (method) => {
-  checkout.setMethod(method);
+  checkout.setMethod(method);  
 });
 
 watch(selectedCountry, () => {
@@ -463,6 +459,7 @@ onMounted(() => {
             <!-- Payment button -->
             <section>
               <BaseButton
+              @click="callPayment"
                 v-if="method !== 'PAYPAL'"
                 class="my-7"
                 :loading="isPaymentLoading"

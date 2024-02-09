@@ -120,7 +120,10 @@
     "modal": {
       "text_expiration": "Attention, your session has expired",
       "text_loading": "You will need to reload the page to continue purchasing this event.",
-      "text_button": "Reload the page"
+      "text_button": "Reload the page",
+      "text_ticket": "Change tickets",
+      "text_session": "Your session has not expired yet, if you return to the pre-checkout screen to change your tickets you will lose your saved data.",
+      "text_button_pre": "Return to Pre-checkout"
     },
     "dados_pessoais": {
       "title": "Personal Data",

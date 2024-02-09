@@ -37,16 +37,16 @@ onMounted(() => {
               await preCheckout.deleteReservation(reservation);
               reservations = reservations.filter(x => x.id !== reservation.id);
             } catch(err) {
-              consol.error(err)
+              console.error(err)
             }
           });
           await Promise.all(promises);
-          preCheckout.setReservations(reservations);
-          localStorage.setItem('reservations', reservations);
+          preCheckout.setReservations([]);
+          localStorage.setItem('reservations', []);
         }
-        return reservations;
-      } catch (error) {
-        return error;
+      } catch (e) {
+        checkout.setError(e.message);
+        throw e;
       }
     }
   }, 500)
