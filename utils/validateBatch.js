@@ -44,20 +44,25 @@ const showUnloadAlert = async function (evt) {
 
 const goBackToPreCheckout = function() {
   const preCheckout = usePreCheckoutStore();
-  const { getBatches } = storeToRefs(preCheckout);
+  const { getBatches, getReservations } = storeToRefs(preCheckout);
   let batchs = getBatches.value;
+  let reservations = getReservations.value;
   const amountStore = useAmountStore();
 
-  batchs.forEach(batch => {
+  batchs.forEach((batch) => {
     batch.selectedt_batch_tickets = 0;
-    batch.tickets.forEach(ticket => {
+    batch.tickets.forEach((ticket) => {
       ticket.selected_tickets = 0;
     });
+  });
+
+  reservations.forEach((reservation) => {
+    preCheckout.deleteReservation(reservation, batchs);
   });
   amountStore.reset();
   preCheckout.setBatches(batchs);
   const checkout = useCheckoutStore();
-  checkout.setCoupon(false, true)
+  checkout.setCoupon(false, true);
   checkout.resetProducts();
   const route = useRoute();
   const queryParams = new URLSearchParams(route.query).toString();
