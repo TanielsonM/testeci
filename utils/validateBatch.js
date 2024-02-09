@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useAmountStore } from "~~/store/modules/amount";
+import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout";
 
 const saleHasStarted = function (batch) {
   if(batch.release_type && batch.release_type === 'fixed_date') {
@@ -48,6 +49,7 @@ const goBackToPreCheckout = function() {
   let batchs = getBatches.value;
   let reservations = getReservations.value;
   const amountStore = useAmountStore();
+  const goBackToPrecheckout = useGoBackToPrecheckoutStore();
 
   batchs.forEach((batch) => {
     batch.selectedt_batch_tickets = 0;
@@ -64,6 +66,7 @@ const goBackToPreCheckout = function() {
   const checkout = useCheckoutStore();
   checkout.setCoupon(false, true);
   checkout.resetProducts();
+  goBackToPrecheckout.setShowModal(false);
   const route = useRoute();
   const queryParams = new URLSearchParams(route.query).toString();
   navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
