@@ -1,5 +1,6 @@
 <script setup>
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
+import { goBackToPreCheckout } from "@/utils/validateBatch";
 
 const expiredSession = useExpiredSessionStore();
 const cronometroRodando = ref(false);
@@ -23,6 +24,8 @@ function finish(evt) {
     cronometro = null;
     if(evt !== 'onBeforeUnmount'){
       expiredSession.setHaveFinished(true);
+      // forçar pra resetar dados quando expira a sessão
+      goBackToPreCheckout();
     }
   }
 }

@@ -3,12 +3,12 @@ import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout"
 import { goBackToPreCheckout } from "@/utils/validateBatch";
 import moment from "moment";
 
-const goBackToPrecheckout = useGoBackToPrecheckoutStore();
+const goBackToPrecheckoutStore = useGoBackToPrecheckoutStore();
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
 
 function closeModal() {
-  goBackToPrecheckout.setShowModal(false);
+  goBackToPrecheckoutStore.setShowModal(false);
 }
 </script>
 
