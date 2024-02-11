@@ -42,7 +42,7 @@ const props = defineProps({
     required: false,
   },
   shippingSelected: {
-    type: String,
+    type: Object,
     default: null,
     required: false,
   },
@@ -93,6 +93,10 @@ const data = ref({
   shippingSelected: props.shippingSelected,
   showCode: false,
 });
+
+// const hasShipping = computed(() => {
+//   return 
+// });
 
 const displayCode = () => {
   emit("openedPixEvent", props.opened === props.id ? 0 : props.id);
@@ -301,7 +305,7 @@ onBeforeUnmount(() => {
         <p>{{ name }}</p>
         <p>{{ amount }}</p>
       </div>
-      <div class="item" v-if="!!shippingAmount">
+      <div class="item" v-if="!!shippingAmount && shippingAmount != 'R$ 0,00' && !!sale.shipping_amount">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ shippingAmount }}</p>
       </div>
