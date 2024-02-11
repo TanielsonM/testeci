@@ -533,9 +533,6 @@ export const useCheckoutStore = defineStore("checkout", {
             this.coupon.error = false;
             this.coupon.applied = true;
             this.coupon.is_valid = true;
-            console.log('prodStore.amount',prodStore.amount)
-            console.log('getCoupon.amount',amount)
-            console.log('coupons ',this.coupon);
           })
           .catch((error) => {
             this.coupon = {

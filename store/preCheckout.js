@@ -89,7 +89,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       }
     },
     setLoadingReservation(value, ticket) {
-      ticket.load = value;
+      if(ticket) {
+        ticket.load = value;
+      }
     },
     someTotalTicket(array){
       let totalSelectedTickets = 0;

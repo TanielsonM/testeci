@@ -6,6 +6,7 @@ import moment from "moment";
 const goBackToPrecheckoutStore = useGoBackToPrecheckoutStore();
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
+const showModal = goBackToPrecheckoutStore.getShowModal;
 
 function closeModal() {
   goBackToPrecheckoutStore.setShowModal(false);
@@ -13,7 +14,7 @@ function closeModal() {
 </script>
 
 <template>
-  <BaseModal :title="product.name + ' | ' + moment(product.start_date).format('DD') + ' de ' + moment(product.start_date).format('MMM').toUpperCase().charAt(0) + moment(product.start_date).format('MMM').slice(1)" :is-open="goBackToPrecheckout.showModal" @close="closeModal">
+  <BaseModal :title="product.name + ' | ' + moment(product.start_date).format('DD') + ' de ' + moment(product.start_date).format('MMM').toUpperCase().charAt(0) + moment(product.start_date).format('MMM').slice(1)" :is-open="showModal" @close="closeModal">
     <section class="flex w-full max-w-[400px] flex-col gap-5 p-6">
       <p class="text-txt-color text-center font-bold">{{ $t("checkout.modal.text_ticket") }}</p>
       <p class="text-center text-gray-500">{{ $t("checkout.modal.text_session") }}</p>

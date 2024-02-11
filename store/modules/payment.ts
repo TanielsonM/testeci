@@ -352,10 +352,10 @@ export const usePaymentStore = defineStore("Payment", {
               // Set query bumps
               const route = useRoute();
 
-              // em desenvolvimento...
+              // Se o produto for do tipo evento
               if(product?.value?.product_type_id === 3) {
-                product_list.value.forEach((ticket: {id: number, name: string}, i) => {
-                  const sale = res.sales.find((item: any) => item.offer_id === ticket.id);
+                product_list.value.forEach((ticket: {id: number, name: string, hash: string}, i) => {
+                  const sale = res.sales.find((item: any) => item.product.offer_hash === ticket.hash);
                   if(sale) query['ticket_id_'+i] = (ticket.id + "-s_id_" + sale.sale_id)
                 })
               } else {

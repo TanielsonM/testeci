@@ -16,7 +16,13 @@ const route: any = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
 
-const saleId = route.query.s_id;
+const queryKeys = Object.keys(route.query);
+const isEvent = queryKeys.some(x => x.includes('ticket_id'));
+
+const saleId = isEvent
+  ? route.query[queryKeys[0]].split("-s_id_")[1]
+  : route.query.s_id;
+
 const current_query = new URLSearchParams(route.query);
 
 const data = ref({
@@ -26,13 +32,14 @@ const data = ref({
   order: {} as any,
   chc: "",
   pixOpened: 0,
+  ticket: {} as any
 });
 
 if (
   (!!route.query.s_id && !route.query.chc) ||
-  (!!route.query.s_id && !!route.query.chc)
+  (!!route.query.s_id && !!route.query.chc) ||
+  (!!isEvent && !route.query.chc)
 ) {
-  const saleId = route.query.s_id;
   await checkoutStore.getSale(saleId);
   const sale: Sale = sales.value as Sale;
   data.value.sale = sale;
@@ -46,7 +53,6 @@ if (
     CREDIT_CARD: "",
     TWO_CREDIT_CARDS: "",
   });
-
 
   thankYouData.forEach(element => {
     switch (element.type) {
@@ -278,7 +284,7 @@ function openPix(id: number) {
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
-            @click="modal.closeAtion"
+            @click="modal.closeAction"
           >
             {{ $t("pg_obrigado.modal.entendido") }}
           </BaseButton>
