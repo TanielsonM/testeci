@@ -7,9 +7,7 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
-import { usePersonalStore } from "@/store/forms/personal";
-import { useLeadsStore } from "@/store/modules/leads";
-import { showUnloadAlert } from "@/utils/validateBatch";
+import { showUnloadAlert, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
 
 // Stores
@@ -186,6 +184,9 @@ onMounted(() => {
   if (process.client) {
     // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
     if(product?.value?.product_type_id === 3) {
+      // Quando o usuário clica em voltar no navegador
+      window.addEventListener('popstate', showBeforeBackNavigation);
+
       if(getReservations?.value?.length) {
         window.addEventListener('beforeunload', showUnloadAlert);
         checkout.setCoupon(true);
@@ -206,6 +207,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if(product?.value?.product_type_id === 3) {
+    window.removeEventListener('popstate', showBeforeBackNavigation);
     window.removeEventListener('beforeunload', showUnloadAlert);
   }
   window.removeEventListener("resize", handleResize);

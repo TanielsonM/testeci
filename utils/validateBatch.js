@@ -73,10 +73,21 @@ const goBackToPreCheckout = function() {
   navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
 }
 
+const showBeforeBackNavigation = async function (evt) {
+  // Pergunta pro usuário se realmente quer voltar a página
+  var confirmacao = confirm('Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso volte a página esses dados serão perdidos, deseja continuar?');
+  if (!confirmacao) {
+    history.forward();
+  } else {
+    goBackToPreCheckout();
+  }
+}
+
 export {
   saleHasStarted,
   haveAvailableTickets,
   dependsOnAnotherBatch,
   showUnloadAlert,
-  goBackToPreCheckout
+  goBackToPreCheckout,
+  showBeforeBackNavigation
 }

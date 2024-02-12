@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useModalStore } from "~~/store/modal/success";
 import { useStepStore } from "~~/store/modules/steps";
-import { ShippingSelected } from "@/types";
 import * as Toast from "vue-toastification";
 
 const { t } = useI18n();
@@ -94,10 +93,6 @@ const data = ref({
   showCode: false,
 });
 
-// const hasShipping = computed(() => {
-//   return 
-// });
-
 const displayCode = () => {
   emit("openedPixEvent", props.opened === props.id ? 0 : props.id);
 };
@@ -119,6 +114,7 @@ onBeforeUnmount(() => {
   }
 });
 </script>
+
 <template>
   <div v-if="!modal.expiredPix">
     <p class="paragraph" v-if="(!onlyButtons && !last) || salesLength == 1">
