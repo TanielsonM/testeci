@@ -112,7 +112,7 @@ const getSmallerAmount = function (tickets) {
         <li v-for="(ticket, i) in batch.tickets" :key="ticket?.hash" class="mb-6 pt-5 flex justify-between items-center border-[#E5E5E5]" :class="{'border-t': i !== 0}">
           <div class="ml-5" :class="{'line-through': !haveAvailableTickets(batch)}">
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ ticket?.name }}</h5>
-            <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(ticket?.amount) }} + taxas</p>
+            <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(ticket?.amount) }}</p>
             <small v-if="ticket?.selected_tickets > 0" class="text-[14px] font-[400] text-main-color">
               em até {{ ticket?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch, ticket?.hash)) }}
             </small>
