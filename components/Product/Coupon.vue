@@ -3,6 +3,9 @@ import * as Toast from "vue-toastification";
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
+import { usePaymentStore } from "~~/store/modules/payment";
+
+const payment = usePaymentStore();
 const checkout = useCheckoutStore();
 const product = useProductStore();
 const { coupon, hasCoupon } = storeToRefs(checkout);
@@ -12,6 +15,8 @@ const { t } = useI18n();
 const isOpen = ref(!!coupon.value.name);
 
 function apply() {
+  payment.setPaymentLoading(true);
+
   checkout.setCoupon().then(() => {
     /* Show toast */
     if (coupon.value.applied) {
@@ -22,6 +27,8 @@ function apply() {
         )}: ${productName.value.toUpperCase()}`
       );
     }
+  }).finally(() => {
+    payment.setPaymentLoading(false);
   });
 }
 </script>

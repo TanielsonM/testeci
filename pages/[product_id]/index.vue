@@ -43,6 +43,7 @@ const {
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
 
+
 // Computeds
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -221,21 +222,26 @@ watch(sameAddress, (val) => {
 
 // Functions
 function closeModal() {
+  payment.setPaymentLoading(false);
   alert_modal.value = false;
   error_message.value = "";
 }
 
 async function callPayment() {
+  
   payment.setPaymentLoading(true);
+
   if (captchaEnabled.value) {
     //não colocar await pois nenhuma dessa funções retornam promises
     //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
     window.grecaptcha.reset();
     window.grecaptcha.execute();
   } else {
-    await payment.payment(locale.value).finally(() => {
-      payment.setPaymentLoading(false);
-    })
+    if(isPaymentLoading.value === true) {
+      await payment.payment(locale.value).finally(() => {
+        payment.setPaymentLoading(false);
+      })
+    }
   }
 }
 
@@ -436,6 +442,7 @@ onMounted(() => {
                 v-if="method !== 'PAYPAL'"
                 class="my-7"
                 :loading="isPaymentLoading"
+                :disabled="isPaymentLoading"
               >
                 <span class="text-[15px] font-semibold">
                   {{
@@ -487,6 +494,7 @@ onMounted(() => {
             @click="callPayment"
             class="my-7"
             :loading="isPaymentLoading"
+            :disabled="isPaymentLoading"
           >
             <span class="text-[15px] font-semibold">
               {{

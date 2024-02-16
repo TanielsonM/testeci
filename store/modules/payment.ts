@@ -68,10 +68,10 @@ export const usePaymentStore = defineStore("Payment", {
     error_message: "",
     hasSent: false,
     // Payment button loading
-    loading: false
+    loading: false,
   }),
   getters: {
-    isPaymentLoading: state => state.loading
+    isPaymentLoading: state => state.loading,
   },
   actions: {
     setPaymentLoading(value = false) {
