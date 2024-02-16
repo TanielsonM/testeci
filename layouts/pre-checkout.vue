@@ -5,9 +5,16 @@ import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 // Variables
 const custom_checkout = useCustomCheckoutStore();
-const product = useProductStore();
+const productStore = useProductStore();
+const { product } = useProductStore();
 const checkout = useCheckoutStore();
 const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
+
+onMounted(() => {
+  if(!product.start_date && !product.location){
+    checkout.setError('Configure a data e local do evento');
+  }
+})
 </script>
 
 <template>
@@ -34,9 +41,9 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
     v-else
     class="flex min-h-screen w-full flex-col items-center gap-10"
     :class="{'bg-background': custom_checkout.theme === 'dark'}"
-    :data-theme="product.isValid() ? custom_checkout.theme : 'light'"
+    :data-theme="productStore.isValid() ? custom_checkout.theme : 'light'"
     :data-theme_color="
-      product.isValid()
+      productStore.isValid()
         ? (custom_checkout.themeColor === '#00E4A0' ? 'dark-greenn' : custom_checkout.themeColor)
         : 'dark-greenn'
     "
@@ -45,7 +52,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
     <section class="flex w-full max-w-[1240px] justify-center">
       <BaseCard
         class="mt-10 flex max-w-[800px] flex-col items-center gap-6 border border-b-4 border-gray-200 border-b-error px-5 py-10 md:px-20"
-        v-if="!product.isValid()"
+        v-if="!productStore.isValid()"
       >
         <Icon name="mdi:close-circle" size="120" class="text-error" />
         <h1 class="text-center text-2xl">{{ $t("general.error_message") }}</h1>
@@ -57,7 +64,7 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
         <slot />
       </section>
     </section>
-    <BaseFooter v-if="product.isValid()" :installments_fee="false" />
-    <ButtonWhatsapp v-if="product.isValid()" />
+    <BaseFooter v-if="productStore.isValid()" :installments_fee="false" />
+    <ButtonWhatsapp v-if="productStore.isValid()" />
   </main>
 </template>
