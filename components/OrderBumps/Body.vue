@@ -143,7 +143,10 @@ function getType(type = "") {
             <span class='tooltip rounded shadow-lg p-2 bg-black text-white bg-opacity-75 text-sm -mt-12 mr-8 w-80 text-center'>    
               {{$t("checkout.venda_por_indicacao")}}  
             </span>
-            <span class="different-seller"><Icon name="mdi:star-outline" size="20" class="" />{{ bump.seller.name }}</span>
+            <span class="different-seller"><Icon name="mdi:star-outline" size="20" class="" />{{ bump.seller.company ? bump.seller.company.fantasy_name ||
+                bump.seller.company.name
+              : bump.seller.name
+             }}</span>        
           </div>
         </div>
         <template v-if="hasTrial">
