@@ -72,6 +72,13 @@ const exceptionSellerId = computed(() => {
   }
   return false
 })
+import {useVisitorData} from '@fingerprintjs/fingerprintjs-pro-vue-v3';
+
+const {data, error, isLoading, getData} = useVisitorData(
+  {extendedResult: true},
+  {immediate: false}
+);
+console.log(data, error, isLoading, getData)
 
 // Methods
 function getType(type = "") {
