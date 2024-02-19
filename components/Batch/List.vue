@@ -72,6 +72,9 @@ const getSmallerAmount = function (tickets) {
 
 <template>
   <div class="mb-3">
+    <!-- <pre>
+      {{ batches }}
+    </pre> -->
     <PreCheckoutCard v-for="batch in batches" :key="batch.id" class="mb-5" :class="{'bg-checkout': dependsOnAnotherBatch(batch)}">
       <div
         class="text-txt-color justify-between items-center mt-5"
@@ -117,7 +120,7 @@ const getSmallerAmount = function (tickets) {
               em até {{ ticket?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch, ticket?.hash)) }}
             </small>
           </div>
-          <div v-if="haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)" class="flex items-center mr-5">
+          <div v-if="batch.available_tickets > 0 && haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)" class="flex items-center mr-5">
             <template v-if="!ticket.load">
               <Icon
                 name="mdi:minus-circle-outline"
