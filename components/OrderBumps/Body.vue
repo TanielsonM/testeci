@@ -58,11 +58,7 @@ const props = defineProps({
   },
 });
 const details = ref(false);
-const isBumpSellerEqual = ref(false);
 
-if (props.bump.seller.id === product.value.seller.id) {
-  isBumpSellerEqual.value = true;
-}
 const toast = Toast.useToast();
 
 const redirect = () => { 
@@ -74,13 +70,16 @@ const redirect = () => {
     window.open(url, '_blank')
   } else {   
     toast.info(
-    `${t("checkout.link_vendedor_nao_encontrado")}`
-  );
-  }
-};
-
-// Computeds
-const hasTrial = computed(() => !!props.bump.trial);
+      `${t("checkout.link_vendedor_nao_encontrado")}`
+      );
+    }
+  };
+  
+  // Computeds
+  const hasTrial = computed(() => !!props.bump.trial);
+  const isBumpSellerEqual = computed(() => {
+    return product.value.seller.id === props.bump.seller.id;
+  });
 
 const showDescription = computed(() =>
   customCheckout.hasCustomBump ? customCheckout.bump_options.description : true
@@ -140,7 +139,7 @@ function getType(type = "") {
         <div class="bump-product-title">
           <h1 class="item-title text-txt-color">{{ bump.name }}</h1>
 
-          <div v-if="!isBumpSellerEqual" class='has-tooltip' @click="redirect">
+          <div v-show="!isBumpSellerEqual" class='has-tooltip' @click="redirect">
             <span class='tooltip rounded shadow-lg p-2 bg-black text-white bg-opacity-75 text-sm -mt-12 mr-8 w-80 text-center'>    
               {{$t("checkout.venda_por_indicacao")}}  
             </span>
