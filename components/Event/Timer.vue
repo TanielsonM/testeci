@@ -58,7 +58,7 @@ onMounted(() => {
   <section class="rounded-b p-4 section-color">
     <Chronometer :tempoEmSegundos="tempoEmSegundos"/>
     <span class="text-[14px] font-[400] leading-[21px] text-[#3483FA]">
-      Após este tempo, os ingressos serão liberados para venda novamente.
+      {{ $t("checkout.event.finish_time_text") }}
     </span>
   </section>
 </template>

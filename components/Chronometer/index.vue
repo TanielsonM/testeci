@@ -18,7 +18,7 @@ const tempoDecorrido = computed(() => {
   <section class="flex items-center min-w-[100px] mr-4 text-[#3483FA]">
     <div class="w-full">
       <p class="text-[16px] font-[600] leading-[24px] mt-[3px]">
-        Finalize em até {{ tempoDecorrido }}
+        {{ $t("checkout.event.finish_time") }} {{ tempoDecorrido }}
       </p>
     </div>
   </section>

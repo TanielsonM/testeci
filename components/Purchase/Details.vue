@@ -59,7 +59,7 @@ function openGoBackPreCheckoutModal() {
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
     >
-      <span class="infos-title">Frete</span>
+      <span class="infos-title">{{ $t("checkout.event.freight") }}</span>
       <span
         class="infos-content flex w-full items-center justify-between"
         v-for="(item, index) in checkout.shippingProducts()"
@@ -84,7 +84,7 @@ function openGoBackPreCheckoutModal() {
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="hasSelectedBump"
     >
-      <p class="infos-title">Order Bumps</p>
+      <p class="infos-title">{{ $t("checkout.event.order_bumps") }}</p>
       <span
         class="infos-content mt-2 flex w-full items-center justify-between"
         v-for="(bump, index) in bump_list.filter((i) => i.checkbox)"
@@ -139,9 +139,9 @@ function openGoBackPreCheckoutModal() {
       v-if="isPresentialEvent"
     >
       <div class="flex justify-between w-full">
-        <p class="infos-title">Ingressos</p>
+        <p class="infos-title">{{ $t("checkout.event.tickets") }}</p>
         <div class="btn-edit-tickets text-center ml-3" @click="openGoBackPreCheckoutModal">
-          <span class="text-[12px] font-[600]">Editar</span>
+          <span class="text-[12px] font-[600]">{{ $t("checkout.event.edit") }}</span>
         </div>
       </div>
       <span

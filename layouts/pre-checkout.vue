@@ -1,4 +1,6 @@
 <script setup>
+// Traduction
+import { useI18n } from "vue-i18n";
 // Stores
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useProductStore } from "~~/store/product";
@@ -12,7 +14,8 @@ const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
 
 onMounted(() => {
   if (!product.start_date || !product.location) {
-    checkout.setError('Configure a data e local do evento');
+    const { t: $t } = useI18n();
+    checkout.setError($t("pre_checkout.location_config"));
   }
 })
 </script>
@@ -23,8 +26,8 @@ onMounted(() => {
     <img v-if="logo === 'Greenn'" src="@/assets/logos/logo.png" alt="logo do greenn" width="250" class="animate-bounce" />
   </main>
   <main v-else class="flex min-h-screen w-full flex-col items-center gap-10" :class="{ 'bg-background': custom_checkout.theme === 'dark' }" :data-theme="productStore.isValid() ? custom_checkout.theme : 'light'" :data-theme_color="productStore.isValid()
-      ? (custom_checkout.themeColor === '#00E4A0' ? 'dark-greenn' : custom_checkout.themeColor)
-      : 'dark-greenn'
+    ? (custom_checkout.themeColor === '#00E4A0' ? 'dark-greenn' : custom_checkout.themeColor)
+    : 'dark-greenn'
     ">
     <BaseHeader />
     <section class="flex w-full max-w-[1240px] justify-center">
