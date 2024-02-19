@@ -1,13 +1,16 @@
 <script setup>
 import moment from "@/plugins/moment";
 import { useProductStore } from "~~/store/product";
+// Traduction
+import { useI18n } from "vue-i18n";
+const { t: $t } = useI18n();
 
 const { product } = useProductStore();
 const startDateDDD = product.start_date ? moment(product.start_date).format('ddd') : null;
 const startDateLL = product.start_date ? moment(product?.start_date).format('LL') : null;
-const startDateConcat = startDateDDD && startDateLL ? `${startDateDDD},${startDateLL}` : 'Configure a data e local do evento';
-const startDateTime = product.start_date ? moment(product.start_date + ' ' + product.start_time).format('HH:mm') : 'Configure a data e local do evento';
-const location = product.location ? product.location : 'Configure a data e local do evento';
+const startDateConcat = startDateDDD && startDateLL ? `${startDateDDD},${startDateLL}` : $t("pre_checkout.location_config");
+const startDateTime = product.start_date ? moment(product.start_date + ' ' + product.start_time).format('HH:mm') : $t("pre_checkout.location_config");
+const location = product.location ? product.location : $t("pre_checkout.location_config");
 </script>
 
 <template>

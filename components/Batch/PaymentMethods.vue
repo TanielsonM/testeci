@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-[16px] font-[700] text-main-color mb-3">Formas de Pagamento</p>
+    <p class="text-[16px] font-[700] text-main-color mb-3">{{ $t("pre_checkout.payment_methods") }}</p>
     <div class="flex justify-between items-center">
       <img src="@/assets/paymentMethods/greenn.svg" alt="greenn">
       <img src="@/assets/paymentMethods/visa.svg" alt="visa">

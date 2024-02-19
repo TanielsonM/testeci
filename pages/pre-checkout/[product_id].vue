@@ -13,7 +13,7 @@ const route = useRoute();
 const batches = await checkout.init();
 // por algum motivo o batches ta sumindo, código abaixo para persistir
 const preCheckout = usePreCheckoutStore();
-if(batches?.length) preCheckout.setBatches(batches);
+if (batches?.length) preCheckout.setBatches(batches);
 
 const hasReservations = preCheckout.$state
 
@@ -27,16 +27,16 @@ onMounted(() => {
   window.addEventListener('beforeunload', showUnloadAlert);
 
   setTimeout(async () => {
-    if(localStorage.getItem('reservations')) {
+    if (localStorage.getItem('reservations')) {
       try {
         let reservations = JSON.parse(localStorage.getItem('reservations'));
-        if(reservations?.length) {
+        if (reservations?.length) {
           const preCheckout = usePreCheckoutStore();
           const promises = reservations.map(async reservation => {
             try {
               await preCheckout.deleteReservation(reservation);
               reservations = reservations.filter(x => x.id !== reservation.id);
-            } catch(err) {
+            } catch (err) {
               console.error(err)
             }
           });
@@ -51,15 +51,15 @@ onMounted(() => {
     }
   }, 500)
 
-  if(route?.query?.batchs) {
+  if (route?.query?.batchs) {
     const preCheckout = usePreCheckoutStore();
     const { getBatches } = storeToRefs(preCheckout);
     const batchs = getBatches?.value;
     const route_batchs = JSON.parse(route.query.batchs);
 
-    if(Array.isArray(batchs) && Array.isArray(route_batchs)) {
+    if (Array.isArray(batchs) && Array.isArray(route_batchs)) {
       const filter_batchs = batchs.filter(b => route_batchs.includes(b.hash));
-      if(filter_batchs.length) preCheckout.setBatches(filter_batchs);
+      if (filter_batchs.length) preCheckout.setBatches(filter_batchs);
     }
   }
 })
@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
   <NuxtLayout name="pre-checkout">
 
     <section class="flex w-full flex-col xl:max-w-[780px]" @click="teste">
-      <EventTimer class="hidden"/>
+      <EventTimer class="hidden" />
       <EventImage class="mb-5" />
       <EventTitle class="mb-5" />
       <div class="flex justify-between">
@@ -93,12 +93,8 @@ onBeforeUnmount(() => {
         <div class="flex flex-col justify-between items-start mb-12 md:flex-row md:items-center">
           <BatchTotal />
           <div class="w-full md:w-fit" :key="hasReservations">
-            <BaseButton
-              color="primary"
-              :disabled="!hasReservations.reservations.length"
-              @click="byTickets"
-            >
-              Comprar ingressos
+            <BaseButton color="primary" :disabled="!hasReservations.reservations.length" @click="byTickets">
+              {{ $t("pre_checkout.buy") }}
             </BaseButton>
           </div>
         </div>
