@@ -84,7 +84,8 @@ if (
 
   const closeAction = () => {
     if (customUrl.value[sale.sales[0].method]) {
-      window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+      //window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+      window.location.href = customUrl.value[sale.sales[0].method];
     } 
     else {
       const redirectTo = sale.sales[0].product.thank_you_page 
