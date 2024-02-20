@@ -32,14 +32,14 @@ const {
 const { email } = storeToRefs(personalStore);
 
 const config = useRuntimeConfig();
-useHead({
-  script: [
-    {
-      id: "paypal_id",
-      src: `https://www.paypal.com/sdk/js?client-id=${config.public.PAYPAL_CLIENT_ID_NATIONAL}&currency=BRL&disable-funding=credit,card,mercadopago`,
-    },
-  ],
-});
+
+const mountScript = () => {
+  const script = document.createElement('script');
+  script.id = "paypal_id",
+  script.src = `https://www.paypal.com/sdk/js?client-id=${config.public.PAYPAL_CLIENT_ID_NATIONAL}&currency=BRL&disable-funding=credit,card,mercadopago`;
+  script.onload = mountButton;
+  document.head.appendChild(script);
+}
 
 const mountButton = () => {
   const amountStore = useAmountStore();
@@ -100,20 +100,11 @@ const mountButton = () => {
     })
     .render(paypal.value);
 }
-const verifyIfPaypalExist = () => {
-  if (window.paypal) {
-    mountButton();
-  } else {
-    setTimeout(() => verifyIfPaypalExist(), 300)
-  }
-}
 
 onMounted(async () => {
-  setTimeout(() => {
-    if (process.client) {
-      verifyIfPaypalExist();
-    }
-  }, 300);
+  if (process.client) {
+    mountScript();
+  }
 });
 </script>
 <template>
