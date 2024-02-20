@@ -6,14 +6,13 @@ import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
 import { showUnloadAlert } from "@/utils/validateBatch";
 
 const checkout = useCheckoutStore();
-const preCheckout = usePreCheckoutStore();
 const expiredSession = useExpiredSessionStore();
 
 const route = useRoute();
 const batches = await checkout.init();
 // por algum motivo o batches ta sumindo, código abaixo para persistir
+const preCheckout = usePreCheckoutStore();
 if (batches?.length) preCheckout.setBatches(batches);
-
 const hasReservations = preCheckout.$state
 
 function byTickets() {
@@ -30,6 +29,7 @@ onMounted(() => {
       try {
         let reservations = JSON.parse(localStorage.getItem('reservations'));
         if (reservations?.length) {
+          const preCheckout = usePreCheckoutStore();
           const promises = reservations.map(async reservation => {
             try {
               await preCheckout.deleteReservation(reservation);
