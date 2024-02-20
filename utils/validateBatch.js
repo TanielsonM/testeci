@@ -67,7 +67,6 @@ const goBackToPreCheckout = async function() {
 
   try {
     await Promise.all(deletePromises);
-    console.log('Todas as reservas foram deletadas com sucesso.');
   } catch (error) {
     console.error('Ocorreu um erro ao deletar as reservas:', error);
   }
