@@ -13,9 +13,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     getBatches: (state) => state.batches,
     getReservations: (state) => state.reservations,
     getLoadingReservation: (state) => state.loadingReservation,
-    isPresentialEvent() {
+    isPresentialEvent(state) {
       const { product } = useProductStore();
-      return product.product_type_id === 3;
+      return product?.product_type_id === 3 && !!this.batches?.length;
     },
     ticketList() {
       const checkoutStore = useCheckoutStore();
@@ -56,7 +56,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       return batchesArry;
     },
     sellerHasFeatureTickets() {
-      return !!this.batches.length;
+      return !!this.batches?.length;
     }
   },
   actions: {
