@@ -22,7 +22,7 @@ const getTicketInstallments = function (batch_group, ticket_hash) {
   const ticket = batch.tickets.find(x => x?.hash === ticket_hash);
 
   const getAmount = ticket.selected_tickets * ticket.amount;
-  const n = installments.value;
+  let n = installments.value;
   if (typeof n === "string") n = parseInt(n);
   if (n === 1) return getAmount;
   let total = 0;

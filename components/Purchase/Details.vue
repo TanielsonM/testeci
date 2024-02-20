@@ -50,6 +50,9 @@ function openGoBackPreCheckoutModal() {
   const goBackToPrecheckout = useGoBackToPrecheckoutStore();
   goBackToPrecheckout.setShowModal(true);
 }
+function formatTicketName(ticket){
+  return `${ ticket?.selected_tickets }x ${ ticket?.batch_name } - ${ ticket?.ticket_name }`
+}
 </script>
 
 <template>
@@ -150,7 +153,7 @@ function openGoBackPreCheckoutModal() {
         :key="ticket?.id"
       >
         <p>
-          {{ ticket?.tickets }}x {{ ticket?.batch_name }} - {{ ticket?.name }}
+          {{ formatTicketName(ticket) }}
         </p>
         <p>
           +{{ formatMoney(ticket?.total_amount) }}

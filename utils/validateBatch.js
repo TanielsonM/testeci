@@ -35,16 +35,18 @@ const dependsOnAnotherBatch = function (batch) {
 }
 
 const showUnloadAlert = async function (evt) {
+  // Pergunta pro usuário se realmente quer recarregar a pagina ( F5 || CTRL + SHFIT + R )
   const preCheckout = usePreCheckoutStore();
   const { getReservations } = storeToRefs(preCheckout);
   if(getReservations?.value?.length) {
     evt.preventDefault();
     evt.returnValue = '';
+    goBackToPreCheckout();
     return "Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso recarregue a página esses dados serão perdidos.";
   }
 }
 
-const goBackToPreCheckout = function() {
+const goBackToPreCheckout = async function() {
   const preCheckout = usePreCheckoutStore();
   const { getBatches, getReservations } = storeToRefs(preCheckout);
   let batchs = getBatches.value;
@@ -59,9 +61,16 @@ const goBackToPreCheckout = function() {
     });
   });
 
-  reservations.forEach((reservation) => {
-    preCheckout.deleteReservation(reservation, batchs);
+  const deletePromises = reservations.map(reservation => {
+    return preCheckout.deleteReservation(reservation, batchs);
   });
+
+  try {
+    await Promise.all(deletePromises);
+    console.log('Todas as reservas foram deletadas com sucesso.');
+  } catch (error) {
+    console.error('Ocorreu um erro ao deletar as reservas:', error);
+  }
   amountStore.reset();
   preCheckout.setBatches(batchs);
   const checkout = useCheckoutStore();
