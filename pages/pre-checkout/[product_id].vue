@@ -10,6 +10,40 @@ const preCheckout = usePreCheckoutStore();
 const expiredSession = useExpiredSessionStore();
 
 const route = useRoute();
+
+setTimeout(async () => {
+  if (localStorage.getItem('reservations')) {
+    try {
+      let reservations = JSON.parse(localStorage.getItem('reservations'));
+      if (reservations?.length) {
+
+        const promises = reservations.map(async reservation => {
+          try {
+            await preCheckout.deleteReservation(reservation);
+            reservations = reservations.filter(x => x.id !== reservation.id);
+          } catch (err) {
+            console.error(err)
+          }
+        });
+        await Promise.all(promises);
+        preCheckout.setReservations([]);
+        localStorage.setItem('reservations', []);
+
+        const batches = await checkout.init();
+        // por algum motivo o batches ta sumindo, código abaixo para persistir
+        if (batches?.length) preCheckout.setBatches(batches);
+      }
+    } catch (e) {
+      checkout.setError(e.message);
+      throw e;
+    }
+  } else {
+    const batches = await checkout.init();
+    // por algum motivo o batches ta sumindo, código abaixo para persistir
+    if (batches?.length) preCheckout.setBatches(batches);
+  }
+}, 500)
+
 const hasReservations = preCheckout.$state
 
 function byTickets() {
@@ -21,51 +55,17 @@ function byTickets() {
 onMounted(() => {
   window.addEventListener('beforeunload', showUnloadAlert);
 
-  setTimeout(async () => {
-    if (localStorage.getItem('reservations')) {
-      try {
-        let reservations = JSON.parse(localStorage.getItem('reservations'));
-        if (reservations?.length) {
+  if (route?.query?.batchs) {
+    const preCheckout = usePreCheckoutStore();
+    const { getBatches } = storeToRefs(preCheckout);
+    const batchs = getBatches?.value;
+    const route_batchs = JSON.parse(route.query.batchs);
 
-          const promises = reservations.map(async reservation => {
-            try {
-              await preCheckout.deleteReservation(reservation);
-              reservations = reservations.filter(x => x.id !== reservation.id);
-            } catch (err) {
-              console.error(err)
-            }
-          });
-          await Promise.all(promises);
-          preCheckout.setReservations([]);
-          localStorage.setItem('reservations', []);
-
-          const batches = await checkout.init();
-          // por algum motivo o batches ta sumindo, código abaixo para persistir
-          if (batches?.length) preCheckout.setBatches(batches);
-        }
-      } catch (e) {
-        checkout.setError(e.message);
-        throw e;
-      }
-    } else {
-      const batches = await checkout.init();
-      // por algum motivo o batches ta sumindo, código abaixo para persistir
-      if (batches?.length) preCheckout.setBatches(batches);
+    if (Array.isArray(batchs) && Array.isArray(route_batchs)) {
+      const filter_batchs = batchs.filter(b => route_batchs.includes(b.hash));
+      if (filter_batchs.length) preCheckout.setBatches(filter_batchs);
     }
-
-    if (route?.query?.batchs) {
-      const preCheckout = usePreCheckoutStore();
-      const { getBatches } = storeToRefs(preCheckout);
-      const batchs = getBatches?.value;
-      const route_batchs = JSON.parse(route.query.batchs);
-  
-      if (Array.isArray(batchs) && Array.isArray(route_batchs)) {
-        const filter_batchs = batchs.filter(b => route_batchs.includes(b.hash));
-        if (filter_batchs.length) preCheckout.setBatches(filter_batchs);
-      }
-    }
-  }, 500)
-
+  }
 })
 
 onBeforeUnmount(() => {
