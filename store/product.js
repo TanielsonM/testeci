@@ -134,8 +134,8 @@ export const useProductStore = defineStore("product", {
 
       // Se for evento o valor deve começar zerado, para aumentar de acordo com a seleção de ingressos
       const preCheckout = usePreCheckoutStore();
-      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
-      if (product.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+      const { batches } = storeToRefs(preCheckout);
+      if (product.product_type_id === 3 && !!batches?.length) {
         amountStore.reset();
       } else {
         checkout.setProductList(this.product);
