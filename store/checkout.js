@@ -310,7 +310,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response?.data && !isBump) {
               this.checkoutPayment = response.checkout_payment;
-              await setProduct(response.data);
+              await setProduct(response.data, response.batches);
               if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
                 const customCheckout = useCustomCheckoutStore();
                 customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);

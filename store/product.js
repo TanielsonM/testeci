@@ -109,7 +109,7 @@ export const useProductStore = defineStore("product", {
     hasAffiliationLead: (state) => state.product.affiliation_lead,
   },
   actions: {
-    setProduct(product) {
+    setProduct(product, batches) {
      const amountStore = useAmountStore();
 
       this.product = product;
@@ -133,8 +133,6 @@ export const useProductStore = defineStore("product", {
       );
 
       // Se for evento o valor deve começar zerado, para aumentar de acordo com a seleção de ingressos
-      const preCheckout = usePreCheckoutStore();
-      const { batches } = storeToRefs(preCheckout);
       if (product.product_type_id === 3 && !!batches?.length) {
         amountStore.reset();
       } else {
