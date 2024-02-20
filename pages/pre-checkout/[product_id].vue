@@ -47,6 +47,10 @@ onMounted(() => {
         checkout.setError(e.message);
         throw e;
       }
+    } else {
+      const batches = await checkout.init();
+      // por algum motivo o batches ta sumindo, código abaixo para persistir
+      if (batches?.length) preCheckout.setBatches(batches);
     }
   }, 500)
 
