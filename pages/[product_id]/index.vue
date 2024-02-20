@@ -43,6 +43,17 @@ const {
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
 
+import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
+
+const visitorData = ref(null);
+
+const getVisitorData = async () => {
+  visitorData.value = await useVisitorData();
+console.log(visitorData.value);
+};
+
+getVisitorData();
+
 
 // Computeds
 const tabs = computed(() => {

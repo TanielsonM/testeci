@@ -2,13 +2,14 @@ import { fpjsPlugin, FpjsVueOptions } from '@fingerprintjs/fingerprintjs-pro-vue
 import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app';
 
 export default defineNuxtPlugin((nuxtApp) => {
-
-  const config = useRuntimeConfig();
-  
+ 
   nuxtApp.vueApp.use(fpjsPlugin, {
       loadOptions: {
-        apiKey: config.public.FINGERPRINT_API_KEY,
+        apiKey: useRuntimeConfig().public.FINGERPRINT_API_KEY2,
+        endpoint: 'https://greenn.com.br/MpFh1my3UHgTqbwv/VhwMjtqarZYKuK11',
+      scriptUrlPattern: 'https://greenn.com.br/MpFh1my3UHgTqbwv/Aq8T1FUNXnsDlYEq',
       },
     } as FpjsVueOptions);
+    console.log(fpjsPlugin);
   });
 

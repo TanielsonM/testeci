@@ -106,6 +106,7 @@ export default defineNuxtConfig({
       VUE_APP_ENVIRONMENT: process.env.VUE_APP_ENVIRONMENT,
       VUE_APP_COMMIT_SHA: process.env.VUE_APP_COMMIT_SHA,
       FINGERPRINT_API_KEY: process.env.FINGERPRINT_API_KEY,
+      FINGERPRINT_API_KEY2: process.env.FINGERPRINT_API_KEY2,
     },
   },
   i18n: {
