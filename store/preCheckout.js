@@ -7,7 +7,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
     batches: [],
     reservations: [],
-    loadingReservation: false,
+    loadingReservation: false
   }),
   getters: {
     getBatches: (state) => state.batches,
@@ -55,6 +55,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       batchesArry.sort((a, b) => a.batch_order - b.batch_order);
       return batchesArry;
     },
+    sellerHasFeatureTickets() {
+      return !!this.batches.length;
+    }
   },
   actions: {
     setBatches(value) {

@@ -324,28 +324,26 @@ export const useCheckoutStore = defineStore("checkout", {
               });
             }
 
-            if (response.data.product_type_id === 3) {
+            if (response.data.product_type_id === 3 && response?.batches && Array.isArray(response?.batches)) {
               const preCheckout = usePreCheckoutStore();
-              if(Array.isArray(response?.batches)) {
-                response.batches.forEach(batch => {
-                  // Adicionar chave para contabilizar ingressos selecionados
-                  batch.tickets = batch.tickets.map(x => {
-                    return { ...x, selected_tickets: 0 }
-                  })
-                  // Ordenar ingressos
-                  batch.tickets.sort((a, b) => {
-                    if (a.batch_order < b.batch_order) return -1;
-                    if (a.batch_order > b.batch_order) return 1;
-                    return 0;
-                  });
+              response.batches.forEach(batch => {
+                // Adicionar chave para contabilizar ingressos selecionados
+                batch.tickets = batch.tickets.map(x => {
+                  return { ...x, selected_tickets: 0 }
                 })
-                // Ordenar lotes
-                response.batches.sort((a, b) => {
-                  if (a.order < b.order) return -1;
-                  if (a.order > b.order) return 1;
+                // Ordenar ingressos
+                batch.tickets.sort((a, b) => {
+                  if (a.batch_order < b.batch_order) return -1;
+                  if (a.batch_order > b.batch_order) return 1;
                   return 0;
                 });
-              }
+              })
+              // Ordenar lotes
+              response.batches.sort((a, b) => {
+                if (a.order < b.order) return -1;
+                if (a.order > b.order) return 1;
+                return 0;
+              });
 
               preCheckout.setBatches(response.batches);
             }
