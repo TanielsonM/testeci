@@ -20,7 +20,7 @@ const queryKeys = Object.keys(route.query);
 const isEvent = queryKeys.some(x => x.includes('ticket_id'));
 
 const saleId = isEvent
-  ? route.query[queryKeys[0]].split("-s_id_")[1]
+  ? route.query.s_id ? route.query.s_id : route.query[queryKeys[0]].split("-s_id_")[1]
   : route.query.s_id;
 
 const current_query = new URLSearchParams(route.query);
