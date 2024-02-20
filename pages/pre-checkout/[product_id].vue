@@ -13,7 +13,7 @@ const route = useRoute();
 
 if (localStorage.getItem('reservations')) {
   try {
-    let reservations = JSON.parse(localStorage.getItem('reservations'));
+    let reservations = JSON.parse(window.localStorage.getItem('reservations'));
     if (reservations?.length) {
 
       const promises = reservations.map(async reservation => {
@@ -26,7 +26,7 @@ if (localStorage.getItem('reservations')) {
       });
       await Promise.all(promises);
       preCheckout.setReservations([]);
-      localStorage.setItem('reservations', []);
+      window.localStorage.setItem('reservations', []);
 
       const batches = await checkout.init();
       // por algum motivo o batches ta sumindo, código abaixo para persistir
