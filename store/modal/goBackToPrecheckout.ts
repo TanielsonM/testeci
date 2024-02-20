@@ -1,3 +1,5 @@
+import { defineStore } from "pinia";
+
 export const useGoBackToPrecheckoutStore = defineStore("goBackToPrecheckout", {
   state: () => ({
     showModal: false

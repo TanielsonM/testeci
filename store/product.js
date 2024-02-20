@@ -4,6 +4,7 @@ import { formatMoney } from "~~/utils/money";
 import { useInstallmentsStore } from "./modules/installments";
 import { defineStore } from "pinia";
 import { useAmountStore } from "./modules/amount";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
@@ -130,10 +131,14 @@ export const useProductStore = defineStore("product", {
         this.hasFixedInstallments,
         this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
-      if (product.product_type_id !== 3) {
-        checkout.setProductList(this.product);
-      } else {
+
+      // Se for evento o valor deve começar zerado, para aumentar de acordo com a seleção de ingressos
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+      if (product.product_type_id === 3 && sellerHasFeatureTickets?.value) {
         amountStore.reset();
+      } else {
+        checkout.setProductList(this.product);
       }
       let allowed_methods = product.method.split(",");
       if (

@@ -1,3 +1,5 @@
+import { defineStore } from "pinia";
+
 export const useExpiredSessionStore = defineStore("expiredSession", {
   state: () => ({
     haveFinished: false

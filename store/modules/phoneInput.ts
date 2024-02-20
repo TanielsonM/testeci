@@ -2,6 +2,8 @@ interface PhoneState {
     phone: any;
 }
 
+import { defineStore } from "pinia";
+
 export const usePhoneValidation = defineStore("phone", {
   state: (): PhoneState => ({
     phone: null,
