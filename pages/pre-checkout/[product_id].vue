@@ -52,19 +52,20 @@ onMounted(() => {
       // por algum motivo o batches ta sumindo, código abaixo para persistir
       if (batches?.length) preCheckout.setBatches(batches);
     }
+
+    if (route?.query?.batchs) {
+      const preCheckout = usePreCheckoutStore();
+      const { getBatches } = storeToRefs(preCheckout);
+      const batchs = getBatches?.value;
+      const route_batchs = JSON.parse(route.query.batchs);
+  
+      if (Array.isArray(batchs) && Array.isArray(route_batchs)) {
+        const filter_batchs = batchs.filter(b => route_batchs.includes(b.hash));
+        if (filter_batchs.length) preCheckout.setBatches(filter_batchs);
+      }
+    }
   }, 500)
 
-  if (route?.query?.batchs) {
-    const preCheckout = usePreCheckoutStore();
-    const { getBatches } = storeToRefs(preCheckout);
-    const batchs = getBatches?.value;
-    const route_batchs = JSON.parse(route.query.batchs);
-
-    if (Array.isArray(batchs) && Array.isArray(route_batchs)) {
-      const filter_batchs = batchs.filter(b => route_batchs.includes(b.hash));
-      if (filter_batchs.length) preCheckout.setBatches(filter_batchs);
-    }
-  }
 })
 
 onBeforeUnmount(() => {
