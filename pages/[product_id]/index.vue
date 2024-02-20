@@ -6,6 +6,7 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
+import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -43,16 +44,21 @@ const {
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
 
-import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
-
 const visitorData = ref(null);
 
-const getVisitorData = async () => {
-  visitorData.value = await useVisitorData();
-console.log(visitorData.value);
-};
+try {
+  const {data, error, isLoading, getData} = useVisitorData(
+    {extendedResult: true},
+    {immediate: false}
+  );
 
-getVisitorData();
+  await getData();
+  
+  visitorData.value = data;
+  console.log('Visitor data:', data);
+} catch(e) {
+  console.log('Error:', e);
+}
 
 
 // Computeds
