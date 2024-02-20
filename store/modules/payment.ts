@@ -338,7 +338,6 @@ export const usePaymentStore = defineStore("Payment", {
                 product_id: product_id.value,
               });
               let query: any = {};
-              console.log(productName.value, res.sales[0].product.name)
               const principal_product = res.sales
                 .filter(
                   (item: SaleElement) => item.product.name === productName.value

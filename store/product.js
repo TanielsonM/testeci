@@ -136,6 +136,7 @@ export const useProductStore = defineStore("product", {
       const preCheckout = usePreCheckoutStore();
       const { batches } = storeToRefs(preCheckout);
       if (product.product_type_id === 3 && !!batches?.length) {
+        checkout.resetProducts();
         amountStore.reset();
       } else {
         checkout.setProductList(this.product);
