@@ -23,7 +23,7 @@ const route = useRoute();
 
 // Variables
 const { t, locale } = useI18n();
-const { getReservations } = storeToRefs(preCheckout);
+const { getReservations, sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const {
@@ -183,7 +183,7 @@ function setInternationalURL() {
 onMounted(() => {
   if (process.client) {
     // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
-    if (product?.value?.product_type_id === 3) {
+    if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
       // Quando o usuário clica em voltar no navegador
       window.addEventListener('popstate', showBeforeBackNavigation);
 
@@ -206,7 +206,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (product?.value?.product_type_id === 3) {
+  if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
     window.removeEventListener('popstate', showBeforeBackNavigation);
     window.removeEventListener('beforeunload', showUnloadAlert);
   }
@@ -506,7 +506,7 @@ onMounted(() => {
       </section>
     </BaseModal>
 
-    <template v-if="product.product_type_id === 3">
+    <template v-if="product.product_type_id === 3 && sellerHasFeatureTickets">
       <EventExpiredSessionModal />
       <EventGoBackWarningModal />
     </template>

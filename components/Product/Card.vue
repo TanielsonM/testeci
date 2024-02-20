@@ -2,15 +2,18 @@
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const { t } = useI18n();
 
 /* State */
 const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { trial_position } = storeToRefs(custom_checkout);
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
 /* Trial message */
 const trialMessage = computed({
@@ -227,7 +230,7 @@ const exceptionSellerId = computed(() => {
       <ProductCoupon v-if="productStore.allowedCoupon" />
       <ProductCashback />
     </section>
-    <EventTimer v-if="product.product_type_id === 3"/>
+    <EventTimer v-if="product.product_type_id === 3 && sellerHasFeatureTickets"/>
   </BaseCard>
 </template>
 

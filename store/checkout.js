@@ -182,7 +182,9 @@ export const useCheckoutStore = defineStore("checkout", {
   actions: {
     async init(byChangeCountry = false) {
       const { product } = useProductStore();
-      if(product.id && product.product_type_id === 3) return
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+      if(product.id && product.product_type_id === 3 && sellerHasFeatureTickets?.value) return
       this.resetProducts();
       amountStore.reset();
       this.setLoading(true);

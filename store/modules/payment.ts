@@ -15,6 +15,7 @@ import { useLeadsStore } from "../modules/leads";
 import { useCheckoutStore } from "../checkout";
 import { useInstallmentsStore } from "./installments";
 import { useAmountStore } from "./amount";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 // External SDK
 import { loadMercadoPago } from "@mercadopago/sdk-js";
@@ -27,6 +28,7 @@ const addressStore = useAddressStore();
 const purchaseStore = usePurchaseStore();
 const installmentsStore = useInstallmentsStore();
 const amountStore = useAmountStore();
+const preCheckout = usePreCheckoutStore();
 
 const {
   method,
@@ -62,6 +64,7 @@ const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
 const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
@@ -117,7 +120,7 @@ export const usePaymentStore = defineStore("Payment", {
           // product infos
           product_id: product_id.value,
           products: product_list.value.map((item: Product) => ({
-            product_id: product.value.product_type_id === 3 ? item.product_id : item.id,
+            product_id: product.value.product_type_id === 3 && sellerHasFeatureTickets?.value ? item.product_id : item.id,
             product_offer: item.hash,
           })),
           // proposal_id: proposal_id,
@@ -353,7 +356,7 @@ export const usePaymentStore = defineStore("Payment", {
               const route = useRoute();
 
               // Se o produto for do tipo evento
-              if(product?.value?.product_type_id === 3) {
+              if(product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
                 product_list.value.forEach((ticket: {id: number, name: string, hash: string}, i) => {
                   const sale = res.sales.find((item: any) => item.product.offer_hash === ticket.hash);
                   if(sale) query['ticket_id_'+i] = (ticket.id + "-s_id_" + sale.sale_id)
