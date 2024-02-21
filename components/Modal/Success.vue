@@ -19,6 +19,8 @@ const { t } = useI18n();
 const saleId = route.query.s_id;
 const current_query = new URLSearchParams(route.query);
 
+const runtimeConfig = useRuntimeConfig();
+
 const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
@@ -90,7 +92,7 @@ if (
     else {
       const redirectTo = sale.sales[0].product.thank_you_page 
       ? sale.sales[0].product.thank_you_page 
-      : `https://greenn.com.br/checkout-obrigado?${current_query.toString()}`;
+      : `${runtimeConfig.public.BASE_URL}/checkout-obrigado?${current_query.toString()}`;
 
       window.location.href = redirectTo;
     }
