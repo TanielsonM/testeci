@@ -10,36 +10,7 @@ const preCheckout = usePreCheckoutStore();
 const expiredSession = useExpiredSessionStore();
 
 const route = useRoute();
-if (localStorage.getItem('reservations')) {
-  try {
-    let reservations = JSON.parse(window.localStorage.getItem('reservations'));
-    if (reservations?.length) {
 
-      const promises = reservations.map(async reservation => {
-        try {
-          await preCheckout.deleteReservation(reservation);
-          reservations = reservations.filter(x => x.id !== reservation.id);
-        } catch (err) {
-          console.error(err)
-        }
-      });
-      await Promise.all(promises);
-      preCheckout.setReservations([]);
-      window.localStorage.setItem('reservations', []);
-
-      const batches = await checkout.init();
-      // por algum motivo o batches ta sumindo, código abaixo para persistir
-      if (batches?.length) preCheckout.setBatches(batches);
-    }
-  } catch (e) {
-    checkout.setError(e.message);
-    throw e;
-  }
-} else {
-  const batches = await checkout.init();
-  // por algum motivo o batches ta sumindo, código abaixo para persistir
-  if (batches?.length) preCheckout.setBatches(batches);
-}
 const hasReservations = preCheckout.$state
 
 function byTickets() {
@@ -48,8 +19,40 @@ function byTickets() {
   navigateTo(`/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
 }
 
-onMounted(() => {
+onMounted(async() => {
   window.addEventListener('beforeunload', showUnloadAlert);
+  if (process.client) {
+    if (window.localStorage.getItem('reservations')) {
+      try {
+        let reservations = JSON.parse(window.localStorage.getItem('reservations'));
+        if (reservations?.length) {
+
+          const promises = reservations.map(async reservation => {
+            try {
+              await preCheckout.deleteReservation(reservation);
+              reservations = reservations.filter(x => x.id !== reservation.id);
+            } catch (err) {
+              console.error(err)
+            }
+          });
+          await Promise.all(promises);
+          preCheckout.setReservations([]);
+          localStorage.setItem('reservations', []);
+
+          const batches = await checkout.init();
+          // por algum motivo o batches ta sumindo, código abaixo para persistir
+          if (batches?.length) preCheckout.setBatches(batches);
+        }
+      } catch (e) {
+        checkout.setError(e.message);
+        throw e;
+      }
+    } else {
+      const batches = await checkout.init();  
+      // por algum motivo o batches ta sumindo, código abaixo para persistir
+      if (batches?.length) preCheckout.setBatches(batches);
+    }
+  }
 
   if (route?.query?.batchs) {
     const preCheckout = usePreCheckoutStore();
