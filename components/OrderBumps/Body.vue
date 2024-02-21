@@ -5,9 +5,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
 import * as Toast from "vue-toastification";
-import { MdPreview } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
-
 
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
