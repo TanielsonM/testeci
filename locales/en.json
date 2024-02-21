@@ -117,6 +117,14 @@
     "captcha3": "Terms of Service",
     "captcha4": "and",
     "captcha5": "apply",
+    "modal": {
+      "text_expiration": "Attention, your session has expired",
+      "text_loading": "You will need to reload the page to continue purchasing this event.",
+      "text_button": "Reload the page",
+      "text_ticket": "Change tickets",
+      "text_session": "Your session has not expired yet, if you return to the pre-checkout screen to change your tickets you will lose your saved data.",
+      "text_button_pre": "Return to Pre-checkout"
+    },
     "dados_pessoais": {
       "title": "Personal Data",
       "nome": "Full Name",
@@ -347,7 +355,32 @@
         "holder_name": "Fill in the name printed on the card.",
         "number": "Fill in your credit card number."
       }
+    },
+    "event": {
+      "freight": "Freight",
+      "order_bumps": "Order Bumps",
+      "tickets": "Tickets",
+      "edit": "Edit",
+      "finish_time": "Finish within",
+      "finish_time_text": "After this time, tickets will be released for sale again."
     }
+  },
+  "pre_checkout": {
+    "from": "From",
+    "sales_available": "Sales available",
+    "sales_available_batch": "Sales available after batch closes:",
+    "sales_start_in": "Sales will start in",
+    "available_soon": "Available soon",
+    "in_until": "in until",
+    "sold_off": "Sold out",
+    "details": "Event details",
+    "location": "Event location",
+    "location_config": "Configure the date and location of the event",
+    "organizers": "Organizers",
+    "payment_methods": "Payment Methods",
+    "total": "total",
+    "or": "or",
+    "buy": "Buy tickets"
   },
   "order": {
     "text_header": "100% SAFE PURCHASE",
