@@ -4,10 +4,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
-
-import { MdPreview } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
-
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
 
@@ -120,7 +116,7 @@ function getType(type = "") {
       </section>
       <!-- More product infos -->
       <section class="right__side" :class="`${bump.type.toLowerCase()}`">
-        <h1 class="item-title text-txt-color ml-5">{{ bump.name }}</h1>
+        <h1 class="item-title text-txt-color">{{ bump.name }}</h1>
         <template v-if="hasTrial">
           <p class="info-value custom-color">
             {{ trialMessage }}
@@ -134,7 +130,7 @@ function getType(type = "") {
           <section class="hide-details" v-if="!details" key="hide-details">
             <span
               v-if="!hasTrial && !hasCustomCharges"
-              class="info-value custom-color ml-5"
+              class="info-value custom-color"
               >{{ `${formatMoney(amount)}` }}</span
             >
             <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
@@ -206,7 +202,7 @@ function getType(type = "") {
           </section>
         </Transition>
         <span class="item-description" v-if="showDescription">
-          <MdPreview v-model="bump.description" style="background-color: transparent;" />
+          {{ bump.description }}
         </span>
       </section>
     </section>
