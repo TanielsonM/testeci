@@ -39,10 +39,11 @@ onMounted(async() => {
           preCheckout.setReservations([]);
           localStorage.setItem('reservations', []);
 
-          const batches = await checkout.init();
-          // por algum motivo o batches ta sumindo, código abaixo para persistir
-          if (batches?.length) preCheckout.setBatches(batches);
         }
+        const batches = await checkout.init();
+
+        // por algum motivo o batches ta sumindo, código abaixo para persistir
+        if (batches?.length) preCheckout.setBatches(batches);
       } catch (e) {
         checkout.setError(e.message);
         throw e;
