@@ -6,6 +6,7 @@ import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
 import { showUnloadAlert } from "@/utils/validateBatch";
 
 const checkout = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const expiredSession = useExpiredSessionStore();
 
 const route = useRoute();
