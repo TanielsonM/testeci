@@ -5,6 +5,9 @@ interface Fields {
   document: string | undefined;
   force: string | undefined;
 }
+
+import { defineStore } from "pinia";
+
 export const usePersonalStore = defineStore("personal", {
   state: () => ({
     name: "",

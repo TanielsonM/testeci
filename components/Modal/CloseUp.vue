@@ -23,9 +23,9 @@ const handleMouseOut = (event) => {
       event.clientX >= window.innerWidth ||
       event.clientY >= window.innerHeight
     ) {
-        closeUpModal.value = true;
-        closeUpModalCookie.value = false;
-        closeUpModalCookie.expires = expirationDate.setDate(expirationDate.getDate() + 7);
+      closeUpModal.value = true;
+      closeUpModalCookie.value = false;
+      closeUpModalCookie.expires = expirationDate.setDate(expirationDate.getDate() + 7);
     }
   }
 };
@@ -45,25 +45,12 @@ onBeforeUnmount(() => {
 
 <template>
   <!--- Close Up Modal -->
-  <BaseModal
-    :is-open="closeUpModal"
-    :show-close="false"
-    @close="closeModal"
-  >
-    <section
-      class="flex -mt-[70px] w-full max-w-[400px] flex-col gap-5"
-    > 
+  <BaseModal :is-open="closeUpModal" :show-close="false" @close="closeModal" :closeButton="false">
+    <section class="flex -mt-[70px] w-full max-w-[400px] flex-col gap-5">
       <section class="p-[5px]">
-        <h6
-          class="flex-content mb-[8px] text-[17px] font-semibold text-txt-color"
-        >
+        <h6 class="flex-content mb-[8px] text-[17px] font-semibold text-txt-color">
           {{ customCheckoutStore.popUpTitle }}
-          <Icon
-            name="mdi:close"
-            class="cursor-pointer text-gray-400"
-            size="25"
-            @click="closeModal"
-          />
+          <Icon name="mdi:close" class="cursor-pointer text-gray-400" size="25" @click="closeModal" />
         </h6>
 
         <section>
@@ -77,11 +64,7 @@ onBeforeUnmount(() => {
         </p>
         <section class="mt-3 flex w-full justify-end">
           <a :href="customCheckoutStore.popUpLink" class="mt-[20px] w-full">
-            <BaseButton
-              v-if="!closeUpOnlyImage"
-              class="bg-main-color text-txt-color"
-              @click="closeModal"
-            >
+            <BaseButton v-if="!closeUpOnlyImage" class="bg-main-color text-txt-color" @click="closeModal">
               {{ customCheckoutStore.popUpButtonText }}
             </BaseButton>
           </a>
@@ -96,11 +79,13 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
 }
+
 .cursor-close {
   position: absolute;
   right: -3px;
   top: -25px;
 }
+
 .close-button {
   display: none !important;
 }
@@ -119,7 +104,7 @@ onBeforeUnmount(() => {
   display: block;
   margin: 0 auto;
   max-height: 420px;
-} 
+}
 
 .margin-top-fix {
   position: relative;

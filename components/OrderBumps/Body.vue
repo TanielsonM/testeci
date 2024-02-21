@@ -4,7 +4,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
-
 import * as Toast from "vue-toastification";
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
@@ -168,7 +167,7 @@ function getType(type = "") {
           <section class="hide-details" v-if="!details" key="hide-details">
             <span
               v-if="!hasTrial && !hasCustomCharges"
-              class="info-value custom-color ml-5"
+              class="info-value custom-color"
               >{{ `${formatMoney(amount)}` }}</span
             >
             <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
@@ -240,7 +239,7 @@ function getType(type = "") {
           </section>
         </Transition>
         <span class="item-description" v-if="showDescription">
-          <MdPreview v-model="bump.description" style="background-color: transparent;" />
+          {{ bump.description }}
         </span>
       </section>
     </section>
