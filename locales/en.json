@@ -117,6 +117,8 @@
     "captcha3": "Terms of Service",
     "captcha4": "and",
     "captcha5": "apply",
+    "venda_por_indicacao": "Sale by indication. Click here to know more",
+    "link_vendedor_nao_encontrado": "The seller link was not found",
     "modal": {
       "text_expiration": "Attention, your session has expired",
       "text_loading": "You will need to reload the page to continue purchasing this event.",

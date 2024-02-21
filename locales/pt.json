@@ -117,6 +117,8 @@
     "captcha3": "Termos de serviço",
     "captcha4": "e",
     "captcha5": "",
+    "venda_por_indicacao": "Venda por indicação. Clique e saiba mais.",
+    "link_vendedor_nao_encontrado": "Link do vendedor não encontrado",
     "modal": {
       "text_expiration": "Atenção, sua sessão foi expirada",
       "text_loading": "Será necessário recarregar a página para continuar comprando este evento.",
