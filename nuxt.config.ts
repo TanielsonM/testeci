@@ -104,6 +104,7 @@ export default defineNuxtConfig({
       MERCADOPAGO_API_PUBLIC_KEY: process.env.MERCADOPAGO_API_PUBLIC_KEY,
       VUE_APP_ENVIRONMENT: process.env.VUE_APP_ENVIRONMENT,
       VUE_APP_COMMIT_SHA: process.env.VUE_APP_COMMIT_SHA,
+      BASE_URL: process.env.BASE_URL,
     },
   },
   i18n: {

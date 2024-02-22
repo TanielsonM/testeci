@@ -25,6 +25,8 @@ const saleId = isEvent
 
 const current_query = new URLSearchParams(route.query);
 
+const runtimeConfig = useRuntimeConfig();
+
 const data = ref({
   sale: {} as Sale,
   productOffer: {} as ProductOffer,
@@ -90,12 +92,13 @@ if (
 
   const closeAction = () => {
     if (customUrl.value[sale.sales[0].method]) {
-      window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+      //window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+      window.location.href = customUrl.value[sale.sales[0].method];
     } 
     else {
       const redirectTo = sale.sales[0].product.thank_you_page 
-      ? sale.sales[0].product.thank_you_page + `?${current_query.toString()}` 
-      : `https://greenn.com.br/checkout-obrigado?${current_query.toString()}`;
+      ? sale.sales[0].product.thank_you_page 
+      : `${runtimeConfig.public.BASE_URL}/checkout-obrigado?${current_query.toString()}`;
 
       window.location.href = redirectTo;
     }
