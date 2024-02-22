@@ -12,6 +12,7 @@ const checkoutStore = useCheckoutStore();
 
 const route = useRoute();
 
+const hasReservations = preCheckout.$state
 const { product_list } = storeToRefs(checkoutStore);
 
 function byTickets() {

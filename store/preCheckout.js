@@ -66,7 +66,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       if (Array.isArray(tickets)) {
         tickets.forEach(ticket => {
           let batch = this.batches.find(x => x.id === ticket.batch_id);
-          batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0
+          if(batch){
+            batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0
+          }
         })
       }
     },
