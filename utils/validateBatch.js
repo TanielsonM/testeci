@@ -40,19 +40,23 @@ const dependsOnAnotherBatch = function (batch) {
   }
 }
 
-const showUnloadAlert = async function (evt) {
+const showUnloadAlertCheckout = async function (evt) {
   // Pergunta pro usuário se realmente quer recarregar a pagina ( F5 || CTRL + SHFIT + R )
-  const preCheckout = usePreCheckoutStore();
-  const { getReservations } = storeToRefs(preCheckout);
-  if(getReservations?.value?.length) {
+  let getReservationsLocal = JSON.parse(window.localStorage.getItem('reservations'));
+  if(getReservationsLocal?.length) {
     evt.preventDefault();
-    evt.returnValue = '';
-    goBackToPreCheckout();
-    return "Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso recarregue a página esses dados serão perdidos.";
+    evt.returnValue = 'Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso recarregue a página esses dados serão perdidos.';
   }
 }
 
-const goBackToPreCheckout = async function() {
+const showUnloadAlert = async function () {
+  let getReservationsLocal = JSON.parse(window.localStorage.getItem('reservations'));
+  if(getReservationsLocal?.length) {
+    await goBackToPreCheckout();
+  }
+}
+
+const goBackToPreCheckout = async function (validateDelete = false) {
   const preCheckout = usePreCheckoutStore();
   const { getBatches, getReservations } = storeToRefs(preCheckout);
   let batchs = getBatches.value;
@@ -68,7 +72,7 @@ const goBackToPreCheckout = async function() {
   });
 
   const deletePromises = reservations.map(reservation => {
-    return preCheckout.deleteReservation(reservation, batchs);
+    return preCheckout.deleteReservation(reservation, batchs, false , validateDelete);
   });
 
   try {
@@ -87,13 +91,13 @@ const goBackToPreCheckout = async function() {
   navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
 }
 
-const showBeforeBackNavigation = async function (evt) {
+const showBeforeBackNavigation = async function () {
   // Pergunta pro usuário se realmente quer voltar a página
   var confirmacao = confirm('Sua sessão ainda esta ativa, e você possui ingressos selecionados, caso volte a página esses dados serão perdidos, deseja continuar?');
   if (!confirmacao) {
     history.forward();
   } else {
-    goBackToPreCheckout();
+    await goBackToPreCheckout(true); 
   }
 }
 
@@ -103,5 +107,6 @@ export {
   dependsOnAnotherBatch,
   showUnloadAlert,
   goBackToPreCheckout,
-  showBeforeBackNavigation
+  showBeforeBackNavigation,
+  showUnloadAlertCheckout,
 }

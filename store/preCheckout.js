@@ -190,10 +190,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         this.setLoadingReservation(false, ticket);
       }
     },
-    async deleteReservation(reservation, ticket) {
+    async deleteReservation(reservation, ticket, preCheckout = false, checkout = false) {
+      if(!ticket && !preCheckout || (ticket && !preCheckout && checkout)) return;
       const reservations = localStorage.getItem('reservations');
-      if (reservations) {
+      if (reservations && !preCheckout) {
         this.setLoadingReservation(true, ticket);
+      }
         try {
           const res = await useApi().remove(`/event/reservation/${reservation.token}`);
           if (this.reservations?.length) this.removeReservation(reservation);
@@ -208,9 +210,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           console.error(err)
           return err;
         } finally {
-          this.setLoadingReservation(false, ticket);
+          if(reservations && !preCheckout) this.setLoadingReservation(false, ticket);
         }
-      }
     }
   }
 });

@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "~~/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
-import { showUnloadAlert } from "@/utils/validateBatch";
+import { showUnloadAlertCheckout } from "@/utils/validateBatch";
 
 const checkout = useCheckoutStore();
 const preCheckout = usePreCheckoutStore();
@@ -21,26 +21,26 @@ function byTickets() {
   navigateTo(`/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
 }
 
-onMounted(async() => {
-  window.addEventListener('beforeunload', showUnloadAlert);
+onMounted(async () => {
   if (process.client) {
+    window.addEventListener('beforeunload', showUnloadAlertCheckout);
     if (window.localStorage.getItem('reservations')) {
       try {
         let reservations = JSON.parse(window.localStorage.getItem('reservations'));
         if (reservations?.length) {
-
-          const promises = reservations.map(async reservation => {
-            try {
-              await preCheckout.deleteReservation(reservation);
-              reservations = reservations.filter(x => x.id !== reservation.id);
-            } catch (err) {
-              console.error(err)
-            }
-          });
-          await Promise.all(promises);
-          preCheckout.setReservations([]);
-          localStorage.setItem('reservations', []);
-
+          setTimeout(async () => {
+            const promises = reservations.map(async reservation => {
+              try {
+                await preCheckout.deleteReservation(reservation, null, true);
+                reservations = reservations.filter(x => x.id !== reservation.id);
+              } catch (err) {
+                console.error(err)
+              }
+            });
+            await Promise.all(promises);
+            preCheckout.setReservations([]);
+            localStorage.setItem('reservations', []);
+          }, 500);
         }
         const batches = await checkout.init();
 
@@ -51,7 +51,7 @@ onMounted(async() => {
         throw e;
       }
     } else {
-      const batches = await checkout.init();  
+      const batches = await checkout.init();
       // por algum motivo o batches ta sumindo, código abaixo para persistir
       if (batches?.length) preCheckout.setBatches(batches);
     }
@@ -71,7 +71,7 @@ onMounted(async() => {
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('beforeunload', showUnloadAlert);
+  window.removeEventListener('beforeunload', showUnloadAlertCheckout);
 });
 </script>
 
