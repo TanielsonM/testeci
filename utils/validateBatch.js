@@ -8,8 +8,9 @@ import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout"
 const saleHasStarted = function (batch) {
   if(batch.release_type && batch.release_type === 'fixed_date') {
     const today = moment();
-    const saleStartDate = moment(batch?.release_fixed_date);
-    return today >= saleStartDate
+    const saleStartDate = moment(batch?.release_fixed_date); 
+    
+     return today.isSameOrAfter(saleStartDate)
   } else {
     return true
   }
@@ -18,7 +19,12 @@ const saleHasStarted = function (batch) {
 const haveAvailableTickets = function (batch) {
   // if(!batch?.available_tickets && batch?.available_tickets !== 0) return true;
   // else return batch?.available_tickets > 0;
-  return !(batch.selected_batch_tickets >= batch?.available_tickets)
+  if(batch.release_type === 'by_stock'){
+    return !(batch.selected_batch_tickets >= batch?.available_tickets)
+  }else{
+    // Para eventos que estão configurados para liberar por data || esgotar lote
+    return true;
+  }
 }
 
 const dependsOnAnotherBatch = function (batch) {

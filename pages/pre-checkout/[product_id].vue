@@ -8,10 +8,11 @@ import { showUnloadAlert } from "@/utils/validateBatch";
 const checkout = useCheckoutStore();
 const preCheckout = usePreCheckoutStore();
 const expiredSession = useExpiredSessionStore();
+const checkoutStore = useCheckoutStore();
 
 const route = useRoute();
 
-const hasReservations = preCheckout.$state
+const { product_list } = storeToRefs(checkoutStore);
 
 function byTickets() {
   expiredSession.setHaveFinished(false);
@@ -97,7 +98,7 @@ onBeforeUnmount(() => {
         <div class="flex flex-col justify-between items-start mb-12 md:flex-row md:items-center">
           <BatchTotal />
           <div class="w-full md:w-fit" :key="hasReservations">
-            <BaseButton color="primary" :disabled="!hasReservations.reservations.length" @click="byTickets">
+            <BaseButton color="primary" :disabled="!product_list.length" @click="byTickets">
               {{ $t("pre_checkout.buy") }}
             </BaseButton>
           </div>
