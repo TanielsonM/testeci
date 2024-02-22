@@ -1,6 +1,7 @@
 <script setup>
 // Traduction
 import { useI18n } from "vue-i18n";
+const { t: $t } = useI18n();
 // Stores
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useProductStore } from "~~/store/product";
@@ -8,16 +9,24 @@ import { useCheckoutStore } from "~~/store/checkout";
 // Variables
 const custom_checkout = useCustomCheckoutStore();
 const productStore = useProductStore();
-const { product } = useProductStore();
+// const { product } = useProductStore();
 const checkout = useCheckoutStore();
 const logo = computed(() => (checkout.isHeaven ? "Heaven" : "Greenn"));
 
-onMounted(() => {
-  if (!product.start_date || !product.location) {
-    const { t: $t } = useI18n();
-    checkout.setError($t("pre_checkout.location_config"));
+const computedProduct = computed(() => {
+  const { product } = useProductStore();
+  return {
+    ...product,
+  };
+});
+
+watch(computedProduct, (value) => {
+  if (value) {
+    if (!value.start_date || !value.location) {
+      checkout.setError($t("pre_checkout.location_config"));
+    }
   }
-})
+});
 </script>
 
 <template>

@@ -66,7 +66,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       if (Array.isArray(tickets)) {
         tickets.forEach(ticket => {
           let batch = this.batches.find(x => x.id === ticket.batch_id);
-          batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0
+          if(batch){
+            batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0
+          }
         })
       }
     },
@@ -118,8 +120,13 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         //   localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // } else {
         // Cria nova reserva do ingresso do lote selecionado
-        await this.createReservation(ticket.id, ticket);
-        localStorage.setItem('reservations', JSON.stringify(this.reservations));
+        if(batch.release_type !== "fixed_date"){
+          await this.createReservation(ticket.id, ticket);
+          localStorage.setItem('reservations', JSON.stringify(this.reservations));
+        }else{
+          // Para eventos que estão configurados para liberar por data || esgotar lote
+          this.updateAvailableTickets(batch.tickets);
+        }
         // }
       }
     },
@@ -134,9 +141,14 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         checkoutStore.setProductListPreCheckout(ticket, addProduct);
         // if(ticket.selected_tickets === 0) {
         // Deleta a reserva do lote existente, já que foram removidos todos ingressos
-        const reservation = this.reservations.find(x => x.offer_id === ticket.id);
-        await this.deleteReservation(reservation, ticket);
-        localStorage.setItem('reservations', JSON.stringify(this.reservations));
+        if(batch.release_type !== "fixed_date"){
+          const reservation = this.reservations.find(x => x.offer_id === ticket.id);
+          await this.deleteReservation(reservation, ticket);
+          localStorage.setItem('reservations', JSON.stringify(this.reservations));
+        }else{
+          // Para eventos que estão configurados para liberar por data || esgotar lote
+          this.updateAvailableTickets(batch.tickets);
+        }
         // } else {
         //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
         //   const res = await this.putReservation(ticket);
