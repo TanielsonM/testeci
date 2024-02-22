@@ -26,6 +26,8 @@ const { t, locale } = useI18n();
 const { getReservations, sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
+const { product_list } = storeToRefs(checkout);
+
 const {
   method,
   allowed_methods,
@@ -187,7 +189,7 @@ onMounted(() => {
       // Quando o usuário clica em voltar no navegador
       window.addEventListener('popstate', showBeforeBackNavigation);
 
-      if (getReservations?.value?.length) {
+      if (product_list?.value?.length) {
         window.addEventListener('beforeunload', showUnloadAlert);
         checkout.setCoupon(true);
       } else {
