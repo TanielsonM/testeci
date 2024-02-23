@@ -19,7 +19,7 @@ const saleHasStarted = function (batch) {
 const haveAvailableTickets = function (batch) {
   // if(!batch?.available_tickets && batch?.available_tickets !== 0) return true;
   // else return batch?.available_tickets > 0;
-  if(batch.release_type === 'by_stock'){
+  if(batch.release_type !== 'fixed_date'){
     return !(batch.selected_batch_tickets >= batch?.available_tickets)
   }else{
     // Para eventos que estão configurados para liberar por data || esgotar lote
