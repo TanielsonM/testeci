@@ -75,7 +75,7 @@ const data = ref({
           {{ formatMoney(sale.total || sale.amount || sale.product.amount) }}
         </p>
       </template>
-      <section class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')">
+      <section class="item" v-if="(sale.shipping_amount || sale.method == 'FREE') && !!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ formatMoney(sale.shipping_amount) || "Grátis"}}</p>
       </section>
