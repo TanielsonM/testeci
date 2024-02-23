@@ -62,12 +62,15 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     setBatches(value) {
       this.batches = value;
     },
-    updateAvailableTickets(tickets) {
+    updateAvailableTickets(tickets, selected = false) {
       if (Array.isArray(tickets)) {
-        tickets.forEach(ticket => {
+        tickets.forEach((ticket,index) => {
           let batch = this.batches.find(x => x.id === ticket.batch_id);
           if(batch){
-            batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0
+            batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0;
+            if(selected){
+              batch.available_tickets = ticket.tickets
+            }
           }
         })
       }
@@ -125,7 +128,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         }else{
           // Para eventos que estão configurados para liberar por data || esgotar lote
-          this.updateAvailableTickets(batch.tickets);
+          this.updateAvailableTickets(batch.tickets, false);
         }
         // }
       }
@@ -147,7 +150,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         }else{
           // Para eventos que estão configurados para liberar por data || esgotar lote
-          this.updateAvailableTickets(batch.tickets);
+          this.updateAvailableTickets(batch.tickets, false);
         }
         // } else {
         //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
@@ -165,7 +168,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         const res = await useApi().create('/event/reservation', payload);
         this.addReservation({ ...res, offer_id });
-        this.updateAvailableTickets(res.tickets);
+        this.updateAvailableTickets(res.tickets, false);
         return res;
       } catch (err) {
         console.error(err);
@@ -181,7 +184,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         const res = await useApi().update(`/event/reservation/${payload.token}`, payload);
         this.updateReservation({ ...res, offer_id: ticket.id });
-        this.updateAvailableTickets(res.tickets);
+        this.updateAvailableTickets(res.tickets, false);
         return res;
       } catch (err) {
         console.error(err);
@@ -202,7 +205,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           localStorage.removeItem('reservations');
           this.batches.forEach(batch => {
             if (batch.tickets.some(x => x.id === reservation.offer_id)) {
-              this.updateAvailableTickets(res.tickets);
+              this.updateAvailableTickets(res.tickets, true);
             }
           })
           return res;
