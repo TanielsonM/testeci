@@ -1,21 +1,15 @@
 <script setup>
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
-import { showUnloadAlert, goBackToPreCheckout } from "@/utils/validateBatch";
+import { goBackToPreCheckout } from "@/utils/validateBatch";
 import moment from "moment";
 
 const expiredSession = useExpiredSessionStore();
-const route = useRoute();
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
 
 function closeModal() {
   expiredSession.setHaveFinished(false);
-  if (route.name === 'pre-checkout-product_id') {
-    window.removeEventListener('beforeunload', showUnloadAlert);
-    window.location.reload(true);
-  } else {
-    goBackToPreCheckout();
-  }
+  goBackToPreCheckout();
 }
 </script>
 

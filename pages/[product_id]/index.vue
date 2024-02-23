@@ -7,7 +7,7 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
-import { showUnloadAlert, showBeforeBackNavigation } from "@/utils/validateBatch";
+import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
 
 // Stores
@@ -190,7 +190,7 @@ onMounted(() => {
       window.addEventListener('popstate', showBeforeBackNavigation);
 
       if (product_list?.value?.length) {
-        window.addEventListener('beforeunload', showUnloadAlert);
+        window.addEventListener('beforeunload', showUnloadAlertCheckout);
         checkout.setCoupon(true);
       } else {
         const route = useRoute();
@@ -210,7 +210,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
     window.removeEventListener('popstate', showBeforeBackNavigation);
-    window.removeEventListener('beforeunload', showUnloadAlert);
+    window.removeEventListener('beforeunload', showUnloadAlertCheckout);
   }
   window.removeEventListener("resize", handleResize);
 });
@@ -371,7 +371,7 @@ onMounted(() => {
 
         <!-- Address form -->
         <Steps :title="$t('components.steps.address')" step="02" v-if="(checkout.showAddressStep &&
-            ((isMobile && currentStep == 2) || !isMobile)) ||
+          ((isMobile && currentStep == 2) || !isMobile)) ||
           (isOneStep && checkout.showAddressStep)
           " @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
           <template #content>
