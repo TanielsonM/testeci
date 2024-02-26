@@ -6,8 +6,6 @@ import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
 
 import * as Toast from "vue-toastification";
-import { MdPreview } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
 
 
 const productStore = useProductStore();
