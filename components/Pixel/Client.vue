@@ -49,7 +49,7 @@ onMounted(async () => {
           });
         }
 
-        pixels.forEach((pixel) => {
+        pixels.forEach((pixel) => {          
           handleIframe(
             pixel.host,
             pixel.product_id,
@@ -111,7 +111,7 @@ onMounted(async () => {
       })(window, document, "script", "dataLayer", pixel_id);
 
       let data = {
-        column: 'events_triggered_count',
+        column: props.event === 'view' ? 'view_events_triggered_count' : 'conversion_events_triggered_count',
         seller_id: `${user_id}`,
         pixel_id: `${pixel_id}`,
         product_id: `${product_id}`,
