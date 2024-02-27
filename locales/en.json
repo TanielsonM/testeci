@@ -117,6 +117,8 @@
     "captcha3": "Terms of Service",
     "captcha4": "and",
     "captcha5": "apply",
+    "venda_por_indicacao": "Sale by indication. Click here to know more",
+    "link_vendedor_nao_encontrado": "The seller link was not found",
     "dados_pessoais": {
       "title": "Personal Data",
       "nome": "Full Name",
