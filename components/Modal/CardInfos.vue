@@ -47,7 +47,14 @@ const data = ref({
   showCode: false,
 });
 
-function productName(sale) {
+const productName = computed(() => {
+  if(props?.product?.product_type_id == 3 && props?.batches?.length){
+    return props?.product?.name;
+  }
+  return props?.name ?? "produto";
+});
+
+function salestName(sale) {
   if(props?.product?.product_type_id == 3 && props?.batches?.length){
     return sale.offer.name;
   }
@@ -61,7 +68,7 @@ function productName(sale) {
   </h6>
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.vc_adquiriu") }}
-    {{ name ?? "produto" }}
+    {{ productName }}
   </p>
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.detalhes_email") }}
@@ -82,7 +89,7 @@ function productName(sale) {
         <section class="flex items-start">
           <section class="check-icon icon-success"></section>
           <section class="transaction">
-            <p>{{ productName(sale) }}</p>
+            <p>{{ salestName(sale) }}</p>
             <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
           </section>
         </section>
