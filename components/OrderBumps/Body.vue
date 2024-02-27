@@ -4,8 +4,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
-import { MdPreview } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
 
 import * as Toast from "vue-toastification";
 
@@ -147,8 +145,10 @@ function getType(type = "") {
           <div v-show="!isBumpSellerEqual" class='has-tooltip' @click="redirect">
             <span class='tooltip absolute rounded shadow-lg p-2 bg-black text-white bg-opacity-75 text-sm -mt-12 mr-8 w-full sm:w-64 md:w-80 text-center left-1/2 transform -translate-x-1/2'>  
               {{$t("checkout.venda_por_indicacao")}}  
+             
             </span>
-            <span class="different-seller"><Icon name="mdi:star-outline" size="20" class="" />{{ bump.seller.company ? bump.seller.company.fantasy_name ||
+            <span class="different-seller">
+              Autor: {{ bump.seller.company ? bump.seller.company.fantasy_name ||
                 bump.seller.company.name
               : bump.seller.name
              }}</span>        
@@ -168,7 +168,7 @@ function getType(type = "") {
           <section class="hide-details" v-if="!details" key="hide-details">
             <span
               v-if="!hasTrial && !hasCustomCharges"
-              class="info-value custom-color ml-5"
+              class="info-value custom-color"
               >{{ `${formatMoney(amount)}` }}</span
             >
             <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
@@ -240,7 +240,7 @@ function getType(type = "") {
           </section>
         </Transition>
         <span class="item-description" v-if="showDescription">
-          <MdPreview v-model="bump.description" style="background-color: transparent;" />
+          {{ bump.description }}
         </span>
       </section>
     </section>
