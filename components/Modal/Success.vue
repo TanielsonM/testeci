@@ -4,6 +4,7 @@ import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
 
@@ -11,6 +12,8 @@ const productStore = useProductStore();
 const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
+const { product } = useProductStore();
+const { batches } = usePreCheckoutStore();
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -254,6 +257,8 @@ function openPix(id: number) {
         :shipping-amount="data.sale.sales && data.sale.sales.length ? formatMoney(data.sale.sales[0].shipping_amount) : 0"
         :shipping-selected="data.sale.sales[0].shipping_selected"
         :only-buttons="data.sale.sales.length == 1"
+        :product="product"
+        :batches="batches"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
