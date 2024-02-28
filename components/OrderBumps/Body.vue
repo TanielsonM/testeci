@@ -143,8 +143,10 @@ function getType(type = "") {
           <div v-show="!isBumpSellerEqual" class='has-tooltip' @click="redirect">
             <span class='tooltip absolute rounded shadow-lg p-2 bg-black text-white bg-opacity-75 text-sm -mt-12 mr-8 w-full sm:w-64 md:w-80 text-center left-1/2 transform -translate-x-1/2'>  
               {{$t("checkout.venda_por_indicacao")}}  
+             
             </span>
-            <span class="different-seller"><Icon name="mdi:star-outline" size="20" class="" />{{ bump.seller.company ? bump.seller.company.fantasy_name ||
+            <span class="different-seller">
+              Autor: {{ bump.seller.company ? bump.seller.company.fantasy_name ||
                 bump.seller.company.name
               : bump.seller.name
              }}</span>        

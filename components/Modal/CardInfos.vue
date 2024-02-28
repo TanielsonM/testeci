@@ -32,12 +32,34 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  product: {
+    type: Object,
+    default: {},
+  },
+  batches: {
+    type: Array,
+    default: [],
+  },
 });
 
 const data = ref({
   shippingSelected: props.shippingSelected ? JSON.parse(props.shippingSelected): {},
   showCode: false,
 });
+
+const productName = computed(() => {
+  if(props?.product?.product_type_id == 3 && props?.batches?.length){
+    return props?.product?.name;
+  }
+  return props?.name ?? "produto";
+});
+
+function salestName(sale) {
+  if(props?.product?.product_type_id == 3 && props?.batches?.length){
+    return sale.offer.name;
+  }
+  return sale.product.name;
+}
 </script>
 
 <template>
@@ -46,7 +68,7 @@ const data = ref({
   </h6>
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.vc_adquiriu") }}
-    {{ name ?? "produto" }}
+    {{ productName }}
   </p>
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.detalhes_email") }}
@@ -67,7 +89,7 @@ const data = ref({
         <section class="flex items-start">
           <section class="check-icon icon-success"></section>
           <section class="transaction">
-            <p>{{ sale.product.name }}</p>
+            <p>{{ salestName(sale) }}</p>
             <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
           </section>
         </section>
