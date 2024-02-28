@@ -180,12 +180,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         const res = await useApi().create('/event/reservation', payload);
         this.addReservation({ ...res, offer_id });
         this.updateAvailableTickets(res.tickets, false);
-
-        console.log(res);
         return res;
       } catch (err) {
         this.hasAvailableTickets = false
-
         return err;
       } finally {
         this.setLoadingReservation(false, ticket);
