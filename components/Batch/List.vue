@@ -112,7 +112,7 @@ const getSmallerAmount = function (tickets) {
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ ticket?.name }}</h5>
             <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(ticket?.amount) }}</p>
             <small v-if="ticket?.selected_tickets > 0" class="text-[14px] font-[400] text-main-color">
-              {{ $t("pre_checkout.in_until") }} G {{ ticket?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch, ticket?.hash)) }}
+              {{ $t("pre_checkout.in_until") }} {{ ticket?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch, ticket?.hash)) }}
             </small>
           </div>
           <div v-if="(batch.available_tickets > 0 || batch.release_type === 'fixed_date') && haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)" class="flex items-center mr-5">
