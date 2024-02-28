@@ -7,7 +7,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
     batches: [],
     reservations: [],
-    loadingReservation: false
+    loadingReservation: false,
+    hasAvailableTickets: true
   }),
   getters: {
     getBatches: (state) => state.batches,
@@ -112,6 +113,16 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     async addTicket(batch_group, hash) {
       let batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
+      const hasTicket = await useApi().create(
+        '/event/reservation/check-amount', { 
+        offer_id: ticket.id 
+      })
+
+      if(! hasTicket) {
+        this.hasAvailableTickets = false
+        return
+      }
+
       if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
         batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
@@ -169,9 +180,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         const res = await useApi().create('/event/reservation', payload);
         this.addReservation({ ...res, offer_id });
         this.updateAvailableTickets(res.tickets, false);
+
+        console.log(res);
         return res;
       } catch (err) {
-        console.error(err);
+        this.hasAvailableTickets = false
+
         return err;
       } finally {
         this.setLoadingReservation(false, ticket);

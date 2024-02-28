@@ -115,7 +115,7 @@ const getSmallerAmount = function (tickets) {
               {{ $t("pre_checkout.in_until") }} {{ ticket?.max_installments ?? 12 }}x de {{ formatMoney(getTicketInstallments(batch, ticket?.hash)) }}
             </small>
           </div>
-          <div v-if="(batch.available_tickets > 0 || batch.release_type === 'fixed_date') && haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)" class="flex items-center mr-5">
+          <div v-if="preCheckout.hasAvailableTickets && (batch.available_tickets > 0 || batch.release_type === 'fixed_date') && haveAvailableTickets(batch) || (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)" class="flex items-center mr-5">
             <template v-if="!ticket.load">
               <Icon name="mdi:minus-circle-outline" size="20" :class="{
                 'text-gray-300': ticket?.selected_tickets === 0 || !saleHasStarted(batch),
