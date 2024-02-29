@@ -119,6 +119,14 @@
     "captcha5": "aplicar",
     "venda_por_indicacao": "Venta por indicación. Clique aquí para saber más",
     "link_vendedor_nao_encontrado": "El enlace del vendedor no se encontró",
+    "modal": {
+      "text_expiration": "Atención, tu sesión ha caducado",
+      "text_loading": "Deberá recargar la página para continuar comprando este evento.",
+      "text_button": "Recargar la pagina",
+      "text_ticket": "Cambiar billetes",
+      "text_session": "Tu sesión aún no ha expirado, si regresas a la pantalla de pre-pago para cambiar tus boletos perderás tus datos guardados.",
+      "text_button_pre": "Volver al pago previo"
+    },
     "dados_pessoais": {
       "title": "Datos personales",
       "nome": "Nombre completo",
@@ -350,7 +358,32 @@
         "year": "Elige el ano de validez.",
         "cvv": "Rellenar correctamente el número CVV de la tarjeta."
       }
+    },
+    "event": {
+      "freight": "flete",
+      "order_bumps": "Mejoras de pedidos",
+      "tickets": "Entradas",
+      "edit": "Editar",
+      "finish_time": "Terminar dentro de",
+      "finish_time_text": "Después de este tiempo, las entradas se pondrán a la venta nuevamente."
     }
+  },
+  "pre_checkout": {
+    "from": "De",
+    "sales_available": "Ventas disponibles",
+    "sales_available_batch": "Ventas disponibles después del cierre del lote:",
+    "sales_start_in": "Las ventas comenzarán en",
+    "available_soon": "Disponible pronto",
+    "in_until": "en hasta",
+    "sold_off": "Agotado",
+    "details": "Detalles del evento",
+    "location": "Ubicación del evento",
+    "location_config": "Configurar la fecha y ubicación del evento",
+    "organizers": "Organizadores",
+    "payment_methods": "Métodos de pago",
+    "total": "total",
+    "or": "o",
+    "buy": "Comprar entradas"
   },
   "order": {
     "text_header": "COMPRA 100% SEGURA",
