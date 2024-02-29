@@ -48,8 +48,14 @@ export type Installment = {
   value: number;
   index: number;
 };
+export type Batche = {
+  batch_id: number;
+  selected_tickets: number;
+};
 
 export type Payment = {
+  batches?: Batche[];
+
   amount: number;
   total: number;
 
