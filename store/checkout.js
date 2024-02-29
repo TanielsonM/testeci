@@ -203,17 +203,12 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      // if (!!this.hasCustomCheckout) {
-      //   const customCheckout = useCustomCheckoutStore();
-      //   await customCheckout.getCustomCheckout();
-      // }
       /* Initial configs */
-      await this.setCoupon(true);
-      if (this.hasBatches) this.getBatches()
-      if (this.hasBump) this.getBumps();
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
+      await this.setCoupon(true);
+      if (this.hasBump) this.getBumps();
+      if (this.hasBatches) this.getBatches()
       this.setLoading();
-
       if(res?.batches?.length) return res.batches;
     },
     setUUID(uuid) {
