@@ -9,4 +9,5 @@ services:
     volumes:
       - './:/frontend'
     env_file:
-      - .env-development
+      - .env.development
+
