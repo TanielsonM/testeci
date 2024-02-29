@@ -41,6 +41,8 @@ npm run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+
+
 # Como Executar o Projeto Localmente em Docker
 
 Este guia irá ajudá-lo a executar o projeto localmente usando o Docker Compose.
@@ -56,24 +58,28 @@ Este guia irá ajudá-lo a executar o projeto localmente usando o Docker Compose
 
 2. Execute o comando `docker-compose` para construir e iniciar os contêineres:
 
-   ```sh
-   docker-compose -f local.docker-compose.yaml up --build
+  ```sh
+  docker-compose -f local.docker-compose.yaml up --build
    ```
 - Acesse a aplicação em seu navegador em http://localhost:3000.
 
 ## Comandos Úteis:
 1. Verificar os contêineres em execução:
 
-- docker ps
+  ```sh
+ docker ps
+   ```
 
 2. Visualizar logs dos contêineres:
  
-- docker-compose -f local.docker-compose.yaml logs
-
+  ```sh
+ docker-compose -f local.docker-compose.yaml logs
+  ``` 
 ## Parar execução do container:
 
-- docker-compose -f local.docker-compose.yaml down
-
+   ```sh
+  docker-compose -f local.docker-compose.yaml down
+   ```
 
  
 
