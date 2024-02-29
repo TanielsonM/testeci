@@ -7,7 +7,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
     batches: [],
     reservations: [],
-    loadingReservation: false
+    loadingReservation: false,
+    hasAvailableTickets: true
   }),
   getters: {
     getBatches: (state) => state.batches,
@@ -109,9 +110,22 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       });
       return totalSelectedTickets;
     },
+    async checkHasTickets(offer) {
+      const hasTicket = await useApi().create('/event/reservation/check-amount', { offer_id: offer })
+
+      if(! hasTicket) 
+        return this.hasAvailableTickets = false
+      
+      this.hasAvailableTickets = true
+    },
     async addTicket(batch_group, hash) {
       let batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
+      
+      await this.checkHasTickets(ticket.id)
+      if(! this.hasAvailableTickets)
+        return
+
       if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
         batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
@@ -139,6 +153,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       if (ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
         ticket.selected_tickets -= 1;
         batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
+
         const checkoutStore = useCheckoutStore();
         const addProduct = false
         checkoutStore.setProductListPreCheckout(ticket, addProduct);
@@ -147,8 +162,10 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         if(batch.release_type !== "fixed_date"){
           const reservation = this.reservations.find(x => x.offer_id === ticket.id);
           await this.deleteReservation(reservation, ticket);
+          await this.checkHasTickets(ticket.id)
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         }else{
+          console.log('ELSE', batch.release_type);
           // Para eventos que estão configurados para liberar por data || esgotar lote
           this.updateAvailableTickets(batch.tickets, false);
         }
@@ -171,7 +188,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         this.updateAvailableTickets(res.tickets, false);
         return res;
       } catch (err) {
-        console.error(err);
+        this.hasAvailableTickets = false
         return err;
       } finally {
         this.setLoadingReservation(false, ticket);
@@ -205,7 +222,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           localStorage.removeItem('reservations');
           this.batches.forEach(batch => {
             if (batch.tickets.some(x => x.id === reservation.offer_id)) {
-              this.updateAvailableTickets(res.tickets, true);
+              this.updateAvailableTickets(res.tickets, false);
             }
           })
           return res;
