@@ -1,9 +1,9 @@
 <script setup>
-import { storeToRefs } from "pinia";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useProductStore } from "~~/store/product";
 import { useStepStore } from "~~/store/modules/steps";
 import greenn from "../../assets/logos/logo.png";
+import heaven from "../../assets/heaven/logo.svg";
 
 const customCheckStore = useCustomCheckoutStore();
 const product = useProductStore();

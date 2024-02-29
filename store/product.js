@@ -3,12 +3,10 @@ import { useCustomCheckoutStore } from "@/store/customCheckout";
 import { formatMoney } from "~~/utils/money";
 import { useInstallmentsStore } from "./modules/installments";
 import { defineStore } from "pinia";
-import { useAmountStore } from "./modules/amount";
-import { usePreCheckoutStore } from "~~/store/preCheckout";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
-    product: {product_type_id: 0},
+    product: [],
     amount: 0,
     original_amount: 0,
     is_gift: false,
@@ -109,9 +107,7 @@ export const useProductStore = defineStore("product", {
     hasAffiliationLead: (state) => state.product.affiliation_lead,
   },
   actions: {
-    setProduct(product, batches) {
-     const amountStore = useAmountStore();
-
+    setProduct(product) {
       this.product = product;
 
       if (this.product.status_product === "CHANGED")
@@ -131,14 +127,7 @@ export const useProductStore = defineStore("product", {
         this.hasFixedInstallments,
         this.hasTicketInstallments > 1 ? this.hasTicketInstallments : 1
       );
-
-      // Se for evento o valor deve começar zerado, para aumentar de acordo com a seleção de ingressos
-      if (product.product_type_id === 3 && !!batches?.length) {
-        checkout.resetProducts();
-        amountStore.reset();
-      } else {
-        checkout.setProductList(this.product);
-      }
+      checkout.setProductList(this.product);
       let allowed_methods = product.method.split(",");
       if (
         !!product.seller.is_heaven &&

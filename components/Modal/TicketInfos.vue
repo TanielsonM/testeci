@@ -82,8 +82,13 @@ const copy = (id: string) => {
     )}`
   );
 };
-</script>
 
+onMounted(() => {
+  console.log(props.shippingAmount);
+  console.log(props.shippingSelected);
+  console.log(props.sale);
+})
+</script>
 <template>
   <div v-if="!onlyCode">
     <h6 class="subtitle" v-if="index === 0">
