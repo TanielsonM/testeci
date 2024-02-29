@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useModalStore } from "~~/store/modal/success";
 import { useStepStore } from "~~/store/modules/steps";
+import { ShippingSelected } from "@/types";
 import * as Toast from "vue-toastification";
 
 const { t } = useI18n();
@@ -41,7 +42,7 @@ const props = defineProps({
     required: false,
   },
   shippingSelected: {
-    type: Object,
+    type: String,
     default: null,
     required: false,
   },
@@ -114,7 +115,6 @@ onBeforeUnmount(() => {
   }
 });
 </script>
-
 <template>
   <div v-if="!modal.expiredPix">
     <p class="paragraph" v-if="(!onlyButtons && !last) || salesLength == 1">
@@ -301,7 +301,7 @@ onBeforeUnmount(() => {
         <p>{{ name }}</p>
         <p>{{ amount }}</p>
       </div>
-      <div class="item" v-if="!!shippingAmount && shippingAmount != 'R$ 0,00' && !!sale.shipping_amount">
+      <div class="item" v-if="!!shippingAmount">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ shippingAmount }}</p>
       </div>

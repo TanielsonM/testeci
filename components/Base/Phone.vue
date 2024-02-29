@@ -189,7 +189,7 @@ onMounted(() => {
 .vue-tel-input {
   display: flex;
   text-align: left;
-  border: 0px !important;
+  border: 0px;
   margin-top: -0.2rem;
   margin-bottom: 0.25rem;
   outline: none !important;
