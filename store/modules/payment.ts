@@ -346,7 +346,7 @@ export const usePaymentStore = defineStore("Payment", {
               // Set principal product query
               if (principal_product?.chc) query.chc = principal_product.chc;
               if (principal_product?.token) query.token = principal_product.token;
-              if (principal_product?.sale_id || (res?.sales && Array.isArray(res?.sales) && res?.sales[0]?.sale_id)) {
+              if (principal_product?.sale_id || res?.sales[0]?.sale_id) {
                 delete query.chc;
                 query.s_id = res.sales[0].sale_id;
               }
