@@ -21,6 +21,12 @@ function byTickets() {
   navigateTo(`/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
 }
 
+await checkout.init().then((batches) => {
+  // por algum motivo o batches ta sumindo, código abaixo para persistir
+  if (batches?.length) preCheckout.setBatches(batches);
+  return batches;
+});
+
 onMounted(async () => {
   if (process.client) {
     window.addEventListener('beforeunload', showUnloadAlertCheckout);
@@ -42,18 +48,10 @@ onMounted(async () => {
             localStorage.setItem('reservations', []);
           }, 500);
         }
-        const batches = await checkout.init();
-
-        // por algum motivo o batches ta sumindo, código abaixo para persistir
-        if (batches?.length) preCheckout.setBatches(batches);
       } catch (e) {
         checkout.setError(e.message);
         throw e;
       }
-    } else {
-      const batches = await checkout.init();
-      // por algum motivo o batches ta sumindo, código abaixo para persistir
-      if (batches?.length) preCheckout.setBatches(batches);
     }
   }
 
