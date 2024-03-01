@@ -1,87 +1,45 @@
+<script setup>
+const cronometroRodando = ref(false);
+const tempoEmSegundos = ref(0);
+let cronometro = null;
+
+function start() {
+  if (!cronometroRodando.value) {
+    cronometroRodando.value = true
+    cronometro = setInterval(() => {
+      tempoEmSegundos.value += 1
+    }, 1000)
+  }
+}
+
+function finish() {
+  if (cronometroRodando.value) {
+    tempoEmSegundos.value = 0
+    cronometroRodando.value = false
+    clearInterval(cronometro)
+  }
+}
+
+onBeforeUnmount(() => {
+  finish();
+});
+
+watch(cronometroRodando, (novoValor) => {
+  if (!novoValor) {
+    finish();
+  }
+});
+
+onMounted(() => {
+  start();
+})
+</script>
+
 <template>
-  <section class="rounded-b p-4 section-color">
+  <section class="flex items-center justify-between rounded p-4 bg-gray-200">
     <Chronometer :tempoEmSegundos="tempoEmSegundos"/>
-    <span class="text-[14px] font-[400] leading-[21px] text-[#3483FA]">
-      {{ $t("checkout.event.finish_time_text") }}
+    <span class="text-sm">
+      Após este tempo, os ingressos serão liberados para venda novamente.
     </span>
   </section>
 </template>
-
-<script setup>
-import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
-import { ref, onBeforeUnmount, onMounted } from 'vue';
-
-const expiredSession = useExpiredSessionStore();
-const tempoEmSegundos = ref(600);
-
-let worker;
-let workerUrl;
-
-onMounted(() => {
-  if (process.client) {
-    // Criando um Blob com o código do Web Worker
-    const workerBlob = new Blob([`
-      let tempoEmSegundos = 600;
-      let cronometroRodando = false;
-      let intervalId = null;
-
-      function startCronometro() {
-        cronometroRodando = true;
-        intervalId = setInterval(() => {
-          if (tempoEmSegundos === 0) {
-            clearInterval(intervalId);
-            self.postMessage('finish');
-          } else {
-            tempoEmSegundos--;
-            self.postMessage(tempoEmSegundos);
-          }
-        }, 1000);
-      }
-
-      function stopCronometro() {
-        cronometroRodando = false;
-        clearInterval(intervalId);
-      }
-
-      self.onmessage = (e) => {
-        if (e.data === 'start') {
-          startCronometro();
-        } else if (e.data === 'stop') {
-          stopCronometro();
-        }
-      };
-    `], { type: 'application/javascript' });
-
-    // Criando uma URL a partir do Blob
-    workerUrl = URL.createObjectURL(workerBlob);
-
-    // Criando e configurando o Web Worker
-    worker = new Worker(workerUrl);
-
-    // Tratando as mensagens do Web Worker
-    worker.onmessage = (e) => {
-      if (typeof e.data === 'number') {
-        tempoEmSegundos.value = e.data;
-      } else if (e.data === 'finish') {
-        expiredSession.setHaveFinished(true);
-      }
-    };
-
-    // Iniciando o Web Worker
-    worker.postMessage('start');
-
-  }
-  // Parando o Web Worker quando o componente é desmontado
-  onBeforeUnmount(() => {
-    worker.postMessage('stop');
-    URL.revokeObjectURL(workerUrl);
-  });
-});
-</script>
-
-
-<style scoped>
-.section-color {
-  background: rgba(52, 131, 250, 0.10);
-}
-</style>
