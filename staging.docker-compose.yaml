@@ -1,0 +1,12 @@
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3032:80"
+    volumes:
+      - './:/frontend'
+    env_file:
+      - .env.staging

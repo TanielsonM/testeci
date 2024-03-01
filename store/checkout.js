@@ -1,6 +1,7 @@
 import * as Toast from "vue-toastification";
 import { useCustomCheckoutStore } from "~/store/customCheckout";
 import { useProductStore } from "~/store/product";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
 import { defineStore, storeToRefs } from "pinia";
@@ -66,6 +67,7 @@ export const useCheckoutStore = defineStore("checkout", {
      */
     order_bumps: [],
     bump_list: [],
+    batches_list: [],
     /* Payment details */
     checkoutPayment: null,
     // Captcha
@@ -78,7 +80,8 @@ export const useCheckoutStore = defineStore("checkout", {
     // Paypal details
     paypal_details: {},
     allow_free_offers : null,
-    hasIntegrationWithGreennEnvios: false
+    hasIntegrationWithGreennEnvios: false,
+    isCreditCard: false
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -92,6 +95,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasNewBump: (state) => state.url.fullPath.includes("b_id_1"),
     hasCoupon: (state) => state.url.query?.cupom ?? "",
     hasCustomCheckout: (state) => state.url.query?.ch_id,
+    hasBatches: (state) => state.url.fullPath.includes("bt_id"),
     hasDocument: (state) => state.url.query?.document,
     hasDebugPixel: (state) => state.url.query?.debugPixel === "true",
     hasEmail: (state) => state.url.query?.em,
@@ -103,8 +107,8 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Others
      */
-    product_id: (state) => state.url.params.product_id,
-    product_offer: (state) => state.url.params.hash,
+    product_id: (state) => state?.url?.params?.product_id,
+    product_offer: (state) => state?.url?.params?.hash,
     /**
      * Global settings
      */
@@ -152,6 +156,7 @@ export const useCheckoutStore = defineStore("checkout", {
       return state.product_list.some((product) => !!product.is_checkout_address);
     },
     getBumpList: (state) => state.bump_list,
+    getBatcheList:(state) => state.batches_list,
     getBumpsWithShippingFee(state) {
       let filter = state.bump_list.filter(
         (bump) =>
@@ -171,10 +176,15 @@ export const useCheckoutStore = defineStore("checkout", {
         );
       };
     },
-    getShippingSelected: (state) => state.shipping_selected
+    getShippingSelected: (state) => state.shipping_selected,
+    getIsCreditCard: (state) => state.isCreditCard
   },
   actions: {
     async init(byChangeCountry = false) {
+      const { product } = useProductStore();
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+      if(product.id && product.product_type_id === 3 && sellerHasFeatureTickets?.value) return
       this.resetProducts();
       amountStore.reset();
       this.setLoading(true);
@@ -193,12 +203,13 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      await this.getProduct(this.product_id, this.product_offer);
-
       /* Initial configs */
-      this.setCoupon(true);
+      const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
+      await this.setCoupon(true);
       if (this.hasBump) this.getBumps();
+      if (this.hasBatches) this.getBatches()
       this.setLoading();
+      if(res?.batches?.length) return res.batches;
     },
     setUUID(uuid) {
       return (this.uuid = uuid);
@@ -206,7 +217,8 @@ export const useCheckoutStore = defineStore("checkout", {
     setAllowFreeOffers(allow_free_offers){
       this.allow_free_offers = allow_free_offers
     },
-    async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0) {
+    async getProduct(id, offer = null, isBump = false, configs = {}, bumpOrder = 0 , batches = null) {
+
       const productStore = useProductStore();
       const { product, isValid } = storeToRefs(productStore);
       const { setProduct } = productStore;
@@ -221,20 +233,26 @@ export const useCheckoutStore = defineStore("checkout", {
       if (offer) {
         url += `/offer/${offer}`;
       }
-
+      // Check if has batches
+      if(batches?.length){
+        url += `/batches/[${batches}]`;
+      }
       /* Set country in query */
       const query = {
         country: this.selectedCountry,
       };
-
       /* Call api to get product */
       try {
-        await useApi()
+        return await useApi()
           .read(url, {
             ...configs,
             query,
           })
           .then(async (response) => {
+            if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
+              this.isCreditCard = true
+            }
+
             if(this.global_settings.country !== 'BR') {
               this.redirectOfferPanel(response?.data, this.global_settings.country)
             }
@@ -262,6 +280,7 @@ export const useCheckoutStore = defineStore("checkout", {
               }
               response.data = { ...response.data, shipping };
             }
+
             if (
               !isBump &&
               response?.global_settings &&
@@ -286,7 +305,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response?.data && !isBump) {
               this.checkoutPayment = response.checkout_payment;
-              await setProduct(response.data);
+              await setProduct(response.data, response.batches);
               if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
                 const customCheckout = useCustomCheckoutStore();
                 customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
@@ -301,6 +320,32 @@ export const useCheckoutStore = defineStore("checkout", {
                 return bump1.b_order - bump2.b_order;
               });
             }
+
+            if (response.data.product_type_id === 3 && response?.batches && Array.isArray(response?.batches)) {
+              const preCheckout = usePreCheckoutStore();
+              response.batches.forEach(batch => {
+                // Adicionar chave para contabilizar ingressos selecionados
+                batch.tickets = batch.tickets.map(x => {
+                  return { ...x, selected_tickets: 0 }
+                })
+                // Ordenar ingressos
+                batch.tickets.sort((a, b) => {
+                  if (a.batch_order < b.batch_order) return -1;
+                  if (a.batch_order > b.batch_order) return 1;
+                  return 0;
+                });
+              })
+              // Ordenar lotes
+              response.batches.sort((a, b) => {
+                if (a.order < b.order) return -1;
+                if (a.order > b.order) return 1;
+                return 0;
+              });
+
+              preCheckout.setBatches(response.batches);
+            }
+
+            return response
           })
           .catch((err) => {
             console.error(err);
@@ -332,6 +377,27 @@ export const useCheckoutStore = defineStore("checkout", {
       } finally {
         this.coupon.loading = false;
       }
+    },
+    async getBatches() {
+      this.batches_list = [];
+      // parse apenas dos params
+      let searchParams = new URLSearchParams(this.url.query);
+      // instancia o array final
+      let batchesWithOffers = [];
+      // regex para pegar ids dos batches
+      let batcheRegex = new RegExp("(bt_id_)(\\d*$)", "i");
+      // passamos uma vez apenas pegando o id dos lotes
+      searchParams.forEach((value, key) => {
+        let matches = key.match(batcheRegex);
+        if (matches) {
+          // caso esteja repetido, ignoramos
+          if (!batchesWithOffers.find((item) => item.batche_id === value)) {
+            // setamos o id do lote
+            batchesWithOffers.push( value );
+          }
+        }
+      });
+      this.batches_list = batchesWithOffers;
     },
     async getBumps() {
       if (!this.hasNewBump) {
@@ -378,14 +444,14 @@ export const useCheckoutStore = defineStore("checkout", {
 
       if (bumpsWithOffers.length) {
         this.products_client_statistics = [];
-        bumpsWithOffers.forEach((bump) => {
+        bumpsWithOffers.forEach((bump,index) => {
           if (this.product_id !== bump.product_id)
             this.getProduct(
               bump.product_id,
               bump.offer_hash,
               true,
               {},
-              Number(bump.bump_id)
+              Number(bump.bump_id),
             );
         });
       }
@@ -535,20 +601,17 @@ export const useCheckoutStore = defineStore("checkout", {
       const config = useRuntimeConfig();
       this.is_heaven = url.includes(config.public.HEAVEN_CHECKOUT_PAGE);
     },
-    setProductList(product) {
-      const index = this.product_list
-        .map((item) => item.id)
-        .indexOf(product.id);
+    setProductListPreCheckout(product, addProduct = true) {
+      const index = this.product_list.findIndex(item => item.id === product.id);
 
-
-      if (index === -1) {
+      if (addProduct) {
         amountStore.setAmount(
-          !!product.custom_charges.length
+          !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
         );
         amountStore.setOriginalAmount(
-          !!product.custom_charges.length
+          !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
         );
@@ -567,12 +630,59 @@ export const useCheckoutStore = defineStore("checkout", {
       }
       this.product_list.splice(index, 1);
       amountStore.setAmount(
-        !!product.custom_charges.length
+        !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
       amountStore.setOriginalAmount(
-        !!product.custom_charges.length
+        !!product.custom_charges?.length
+          ? product.custom_charges[0].amount * -1
+          : product.amount * -1
+      );
+
+      if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee && product?.method !== 'FREE') {
+        amountStore.setAmount(product?.shipping?.amount * -1 || 0);
+        amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
+      }
+      this.checkAllowedMethods();
+    },
+    setProductList(product) {
+      const index = this.product_list
+        .map((item) => item.id)
+        .indexOf(product.id);
+
+      if (index === -1) {
+        amountStore.setAmount(
+          !!product?.custom_charges?.length
+            ? product.custom_charges[0].amount
+            : product.amount
+        );
+        amountStore.setOriginalAmount(
+          !!product?.custom_charges?.length
+            ? product.custom_charges[0].amount
+            : product.amount
+        );
+
+        if (
+          product.format === "PHYSICALPRODUCT" &&
+          !!product.has_shipping_fee &&
+          product?.method !== 'FREE'
+        ) {
+          amountStore.setAmount(product?.shipping?.amount || 0);
+          amountStore.setOriginalAmount(product?.shipping?.amount || 0);
+        }
+        this.checkAllowedMethods();
+        this.product_list.push(product);
+        return;
+      }
+      this.product_list.splice(index, 1);
+      amountStore.setAmount(
+        !!product.custom_charges?.length
+          ? product.custom_charges[0].amount * -1
+          : product.amount * -1
+      );
+      amountStore.setOriginalAmount(
+        !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
@@ -674,7 +784,7 @@ export const useCheckoutStore = defineStore("checkout", {
               .create(`envios/calculate/${this.product_id}`, {
                 shipping_address_zip_code: zip
               })
-              .then(res => {
+              .then((res) => {
                 this.hasIntegrationWithGreennEnvios = true;
                 return res;
               })
@@ -725,7 +835,7 @@ export const useCheckoutStore = defineStore("checkout", {
             .create(`envios/calculate/${bump.id}`, {
               shipping_address_zip_code: zip,
             })
-            .then(res => {
+            .then((res) => {
               bump.hasIntegrationWithGreennEnvios = true;
               return res;
             })
@@ -788,8 +898,8 @@ export const useCheckoutStore = defineStore("checkout", {
         service_name: shipping.name,
         old_amount: amountStore.getAmount,
         amount: +shipping.price,
-        frete: shipping
-      }
+        frete: shipping,
+      };
     },
     redirectOfferPanel(product, country) {
       if(product.seller.is_heaven && product.seller.is_greenn && product.offer_redirect_id) {

@@ -4,10 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    # cap_add:
-      # - CAP_SYS_PTRACE
     ports:
-      - "80:80"
-      # - "24678:24678"
+      - "3000:3000"
     volumes:
       - './:/frontend'
+    env_file:
+      - .env.development
+

@@ -15,6 +15,7 @@ import { useLeadsStore } from "../modules/leads";
 import { useCheckoutStore } from "../checkout";
 import { useInstallmentsStore } from "./installments";
 import { useAmountStore } from "./amount";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 // External SDK
 import { loadMercadoPago } from "@mercadopago/sdk-js";
@@ -27,6 +28,7 @@ const addressStore = useAddressStore();
 const purchaseStore = usePurchaseStore();
 const installmentsStore = useInstallmentsStore();
 const amountStore = useAmountStore();
+const preCheckout = usePreCheckoutStore();
 
 const {
   method,
@@ -54,6 +56,7 @@ const {
   isDynamicShipping,
   hasTicketInstallments,
   hasAffiliationLead,
+  product
 } = storeToRefs(productStore);
 
 const { name, email, document, cellphone } = storeToRefs(personalStore);
@@ -61,6 +64,7 @@ const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
 const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
@@ -69,6 +73,7 @@ export const usePaymentStore = defineStore("Payment", {
     hasSent: false,
     // Payment button loading
     loading: false,
+    fetching:false,
   }),
   getters: {
     isPaymentLoading: state => state.loading,
@@ -77,325 +82,345 @@ export const usePaymentStore = defineStore("Payment", {
     setPaymentLoading(value = false) {
       this.loading = value;
     },
+    setPaymentFetching(value = false) {
+      this.fetching = value;
+    },
     async payment(language: string) {
-      const allValid = await validateAll();
-      if (!allValid) {
-        this.hasSent = true;
-        this.setPaymentLoading(false);
-        return;
-      }
-
-      leadsStore.changeStep(3);
-
-      const total = computed(() => {
-        if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
-          return (getTotal.value(ticket_installments.value));
+      if (!this.fetching) {
+        this.setPaymentFetching(true);
+      
+        const allValid = await validateAll();
+        if (!allValid) {
+          this.hasSent = true;
+          this.setPaymentLoading(false);
+          return;
         }
-        if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-          return getTotal.value();
-        }
-        return getInstallments.value(1);
-      });
 
-      let data: Payment = {
-        // Purchase infos
-        method: method.value,
-        amount: getOriginalAmount.value,
-        total: total.value,
-        installments:
-          method.value === "BOLETO"
-            ? ticket_installments.value
-            : installments.value,
-        // product infos
-        product_id: product_id.value,
-        products: product_list.value.map((item: Product) => ({
-          product_id: item.id,
-          product_offer: item.hash,
-        })),
-        // proposal_id: proposal_id,
-        // User details
-        name: name.value,
-        email: email.value.trim(),
-        cellphone: cellphone.value.replace(/[^\d+]/g, ""),
-        document: document.value,
-        uuid: uuid.value,
-        country_code: selectedCountry.value,
-        // client_statistic: products_client_statistics.value,
-        // Address
-        zipcode: charge.value.zipcode
-          ? charge.value.zipcode.replace(/[-]/g, "")
-          : null,
-        street: charge.value.street,
-        number: charge.value.number,
-        complement: charge.value.complement,
-        neighborhood: charge.value.neighborhood,
-        city: charge.value.city,
-        state: charge.value.state,
-        // Others
-        language,
-        upsell_id: hasUpsell.value,
-        metas: url.value.query,
-      };
+        leadsStore.changeStep(3);
 
-      if (captchaEnabled.value) {
-        data.captcha = captcha_code.value;
-      }
+        const total = computed(() => {
+          if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
+            return (getTotal.value(ticket_installments.value));
+          }
+          if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
+            return getTotal.value();
+          }
+          return getInstallments.value(1);
+        });
 
-      if (method.value === "PAYPAL") {
-        data.paypal = paypal_details.value;
-      }
-
-      // Gift
-      if (is_gift.value) {
-        data.is_gift = is_gift.value;
-        data.gift_message = gift_message.value;
-      }
-
-      // Physical product
-      if (hasPhysicalProduct.value) {
-        const address: any = sameAddress.value ? charge.value : shipping.value;
-        data = {
-          ...data,
-          shipping_address_zip_code: address?.zipcode?.replace(/[-]/g, ''),
-          shipping_address_street: address.street,
-          shipping_address_number: address.number,
-          shipping_address_complement: address.complement,
-          shipping_address_neighborhood: address.neighborhood,
-          shipping_address_city: address.city,
-          shipping_address_state: address.state,
-          shipping_selected: JSON.stringify({ address, ...shipping_selected.value })
+        let data: Payment = {
+          // Purchase infos
+          method: method.value,
+          amount: getOriginalAmount.value,
+          total: total.value,
+          installments:
+            method.value === "BOLETO"
+              ? ticket_installments.value
+              : installments.value,
+          // product infos
+          product_id: product_id.value,
+          products: product_list.value.map((item: Product) => ({
+            product_id: product.value.product_type_id === 3 && sellerHasFeatureTickets?.value ? item.product_id : item.id,
+            product_offer: item.hash,
+          })),
+          // proposal_id: proposal_id,
+          // User details
+          name: name.value,
+          email: email.value.trim(),
+          cellphone: cellphone.value.replace(/[^\d+]/g, ""),
+          document: document.value,
+          uuid: uuid.value,
+          country_code: selectedCountry.value,
+          // client_statistic: products_client_statistics.value,
+          // Address
+          zipcode: charge.value.zipcode
+            ? charge.value.zipcode.replace(/[-]/g, "")
+            : null,
+          street: charge.value.street,
+          number: charge.value.number,
+          complement: charge.value.complement,
+          neighborhood: charge.value.neighborhood,
+          city: charge.value.city,
+          state: charge.value.state,
+          // Others
+          language,
+          upsell_id: hasUpsell.value,
+          metas: url.value.query,
         };
 
-        if(isDynamicShipping.value) {
-          data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
+        if (captchaEnabled.value) {
+          data.captcha = captcha_code.value;
         }
 
-        product_list.value.forEach((item: any) => {
-          if (item?.shipping) {
-            const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
-            const shippingSelected: any = shipping_selected;
+        if (method.value === "PAYPAL") {
+          data.paypal = paypal_details.value;
+        }
 
-            data.products[index].shipping_amount = item.shipping.amount;
-            data.products[index].shipping_service_id = item.shipping.id;
-            data.products[index].shipping_service_name = item.shipping.name;
-            data.products[index].shipping_selected = JSON.stringify({ address, ...shipping_selected.value });
+        // Gift
+        if (is_gift.value) {
+          data.is_gift = is_gift.value;
+          data.gift_message = gift_message.value;
+        }
+
+        // Physical product
+        if (hasPhysicalProduct.value) {
+          const address: any = sameAddress.value ? charge.value : shipping.value;
+          data = {
+            ...data,
+            shipping_address_zip_code: address?.zipcode?.replace(/[-]/g, ''),
+            shipping_address_street: address.street,
+            shipping_address_number: address.number,
+            shipping_address_complement: address.complement,
+            shipping_address_neighborhood: address.neighborhood,
+            shipping_address_city: address.city,
+            shipping_address_state: address.state,
+            shipping_selected: JSON.stringify({ address, ...shipping_selected.value })
+          };
+
+          if(isDynamicShipping.value) {
+            data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
           }
-        });
-      }
-      // Affiliate id
-      const affiliate_id = useCookie(`affiliate_${product_id.value}`);
-      const affiliate = useCookie("affiliate");
-      if (hasAffiliateId.value) {
-        data.affiliate_id = hasAffiliateId.value;
-      } else if (!hasAffiliationLead.value && affiliate_id.value) {
-        data.affiliate_id = affiliate_id.value;
-      } else if (hasAffiliationLead.value && affiliate.value) {
-        data.affiliate_id = affiliate.value;
-      }
 
-      // Coupon
-      if (coupon.value.applied && !!coupon.value.name) {
-        data.products[0].coupon = coupon.value.name.toUpperCase();
-      }
+          product_list.value.forEach((item: any) => {
+            if (item?.shipping) {
+              const index = data.products.map((prod) => prod.product_id).indexOf(item.id);
+              const shippingSelected: any = shipping_selected;
 
-      /* When method is Credit card */
-      if (
-        ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
-      ) {
-        const config = useRuntimeConfig();
-        await loadMercadoPago();
-        const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
-          locale: "pt-BR",
-        });
-
-        let parsedFirstAmount = Number(
-          first.value.amount
-            .toString()
-            .replace("R$", "")
-            .replace(".", "")
-            .replace(",", ".")
-        );
-        let firstCardAmountWithoutInterest = parsedFirstAmount;
-        if (method.value === "TWO_CREDIT_CARDS") {
-          let percentageFirstCard = parsedFirstAmount / total.value;
-          firstCardAmountWithoutInterest =
-            getAmount.value * percentageFirstCard;
-        }
-        let cards: any = [];
-        cards.push({
-          total: Number(parsedFirstAmount).toFixed(2),
-          amount: Number(firstCardAmountWithoutInterest).toFixed(2),
-          card_cvv: first.value.cvv,
-          card_expiration_date: `${first.value.month}${first.value.year}`,
-          card_holder_name: first.value.holder_name,
-          card_number: first.value.number,
-        });
-
-        // Mercado Pago token - First Card
-        if (installments.value >= 10) {
-          const firstCardToken = mp.createCardToken({
-            cardNumber: first.value.number.replaceAll(" ", ""),
-            cardholderName: first.value.holder_name,
-            cardExpirationMonth: first.value.month,
-            cardExpirationYear: first.value.year,
-            securityCode: first.value.cvv,
-            identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
-            identificationNumber: document.value.replace(/[^\d]/g, ""),
-          });
-
-          await Promise.resolve(firstCardToken).then(function (res) {
-            cards[0].card_hash = res.id;
-            data.gateway = "MERCADOPAGO";
+              data.products[index].shipping_amount = item.shipping.amount;
+              data.products[index].shipping_service_id = item.shipping.id;
+              data.products[index].shipping_service_name = item.shipping.name;
+              data.products[index].shipping_selected = JSON.stringify({ address, ...shipping_selected.value });
+            }
           });
         }
+        // Affiliate id
+        const affiliate_id = useCookie(`affiliate_${product_id.value}`);
+        const affiliate = useCookie("affiliate");
+        if (hasAffiliateId.value) {
+          data.affiliate_id = hasAffiliateId.value;
+        } else if (!hasAffiliationLead.value && affiliate_id.value) {
+          data.affiliate_id = affiliate_id.value;
+        } else if (hasAffiliationLead.value && affiliate.value) {
+          data.affiliate_id = affiliate.value;
+        }
 
-        if (method.value === "TWO_CREDIT_CARDS") {
-          let parsedSecondAmount = Number(
-            second.value.amount
+        // Coupon
+        if (coupon.value.applied && !!coupon.value.name) {
+          data.products[0].coupon = coupon.value.name.toUpperCase();
+        }
+
+        /* When method is Credit card */
+        if (
+          ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
+        ) {
+          const config = useRuntimeConfig();
+          await loadMercadoPago();
+          const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
+            locale: "pt-BR",
+          });
+
+          let parsedFirstAmount = Number(
+            first.value.amount
               .toString()
               .replace("R$", "")
               .replace(".", "")
               .replace(",", ".")
           );
+          let firstCardAmountWithoutInterest = parsedFirstAmount;
+          if (method.value === "TWO_CREDIT_CARDS") {
+            let percentageFirstCard = parsedFirstAmount / total.value;
+            firstCardAmountWithoutInterest =
+              getAmount.value * percentageFirstCard;
+          }
+          let cards: any = [];
           cards.push({
-            total: Number(parsedSecondAmount).toFixed(2),
-            amount: Number(
-              getAmount.value - firstCardAmountWithoutInterest
-            ).toFixed(2),
-            card_cvv: second.value.cvv,
-            card_expiration_date: `${second.value.month}${second.value.year}`,
-            card_holder_name: second.value.holder_name,
-            card_number: second.value.number,
+            total: Number(parsedFirstAmount).toFixed(2),
+            amount: Number(firstCardAmountWithoutInterest).toFixed(2),
+            card_cvv: first.value.cvv,
+            card_expiration_date: `${first.value.month}${first.value.year}`,
+            card_holder_name: first.value.holder_name,
+            card_number: first.value.number,
           });
 
-          // Mercado Pago token - Second Card
+          // Mercado Pago token - First Card
           if (installments.value >= 10) {
-            const secondCardToken = mp.createCardToken({
-              cardNumber: second.value.number.replaceAll(" ", ""),
-              cardholderName: second.value.holder_name,
-              cardExpirationMonth: second.value.month,
-              cardExpirationYear: second.value.year,
-              securityCode: second.value.cvv,
+            const firstCardToken = mp.createCardToken({
+              cardNumber: first.value.number.replaceAll(" ", ""),
+              cardholderName: first.value.holder_name,
+              cardExpirationMonth: first.value.month,
+              cardExpirationYear: first.value.year,
+              securityCode: first.value.cvv,
               identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
               identificationNumber: document.value.replace(/[^\d]/g, ""),
             });
 
-            await Promise.resolve(secondCardToken).then(function (res) {
-              cards[1].card_hash = res.id;
+            await Promise.resolve(firstCardToken).then(function (res) {
+              cards[0].card_hash = res.id;
+              data.gateway = "MERCADOPAGO";
             });
           }
-        }
-        data.cards = cards;
-      }
 
-      const allowed_installments = [
-        "CREDIT_CARD",
-        "TWO_CREDIT_CARDS",
-        "DEBIT_CARD",
-        "BOLETO",
-      ];
-      if (!allowed_installments.includes(method.value)) {
-        delete data.installments;
-      }
-
-      const currency_data: CurrencyData = {
-        local_currency: 'BRL',
-        base_currency: 'BRL'
-      };
-      data.currency_data = currency_data;
-
-      // Registrando log boleto
-      let dataLog = Object.assign({}, data);
-
-      GreennLogs.logger.info("🟡 Dados da Compra", {
-        name: `Enviando objeto da compra [${method.value}]`,
-        objetoCompra: JSON.stringify(dataLog),
-      });
-
-      checkoutStore.setLoading(true);
-      // Payment request
-      await useApi()
-        .create("/payment", data)
-        .then((res) => {
-          if (
-            res.sales !== undefined &&
-            Array.isArray(res.sales) &&
-            res.sales.every((item: SaleElement) => item.success)
-          ) {
-            GreennLogs.logger.info("🟢 Success Compra", {
-              name: "Compra concluída com sucesso",
-              product_id: product_id.value,
-            });
-            const query: any = {};
-            const principal_product = res.sales
-              .filter(
-                (item: SaleElement) => item.product.name === productName.value
-              )
-              .pop();
-            // Set principal product query
-            if (principal_product?.chc) query.chc = principal_product.chc;
-            if (principal_product?.token) query.token = principal_product.token;
-            if (principal_product?.sale_id) {
-              delete query.chc;
-              query.s_id = res.sales[0].sale_id;
-            }
-            if (!!product_offer.value) query.offer = product_offer.value;
-
-            // Set query bumps
-            const route = useRoute();
-            const keys = Object.keys(route.query);
-            const bumps = product_list.value.filter(
-              (item: Product) => item.id !== parseInt(product_id.value)
+          if (method.value === "TWO_CREDIT_CARDS") {
+            let parsedSecondAmount = Number(
+              second.value.amount
+                .toString()
+                .replace("R$", "")
+                .replace(".", "")
+                .replace(",", ".")
             );
-
-            bumps.forEach((bump: Product) => {
-              const index = keys
-                .filter((key) => route.query[key] === bump.id.toString())
-                .pop();
-              const sale = res.sales
-                .filter((item: any) => item.product.name === bump.name)
-                .pop();
-              if (!!sale && !!index) {
-                if (bump.type === "SUBSCRIPTION") {
-                  if (sale.sale_id) {
-                    query[index] =
-                      route.query[index] +
-                      "-chc_" +
-                      sale.chc +
-                      "-s_id_" +
-                      sale.sale_id;
-                  } else {
-                    query[index] = route.query[index] + "-chc_" + sale.chc;
-                  }
-                } else {
-                  query[index] = route.query[index] + "-s_id_" + sale.sale_id;
-                }
-              }
-            });
-            const router = useRouter();
-            router.push({
-              path: `/${product_id.value}/obrigado`,
-              query,
+            cards.push({
+              total: Number(parsedSecondAmount).toFixed(2),
+              amount: Number(
+                getAmount.value - firstCardAmountWithoutInterest
+              ).toFixed(2),
+              card_cvv: second.value.cvv,
+              card_expiration_date: `${second.value.month}${second.value.year}`,
+              card_holder_name: second.value.holder_name,
+              card_number: second.value.number,
             });
 
-            return;
+            // Mercado Pago token - Second Card
+            if (installments.value >= 10) {
+              const secondCardToken = mp.createCardToken({
+                cardNumber: second.value.number.replaceAll(" ", ""),
+                cardholderName: second.value.holder_name,
+                cardExpirationMonth: second.value.month,
+                cardExpirationYear: second.value.year,
+                securityCode: second.value.cvv,
+                identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
+                identificationNumber: document.value.replace(/[^\d]/g, ""),
+              });
+
+              await Promise.resolve(secondCardToken).then(function (res) {
+                cards[1].card_hash = res.id;
+              });
+            }
           }
-          if (
-            Array.isArray(res?.sales) &&
-            res.sales.some((item: SaleElement) => !item.success)
-          ) {
-            this.validateError(res?.sales[0]);
-            return;
-          }
-          if (res.status === "error" && !res.sales?.success) {
-            this.validateError(res);
-            return;
-          }
-        })
-        .catch(() => {
-          checkoutStore.setLoading(false);
-          this.setPaymentLoading(false);
+          data.cards = cards;
+        }
+
+        const allowed_installments = [
+          "CREDIT_CARD",
+          "TWO_CREDIT_CARDS",
+          "DEBIT_CARD",
+          "BOLETO",
+        ];
+        if (!allowed_installments.includes(method.value)) {
+          delete data.installments;
+        }
+
+        const currency_data: CurrencyData = {
+          local_currency: 'BRL',
+          base_currency: 'BRL'
+        };
+        data.currency_data = currency_data;
+
+        // Registrando log boleto
+        let dataLog = Object.assign({}, data);
+
+        GreennLogs.logger.info("🟡 Dados da Compra", {
+          name: `Enviando objeto da compra [${method.value}]`,
+          objetoCompra: JSON.stringify(dataLog),
         });
+
+        checkoutStore.setLoading(true);
+        // Payment request
+        await useApi()
+          .create("/payment", data)
+          .then(res => {
+            if (
+              res.sales !== undefined &&
+              Array.isArray(res.sales) &&
+              res.sales.every((item: SaleElement) => item.success)
+            ) {
+              GreennLogs.logger.info("🟢 Success Compra", {
+                name: "Compra concluída com sucesso",
+                product_id: product_id.value,
+              });
+              let query: any = {};
+              const principal_product = res.sales
+                .filter(
+                  (item: SaleElement) => item.product.name === productName.value
+                )
+                .pop();
+              // Set principal product query
+              if (principal_product?.chc || res?.sales[0]?.chc) query.chc = principal_product?.chc || res?.sales[0]?.chc;
+              if (principal_product?.token || res?.sales[0]?.token) query.token = principal_product?.token || res?.sales[0]?.token;
+              if (principal_product?.sale_id || res?.sales[0]?.sale_id) {
+                delete query.chc;
+                query.s_id = res.sales[0].sale_id;
+              }
+              if (!!product_offer.value) query.offer = product_offer.value;
+
+              // Set query bumps
+              const route = useRoute();
+
+              // Se o produto for do tipo evento
+              if(product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+                product_list.value.forEach((ticket: {id: number, name: string, hash: string}, i) => {
+                  const sale = res.sales.find((item: any) => item.product.offer_hash === ticket.hash);
+                  if(sale) query['ticket_id_'+i] = (ticket.id + "-s_id_" + sale.sale_id)
+                })
+              } else {
+                const keys = Object.keys(route.query);
+                const bumps = product_list.value.filter(
+                  (item: Product) => item.id !== parseInt(product_id.value)
+                );
+
+                bumps.forEach((bump: Product) => {
+                  const index = keys
+                    .filter((key) => route.query[key] === bump.id.toString())
+                    .pop();
+                  const sale = res.sales
+                    .filter((item: any) => item.product.name === bump.name)
+                    .pop();
+                  if (!!sale && !!index) {
+                    if (bump.type === "SUBSCRIPTION") {
+                      if (sale.sale_id) {
+                        query[index] =
+                          route.query[index] +
+                          "-chc_" +
+                          sale.chc +
+                          "-s_id_" +
+                          sale.sale_id;
+                      } else {
+                        query[index] = route.query[index] + "-chc_" + sale.chc;
+                      }
+                    } else {
+                      query[index] = route.query[index] + "-s_id_" + sale.sale_id;
+                    }
+                  }
+                });
+              }
+
+              const router = useRouter();
+              router.push({
+                path: `/${product_id.value}/obrigado`,
+                query,
+              });
+
+              return;
+            }
+            if (
+              Array.isArray(res?.sales) &&
+              res.sales.some((item: SaleElement) => !item.success)
+            ) {
+              this.validateError(res?.sales[0]);
+              return;
+            }
+            if (res.status === "error" && !res.sales?.success) {
+              this.validateError(res);
+              return;
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            checkoutStore.setLoading(false);
+            this.setPaymentLoading(false);
+          }).finally(() =>{
+            this.setPaymentFetching(false);
+          })
+      }
     },
     validateError(error: PaymentError) {
       checkoutStore.setLoading(false);

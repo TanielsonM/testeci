@@ -32,12 +32,34 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  product: {
+    type: Object,
+    default: {},
+  },
+  batches: {
+    type: Array,
+    default: [],
+  },
 });
 
 const data = ref({
   shippingSelected: props.shippingSelected ? JSON.parse(props.shippingSelected): {},
   showCode: false,
 });
+
+const productName = computed(() => {
+  if(props?.product?.product_type_id == 3 && props?.batches?.length){
+    return props?.product?.name;
+  }
+  return props?.name ?? "produto";
+});
+
+function salestName(sale) {
+  if(props?.product?.product_type_id == 3 && props?.batches?.length){
+    return sale.offer.name;
+  }
+  return sale.product.name;
+}
 </script>
 
 <template>
@@ -46,7 +68,7 @@ const data = ref({
   </h6>
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.vc_adquiriu") }}
-    {{ name ?? "produto" }}
+    {{ productName }}
   </p>
   <p class="paragraph">
     {{ $t("pg_obrigado.modal.detalhes_email") }}
@@ -67,7 +89,7 @@ const data = ref({
         <section class="flex items-start">
           <section class="check-icon icon-success"></section>
           <section class="transaction">
-            <p>{{ sale.product.name }}</p>
+            <p>{{ salestName(sale) }}</p>
             <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
           </section>
         </section>
@@ -75,7 +97,7 @@ const data = ref({
           {{ formatMoney(sale.total || sale.amount || sale.product.amount) }}
         </p>
       </template>
-      <section class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')">
+      <section class="item" v-if="(sale.shipping_amount || sale.method == 'FREE') && (!!shippingAmount && shippingAmount != 'R$ 0,00') || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ formatMoney(sale.shipping_amount) || "Grátis"}}</p>
       </section>
@@ -85,7 +107,7 @@ const data = ref({
       ></span>
       <div
         class="details py-5"
-        v-if="(!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')) && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
+        v-if="((!!shippingAmount && shippingAmount != 'R$ 0,00') || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')) && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
       >
         <h6 class="title">
           {{ $t("pg_obrigado.modal.frete_selecionado") }}
