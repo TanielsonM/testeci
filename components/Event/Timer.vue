@@ -14,65 +14,71 @@ import { ref, onBeforeUnmount, onMounted } from 'vue';
 const expiredSession = useExpiredSessionStore();
 const tempoEmSegundos = ref(600);
 
-// Criando um Blob com o código do Web Worker
-const workerBlob = new Blob([`
-  let tempoEmSegundos = 600;
-  let cronometroRodando = false;
-  let intervalId = null;
+let worker;
+let workerUrl;
 
-  function startCronometro() {
-    cronometroRodando = true;
-    intervalId = setInterval(() => {
-      if (tempoEmSegundos === 0) {
-        clearInterval(intervalId);
-        self.postMessage('finish');
-      } else {
-        tempoEmSegundos--;
-        self.postMessage(tempoEmSegundos);
-      }
-    }, 1000);
-  }
-
-  function stopCronometro() {
-    cronometroRodando = false;
-    clearInterval(intervalId);
-  }
-
-  self.onmessage = (e) => {
-    if (e.data === 'start') {
-      startCronometro();
-    } else if (e.data === 'stop') {
-      stopCronometro();
-    }
-  };
-`], { type: 'application/javascript' });
-
-// Criando uma URL a partir do Blob
-const workerUrl = URL.createObjectURL(workerBlob);
-
-// Criando e configurando o Web Worker
-const worker = new Worker(workerUrl);
-
-// Tratando as mensagens do Web Worker
-worker.onmessage = (e) => {
-  if (typeof e.data === 'number') {
-    tempoEmSegundos.value = e.data;
-  } else if (e.data === 'finish') {
-    expiredSession.setHaveFinished(true);
-  }
-};
-
-// Iniciando o Web Worker quando o componente é montado
 onMounted(() => {
-  expiredSession.setHaveFinished(false);
-  worker.postMessage('start');
-});
+  if (process.client) {
+    // Criando um Blob com o código do Web Worker
+    const workerBlob = new Blob([`
+      let tempoEmSegundos = 600;
+      let cronometroRodando = false;
+      let intervalId = null;
 
-// Parando o Web Worker quando o componente é desmontado
-onBeforeUnmount(() => {
-  worker.postMessage('stop');
+      function startCronometro() {
+        cronometroRodando = true;
+        intervalId = setInterval(() => {
+          if (tempoEmSegundos === 0) {
+            clearInterval(intervalId);
+            self.postMessage('finish');
+          } else {
+            tempoEmSegundos--;
+            self.postMessage(tempoEmSegundos);
+          }
+        }, 1000);
+      }
+
+      function stopCronometro() {
+        cronometroRodando = false;
+        clearInterval(intervalId);
+      }
+
+      self.onmessage = (e) => {
+        if (e.data === 'start') {
+          startCronometro();
+        } else if (e.data === 'stop') {
+          stopCronometro();
+        }
+      };
+    `], { type: 'application/javascript' });
+
+    // Criando uma URL a partir do Blob
+    workerUrl = URL.createObjectURL(workerBlob);
+
+    // Criando e configurando o Web Worker
+    worker = new Worker(workerUrl);
+
+    // Tratando as mensagens do Web Worker
+    worker.onmessage = (e) => {
+      if (typeof e.data === 'number') {
+        tempoEmSegundos.value = e.data;
+      } else if (e.data === 'finish') {
+        expiredSession.setHaveFinished(true);
+      }
+    };
+
+    // Iniciando o Web Worker
+    worker.postMessage('start');
+
+  }
+  // Parando o Web Worker quando o componente é desmontado
+  onBeforeUnmount(() => {
+    worker.postMessage('stop');
+    URL.revokeObjectURL(workerUrl);
+  });
 });
 </script>
+
 
 <style scoped>
 .section-color {
