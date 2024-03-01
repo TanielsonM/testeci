@@ -33,11 +33,11 @@ onBeforeUnmount(() => {
   }
 });
 
-watch(tempoEmSegundos, (newValue) => {
-  if(newValue === 0 && cronometro) {
+watch(cronometroRodando, (newValue) => {
+  if (!newValue && cronometro) {
     finish();
   }
-})
+});
 
 onMounted(() => {
   expiredSession.setHaveFinished(false);
@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
- <section class="flex items-center justify-between rounded p-4 bg-gray-200">
+ <section class="rounded-b p-4 section-color">
     <Chronometer :tempoEmSegundos="tempoEmSegundos"/>
     <span class="text-[14px] font-[400] leading-[21px] text-[#3483FA]">
       {{ $t("checkout.event.finish_time_text") }}
