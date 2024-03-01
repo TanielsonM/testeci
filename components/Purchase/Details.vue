@@ -2,12 +2,16 @@
 // Stores
 import { storeToRefs } from "pinia";
 import { useCheckoutStore } from "@/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
+import { useProductStore } from "~~/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
+import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout";
 
 // Utils
 import { formatMoney } from "~~/utils/money";
 
 const checkout = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const productStore = useProductStore();
 const installmentsStore = useInstallmentsStore();
 const {
@@ -17,8 +21,9 @@ const {
   hasFees,
   bump_list,
   hasSelectedBump,
-  checkoutPayment,
+  checkoutPayment
 } = storeToRefs(checkout);
+const { ticketList, isPresentialEvent } = storeToRefs(preCheckout);
 const { getInstallments } = storeToRefs(installmentsStore);
 const { hasTicketInstallments, product } = storeToRefs(productStore);
 
@@ -40,6 +45,14 @@ const amountText = computed(() => {
 
   return `${formatMoney(getInstallments.value(1))}`;
 });
+
+function openGoBackPreCheckoutModal() {
+  const goBackToPrecheckout = useGoBackToPrecheckoutStore();
+  goBackToPrecheckout.setShowModal(true);
+}
+function formatTicketName(ticket){
+  return `${ ticket?.selected_tickets }x ${ ticket?.batch_name } - ${ ticket?.ticket_name }`
+}
 </script>
 
 <template>
@@ -49,7 +62,7 @@ const amountText = computed(() => {
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
     >
-      <span class="infos-title">Frete</span>
+      <span class="infos-title">{{ $t("checkout.event.freight") }}</span>
       <span
         class="infos-content flex w-full items-center justify-between"
         v-for="(item, index) in checkout.shippingProducts()"
@@ -74,7 +87,7 @@ const amountText = computed(() => {
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
       v-if="hasSelectedBump"
     >
-      <p class="infos-title">Order Bumps</p>
+      <p class="infos-title">{{ $t("checkout.event.order_bumps") }}</p>
       <span
         class="infos-content mt-2 flex w-full items-center justify-between"
         v-for="(bump, index) in bump_list.filter((i) => i.checkbox)"
@@ -123,12 +136,37 @@ const amountText = computed(() => {
         <p>+{{ formatMoney(tax.local_amount) }}</p>
       </span>
     </section>
+    <!-- Event Tickets -->
+    <section
+      class="-mt-[9px] flex flex-col items-start md:mt-auto"
+      v-if="isPresentialEvent"
+    >
+      <div class="flex justify-between w-full">
+        <p class="infos-title">{{ $t("checkout.event.tickets") }}</p>
+        <div class="btn-edit-tickets text-center ml-3" @click="openGoBackPreCheckoutModal">
+          <span class="text-[12px] font-[600]">{{ $t("checkout.event.edit") }}</span>
+        </div>
+      </div>
+      <span
+        class="infos-content mt-2 flex w-full items-center justify-between"
+        v-for="ticket in ticketList"
+        :key="ticket?.id"
+      >
+        <p>
+          {{ formatTicketName(ticket) }}
+        </p>
+        <p>
+          +{{ formatMoney(ticket?.total_amount) }}
+        </p>
+      </span>
+    </section>
     <!-- Total -->
     <section
       class="flex items-start justify-between"
       v-if="
         hasSelectedBump ||
         coupon.applied ||
+        isPresentialEvent ||
         (typeof checkoutPayment.price === 'object' &&
           checkoutPayment.price.tax.length > 0)
       "
@@ -138,3 +176,19 @@ const amountText = computed(() => {
     </section>
   </section>
 </template>
+
+<style scoped>
+.btn-edit-tickets {
+  width: 57px;
+  height: 25px;
+  border-radius: 5px;
+  background: rgba(52, 131, 250, 0.10);
+  color: #3483FA;
+  cursor: pointer;
+}
+
+.btn-edit-tickets:hover {
+  background: #3483FA;
+  color: rgba(52, 131, 250, 0.10);
+}
+</style>

@@ -64,8 +64,27 @@ const props = defineProps({
 });
 const details = ref(false);
 
-// Computeds
-const hasTrial = computed(() => !!props.bump.trial);
+const toast = Toast.useToast();
+
+const redirect = () => { 
+  if (props.bump.links.length && props.bump.links[0].url) {
+    let url = props.bump.links[0].url
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url
+    }
+    window.open(url, '_blank')
+  } else {   
+    toast.info(
+      `${t("checkout.link_vendedor_nao_encontrado")}`
+      );
+    }
+  };
+  
+  // Computeds
+  const hasTrial = computed(() => !!props.bump.trial);
+  const isBumpSellerEqual = computed(() => {
+    return product.value.seller.id === props.bump.seller.id;
+  });
 
 const showDescription = computed(() =>
   customCheckout.hasCustomBump ? customCheckout.bump_options.description : true
@@ -122,7 +141,22 @@ function getType(type = "") {
       </section>
       <!-- More product infos -->
       <section class="right__side" :class="`${bump.type.toLowerCase()}`">
-        <h1 class="item-title text-txt-color">{{ bump.name }}</h1>
+        <div class="bump-product-title">
+          <h1 class="item-title text-txt-color">{{ bump.name }}</h1>
+
+          <div v-show="!isBumpSellerEqual" class='has-tooltip' @click="redirect">
+            <span class='tooltip absolute rounded shadow-lg p-2 bg-black text-white bg-opacity-75 text-sm -mt-12 mr-8 w-full sm:w-64 md:w-80 text-center left-1/2 transform -translate-x-1/2'>  
+              {{$t("checkout.venda_por_indicacao")}}  
+             
+            </span>
+            <span class="different-seller">
+              Autor: {{ bump.seller.company ? bump.seller.company.fantasy_name ||
+                bump.seller.company.name
+              : bump.seller.name
+             }}</span>        
+          </div>
+        </div>
+
         <template v-if="hasTrial">
           <p class="info-value custom-color">
             {{ trialMessage }}
@@ -371,5 +405,29 @@ function getType(type = "") {
 .custom-color {
   color: var(--font-color-body);
   font-weight: 600;
+}
+.bump-product-title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  .different-seller{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--font-color-body);
+    background-color: var(--background-body);
+    border-radius: 5px;
+    padding: 10px;
+    &:hover {
+        transform: scale3d(1.1, 1.1, 1.1);
+        transition: ease-in-out 300ms;
+        background-color: var(--background-header);
+        color: white;
+        cursor: pointer;
+      }
+  }
 }
 </style>
