@@ -121,10 +121,14 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     async addTicket(batch_group, hash) {
       let batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
-      
+
       await this.checkHasTickets(ticket.id)
-      if(! this.hasAvailableTickets)
+      if(! this.hasAvailableTickets) {
+        batch.soldOff = true
         return
+      } else {
+        batch.soldOff = false
+      }
 
       if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
@@ -165,7 +169,6 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           await this.checkHasTickets(ticket.id)
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         }else{
-          console.log('ELSE', batch.release_type);
           // Para eventos que estão configurados para liberar por data || esgotar lote
           this.updateAvailableTickets(batch.tickets, false);
         }
