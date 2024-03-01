@@ -53,3 +53,9 @@ onMounted(() => {
     </span>
   </section>
 </template>
+
+<style scoped>
+.section-color {
+  background: rgba(52, 131, 250, 0.10);
+}
+</style>
