@@ -1,45 +1,55 @@
 <script setup>
+import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
+
+const expiredSession = useExpiredSessionStore();
 const cronometroRodando = ref(false);
-const tempoEmSegundos = ref(0);
+const tempoEmSegundos = ref(600);
 let cronometro = null;
 
 function start() {
   if (!cronometroRodando.value) {
-    cronometroRodando.value = true
+    cronometroRodando.value = true;
     cronometro = setInterval(() => {
-      tempoEmSegundos.value += 1
-    }, 1000)
+      tempoEmSegundos.value -= 1;
+    }, 1000);
   }
 }
 
-function finish() {
+function finish(evt) {
   if (cronometroRodando.value) {
-    tempoEmSegundos.value = 0
-    cronometroRodando.value = false
-    clearInterval(cronometro)
+    tempoEmSegundos.value = 0;
+    cronometroRodando.value = false;
+    clearInterval(cronometro);
+    cronometro = null;
+    if(evt !== 'onBeforeUnmount'){
+      expiredSession.setHaveFinished(true);
+    }
   }
 }
 
 onBeforeUnmount(() => {
-  finish();
-});
-
-watch(cronometroRodando, (novoValor) => {
-  if (!novoValor) {
-    finish();
+  if(cronometro) {
+    finish('onBeforeUnmount');
   }
 });
 
+watch(tempoEmSegundos, (newValue) => {
+  if(newValue === 0 && cronometro) {
+    finish();
+  }
+})
+
 onMounted(() => {
+  expiredSession.setHaveFinished(false);
   start();
 })
 </script>
 
 <template>
-  <section class="flex items-center justify-between rounded p-4 bg-gray-200">
+ <section class="flex items-center justify-between rounded p-4 bg-gray-200">
     <Chronometer :tempoEmSegundos="tempoEmSegundos"/>
-    <span class="text-sm">
-      Após este tempo, os ingressos serão liberados para venda novamente.
+    <span class="text-[14px] font-[400] leading-[21px] text-[#3483FA]">
+      {{ $t("checkout.event.finish_time_text") }}
     </span>
   </section>
 </template>
