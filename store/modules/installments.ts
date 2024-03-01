@@ -33,7 +33,7 @@ export const useInstallmentsStore = defineStore("installments", {
         let frete = 0;
 
         product_list.value.map((item: Product) => {
-          let value = !!item.custom_charges.length
+          let value = !!item.custom_charges?.length
             ? item.custom_charges[0].amount
             : item.amount;
           // Verifica se produto tem frete
@@ -83,7 +83,7 @@ export const useInstallmentsStore = defineStore("installments", {
         let frete = 0;
 
         product_list.value.map((item: Product) => {
-          let value = !!item.custom_charges.length
+          let value = !!item.custom_charges?.length
             ? item.custom_charges[0].amount
             : item.amount;
           // Verifica se produto tem frete

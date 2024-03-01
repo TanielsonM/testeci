@@ -1,17 +1,21 @@
 <script setup>
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
+import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
+import { storeToRefs } from "pinia";
 import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
@@ -20,8 +24,11 @@ const route = useRoute();
 
 // Variables
 const { t, locale } = useI18n();
+const { getReservations, sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
+const { product_list } = storeToRefs(checkout);
+
 const {
   method,
   allowed_methods,
@@ -34,8 +41,8 @@ const {
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, isPaymentLoading } = storeToRefs(payment);
-const { 
-  isOneStep, 
+const {
+  isOneStep,
   custom_checkout,
   hasNotifications
 } = storeToRefs(customCheckoutStore);
@@ -193,6 +200,20 @@ function setInternationalURL() {
 
 onMounted(() => {
   if (process.client) {
+    // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
+    if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+      // Quando o usuário clica em voltar no navegador
+      window.addEventListener('popstate', showBeforeBackNavigation);
+
+      if (product_list?.value?.length) {
+        window.addEventListener('beforeunload', showUnloadAlertCheckout);
+        checkout.setCoupon(true);
+      } else {
+        const route = useRoute();
+        const queryParams = new URLSearchParams(route.query).toString();
+        navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
+      }
+    }
     handleResize();
     window.addEventListener("resize", handleResize);
     window.addEventListener("myRecaptchaCallback", () => {
@@ -204,6 +225,10 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+    window.removeEventListener('popstate', showBeforeBackNavigation);
+    window.removeEventListener('beforeunload', showUnloadAlertCheckout);
+  }
   window.removeEventListener("resize", handleResize);
 });
 
@@ -245,7 +270,7 @@ function closeModal() {
 }
 
 async function callPayment() {
-  
+
   payment.setPaymentLoading(true);
 
   if (captchaEnabled.value) {
@@ -254,7 +279,7 @@ async function callPayment() {
     window.grecaptcha.reset();
     window.grecaptcha.execute();
   } else {
-    if(isPaymentLoading.value === true) {
+    if (isPaymentLoading.value === true) {
       await payment.payment(locale.value).finally(() => {
         payment.setPaymentLoading(false);
       })
@@ -290,19 +315,19 @@ if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
 await checkout.init().then(() => {
 
   let ogTitle = "Greenn";
-  if(product?.value?.name) {
+  if (product?.value?.name) {
     ogTitle = `${product.value.name} | Greenn`;
   }
 
   let ogDescription = "A plataforma de pagamento simples";
-  if(product?.value?.description) {
+  if (product?.value?.description) {
     ogDescription = product.value.description;
   }
 
   let currentUrlOg = ""
-  if(!process.client){
+  if (!process.client) {
     currentUrlOg = `https://payfast.greenn.com.br/${route.fullPath}`
-  }else{
+  } else {
     currentUrlOg = window.location.href;
   }
   let urlForOG = new URL(currentUrlOg);
@@ -330,7 +355,7 @@ onMounted(() => {
         custom_checkout.value.how_get_purchase_notification,
         custom_checkout.value.quantity_purchase_notification,
         custom_checkout.value.type_purchase_notification
-        );
+      );
     }
   }
 });
@@ -342,29 +367,17 @@ onMounted(() => {
     <Meta name="description" :content="product.description" />
   </Head>
   <NuxtLayout>
-    <section
-      class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]"
-    >
+    <section class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]">
       <!-- Purchase card -->
       <BaseCard class="w-full p-5 md:px-[60px] md:py-[50px]">
-        <BaseButton
-          color="transparent"
-          size="sm"
-          class="mb-4"
-          v-if="currentStep > 1 && currentStep <= 3 && isMobile && !isOneStep"
-          @click="stepsStore.back()"
-        >
+        <BaseButton color="transparent" size="sm" class="mb-4" v-if="currentStep > 1 && currentStep <= 3 && isMobile && !isOneStep" @click="stepsStore.back()">
           <div class="flex items-start justify-start text-left">
             <Icon name="mdi:arrow-left" class="mr-4" size="20" />
             <p class="text-left">{{ $t("checkout.steps.back") }}</p>
           </div>
         </BaseButton>
         <!-- Personal form -->
-        <Steps
-          :title="$t('components.steps.personal_data')"
-          step="01"
-          v-if="(isMobile && currentStep == 1) || !isMobile || isOneStep"
-        >
+        <Steps :title="$t('components.steps.personal_data')" step="01" v-if="(isMobile && currentStep == 1) || !isMobile || isOneStep">
           <template #end-line>
             <LocaleSelect />
           </template>
@@ -374,56 +387,29 @@ onMounted(() => {
         </Steps>
 
         <!-- Address form -->
-        <Steps
-          :title="$t('components.steps.address')"
-          step="02"
-          v-if="
-            (checkout.showAddressStep &&
-              ((isMobile && currentStep == 2) || !isMobile)) ||
-            (isOneStep && checkout.showAddressStep)
-          "
-          @vnode-mounted="incrementSteps"
-          @vnode-before-unmount="decreaseCount"
-        >
+        <Steps :title="$t('components.steps.address')" step="02" v-if="(checkout.showAddressStep &&
+          ((isMobile && currentStep == 2) || !isMobile)) ||
+          (isOneStep && checkout.showAddressStep)
+          " @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
           <template #content>
             <FormAddress />
-            <BaseToogle
-              v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'"
-              class="my-5"
-              v-model:checked="sameAddress"
-              id="address-form"
-              :label="$t('general.address_toogle_label')"
-            />
-            <Steps
-              :title="$t('general.delivery_address')"
-              icon="📦"
-              v-if="!sameAddress"
-            >
+            <BaseToogle v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'" class="my-5" v-model:checked="sameAddress" id="address-form" :label="$t('general.address_toogle_label')" />
+            <Steps :title="$t('general.delivery_address')" icon="📦" v-if="!sameAddress">
               <template #content>
                 <br />
                 <FormAddress type="shipping" />
               </template>
             </Steps>
-            <FormShippingOption
-              v-if="
-                product?.has_shipping_fee === 1 &&
-                product?.type_shipping_fee == 'DYNAMIC'
-              "
-              :options="product.shipping_options ?? []"
-            />
+            <FormShippingOption v-if="product?.has_shipping_fee === 1 &&
+              product?.type_shipping_fee == 'DYNAMIC'
+              " :options="product.shipping_options ?? []" />
           </template>
         </Steps>
         <!-- Purchase Form -->
-        <Steps
-          :title="$t('checkout.pagamento.title')"
-          :step="checkout.showAddressStep ? '03' : '02'"
-          :free="product?.method !== 'FREE' ? false : true"
-          v-if="
-            (isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
-            !isMobile ||
-            isOneStep
-          "
-        >
+        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
+          !isMobile ||
+          isOneStep
+          ">
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <template v-if="product?.method !== 'FREE'">
@@ -434,33 +420,20 @@ onMounted(() => {
               </template>
             </section>
             <!-- Bumps -->
-            <template
-              v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE' && !checkout.hasFreeBump"
-            >
+            <template v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE' && !checkout.hasFreeBump">
               <p class="my-5 w-full text-txt-color">
                 {{
                   customCheckoutStore.hasCustomBump
-                    ? customCheckoutStore.bump_options.title
-                    : `${$t("checkout.pagamento.bump.title")} 🔥`
+                  ? customCheckoutStore.bump_options.title
+                  : `${$t("checkout.pagamento.bump.title")} 🔥`
                 }}
               </p>
-              <OrderBumps
-                v-for="(bump, index) in checkout.getBumpList"
-                :key="index"
-                :bump="bump"
-                :class="{ 'mb-5': checkout.getBumpList.length !== index + 1 }"
-              />
+              <OrderBumps v-for="(bump, index) in checkout.getBumpList" :key="index" :bump="bump" :class="{ 'mb-5': checkout.getBumpList.length !== index + 1 }" />
             </template>
 
             <!-- Payment button -->
             <section>
-              <BaseButton
-                @click="callPayment"
-                v-if="method !== 'PAYPAL'"
-                class="my-7"
-                :loading="isPaymentLoading"
-                :disabled="isPaymentLoading"
-              >
+              <BaseButton @click="callPayment" v-if="method !== 'PAYPAL'" class="my-7" :loading="isPaymentLoading" :disabled="isPaymentLoading">
                 <span class="text-[15px] font-semibold">
                   {{
                     customCheckoutStore.purchase_text ||
@@ -485,34 +458,22 @@ onMounted(() => {
         </Steps>
 
         <!-- Next step buttom -->
-        <BaseButton
-          @click="stepsStore.setStep(currentStep + 1)"
-          v-if="
-            isMobile &&
-            currentStep < (checkout.showAddressStep ? 3 : 2) &&
-            !isOneStep &&
-            method !== 'FREE'
-          "
-        >
+        <BaseButton @click="stepsStore.setStep(currentStep + 1)" v-if="isMobile &&
+          currentStep < (checkout.showAddressStep ? 3 : 2) &&
+          !isOneStep &&
+          method !== 'FREE'
+          ">
           <span class="text-[15px] font-semibold">
             {{ $t("checkout.steps.next_step") }}
           </span>
         </BaseButton>
         <!-- Payment button -->
-        <template
-          v-if="
-            isMobile &&
-            currentStep < (checkout.showAddressStep ? 3 : 2) &&
-            !isOneStep &&
-            method === 'FREE'
-          "
-        >
-          <BaseButton
-            @click="callPayment"
-            class="my-7"
-            :loading="isPaymentLoading"
-            :disabled="isPaymentLoading"
-          >
+        <template v-if="isMobile &&
+          currentStep < (checkout.showAddressStep ? 3 : 2) &&
+          !isOneStep &&
+          method === 'FREE'
+          ">
+          <BaseButton @click="callPayment" class="my-7" :loading="isPaymentLoading" :disabled="isPaymentLoading">
             <span class="text-[15px] font-semibold">
               {{
                 customCheckoutStore.purchase_text ||
@@ -531,12 +492,7 @@ onMounted(() => {
       <!-- End purchase card -->
 
       <!-- Bottom thumb (custom checkout) -->
-      <img
-        v-if="customCheckoutStore.bottomThumb"
-        :src="customCheckoutStore.bottomThumb"
-        alt="Thumb inferior"
-        class="w-full max-w-[771.66px] rounded-lg object-contain"
-      />
+      <img v-if="customCheckoutStore.bottomThumb" :src="customCheckoutStore.bottomThumb" alt="Thumb inferior" class="w-full max-w-[771.66px] rounded-lg object-contain" />
       <!-- End bottom thumb (custom checkout) -->
       <FooterSafe />
       <!-- Payment methods -->
@@ -544,61 +500,41 @@ onMounted(() => {
     </section>
 
     <!-- Product Card -->
-    <section
-      class="flex w-full flex-col gap-10 lg:max-w-[370px] xl:min-w-[370px]"
-    >
+    <section class="flex w-full flex-col gap-10 lg:max-w-[370px] xl:min-w-[370px]">
       <ProductCard :product="product" />
       <!-- Side Thumb -->
-      <img
-        v-if="customCheckoutStore.sideThumb"
-        :src="customCheckoutStore.sideThumb"
-        alt="Thumb lateral"
-        class="hidden w-full rounded-lg lg:block"
-      />
+      <img v-if="customCheckoutStore.sideThumb" :src="customCheckoutStore.sideThumb" alt="Thumb lateral" class="hidden w-full rounded-lg lg:block" />
       <!-- End side Thumb -->
       <!-- Side Thumb Mobile -->
-      <img
-        v-if="customCheckoutStore.sideThumbMobile"
-        :src="customCheckoutStore.sideThumbMobile"
-        alt="Thumb lateral mobile"
-        class="w-full rounded-lg lg:hidden"
-      />
+      <img v-if="customCheckoutStore.sideThumbMobile" :src="customCheckoutStore.sideThumbMobile" alt="Thumb lateral mobile" class="w-full rounded-lg lg:hidden" />
       <!-- End side Thumb Mobile-->
     </section>
 
     <!-- Alert modal -->
-    <BaseModal :title="product.name" :is-open="alert_modal" @close="closeModal">
+    <BaseModal :title="product.name" :is-open="alert_modal" @close="closeModal" :close-button="false">
       <section class="flex w-full max-w-[400px] flex-col gap-5">
         <h6 class="text-[15px] font-semibold text-txt-color">
           {{ $t("checkout.dados_pessoais.title_error") }}
         </h6>
         <p class="text-txt-color">{{ $t(error_message) }}</p>
         <section class="mt-10 flex w-full justify-end">
-          <BaseButton
-            color="blue"
-            class="w-[40%] bg-main-color text-txt-color"
-            @click="closeModal"
-          >
+          <BaseButton color="blue" class="w-[40%] bg-main-color text-txt-color" @click="closeModal">
             {{ $t("checkout.dados_pessoais.btn_error") }}
           </BaseButton>
         </section>
       </section>
     </BaseModal>
 
+    <template v-if="product.product_type_id === 3 && sellerHasFeatureTickets">
+      <EventExpiredSessionModal />
+      <EventGoBackWarningModal />
+    </template>
+
     <!-- Client Only section -->
     <ClientOnly class="hidden">
       <ModalCloseUp />
       <LeadsClient />
-      <PixelClient
-        :key="pixelComponentKey"
-        :event="'view'"
-        :product_id="productStore.product_id"
-        :affiliate_id="hasAffiliateId"
-        :method="checkout.method"
-        :amount="amountStore.getAmount"
-        :original_amount="amountStore.getOriginalAmount"
-        :product_name="productStore.productName"
-      />
+      <PixelClient :key="pixelComponentKey" :event="'view'" :product_id="productStore.product_id" :affiliate_id="hasAffiliateId" :method="checkout.method" :amount="amountStore.getAmount" :original_amount="amountStore.getOriginalAmount" :product_name="productStore.productName" />
       <Captcha />
     </ClientOnly>
     <!-- End Client Only section -->
