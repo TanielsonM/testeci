@@ -157,7 +157,7 @@ onMounted(() => {
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      :error="!email && hasSent ||email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.em && !isEmailValid)) : undefined"
+      :error="email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.em && !isEmailValid)) : undefined"
       :disabled="forceEmail"
       rules="email"
     >

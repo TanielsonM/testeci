@@ -93,8 +93,8 @@ const data = ref({
         <p>
           {{
             sale.amount == 0
-            ? $t("checkout.pagamento.bump.free")
-            : formatMoney(sale.amount)
+              ? $t("checkout.pagamento.bump.free")
+              : formatMoney(sale.amount)
           }}
         </p>
       </div>
@@ -105,8 +105,8 @@ const data = ref({
         <p>
           {{
             sale.amount == 0
-            ? $t("checkout.pagamento.bump.free")
-            : formatMoney(sale.amount)
+              ? $t("checkout.pagamento.bump.free")
+              : formatMoney(sale.amount)
           }}
         </p>
       </div>
@@ -116,7 +116,17 @@ const data = ref({
       </div>
     </div>
     <div v-if="sale.method == 'BOLETO'">
-      <ModalTicketInfos :code="sale.boleto_barcode" :url="sale.boleto_url" :id="sale.id.toString()" :amount="formatMoney(sale.amount)" :last="true" :name="sale.product.name" :shipping-amount="formatMoney(sale.shipping_amount)" :only-code="true" :status="sale.status" />
+      <ModalTicketInfos
+        :code="sale.boleto_barcode"
+        :url="sale.boleto_url"
+        :id="sale.id.toString()"
+        :amount="formatMoney(sale.amount)"
+        :last="true"
+        :name="sale.product.name"
+        :shipping-amount="formatMoney(sale.shipping_amount)"
+        :only-code="true"
+        :status="sale.status"
+      />
     </div>
   </div>
 </template>

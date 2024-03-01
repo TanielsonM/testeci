@@ -1,17 +1,7 @@
 <script setup>
-import { storeToRefs } from "pinia";
-import { useCheckoutStore } from "~~/store/checkout";
-
 const actual_year = computed(() => new Date().getFullYear());
 const store = useCheckoutStore();
 const { captchaEnabled } = storeToRefs(store);
-const props = defineProps({
-  installments_fee: {
-    required: false,
-    type: Boolean,
-    default: true
-  }
-})
 </script>
 
 <template>
@@ -30,7 +20,6 @@ const props = defineProps({
       {{ $t("checkout.captcha5") }}.
     </small>
     <p
-      v-if="installments_fee"
       class="relative flex flex-nowrap text-[10px] font-normal text-txt-color md:hidden"
     >
       {{ $t("components.footer.annual_fee") }}

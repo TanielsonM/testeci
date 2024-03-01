@@ -1,5 +1,4 @@
 import { AmountState } from "~~/types";
-import { defineStore } from "pinia";
 
 export const useAmountStore = defineStore("Amount", {
   state: (): AmountState => ({
