@@ -85,7 +85,7 @@ const data = ref({
       ></span>
       <div
         class="details py-5"
-        v-if="(!!shippingAmount || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')) && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
+        v-if="((!!shippingAmount && shippingAmount != 'R$ 0,00') || (!!shippingSelected && !shippingAmount && JSON.parse(shippingSelected).service_name === 'GRÁTIS')) && onlyButtons && data?.shippingSelected && data.shippingSelected.frete"
       >
         <h6 class="title">
           {{ $t("pg_obrigado.modal.frete_selecionado") }}
