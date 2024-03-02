@@ -118,9 +118,6 @@ export type Payment = {
   // Gateway
   gateway?: string;
   currency_data?: CurrencyData;
-  //fingerPrint
-  requestId?: string | null;
-  visitorId?: string | null;
 };
 
 export type CurrencyData = {

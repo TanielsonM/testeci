@@ -9,7 +9,6 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
-import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -51,21 +50,6 @@ const {
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
 
-const getVisitorData = async () => {
-  try {
-    const {data, error, isLoading, getData} = useVisitorData(
-      {extendedResult: true},
-      {immediate: false}
-    );
-      
-    await getData();
-    
-    localStorage.setItem('visitorId', data?.value?.visitorId);
-    localStorage.setItem('requestId', data?.value?.requestId);
-    } catch(e) {
-      console.log('Error:', e);
-    }
-  };
 
 // Computeds
 const tabs = computed(() => {
@@ -220,7 +204,6 @@ onMounted(() => {
       payment.payment(locale.value);
     });
     setInternationalURL()
-    getVisitorData();
   }
 });
 
