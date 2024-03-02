@@ -324,12 +324,6 @@ export const usePaymentStore = defineStore("Payment", {
         });
 
         checkoutStore.setLoading(true);
-        checkoutStore.setLoading(true);
-        const requestId = localStorage.getItem('requestId');
-        const visitorId = localStorage.getItem('visitorId');
-
-        data.requestId = requestId;
-        data.visitorId = visitorId;
         // Payment request
         await useApi()
           .create("/payment", data)
