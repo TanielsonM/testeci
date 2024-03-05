@@ -68,11 +68,33 @@ const dependentBatchName = function (batch) {
 const getSmallerAmount = function (tickets) {
   return Math.min(...tickets.map(x => x.amount));
 }
+
+const hasFixedBatch = () => {
+  const url = useRoute();
+
+  if (Object.keys(url.query).length === 0) 
+    return batches;
+  
+  let batch = url.query
+  let allBatches = batches
+  let collection = []
+
+  for (const key in batch) {
+    if (batch.hasOwnProperty(key)) {
+      const value = batch[key];
+      collection.push(
+        allBatches.find(val => val.id == value)
+      )
+    }
+  }
+
+  return (batches.value = collection || []);
+}
 </script>
 
 <template>
   <div class="mb-3">
-    <PreCheckoutCard v-for="batch in batches" :key="batch.id" class="mb-5" :class="{ 'bg-checkout': dependsOnAnotherBatch(batch) }">
+    <PreCheckoutCard v-for="batch in hasFixedBatch()" :key="batch.id" class="mb-5" :class="{ 'bg-checkout': dependsOnAnotherBatch(batch) }">
       <div class="text-txt-color justify-between items-center mt-5" :class="{
         'mb-5 block sm:flex': dependsOnAnotherBatch(batch),
         'flex': !dependsOnAnotherBatch(batch)
