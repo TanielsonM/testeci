@@ -72,9 +72,8 @@ const getSmallerAmount = function (tickets) {
 function verifyIfHasSoldOffField(id) {
   let filter = batches.find(x => x.id == id)
 
-  if(filter)
-    if(filter?.soldOff)
-      return false
+  if(filter && filter?.soldOff)
+    return false
 
   return true
 }
