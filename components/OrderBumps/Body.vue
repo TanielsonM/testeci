@@ -242,11 +242,12 @@ function getType(type = "") {
         </span>
       </section>
     </section>
-    <section class="mt-5 !block w-full" v-if="bump.checkbox">
+    <section class="!block w-full" v-if="bump.checkbox">
       <FormShippingOption
         :options="bump.shipping_options ?? []"
         :is-bump="true"
         :bump="bump.id"
+        class="mt-5"
       />
     </section>
   </section>
