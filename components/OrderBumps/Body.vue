@@ -138,7 +138,7 @@ function getType(type = "") {
       <!-- More product infos -->
       <section class="right__side" :class="`${bump.type.toLowerCase()}`">
         <div class="bump-product-title">
-          <h1 class="item-title text-txt-color">{{ bump.offer_name }}</h1>
+          <h1 class="item-title text-txt-color">{{ bump.name }}</h1>
 
           <div v-show="!isBumpSellerEqual" class='has-tooltip' @click="redirect">
             <span class='tooltip absolute rounded shadow-lg p-2 bg-black text-white bg-opacity-75 text-sm -mt-12 mr-8 w-full sm:w-64 md:w-80 text-center left-1/2 transform -translate-x-1/2'>  
