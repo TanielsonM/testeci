@@ -21,7 +21,7 @@ function byTickets() {
   navigateTo(`/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
 }
 
-await checkout.init().then((batches) => {
+await checkout.init(false, true).then((batches) => {
   // por algum motivo o batches ta sumindo, código abaixo para persistir
   if (batches?.length) preCheckout.setBatches(batches);
   return batches;
