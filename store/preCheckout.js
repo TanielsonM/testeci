@@ -112,7 +112,6 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     async checkHasTickets(offer) {
       const hasTicket = await useApi().create('/event/reservation/check-amount', { offer_id: offer })
-
       if(! hasTicket) 
         return this.hasAvailableTickets = false
       
@@ -123,8 +122,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       let ticket = batch.tickets.find(x => x.hash === hash);
       
       await this.checkHasTickets(ticket.id)
-      if(! this.hasAvailableTickets)
-        return
+      if(batch.release_type !== "fixed_date" && !this.hasAvailableTickets) return
 
       if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
