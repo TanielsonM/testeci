@@ -55,7 +55,6 @@ watch(
 onMounted(() => {
   if (process.client) {
     setTime();
-    console.log('testeeee');
   }
 });
 </script>
