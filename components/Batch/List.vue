@@ -82,9 +82,10 @@ const hasFixedBatch = () => {
   for (const key in batch) {
     if (batch.hasOwnProperty(key)) {
       const value = batch[key];
-      collection.push(
-        allBatches.find(val => val.id == value)
-      )
+      let offer = allBatches.find(val => val.id == value)
+      
+      if(offer !== undefined)
+        collection.push(offer)
     }
   }
 
