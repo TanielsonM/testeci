@@ -78,7 +78,7 @@ const exceptionSellerId = computed(() => {
           {{ $t("components.product_card.is_subscription") }}
         </small>
         <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">
-          PROGRAMA ONLINE: MINDFULNESS E AUTOCOMPAIXÃO - Mindful Self Compassion (MSC)
+          {{ product.name }}
         </h1>
         <p
           class="text-lg font-semibold leading-4 text-txt-color"
