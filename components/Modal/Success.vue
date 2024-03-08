@@ -128,8 +128,13 @@ if (
 
   const closeAction = () => {
     const current_query = new URLSearchParams(route.query);
-    window.location.href =
-      data.value.productOffer.data.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
+
+    if(!data.value.productOffer.data.thank_you_page){
+      window.location.href = `${runtimeConfig.public.BASE_URL}/checkout-obrigado?${current_query.toString()}`;  
+    }else{
+      window.location.href =
+      data.value.productOffer.data.thank_you_page + `?${current_query.toString()}` || runtimeConfig.public.BASE_URL;
+    }
   };
 
   modal.setAction(closeAction);
