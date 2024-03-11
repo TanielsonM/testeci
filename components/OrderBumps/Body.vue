@@ -4,7 +4,11 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
+
+import { MdPreview } from 'md-editor-v3';
+
 import * as Toast from "vue-toastification";
+
 
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
@@ -237,16 +241,15 @@ function getType(type = "") {
             </section>
           </section>
         </Transition>
-        <span class="item-description" v-if="showDescription">
-          {{ bump.description }}
-        </span>
+        <MdPreview v-model="bump.description" style="background-color: transparent;" class="item-description" v-if="showDescription" />
       </section>
     </section>
-    <section class="mt-5 !block w-full" v-if="bump.checkbox">
+    <section class="!block w-full" v-if="bump.checkbox">
       <FormShippingOption
         :options="bump.shipping_options ?? []"
         :is-bump="true"
         :bump="bump.id"
+        class="mt-5"
       />
     </section>
   </section>
