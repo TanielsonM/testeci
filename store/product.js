@@ -141,7 +141,10 @@ export const useProductStore = defineStore("product", {
       }
       let allowed_methods = product.method.split(",");
 
-      if (
+      if(product.method.includes("PAYPAL") && !this.product.is_heaven){
+        allowed_methods = allowed_methods.filter((item) => item != "PAYPAL");
+
+      }else if (
         !!product.seller.is_heaven &&
         product.method.includes("PAYPAL") &&
         checkout.selectedCountry !== "BR"
