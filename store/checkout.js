@@ -322,7 +322,7 @@ export const useCheckoutStore = defineStore("checkout", {
               if(this.hasBumpForceCheck) {
                 bumpData.checkbox = true
                 bumpData.disabled = true
-              //   this.setProductList(bumpData);
+                this.setProductList(bumpData);
               //   const addressStore = useAddressStore();
               //   if(bumpData.type_shipping_fee === 'DYNAMIC' && bumpData.has_shipping_fee === 1 && addressStore.zipcode) {
               //     await this.calculateBumpsShipping(addressStore.zipcode);
