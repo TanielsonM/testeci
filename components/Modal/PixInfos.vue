@@ -301,7 +301,7 @@ onBeforeUnmount(() => {
         <p>{{ name }}</p>
         <p>{{ amount }}</p>
       </div>
-      <div class="item" v-if="!!shippingAmount && shippingAmount != 'R$ 0,00' && !!sale.shipping_amount">
+      <div class="item" v-if="!!shippingAmount && shippingAmount != 'R$ 0,00'">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ shippingAmount }}</p>
       </div>
