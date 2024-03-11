@@ -4,7 +4,11 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
+
+import { MdPreview } from 'md-editor-v3';
+
 import * as Toast from "vue-toastification";
+
 
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
@@ -138,7 +142,7 @@ function getType(type = "") {
       <!-- More product infos -->
       <section class="right__side" :class="`${bump.type.toLowerCase()}`">
         <div class="bump-product-title">
-          <h1 class="item-title text-txt-color">{{ bump.name }}</h1>
+          <h1 class="item-title text-txt-color">{{ bump.offer_name }}</h1>
 
           <div v-show="!isBumpSellerEqual" class='has-tooltip' @click="redirect">
             <span class='tooltip absolute rounded shadow-lg p-2 bg-black text-white bg-opacity-75 text-sm -mt-12 mr-8 w-full sm:w-64 md:w-80 text-center left-1/2 transform -translate-x-1/2'>  
@@ -237,16 +241,15 @@ function getType(type = "") {
             </section>
           </section>
         </Transition>
-        <span class="item-description" v-if="showDescription">
-          {{ bump.description }}
-        </span>
+        <MdPreview v-model="bump.description" style="background-color: transparent;" class="item-description" v-if="showDescription" />
       </section>
     </section>
-    <section class="mt-5 !block w-full" v-if="bump.checkbox">
+    <section class="!block w-full" v-if="bump.checkbox">
       <FormShippingOption
         :options="bump.shipping_options ?? []"
         :is-bump="true"
         :bump="bump.id"
+        class="mt-5"
       />
     </section>
   </section>

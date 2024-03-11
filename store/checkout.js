@@ -180,7 +180,7 @@ export const useCheckoutStore = defineStore("checkout", {
     getIsCreditCard: (state) => state.isCreditCard
   },
   actions: {
-    async init(byChangeCountry = false) {
+    async init(byChangeCountry = false, routeIsCheckout = false) {
       const { product } = useProductStore();
       const preCheckout = usePreCheckoutStore();
       const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
@@ -203,17 +203,12 @@ export const useCheckoutStore = defineStore("checkout", {
       this.url.params = params;
       this.url.query = query;
       this.url.fullPath = fullPath;
-      // if (!!this.hasCustomCheckout) {
-      //   const customCheckout = useCustomCheckoutStore();
-      //   await customCheckout.getCustomCheckout();
-      // }
       /* Initial configs */
-      await this.setCoupon(true);
-      if (this.hasBatches) this.getBatches()
-      if (this.hasBump) this.getBumps();
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
+      await this.setCoupon(true, false, routeIsCheckout);
+      if (this.hasBump) this.getBumps();
+      if (this.hasBatches) this.getBatches()
       this.setLoading();
-
       if(res?.batches?.length) return res.batches;
     },
     setUUID(uuid) {
@@ -491,7 +486,8 @@ export const useCheckoutStore = defineStore("checkout", {
     setAmount(amount = 0) {
       this.amount = amount;
     },
-    async setCoupon(initial = false, remove = false) {
+    async setCoupon(initial = false, remove = false, routeIsCheckout = false) {
+      if(routeIsCheckout) return;
       const store = useAmountStore();
       const prodStore = useProductStore();
       if (remove) {

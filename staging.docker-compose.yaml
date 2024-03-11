@@ -5,9 +5,8 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3000:3000"
+      - "3032:80"
     volumes:
       - './:/frontend'
     env_file:
-      - .env.development
-
+      - .env.staging
