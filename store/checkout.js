@@ -4,6 +4,8 @@ import { useProductStore } from "~/store/product";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
+import { useAddressStore } from "@/store/forms/address";
+import { useStepStore } from "~~/store/modules/steps";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 
@@ -318,8 +320,18 @@ export const useCheckoutStore = defineStore("checkout", {
                 b_order: bumpOrder,
               }
               if(this.hasBumpForceCheck) {
-                bumpData.checkbox = true,
+                bumpData.checkbox = true
                 bumpData.disabled = true
+                this.setProductList(bumpData);
+                const addressStore = useAddressStore();
+                if(bumpData.type_shipping_fee === 'DYNAMIC' && bumpData.has_shipping_fee === 1 && addressStore.zipcode) {
+                  await this.calculateBumpsShipping(addressStore.zipcode);
+                }
+                const stepsStore = useStepStore();
+                const { countSteps, currentStep, isMobile } = storeToRefs(stepsStore);
+                if (countSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
+                  stepsStore.back();
+                }
               }
               this.bump_list.push(bumpData);
               this.bump_list = this.bump_list.sort((bump1, bump2) => {
