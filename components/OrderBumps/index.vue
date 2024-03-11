@@ -104,7 +104,7 @@ watch(
     }
   }
 );
-console.log('props.bump', props.bump)
+
 if (isFixedShipping.value)
   shipping.value = { price: props.bump.amount_fixed_shipping_fee };
 </script>

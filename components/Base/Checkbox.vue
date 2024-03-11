@@ -28,8 +28,6 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:checked"]);
 
-console.log('b_id', id)
-console.log('disabled', disabled)
 </script>
 
 <template>
