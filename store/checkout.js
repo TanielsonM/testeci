@@ -318,8 +318,9 @@ export const useCheckoutStore = defineStore("checkout", {
                 b_order: bumpOrder,
               }
               if(this.hasBumpForceCheck) {
-                bumpData.checkbox = true,
+                bumpData.checkbox = true
                 bumpData.disabled = true
+                this.setProductList(bumpData);
               }
               this.bump_list.push(bumpData);
               this.bump_list = this.bump_list.sort((bump1, bump2) => {
