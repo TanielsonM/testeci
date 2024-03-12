@@ -104,7 +104,7 @@ function verifyIfHasSoldOffField(id) {
 
 <template>
   <div class="mb-3">
-    <PreCheckoutCard v-for="batch in hasFixedBatch()" :key="batch.id" class="mb-5" :class="{ 'bg-checkout': dependsOnAnotherBatch(batch) }">
+    <PreCheckoutCard v-for="(batch, index) in hasFixedBatch()" :key="batch.id" class="mb-5" :class="{ 'bg-checkout': dependsOnAnotherBatch(batch) }">
       <div class="text-txt-color justify-between items-center mt-5" :class="{
         'mb-5 block sm:flex': dependsOnAnotherBatch(batch),
         'flex': !dependsOnAnotherBatch(batch)
