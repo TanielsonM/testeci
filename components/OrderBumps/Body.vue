@@ -77,12 +77,6 @@ const redirect = () => {
     toast.info(`${t("checkout.link_vendedor_nao_encontrado")}`);
   }
 };
-  
-// Computeds
-const hasTrial = computed(() => !!props.bump.trial);
-const isBumpSellerEqual = computed(() => {
-  return product.value.seller.id === props.bump.seller.id;
-});
 
 const showDescription = computed(() =>
   customCheckout.hasCustomBump ? customCheckout.bump_options.description : true
