@@ -78,29 +78,6 @@ function verifyIfHasSoldOffField(id) {
   return true
 }
 
-const hasFixedBatch = () => {
-  const url = useRoute();
-
-  if (Object.keys(url.query).length === 0) 
-    return batches;
-  
-  let batch = url.query
-  let allBatches = batches
-  let collection = []
-
-  for (const key in batch) {
-    if (batch.hasOwnProperty(key)) {
-      const value = batch[key];
-      let offer = allBatches.find(val => val.id == value)
-      
-      if(offer !== undefined)
-        collection.push(offer)
-    }
-  }
-
-  return (batches.value = collection || []);
-}
-
 </script>
 
 <template>
