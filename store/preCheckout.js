@@ -64,11 +64,16 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.batches = value;
     },
     forceUpdateAvailableBatches(id) {
-      let batch = this.batches.find(x => x.id === id);
-      if(batch){
-        let available = batch.available_tickets;
-        batch.available_tickets = batch.available_tickets;
-      }
+      return new Promise((resolve, reject) => {
+        let batch = this.batches.find(x => x.id === id);
+        if (batch) {
+          let available = batch.available_tickets;
+          batch.available_tickets = batch.available_tickets;
+          resolve(); 
+        } else {
+          reject(new Error('Batch not found')); 
+        }
+      });
     },
     updateAvailableTickets(tickets, selected = false) {
       if (Array.isArray(tickets)) {
