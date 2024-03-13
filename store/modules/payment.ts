@@ -419,6 +419,7 @@ export const usePaymentStore = defineStore("Payment", {
             this.setPaymentLoading(false);
           }).finally(() =>{
             this.setPaymentFetching(false);
+            this.setPaymentLoading(false);
           })
       }
     },
