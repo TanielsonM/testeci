@@ -63,10 +63,11 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     setBatches(value) {
       this.batches = value;
     },
-    updateAvailableBatches(id) {
+    forceUpdateAvailableBatches(id) {
       let batch = this.batches.find(x => x.id === id);
       if(batch){
-        batch.available_tickets =+ 1;
+        let available = batch.available_tickets;
+        batch.available_tickets = batch.available_tickets;
       }
     },
     updateAvailableTickets(tickets, selected = false) {
