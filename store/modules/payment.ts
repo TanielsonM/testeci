@@ -86,34 +86,26 @@ export const usePaymentStore = defineStore("Payment", {
       this.fetching = value;
     },
     async payment(language: string) {
-      console.log('payment1')
       if (!this.fetching) {
         this.setPaymentFetching(true);
-        console.log('payment2')
         const allValid = await validateAll();
         if (!allValid) {
           this.hasSent = true;
           this.setPaymentLoading(false);
           this.setPaymentFetching(false);
-          console.log('payment3')
           return;
         }
 
         leadsStore.changeStep(3);
-        console.log('payment4')
         const total = computed(() => {
-          console.log('payment5')
           if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
             return (getTotal.value(ticket_installments.value));
           }
           if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)) {
-            console.log('payment6')
             return getTotal.value();
           }
-          console.log('payment7')
           return getInstallments.value(1);
         });
-        console.log('payment8')
         let data: Payment = {
           // Purchase infos
           method: method.value,
@@ -153,21 +145,17 @@ export const usePaymentStore = defineStore("Payment", {
           upsell_id: hasUpsell.value,
           metas: url.value.query,
         };
-        console.log('payment9')
         if (captchaEnabled.value) {
           data.captcha = captcha_code.value;
         }
-        console.log('payment10')
         if (method.value === "PAYPAL") {
           data.paypal = paypal_details.value;
         }
-        console.log('payment11')
         // Gift
         if (is_gift.value) {
           data.is_gift = is_gift.value;
           data.gift_message = gift_message.value;
         }
-        console.log('payment12')
         // Physical product
         if (hasPhysicalProduct.value) {
           const address: any = sameAddress.value ? charge.value : shipping.value;
@@ -199,7 +187,6 @@ export const usePaymentStore = defineStore("Payment", {
             }
           });
         }
-        console.log('payment13')
         // Affiliate id
         const affiliate_id = useCookie(`affiliate_${product_id.value}`);
         const affiliate = useCookie("affiliate");
@@ -210,23 +197,19 @@ export const usePaymentStore = defineStore("Payment", {
         } else if (hasAffiliationLead.value && affiliate.value) {
           data.affiliate_id = affiliate.value;
         }
-        console.log('payment14')
         // Coupon
         if (coupon.value.applied && !!coupon.value.name) {
           data.products[0].coupon = coupon.value.name.toUpperCase();
         }
-        console.log('payment15')
         /* When method is Credit card */
         if (
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
         ) {
-          console.log('payment16')
           const config = useRuntimeConfig();
           await loadMercadoPago();
           const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
             locale: "pt-BR",
           });
-          console.log('payment17')
           let parsedFirstAmount = Number(
             first.value.amount
               .toString()
@@ -240,7 +223,6 @@ export const usePaymentStore = defineStore("Payment", {
             firstCardAmountWithoutInterest =
               getAmount.value * percentageFirstCard;
           }
-          console.log('payment18')
           let cards: any = [];
           cards.push({
             total: Number(parsedFirstAmount).toFixed(2),
@@ -250,7 +232,6 @@ export const usePaymentStore = defineStore("Payment", {
             card_holder_name: first.value.holder_name,
             card_number: first.value.number,
           });
-          console.log('payment19')
           // Mercado Pago token - First Card
           if (installments.value >= 10) {
             const firstCardToken = mp.createCardToken({
@@ -268,7 +249,6 @@ export const usePaymentStore = defineStore("Payment", {
               data.gateway = "MERCADOPAGO";
             });
           }
-          console.log('payment20')
           if (method.value === "TWO_CREDIT_CARDS") {
             let parsedSecondAmount = Number(
               second.value.amount
@@ -307,7 +287,6 @@ export const usePaymentStore = defineStore("Payment", {
           }
           data.cards = cards;
         }
-        console.log('payment21')
         const allowed_installments = [
           "CREDIT_CARD",
           "TWO_CREDIT_CARDS",
@@ -317,27 +296,22 @@ export const usePaymentStore = defineStore("Payment", {
         if (!allowed_installments.includes(method.value)) {
           delete data.installments;
         }
-        console.log('payment22')
         const currency_data: CurrencyData = {
           local_currency: 'BRL',
           base_currency: 'BRL'
         };
         data.currency_data = currency_data;
-        console.log('payment23')
         // Registrando log boleto
         let dataLog = Object.assign({}, data);
-        console.log('payment24')
         GreennLogs.logger.info("🟡 Dados da Compra", {
           name: `Enviando objeto da compra [${method.value}]`,
           objetoCompra: JSON.stringify(dataLog),
         });
-        console.log('payment25')
         checkoutStore.setLoading(true);
         // Payment request
         await useApi()
           .create("/payment", data)
           .then(res => {
-            console.log('payment26')
             if (
               res.sales !== undefined &&
               Array.isArray(res.sales) &&
@@ -408,20 +382,17 @@ export const usePaymentStore = defineStore("Payment", {
                 path: `/${product_id.value}/obrigado`,
                 query,
               });
-              console.log('payment27')
               return;
             }
             if (
               Array.isArray(res?.sales) &&
               res.sales.some((item: SaleElement) => !item.success)
             ) {
-              console.log('payment28')
               this.validateError(res?.sales[0]);
               return;
             }
             if (res.status === "error" && !res.sales?.success) {
               this.validateError(res);
-              console.log('payment29')
               return;
             }
           })
@@ -429,11 +400,9 @@ export const usePaymentStore = defineStore("Payment", {
             console.error(err)
             checkoutStore.setLoading(false);
             this.setPaymentLoading(false);
-            console.log('payment30')
           }).finally(() =>{
             this.setPaymentFetching(false);
             this.setPaymentLoading(false);
-            console.log('payment31')
           })
       }
     },
