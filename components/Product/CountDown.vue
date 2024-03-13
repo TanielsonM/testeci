@@ -3,24 +3,26 @@ import moment from "moment";
 import { useCheckoutStore } from "@/store/checkout";
 import * as Toast from "vue-toastification";
 
+const props = defineProps({
+  coupon: {
+    type: Object,
+    required: true,
+    default: () => {},
+  },
+});
+
+const time = ref({
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+});
+
 onMounted(() => {
   if (process.client) {
     const checkout = useCheckoutStore();
     const toast = Toast.useToast();
     const { t } = useI18n();
-    const props = defineProps({
-      coupon: {
-        type: Object,
-        required: true,
-        default: () => {},
-      },
-    });
 
-    const time = ref({
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-    });
     const interval = setInterval(() => {
       setTime();
     }, 1000);
