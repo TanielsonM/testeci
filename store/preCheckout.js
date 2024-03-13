@@ -67,8 +67,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       return new Promise((resolve, reject) => {
         let batch = this.batches.find(x => x.id === id);
         if (batch) {
-          let available = batch.available_tickets;
-          batch.available_tickets = batch.available_tickets;
+          batch.available_tickets = batch.available_tickets +1;
           resolve(); 
         } else {
           reject(new Error('Batch not found')); 
@@ -133,7 +132,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     async addTicket(batch_group, hash) {
       let batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
-
+      this.setLoadingReservation(true, ticket);
       await this.checkHasTickets(ticket.id)
       if(! this.hasAvailableTickets) {
         batch.soldOff = true
@@ -162,10 +161,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         }
         // }
       }
+      this.setLoadingReservation(false, ticket);
     },
     async subTicket(batch_group, hash) {
       const batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
+      this.setLoadingReservation(true, ticket);
       if (ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
         ticket.selected_tickets -= 1;
         batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
@@ -190,6 +191,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         //   localStorage.setItem('reservations', JSON.stringify(this.reservations))
         // }
       }
+      this.setLoadingReservation(false, ticket);
     },
     async createReservation(offer_id, ticket, batch_id) {
       const start = new Date();

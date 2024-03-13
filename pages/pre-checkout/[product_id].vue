@@ -34,11 +34,14 @@ onMounted(async () => {
       try {
         let reservations = JSON.parse(window.localStorage.getItem('reservations'));
         if (reservations?.length) {
-          reservations.forEach(({batch_id}) => {
-            if(batch_id) preCheckout.forceUpdateAvailableBatches(batch_id);
+          const promises = reservations.map(async ({ batch_id }) => {
+            if (batch_id) {
+              await preCheckout.forceUpdateAvailableBatches(batch_id);
+            }
           });
+          await Promise.all(promises);
           setTimeout(async () => {
-            const promises = reservations.map(async reservation => {
+            const promises = reservations.forEach(async reservation => {
               try {
                 await preCheckout.deleteReservation(reservation, null, true);
                 reservations = reservations.filter(x => x.id !== reservation.id);
