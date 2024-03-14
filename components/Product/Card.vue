@@ -53,7 +53,7 @@ const exceptionSellerId = computed(() => {
     <section class="flex w-full items-center px-5">
       <!-- Product Image -->
       <aside
-        class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px]"
+        class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px] flex-shrink-0"
         v-if="product.images.length"
       >
         <nuxt-img

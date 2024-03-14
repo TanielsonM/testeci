@@ -102,6 +102,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasForce: (state) => state.url.query?.force === "true",
     hasPhone: (state) => state.url.query?.ph,
     hasUpsell: (state) => state.url.query?.up_id,
+    hasBumpForceCheck: (state) => state.url.query?.b_fc,
     hasSelectedBump: (state) => state.bump_list.some((bump) => bump.checkbox),
     hasFreeBump: (state) => state.bump_list.every(bump => bump.method === 'FREE'),
     /**
@@ -311,11 +312,17 @@ export const useCheckoutStore = defineStore("checkout", {
                 customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
               }
             } else {
-              this.bump_list.push({
+              let bumpData = {
                 ...response.data,
                 checkbox: false,
                 b_order: bumpOrder,
-              });
+              }
+              if(this.hasBumpForceCheck) {
+                bumpData.checkbox = true
+                bumpData.disabled = true
+                this.setProductList(bumpData);
+              }
+              this.bump_list.push(bumpData);
               this.bump_list = this.bump_list.sort((bump1, bump2) => {
                 return bump1.b_order - bump2.b_order;
               });
