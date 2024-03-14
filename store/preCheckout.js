@@ -171,7 +171,6 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           await this.checkHasTickets(ticket.id)
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         }else{
-          console.log('ELSE', batch.release_type);
           // Para eventos que estão configurados para liberar por data || esgotar lote
           this.updateAvailableTickets(batch.tickets, false);
         }
