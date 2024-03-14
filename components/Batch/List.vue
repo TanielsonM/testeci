@@ -69,15 +69,6 @@ const getSmallerAmount = function (tickets) {
   return Math.min(...tickets.map(x => x.amount));
 }
 
-function verifyIfHasSoldOffField(id) {
-  let filter = batches.find(x => x.id == id)
-
-  if(filter && filter?.soldOff)
-    return false
-
-  return true
-}
-
 const hasFixedBatch = () => {
   const url = useRoute();
 
@@ -100,12 +91,20 @@ const hasFixedBatch = () => {
 
   return (batches.value = collection || []);
 }
+function verifyIfHasSoldOffField(id) {
+  let filter = batches.find(x => x.id == id)
+
+  if(filter && filter?.soldOff)
+    return false
+
+  return true
+}
 
 </script>
 
 <template>
   <div class="mb-3">
-    <PreCheckoutCard v-for="(batch, index) in batches" :key="batch.id" class="mb-5" :class="{ 'bg-checkout': dependsOnAnotherBatch(batch) }">
+    <PreCheckoutCard v-for="(batch, index) in hasFixedBatch()" :key="batch.id" class="mb-5" :class="{ 'bg-checkout': dependsOnAnotherBatch(batch) }">
       <div class="text-txt-color justify-between items-center mt-5" :class="{
         'mb-5 block sm:flex': dependsOnAnotherBatch(batch),
         'flex': !dependsOnAnotherBatch(batch)

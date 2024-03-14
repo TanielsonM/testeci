@@ -20,8 +20,14 @@ const props = defineProps({
     required: false,
     default: () => "",
   },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: () => false,
+  },
 });
 const emit = defineEmits(["update:checked"]);
+
 </script>
 
 <template>
@@ -31,6 +37,7 @@ const emit = defineEmits(["update:checked"]);
     :checked="checked"
     :id="`checkbox-${props.id}`"
     class="mr-2 hidden"
+    :disabled="props.disabled"
   />
   <label
     :for="`checkbox-${props.id}`"

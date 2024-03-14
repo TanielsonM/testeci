@@ -123,6 +123,7 @@ if (isFixedShipping.value)
             : $t('checkout.pagamento.bump.yes_i_want')
         "
         label-custom-class="text-white"
+        :disabled="!!bump?.disabled"
       />
       <p class="item-value">
         {{ !!bump.trial ? trialMessage : formatMoney(amount) }}
