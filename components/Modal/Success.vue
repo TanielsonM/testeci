@@ -40,6 +40,12 @@ const data = ref({
   ticket: {} as any
 });
 
+onMounted(() => {
+  if (window.localStorage.getItem('reservations')) {
+    localStorage.removeItem('reservations');
+  }
+})
+
 if (
   (!!route.query.s_id && !route.query.chc) ||
   (!!route.query.s_id && !!route.query.chc) ||
