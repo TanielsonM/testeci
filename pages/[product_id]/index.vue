@@ -253,7 +253,6 @@ function closeModal() {
 }
 
 async function callPayment() {
-  payment.setPaymentLoading(true);
   if (captchaEnabled.value) {
     //não colocar await pois nenhuma dessa funções retornam promises
     //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api

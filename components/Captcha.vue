@@ -25,6 +25,7 @@ onMounted(() => {
                   window.grecaptcha.render(recaptcha.value, {
                     sitekey: config.public.RECAPTCHA_KEY,
                     callback: recaptchaCallback,
+                    size: "invisible",
                   });
                 });
               },
@@ -45,15 +46,8 @@ function recaptchaCallback(response) {
   window.dispatchEvent(new CustomEvent("myRecaptchaCallback"));
 }
 
-function preventClose(event) {
-  event.stopPropagation();
-}
 </script>
 
 <template>
-  <div>
-    <div @click="preventClose">
-      <div class="hidden" id="recaptcha" ref="recaptcha"></div>
-    </div>
-  </div>
+  <div class="hidden" id="recaptcha" ref="recaptcha"></div>
 </template>

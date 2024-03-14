@@ -404,6 +404,9 @@ export const usePaymentStore = defineStore("Payment", {
             this.setPaymentFetching(false);
             this.setPaymentLoading(false);
           })
+      } else {
+        this.setPaymentFetching(false);
+        this.setPaymentLoading(false);
       }
     },
     validateError(error: PaymentError) {
