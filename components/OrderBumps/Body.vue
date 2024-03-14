@@ -4,7 +4,11 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
+
+import { MdPreview } from 'md-editor-v3';
+
 import * as Toast from "vue-toastification";
+
 
 const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
@@ -70,17 +74,15 @@ const redirect = () => {
     }
     window.open(url, '_blank')
   } else {   
-    toast.info(
-      `${t("checkout.link_vendedor_nao_encontrado")}`
-      );
-    }
-  };
+    toast.info(`${t("checkout.link_vendedor_nao_encontrado")}`);
+  }
+};
   
-  // Computeds
-  const hasTrial = computed(() => !!props.bump.trial);
-  const isBumpSellerEqual = computed(() => {
-    return product.value.seller.id === props.bump.seller.id;
-  });
+// Computeds
+const hasTrial = computed(() => !!props.bump.trial);
+const isBumpSellerEqual = computed(() => {
+  return product.value.seller.id === props.bump.seller.id;
+});
 
 const showDescription = computed(() =>
   customCheckout.hasCustomBump ? customCheckout.bump_options.description : true
@@ -237,16 +239,15 @@ function getType(type = "") {
             </section>
           </section>
         </Transition>
-        <span class="item-description" v-if="showDescription">
-          {{ bump.description }}
-        </span>
+        <MdPreview v-model="bump.description" style="background-color: transparent;" class="item-description" v-if="showDescription" />
       </section>
     </section>
-    <section class="mt-5 !block w-full" v-if="bump.checkbox">
+    <section class="!block w-full" v-if="bump.checkbox">
       <FormShippingOption
         :options="bump.shipping_options ?? []"
         :is-bump="true"
         :bump="bump.id"
+        class="mt-5"
       />
     </section>
   </section>
