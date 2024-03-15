@@ -66,8 +66,8 @@ Build Images:
     - apk add python3 py3-pip curl
     - pip3 install --upgrade pip
     - pip3 install --no-cache-dir awscli
-    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin latest
-    - export TRIVY_TS=$(date "+%Y-%m-%d-%H-%M-%S")
+    # - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin latest
+    # - export TRIVY_TS=$(date "+%Y-%m-%d-%H-%M-%S")
   script:
     - echo "env before replace:"
     - cat .env
@@ -86,7 +86,7 @@ Build Images:
     
     - docker pull $LATEST_CHECKOUT_IMAGE_TAG || true
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_CHECKOUT_IMAGE_TAG -f "Dockerfile" -t $CHECKOUT_IMAGE_TAG -t $LATEST_CHECKOUT_IMAGE_TAG -t $DOCKER_HUB_IMAGE_TAG -t $DOCKER_HUB_LATEST_IMAGE_TAG .
-    - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
+    # - trivy image --cache-dir .trivycache/ --format table -o ${CI_PROJECT_NAME}_${TRIVY_TS}_Dockerfile_report.txt $CHECKOUT_IMAGE_TAG
     - docker push $CHECKOUT_IMAGE_TAG
     - docker push $LATEST_CHECKOUT_IMAGE_TAG
     
@@ -105,12 +105,12 @@ Build Images:
     # - docker push $LATEST_CHECKOUT_IMAGE_TAG
   needs:
     - Terraform Plan
-  cache:
-    paths:
-      - .trivycache/
-  artifacts:
-    paths:
-      - "*_report.txt"  
+  # cache:
+  #   paths:
+  #     - .trivycache/
+  # artifacts:
+  #   paths:
+  #     - "*_report.txt"  
 
 Terraform Deploy:
   image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest

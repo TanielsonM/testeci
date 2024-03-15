@@ -2,20 +2,18 @@
 import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
-import { useCheckoutStore } from "~~/store/checkout";
-import { formatMoney } from "~/utils/money";
-import { useInstallmentsStore } from "~~/store/modules/installments";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
+
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
-const checkout = useCheckoutStore();
-const installmentsStore = useInstallmentsStore();
+const preCheckout = usePreCheckoutStore();
 const { t } = useI18n();
+
 /* State */
 const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
-const { method, installments, hasFees } = storeToRefs(checkout);
 const { trial_position } = storeToRefs(custom_checkout);
-const { getInstallments } = storeToRefs(installmentsStore);
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
 /* Trial message */
 const trialMessage = computed({
@@ -31,6 +29,8 @@ const trialMessage = computed({
   },
 });
 
+
+
 const exceptionSellerId = computed(() => {
   if(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION) {
     const ids = JSON.parse(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION)
@@ -38,7 +38,6 @@ const exceptionSellerId = computed(() => {
   }
   return false
 })
-
 </script>
 
 <template>
@@ -54,7 +53,7 @@ const exceptionSellerId = computed(() => {
     <section class="flex w-full items-center px-5">
       <!-- Product Image -->
       <aside
-        class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px]"
+        class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px] flex-shrink-0"
         v-if="product.images.length"
       >
         <nuxt-img
@@ -75,9 +74,9 @@ const exceptionSellerId = computed(() => {
       <!--  -->
       <!-- Product Infos -->
       <section class="flex flex-col gap-1 text-txt-color">
-        <small class="text-blue-500" v-if="productStore.isSubscription">{{
-          $t("components.product_card.is_subscription")
-        }}</small>
+        <small class="text-blue-500" v-if="productStore.isSubscription">
+          {{ $t("components.product_card.is_subscription") }}
+        </small>
         <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">
           {{ product.name }}
         </h1>
@@ -108,12 +107,12 @@ const exceptionSellerId = computed(() => {
               <span class="flex-nowrap">{{ formatMoney(charge.amount) }}</span>
             </p>
             <p class="flex w-full items-center justify-between">
-              <span class="flex-wrap">{{
-                $t("checkout.different_amount_text.other_charges")
-              }}</span>
-              <span class="min-w-[70px] flex-nowrap text-end">{{
-                formatMoney(product.amount)
-              }}</span>
+              <span class="flex-wrap">
+                {{ $t("checkout.different_amount_text.other_charges") }}
+              </span>
+              <span class="min-w-[70px] flex-nowrap text-end">
+                {{ formatMoney(product.amount) }}
+              </span>
             </p>
           </section>
           <button class="show-more" @click="opened = !opened">
@@ -197,8 +196,7 @@ const exceptionSellerId = computed(() => {
         <span class="infos-content">
           {{
             product.seller.company
-              ? product.seller.company.fantasy_name ||
-                product.seller.company.name
+              ? product.seller.company.fantasy_name || product.seller.company.name
               : product.seller.name
           }}
         </span>
@@ -206,11 +204,7 @@ const exceptionSellerId = computed(() => {
       <!-- Email -->
       <p
         class="flex items-center gap-1 md:flex-col md:items-start"
-        v-if="
-          product.seller &&
-          product.seller.company &&
-          product.seller.company.email
-        "
+        v-if="product?.seller?.company?.email"
       >
         <span class="infos-title"
           >{{ $t("general.mail") }}<span class="md:hidden">:</span></span
@@ -220,11 +214,7 @@ const exceptionSellerId = computed(() => {
       <!-- Cellphone -->
       <p
         class="mb-5 flex items-center gap-2 md:flex-col md:items-start"
-        v-if="
-          product.seller &&
-          product.seller.company &&
-          product.seller.company.support_telephone
-        "
+        v-if="product?.seller?.company?.support_telephone"
       >
         <span class="infos-title"
           >{{ $t("general.telephone") }}<span class="md:hidden">:</span></span
@@ -240,6 +230,7 @@ const exceptionSellerId = computed(() => {
       <ProductCoupon v-if="productStore.allowedCoupon" />
       <ProductCashback />
     </section>
+    <EventTimer v-if="product.product_type_id === 3 && sellerHasFeatureTickets"/>
   </BaseCard>
 </template>
 

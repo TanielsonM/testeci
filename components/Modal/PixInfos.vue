@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useModalStore } from "~~/store/modal/success";
 import { useStepStore } from "~~/store/modules/steps";
-import { ShippingSelected } from "@/types";
 import * as Toast from "vue-toastification";
 
 const { t } = useI18n();
@@ -42,7 +41,7 @@ const props = defineProps({
     required: false,
   },
   shippingSelected: {
-    type: String,
+    type: Object,
     default: null,
     required: false,
   },
@@ -115,6 +114,7 @@ onBeforeUnmount(() => {
   }
 });
 </script>
+
 <template>
   <div v-if="!modal.expiredPix">
     <p class="paragraph" v-if="(!onlyButtons && !last) || salesLength == 1">
@@ -207,7 +207,7 @@ onBeforeUnmount(() => {
             <p>{{ name }}</p>
             <p>{{ amount }}</p>
           </div>
-          <div class="item" v-if="!!shippingAmount || (!!shippingSelected && !shippingAmount && shippingSelected.service_name === 'GRÁTIS')">
+          <div class="item" v-if="(!!shippingAmount && shippingAmount != 'R$ 0,00') || (!!shippingSelected && !shippingAmount && shippingSelected.service_name === 'GRÁTIS')">
             <p>{{ $t("pg_obrigado.modal.frete") }}</p>
             <p>{{ shippingAmount || `Grátis` }}</p>
           </div>
@@ -301,14 +301,14 @@ onBeforeUnmount(() => {
         <p>{{ name }}</p>
         <p>{{ amount }}</p>
       </div>
-      <div class="item" v-if="!!shippingAmount">
+      <div class="item" v-if="!!shippingAmount && shippingAmount != 'R$ 0,00'">
         <p>{{ $t("pg_obrigado.modal.frete") }}</p>
         <p>{{ shippingAmount }}</p>
       </div>
     </div>
     <div
       class="details py-5"
-      v-if="!!shippingAmount && onlyButtons && data?.shippingSelected.frete"
+      v-if="(!!shippingAmount && shippingAmount != 'R$ 0,00') && onlyButtons && data?.shippingSelected.frete"
     >
       <h6 class="title">
         {{ $t("pg_obrigado.modal.frete_selecionado") }}

@@ -4,6 +4,7 @@ import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
 
@@ -11,13 +12,23 @@ const productStore = useProductStore();
 const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
+const { product } = useProductStore();
+const { batches } = usePreCheckoutStore();
 
 const route: any = useRoute();
 const modal = useModalStore();
 const { t } = useI18n();
 
-const saleId = route.query.s_id;
+const queryKeys = Object.keys(route.query);
+const isEvent = queryKeys.some(x => x.includes('ticket_id'));
+
+const saleId = isEvent
+  ? route.query.s_id ? route.query.s_id : route.query[queryKeys[0]].split("-s_id_")[1]
+  : route.query.s_id;
+
 const current_query = new URLSearchParams(route.query);
+
+const runtimeConfig = useRuntimeConfig();
 
 const data = ref({
   sale: {} as Sale,
@@ -26,13 +37,14 @@ const data = ref({
   order: {} as any,
   chc: "",
   pixOpened: 0,
+  ticket: {} as any
 });
 
 if (
   (!!route.query.s_id && !route.query.chc) ||
-  (!!route.query.s_id && !!route.query.chc)
+  (!!route.query.s_id && !!route.query.chc) ||
+  (!!isEvent && !route.query.chc)
 ) {
-  const saleId = route.query.s_id;
   await checkoutStore.getSale(saleId);
   const sale: Sale = sales.value as Sale;
   data.value.sale = sale;
@@ -46,7 +58,6 @@ if (
     CREDIT_CARD: "",
     TWO_CREDIT_CARDS: "",
   });
-
 
   thankYouData.forEach(element => {
     switch (element.type) {
@@ -84,12 +95,13 @@ if (
 
   const closeAction = () => {
     if (customUrl.value[sale.sales[0].method]) {
-      window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+      //window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
+      window.location.href = customUrl.value[sale.sales[0].method];
     } 
     else {
       const redirectTo = sale.sales[0].product.thank_you_page 
-      ? sale.sales[0].product.thank_you_page + `?${current_query.toString()}` 
-      : `https://greenn.com.br/checkout-obrigado?${current_query.toString()}`;
+      ? sale.sales[0].product.thank_you_page 
+      : `${runtimeConfig.public.BASE_URL}/checkout-obrigado?${current_query.toString()}`;
 
       window.location.href = redirectTo;
     }
@@ -116,8 +128,13 @@ if (
 
   const closeAction = () => {
     const current_query = new URLSearchParams(route.query);
-    window.location.href =
-      data.value.productOffer.data.thank_you_page + `?${current_query.toString()}` || "https://greenn.com.br";
+
+    if(!data.value.productOffer.data.thank_you_page){
+      window.location.href = `${runtimeConfig.public.BASE_URL}/checkout-obrigado?${current_query.toString()}`;  
+    }else{
+      window.location.href =
+      data.value.productOffer.data.thank_you_page + `?${current_query.toString()}` || runtimeConfig.public.BASE_URL;
+    }
   };
 
   modal.setAction(closeAction);
@@ -222,7 +239,7 @@ function openPix(id: number) {
           :sales-length="data.sale.sales.length"
           :created-at="sale.created_at.toString()"
           :shipping-amount="formatMoney(sale.shipping_amount)"
-          :shipping-selected="JSON.parse(sale.shipping_selected)"
+          :shipping-selected="sale.shipping_selected ? JSON.parse(sale.shipping_selected) : {}"
           :sales="data.sale.sales"
           :opened="data.pixOpened"
           @openedPixEvent="openPix"
@@ -245,6 +262,8 @@ function openPix(id: number) {
         :shipping-amount="data.sale.sales && data.sale.sales.length ? formatMoney(data.sale.sales[0].shipping_amount) : 0"
         :shipping-selected="data.sale.sales[0].shipping_selected"
         :only-buttons="data.sale.sales.length == 1"
+        :product="product"
+        :batches="batches"
       />
 
       <div class="actions mt-12 flex content-end justify-end">
@@ -278,7 +297,7 @@ function openPix(id: number) {
             size="md"
             animation="pulse"
             class="col-span-12 lg:col-span-4"
-            @click="modal.closeAtion"
+            @click="modal.closeAction"
           >
             {{ $t("pg_obrigado.modal.entendido") }}
           </BaseButton>
