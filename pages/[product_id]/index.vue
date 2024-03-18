@@ -23,7 +23,7 @@ const route = useRoute();
 
 // Variables
 const { t, locale } = useI18n();
-const { getReservations, sellerHasFeatureTickets } = storeToRefs(preCheckout);
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
@@ -39,7 +39,7 @@ const {
 } = storeToRefs(checkout);
 
 const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
-const { error_message, isPaymentLoading } = storeToRefs(payment);
+const { error_message, isPaymentLoading, isPaymentFetching } = storeToRefs(payment);
 const {
   isOneStep,
   custom_checkout,
@@ -253,18 +253,19 @@ function closeModal() {
 }
 
 async function callPayment() {
-  payment.setPaymentLoading(true);
-  if (captchaEnabled.value) {
-    //não colocar await pois nenhuma dessa funções retornam promises
-    //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
-    window.grecaptcha.reset();
-    window.grecaptcha.execute();
-  } else {
-    if (isPaymentLoading.value === true) {
-      await payment.payment(locale.value).finally(() => {
-        payment.setPaymentLoading(false);
-        payment.setPaymentFetching(false);
-      })
+  if(!isPaymentFetching.value) {
+    if (captchaEnabled.value) {
+      //não colocar await pois nenhuma dessa funções retornam promises
+      //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
+      window.grecaptcha.reset();
+      window.grecaptcha.execute();
+    } else {
+      if (isPaymentLoading.value === true) {
+        await payment.payment(locale.value).finally(() => {
+          payment.setPaymentLoading(false);
+          payment.setPaymentFetching(false);
+        })
+      }
     }
   }
 }
