@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
@@ -7,13 +8,16 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
+import { resetReservations } from "@/utils/validateBatch";
 
 const productStore = useProductStore();
 const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
 const { product } = useProductStore();
-const { batches } = usePreCheckoutStore();
+const { batches,  } = usePreCheckoutStore();
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -163,6 +167,10 @@ if (
       }
     })
   );
+}
+
+if(sellerHasFeatureTickets){
+  resetReservations();
 }
 
 function openPix(id: number) {
