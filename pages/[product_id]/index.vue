@@ -252,20 +252,31 @@ function closeModal() {
   error_message.value = "";
 }
 
+const timeStemp = ref(null);
+
 async function callPayment() {
+  const newDateTimeStemp = new Date();
+  console.log(newDateTimeStemp.getTime())
+  console.log(timeStemp.value)
+
+  if(timeStemp.value && (newDateTimeStemp.getTime() - timeStemp.value) < 1000) return
+  timeStemp.value = newDateTimeStemp.getTime();
+  console.log('ta passando do return?')
   if(!isPaymentFetching.value) {
+    console.log('teste1')
     if (captchaEnabled.value) {
+      console.log('teste2')
       //não colocar await pois nenhuma dessa funções retornam promises
       //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
       window.grecaptcha.reset();
       window.grecaptcha.execute();
     } else {
-      if (isPaymentLoading.value === true) {
-        await payment.payment(locale.value).finally(() => {
-          payment.setPaymentLoading(false);
-          payment.setPaymentFetching(false);
-        })
-      }
+      console.log('teste3')
+      console.log('test4')
+      await payment.payment(locale.value).finally(() => {
+        payment.setPaymentLoading(false);
+        payment.setPaymentFetching(false);
+      })
     }
   }
 }
