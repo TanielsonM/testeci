@@ -374,10 +374,16 @@ onMounted(() => {
         </Steps>
 
         <!-- Address form -->
-        <Steps :title="$t('components.steps.address')" step="02" v-if="(checkout.showAddressStep &&
-          ((isMobile && currentStep == 2) || !isMobile)) ||
-          (isOneStep && checkout.showAddressStep)
-          " @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
+        <Steps
+          :title="$t('components.steps.address')"
+          step="02"
+          v-if="
+            product.is_checkout_address ||
+            (checkout.showAddressStep &&
+            ((isMobile && currentStep == 2) || !isMobile)) ||
+            (isOneStep && checkout.showAddressStep)
+          "
+          @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
           <template #content>
             <FormAddress />
             <BaseToogle v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'" class="my-5" v-model:checked="sameAddress" id="address-form" :label="$t('general.address_toogle_label')" />
@@ -393,7 +399,7 @@ onMounted(() => {
           </template>
         </Steps>
         <!-- Purchase Form -->
-        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
+        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep || product.is_checkout_address ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
           !isMobile ||
           isOneStep
           ">
