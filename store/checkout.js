@@ -368,14 +368,14 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     async getCoupon() {
-      // NÃO APLICAR O CUPOM ATE VALIADAR ESSE CENÁRIO↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
       const { batches } = usePreCheckoutStore();
       if(this.product_list.length && batches.length){
         const toast = Toast.useToast();
         toast.warning("Desculpe, o cupom não está disponível no momento para eventos.");
         throw new Error; 
       }
-      // NÃO APLICAR O CUPOM ATE VALIADAR ESSE CENÁRIO↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
       let url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
