@@ -78,29 +78,6 @@ function verifyIfHasSoldOffField(id) {
   return true
 }
 
-const hasFixedBatch = () => {
-  const url = useRoute();
-
-  if (Object.keys(url.query).length === 0) 
-    return batches;
-  
-  let batch = url.query
-  let allBatches = batches
-  let collection = []
-
-  for (const key in batch) {
-    if (batch.hasOwnProperty(key)) {
-      const value = batch[key];
-      let offer = allBatches.find(val => val.id == value)
-      
-      if(offer !== undefined)
-        collection.push(offer)
-    }
-  }
-
-  return (batches.value = collection || []);
-}
-
 </script>
 
 <template>
@@ -141,7 +118,7 @@ const hasFixedBatch = () => {
       </div>
       <ul v-if="!dependsOnAnotherBatch(batch) && saleHasStarted(batch)" class="text-txt-color">
         <li v-for="(ticket, i) in batch.tickets" :key="ticket?.hash" class="mb-6 pt-5 flex justify-between items-center border-[#E5E5E5]" :class="{ 'border-t': i !== 0 }">
-          <div class="ml-5" :class="{ 'line-through': !haveAvailableTickets(batch) }"> 
+          <div class="ml-5" :class="{ 'line-through': batch.release_type !== 'fixed_date' && !haveAvailableTickets(batch) }">
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ ticket?.name }}</h5>
             <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(ticket?.amount) }}</p>
             <small v-if="ticket?.selected_tickets > 0" class="text-[14px] font-[400] text-main-color">

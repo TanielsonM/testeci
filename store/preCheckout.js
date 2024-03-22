@@ -123,7 +123,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       let ticket = batch.tickets.find(x => x.hash === hash);
       
       await this.checkHasTickets(ticket.id)
-      if(! this.hasAvailableTickets) {
+      if(batch.release_type !== "fixed_date" && !this.hasAvailableTickets) {
         batch.soldOff = true
         return
       } else {
