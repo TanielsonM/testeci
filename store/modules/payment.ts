@@ -77,6 +77,7 @@ export const usePaymentStore = defineStore("Payment", {
   }),
   getters: {
     isPaymentLoading: state => state.loading,
+    isPaymentFetching: state => state.fetching,
   },
   actions: {
     setPaymentLoading(value = false) {
@@ -87,17 +88,17 @@ export const usePaymentStore = defineStore("Payment", {
     },
     async payment(language: string) {
       if (!this.fetching) {
+        this.setPaymentLoading(true);
         this.setPaymentFetching(true);
-      
         const allValid = await validateAll();
         if (!allValid) {
           this.hasSent = true;
           this.setPaymentLoading(false);
+          this.setPaymentFetching(false);
           return;
         }
 
         leadsStore.changeStep(3);
-
         const total = computed(() => {
           if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
             return (getTotal.value(ticket_installments.value));
@@ -107,7 +108,6 @@ export const usePaymentStore = defineStore("Payment", {
           }
           return getInstallments.value(1);
         });
-
         let data: Payment = {
           // Purchase infos
           method: method.value,
@@ -147,21 +147,17 @@ export const usePaymentStore = defineStore("Payment", {
           upsell_id: hasUpsell.value,
           metas: url.value.query,
         };
-
         if (captchaEnabled.value) {
           data.captcha = captcha_code.value;
         }
-
         if (method.value === "PAYPAL") {
           data.paypal = paypal_details.value;
         }
-
         // Gift
         if (is_gift.value) {
           data.is_gift = is_gift.value;
           data.gift_message = gift_message.value;
         }
-
         // Physical product
         if (hasPhysicalProduct.value) {
           const address: any = sameAddress.value ? charge.value : shipping.value;
@@ -203,12 +199,10 @@ export const usePaymentStore = defineStore("Payment", {
         } else if (hasAffiliationLead.value && affiliate.value) {
           data.affiliate_id = affiliate.value;
         }
-
         // Coupon
         if (coupon.value.applied && !!coupon.value.name) {
           data.products[0].coupon = coupon.value.name.toUpperCase();
         }
-
         /* When method is Credit card */
         if (
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
@@ -218,7 +212,6 @@ export const usePaymentStore = defineStore("Payment", {
           const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
             locale: "pt-BR",
           });
-
           let parsedFirstAmount = Number(
             first.value.amount
               .toString()
@@ -241,7 +234,6 @@ export const usePaymentStore = defineStore("Payment", {
             card_holder_name: first.value.holder_name,
             card_number: first.value.number,
           });
-
           // Mercado Pago token - First Card
           if (installments.value >= 10) {
             const firstCardToken = mp.createCardToken({
@@ -259,7 +251,6 @@ export const usePaymentStore = defineStore("Payment", {
               data.gateway = "MERCADOPAGO";
             });
           }
-
           if (method.value === "TWO_CREDIT_CARDS") {
             let parsedSecondAmount = Number(
               second.value.amount
@@ -298,7 +289,6 @@ export const usePaymentStore = defineStore("Payment", {
           }
           data.cards = cards;
         }
-
         const allowed_installments = [
           "CREDIT_CARD",
           "TWO_CREDIT_CARDS",
@@ -308,21 +298,17 @@ export const usePaymentStore = defineStore("Payment", {
         if (!allowed_installments.includes(method.value)) {
           delete data.installments;
         }
-
         const currency_data: CurrencyData = {
           local_currency: 'BRL',
           base_currency: 'BRL'
         };
         data.currency_data = currency_data;
-
         // Registrando log boleto
         let dataLog = Object.assign({}, data);
-
         GreennLogs.logger.info("🟡 Dados da Compra", {
           name: `Enviando objeto da compra [${method.value}]`,
           objetoCompra: JSON.stringify(dataLog),
         });
-
         checkoutStore.setLoading(true);
         // Payment request
         await useApi()
@@ -398,7 +384,6 @@ export const usePaymentStore = defineStore("Payment", {
                 path: `/${product_id.value}/obrigado`,
                 query,
               });
-
               return;
             }
             if (
@@ -419,7 +404,11 @@ export const usePaymentStore = defineStore("Payment", {
             this.setPaymentLoading(false);
           }).finally(() =>{
             this.setPaymentFetching(false);
+            this.setPaymentLoading(false);
           })
+      } else {
+        this.setPaymentFetching(false);
+        this.setPaymentLoading(false);
       }
     },
     validateError(error: PaymentError) {
