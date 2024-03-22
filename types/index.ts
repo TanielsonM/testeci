@@ -267,6 +267,7 @@ export type Product = {
   checked?: boolean;
   shipping?: Shipping;
   product_type_id?: number;
+  global_settings?: any[];
 };
 
 export type PurcharseCard = {
@@ -802,4 +803,8 @@ export type ShippingSelected = {
   old_amount: number;
   frete: Frete;
   frete_anterior: number;
+};
+
+export type Type = {
+  type: string;
 };

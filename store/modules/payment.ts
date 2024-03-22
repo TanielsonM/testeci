@@ -2,10 +2,14 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement, CurrencyData } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, CurrencyData, MethodsState, Type } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
+
+//Notifications
+import * as Toast from "vue-toastification";
+
 
 // Stores
 import { usePersonalStore } from "../forms/personal";
@@ -495,6 +499,46 @@ export const usePaymentStore = defineStore("Payment", {
         error_code: error ? error.code : null,
         error_mensage: this.error_message,
       });
+    },
+    getGateway(type: Type, metodo: MethodsState, product: Product) {
+
+      const toast = Toast.useToast();
+
+      let gatewayKey = `${type}_${metodo}`;
+      gatewayKey = gatewayKey.toUpperCase();
+
+      let databaseConfiguration = '';
+    
+      if (product.global_settings && product.global_settings.length > 0) {
+        databaseConfiguration = product.global_settings.find(config => config.key === gatewayKey);
+    
+        if (databaseConfiguration) {
+          return databaseConfiguration.valueOf;
+        }
+      }
+    
+      if (databaseConfiguration && databaseConfiguration !== '') {
+        return databaseConfiguration;
+      }
+    
+      switch (gatewayKey) {
+        case 'TRANSACTION_CREDIT_CARD':
+        case 'SUBSCRIPTION_CREDIT_CARD':
+        case 'TRANSACTION_TWO_CREDIT_CARDS':
+        case 'SUBSCRIPTION_TWO_CREDIT_CARDS':
+        case 'TRANSACTION_BOLETO':
+        case 'SUBSCRIPTION_BOLETO':
+          return 'PAGARME';
+        case 'TRANSACTION_PIX':
+        case 'SUBSCRIPTION_PIX':
+          return 'IUGU';
+        case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
+        case 'TRANSACTION_CREDIT_CARD_DLOCAL':
+          return 'DLOCAL';
+        default:
+          toast.warning("Erro ao buscar o gateway");
+          return null;
+      }
     },
   },
 });
