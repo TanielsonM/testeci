@@ -35,20 +35,6 @@ onMounted(async () => {
           (item) => item.type == "GOOGLETAGMANAGER"
         );
 
-        if (hasTagManager.length) {
-          hasTagManager.forEach((item) => {
-            handleGtag(item.pixel_id, item.product_id, item.user_id, item.host);
-
-            if (props.event === 'view') {
-              onCheckoutEvent();
-            }
-
-            if (props.event === 'conversion') {
-              onPurchaseEvent();
-            }
-          });
-        }
-
         pixels.forEach((pixel) => {
           handleIframe(
             pixel.host,
