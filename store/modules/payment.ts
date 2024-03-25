@@ -102,6 +102,11 @@ export const usePaymentStore = defineStore("Payment", {
           return;
         }
 
+        if(await this.getGateway(product.value.type, method.value, product.value) === null){
+          console.log('caiu aki');
+          return;
+        }
+
         leadsStore.changeStep(3);
         const total = computed(() => {
           if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
@@ -500,45 +505,50 @@ export const usePaymentStore = defineStore("Payment", {
         error_mensage: this.error_message,
       });
     },
-    getGateway(type: Type, metodo: MethodsState, product: Product) {
-
-      const toast = Toast.useToast();
-
-      let gatewayKey = `${type}_${metodo}`;
-      gatewayKey = gatewayKey.toUpperCase();
-
-      let databaseConfiguration = '';
-    
-      if (product.global_settings && product.global_settings.length > 0) {
-        databaseConfiguration = product.global_settings.find(config => config.key === gatewayKey);
-    
-        if (databaseConfiguration) {
-          return databaseConfiguration.valueOf;
+    async getGateway(type: Type, metodo: MethodsState, product: Product) {
+      return new Promise((resolve) => {
+        
+        const toast = Toast.useToast();
+  
+        let gatewayKey = `${type}_${metodo}`;
+        gatewayKey = gatewayKey.toUpperCase();
+  
+        let databaseConfiguration = '';
+      
+        if (product.global_settings && product.global_settings.length > 0) {
+          console.log('caiu no produto global');
+          databaseConfiguration = product.global_settings.find(config => config.key === gatewayKey);
+      
+          if (databaseConfiguration) {
+            return databaseConfiguration.valueOf;
+          }
         }
-      }
-    
-      if (databaseConfiguration && databaseConfiguration !== '') {
-        return databaseConfiguration;
-      }
-    
-      switch (gatewayKey) {
-        case 'TRANSACTION_CREDIT_CARD':
-        case 'SUBSCRIPTION_CREDIT_CARD':
-        case 'TRANSACTION_TWO_CREDIT_CARDS':
-        case 'SUBSCRIPTION_TWO_CREDIT_CARDS':
-        case 'TRANSACTION_BOLETO':
-        case 'SUBSCRIPTION_BOLETO':
-          return 'PAGARME';
-        case 'TRANSACTION_PIX':
-        case 'SUBSCRIPTION_PIX':
-          return 'IUGU';
-        case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
-        case 'TRANSACTION_CREDIT_CARD_DLOCAL':
-          return 'DLOCAL';
-        default:
-          toast.warning("Erro ao buscar o gateway");
-          return null;
-      }
+      
+        if (databaseConfiguration && databaseConfiguration !== '') {
+          return databaseConfiguration;
+        }
+      
+        switch (gatewayKey) {
+          case 'TRANSACTION_CREDIT_CARD':
+          case 'SUBSCRIPTION_CREDIT_CARD':
+          case 'TRANSACTION_TWO_CREDIT_CARDS':
+          case 'SUBSCRIPTION_TWO_CREDIT_CARDS':
+          case 'TRANSACTION_BOLETO':
+          case 'SUBSCRIPTION_BOLETO':
+            resolve('PAGARME');
+
+          case 'TRANSACTION_PIX':
+          case 'SUBSCRIPTION_PIX':
+            resolve('IUGU');
+
+          case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
+          case 'TRANSACTION_CREDIT_CARD_DLOCAL':
+            resolve('PAGARME');
+          default:
+            toast.warning("Erro ao buscar o gateway");
+            resolve(null);
+        }
+      });
     },
   },
 });

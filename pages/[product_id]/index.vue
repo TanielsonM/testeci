@@ -9,6 +9,8 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
+import * as Toast from "vue-toastification";
+
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -253,21 +255,21 @@ function closeModal() {
 }
 
 async function callPayment() {
-  if(!isPaymentFetching.value) {
-    if (captchaEnabled.value) {
-      //não colocar await pois nenhuma dessa funções retornam promises
-      //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
-      window.grecaptcha.reset();
-      window.grecaptcha.execute();
-    } else {
-      if (isPaymentLoading.value === true) {
+  // if(!isPaymentFetching.value) {
+  //   if (captchaEnabled.value) {
+  //     //não colocar await pois nenhuma dessa funções retornam promises
+  //     //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
+  //     window.grecaptcha.reset();
+  //     window.grecaptcha.execute();
+  //   } else {
+  //     if (isPaymentLoading.value === true) {
         await payment.payment(locale.value).finally(() => {
           payment.setPaymentLoading(false);
           payment.setPaymentFetching(false);
         })
-      }
-    }
-  }
+    //   }
+    // }
+  // }
 }
 
 function incrementSteps() {
