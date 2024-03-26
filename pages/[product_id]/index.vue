@@ -346,6 +346,37 @@ onMounted(() => {
     }
   }
 });
+
+const showSteps = () => {
+  console.log(
+    checkout,
+    checkout.value
+  );
+  if (product?.value.is_checkout_address)
+    return true;
+
+  const showForCheckoutStep = checkout?.value?.showAddressStep && 
+    ((isMobile?.value && currentStep?.value === 2) || 
+    !isMobile?.value);
+
+  const showForOneStep = isOneStep?.value && checkout?.value?.showAddressStep;
+
+  return showForCheckoutStep || showForOneStep;  
+}
+
+const setStepIfShowAddress = () => {
+  if(checkout?.value?.showAddressStep || product?.value?.is_checkout_address)
+    return "3"
+
+  return "2"
+}
+
+const shouldDisplayComponent = () => {
+  const isStepCorrectOnMobile = isMobile?.value && currentStep?.value === (checkout?.value?.showAddressStep ? 3 : 2);
+
+  return isStepCorrectOnMobile || !isMobile?.value || isOneStep?.value;
+};
+
 </script>
 
 <template>
@@ -374,10 +405,11 @@ onMounted(() => {
         </Steps>
 
         <!-- Address form -->
-        <Steps :title="$t('components.steps.address')" step="02" v-if="(checkout.showAddressStep &&
-          ((isMobile && currentStep == 2) || !isMobile)) ||
-          (isOneStep && checkout.showAddressStep)
-          " @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
+        <Steps
+          :title="$t('components.steps.address')"
+          step="02"
+          v-if="showSteps()"
+          @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
           <template #content>
             <FormAddress />
             <BaseToogle v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'" class="my-5" v-model:checked="sameAddress" id="address-form" :label="$t('general.address_toogle_label')" />
@@ -393,10 +425,12 @@ onMounted(() => {
           </template>
         </Steps>
         <!-- Purchase Form -->
-        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
-          !isMobile ||
-          isOneStep
-          ">
+        {{ shouldDisplayComponent() }}
+        <Steps
+          :title="$t('checkout.pagamento.title')"
+          :step="setStepIfShowAddress()"
+          :free="product?.method !== 'FREE' ? false : true"
+          v-if="shouldDisplayComponent()">
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <template v-if="product?.method !== 'FREE'">
