@@ -77,6 +77,7 @@ export const usePaymentStore = defineStore("Payment", {
   }),
   getters: {
     isPaymentLoading: state => state.loading,
+    isPaymentFetching: state => state.fetching,
   },
   actions: {
     setPaymentLoading(value = false) {
@@ -87,6 +88,7 @@ export const usePaymentStore = defineStore("Payment", {
     },
     async payment(language: string) {
       if (!this.fetching) {
+        this.setPaymentLoading(true);
         this.setPaymentFetching(true);
         const allValid = await validateAll();
         if (!allValid) {
@@ -405,6 +407,9 @@ export const usePaymentStore = defineStore("Payment", {
             this.setPaymentFetching(false);
             this.setPaymentLoading(false);
           })
+      } else {
+        this.setPaymentFetching(false);
+        this.setPaymentLoading(false);
       }
     },
     validateError(error: PaymentError) {
