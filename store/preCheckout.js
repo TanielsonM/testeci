@@ -63,6 +63,17 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     setBatches(value) {
       this.batches = value;
     },
+    forceUpdateAvailableBatches(id) {
+      return new Promise((resolve, reject) => {
+        let batch = this.batches.find(x => x.id === id);
+        if (batch) {
+          batch.available_tickets = batch.available_tickets +1;
+          resolve(); 
+        } else {
+          reject(new Error('Batch not found')); 
+        }
+      });
+    },
     updateAvailableTickets(tickets, selected = false) {
       if (Array.isArray(tickets)) {
         tickets.forEach((ticket,index) => {
@@ -121,7 +132,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     async addTicket(batch_group, hash) {
       let batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
-      
+      this.setLoadingReservation(true, ticket);
       await this.checkHasTickets(ticket.id)
       if(batch.release_type !== "fixed_date" && !this.hasAvailableTickets) {
         batch.soldOff = true
@@ -152,10 +163,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         }
         // }
       }
+      this.setLoadingReservation(false, ticket);
     },
     async subTicket(batch_group, hash) {
       const batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
+      this.setLoadingReservation(true, ticket);
       if (ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
         ticket.selected_tickets -= 1;
         batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
@@ -180,8 +193,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         //   localStorage.setItem('reservations', JSON.stringify(this.reservations))
         // }
       }
+      this.setLoadingReservation(false, ticket);
     },
-    async createReservation(offer_id, ticket) {
+    async createReservation(offer_id, ticket, batch_id) {
       const start = new Date();
       const end = new Date(start.getTime());
       end.setMinutes(end.getMinutes() + 10);
