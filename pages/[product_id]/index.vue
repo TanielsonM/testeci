@@ -252,7 +252,13 @@ function closeModal() {
   error_message.value = "";
 }
 
+const timeStemp = ref(null);
+
 async function callPayment() {
+  const newDateTimeStemp = new Date();
+
+  if(timeStemp.value && (newDateTimeStemp.getTime() - timeStemp.value) < 1000) return
+  timeStemp.value = newDateTimeStemp.getTime();
   if(!isPaymentFetching.value) {
     if (captchaEnabled.value) {
       //não colocar await pois nenhuma dessa funções retornam promises
@@ -260,12 +266,10 @@ async function callPayment() {
       window.grecaptcha.reset();
       window.grecaptcha.execute();
     } else {
-      if (isPaymentLoading.value === true) {
-        await payment.payment(locale.value).finally(() => {
-          payment.setPaymentLoading(false);
-          payment.setPaymentFetching(false);
-        })
-      }
+      await payment.payment(locale.value).finally(() => {
+        payment.setPaymentLoading(false);
+        payment.setPaymentFetching(false);
+      })
     }
   }
 }
