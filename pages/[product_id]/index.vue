@@ -425,7 +425,6 @@ const shouldDisplayComponent = () => {
           </template>
         </Steps>
         <!-- Purchase Form -->
-        {{ shouldDisplayComponent() }}
         <Steps
           :title="$t('checkout.pagamento.title')"
           :step="setStepIfShowAddress()"
