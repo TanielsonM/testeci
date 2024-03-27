@@ -45,6 +45,7 @@ function recaptchaCallback(response) {
   captcha_code.value = response;
   window.dispatchEvent(new CustomEvent("myRecaptchaCallback"));
 }
+
 </script>
 
 <template>

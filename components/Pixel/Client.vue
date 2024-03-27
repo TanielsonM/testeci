@@ -26,7 +26,7 @@ onMounted(async () => {
     pixelStore.sale_id = props.sale_id;
     pixelStore.client_has_contract = props.chc_id;
 
-    await pixelStore.syncPixels(props.event);
+    await pixelStore.syncPixels(props.event, props.amount);
     await pixelStore.getPixels().then((response) => {
       const { event_id, pixels } = response;
 
@@ -34,20 +34,6 @@ onMounted(async () => {
         const hasTagManager = pixels.filter(
           (item) => item.type == "GOOGLETAGMANAGER"
         );
-
-        if (hasTagManager.length) {
-          hasTagManager.forEach((item) => {
-            handleGtag(item.pixel_id, item.product_id, item.user_id, item.host);
-
-            if (props.event === 'view') {
-              onCheckoutEvent();
-            }
-
-            if (props.event === 'conversion') {
-              onPurchaseEvent();
-            }
-          });
-        }
 
         pixels.forEach((pixel) => {
           handleIframe(
@@ -72,7 +58,7 @@ onMounted(async () => {
         checkout: {
           products: [
             {
-              amount: props.original_amount,
+              amount: props.amount || props.original_amount,
               product_name: props.product_name,
               product_id: props.product_id,
             },
@@ -151,7 +137,7 @@ onMounted(async () => {
       if (!!affiliate_id) query.append("affiliate_id", affiliate_id.toString());
       if (!!sale_id) query.append("sale_id", sale_id.toString());
       if (!!original_amount)
-        query.append("original_amount", original_amount.toString());
+        query.append("original_amount", amount.toString());
 
       const iframe = document.createElement("iframe");
       iframe.src = `${url}?${query.toString()}`;
