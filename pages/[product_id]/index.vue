@@ -255,21 +255,21 @@ function closeModal() {
 }
 
 async function callPayment() {
-  // if(!isPaymentFetching.value) {
-  //   if (captchaEnabled.value) {
-  //     //não colocar await pois nenhuma dessa funções retornam promises
-  //     //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
-  //     window.grecaptcha.reset();
-  //     window.grecaptcha.execute();
-  //   } else {
-  //     if (isPaymentLoading.value === true) {
+  if(!isPaymentFetching.value) {
+    if (captchaEnabled.value) {
+      //não colocar await pois nenhuma dessa funções retornam promises
+      //https://developers.google.com/recaptcha/docs/display?hl=pt-br#js_api
+      window.grecaptcha.reset();
+      window.grecaptcha.execute();
+    } else {
+      if (isPaymentLoading.value === true) {
         await payment.payment(locale.value).finally(() => {
           payment.setPaymentLoading(false);
           payment.setPaymentFetching(false);
         })
-    //   }
-    // }
-  // }
+      }
+    }
+  }
 }
 
 function incrementSteps() {

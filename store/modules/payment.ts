@@ -103,7 +103,6 @@ export const usePaymentStore = defineStore("Payment", {
         }
 
         if(await this.getGateway(product.value.type, method.value, product.value) === null){
-          console.log('caiu aki');
           return;
         }
 
@@ -516,7 +515,6 @@ export const usePaymentStore = defineStore("Payment", {
         let databaseConfiguration = '';
       
         if (product.global_settings && product.global_settings.length > 0) {
-          console.log('caiu no produto global');
           databaseConfiguration = product.global_settings.find(config => config.key === gatewayKey);
       
           if (databaseConfiguration) {
