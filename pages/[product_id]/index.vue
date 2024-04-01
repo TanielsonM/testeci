@@ -348,12 +348,9 @@ onMounted(() => {
 });
 
 const showSteps = () => {
-  console.log(
-    checkout,
-    checkout.value
-  );
-  if (product?.value.is_checkout_address)
+  if (product?.value.is_checkout_address){
     return true;
+  }
 
   const showForCheckoutStep = checkout?.value?.showAddressStep && 
     ((isMobile?.value && currentStep?.value === 2) || 
@@ -365,8 +362,9 @@ const showSteps = () => {
 }
 
 const setStepIfShowAddress = () => {
-  if(checkout?.value?.showAddressStep || product?.value?.is_checkout_address)
+  if(checkout?.value?.showAddressStep || product?.value?.is_checkout_address){
     return "3"
+  }
 
   return "2"
 }
