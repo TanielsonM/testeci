@@ -325,8 +325,7 @@ export const usePaymentStore = defineStore("Payment", {
               data.cards[i] &&
               data.cards[i].card_number &&
               data.cards[i].card_holder_name &&
-              data.cards[i].card_expiration_date &&
-              data.cards[i].card_number != undefined
+              data.cards[i].card_expiration_date
             ) {
               let amount = data.cards[i].amount; // Armazenar o valor do campo amount
               let total = data.cards[i].total; // Armazenar o valor do campo total
