@@ -69,7 +69,7 @@ export type Payment = {
 
   metas: any;
 
-  cards?: PurcharseCard[];
+  cards?: any[];
 
   name: string;
   email: string;

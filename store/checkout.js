@@ -113,7 +113,7 @@ export const useCheckoutStore = defineStore("checkout", {
     /**
      * Global settings
      */
-    captchaEnabled: (state) => state.global_settings.captcha,
+    captchaEnabled: (state) => false,
     antifraud: (state) => state.global_settings.antifraud,
     monthly_interest: (state) => state.global_settings.monthly_interest,
     selectedCountry: (state) => state.global_settings.country,

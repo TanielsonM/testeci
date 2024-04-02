@@ -22,7 +22,7 @@ import { useAmountStore } from "./amount";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 // External SDK
-import { loadMercadoPago } from "@mercadopago/sdk-js";
+//import { loadMercadoPago } from "@mercadopago/sdk-js";
 
 const leadsStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
@@ -99,10 +99,6 @@ export const usePaymentStore = defineStore("Payment", {
           this.hasSent = true;
           this.setPaymentLoading(false);
           this.setPaymentFetching(false);
-          return;
-        }
-
-        if(await this.getGateway(product.value.type, method.value, product.value) === null){
           return;
         }
 
@@ -216,10 +212,10 @@ export const usePaymentStore = defineStore("Payment", {
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
         ) {
           const config = useRuntimeConfig();
-          await loadMercadoPago();
-          const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
+          //await loadMercadoPago();
+          /* const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
             locale: "pt-BR",
-          });
+          }); */
           let parsedFirstAmount = Number(
             first.value.amount
               .toString()
@@ -243,7 +239,7 @@ export const usePaymentStore = defineStore("Payment", {
             card_number: first.value.number,
           });
           // Mercado Pago token - First Card
-          if (installments.value >= 10) {
+         /*  if (installments.value >= 10) {
             const firstCardToken = mp.createCardToken({
               cardNumber: first.value.number.replaceAll(" ", ""),
               cardholderName: first.value.holder_name,
@@ -258,7 +254,7 @@ export const usePaymentStore = defineStore("Payment", {
               cards[0].card_hash = res.id;
               data.gateway = "MERCADOPAGO";
             });
-          }
+          } */
           if (method.value === "TWO_CREDIT_CARDS") {
             let parsedSecondAmount = Number(
               second.value.amount
@@ -279,7 +275,7 @@ export const usePaymentStore = defineStore("Payment", {
             });
 
             // Mercado Pago token - Second Card
-            if (installments.value >= 10) {
+            /* if (installments.value >= 10) {
               const secondCardToken = mp.createCardToken({
                 cardNumber: second.value.number.replaceAll(" ", ""),
                 cardholderName: second.value.holder_name,
@@ -293,7 +289,7 @@ export const usePaymentStore = defineStore("Payment", {
               await Promise.resolve(secondCardToken).then(function (res) {
                 cards[1].card_hash = res.id;
               });
-            }
+            } */
           }
           data.cards = cards;
         }
@@ -318,6 +314,53 @@ export const usePaymentStore = defineStore("Payment", {
           objetoCompra: JSON.stringify(dataLog),
         });
         checkoutStore.setLoading(true);
+     
+        let gateway = this.getGateway(product.value.type, method.value, product.value.global_settings);
+        
+        let promises = [];
+
+        if(data.cards ){
+          for (let i = 0; i < data.cards.length; i++) {
+            if (
+              data.cards[i] &&
+              data.cards[i].card_number &&
+              data.cards[i].card_holder_name &&
+              data.cards[i].card_expiration_date &&
+              data.cards[i].card_number != undefined
+            ) {
+              let amount = data.cards[i].amount; // Armazenar o valor do campo amount
+              let total = data.cards[i].total; // Armazenar o valor do campo total
+    
+              let dataGateway = {
+                system: 'GREENN',
+                gateway: gateway,
+                card: {
+                  holder_name:  data.cards[i].card_holder_name,
+                  number:  data.cards[i].card_number.replace(/\s/g, ''),
+                  exp_month:   data.cards[i].card_expiration_date ? data.cards[i].card_expiration_date.substring(0, 2) : null ,
+                  exp_year: data.cards[i].card_expiration_date.substring(2),
+                  cvv: data.cards[i].card_cvv
+                }
+              };
+              
+              // Criar a promessa e armazená-la no array de promessas
+              let promise = this.cardGateway(dataGateway).then(responseGateway => {
+                // Atualizar o objeto data.cards[i] mantendo os campos amount e total
+                if(data.cards){
+                  data.cards[i] = { id: responseGateway.id, amount, total }; 
+                }
+              })
+              .catch(error => {
+                // Tratar erros
+                console.error(error);
+              });        
+              promises.push(promise);
+            }
+          }
+        }
+  
+        // Aguardar a resolução de todas as promessas usando Promise.all()
+        await Promise.all(promises);
         // Payment request
         await useApi()
           .create("/payment", data)
@@ -504,9 +547,9 @@ export const usePaymentStore = defineStore("Payment", {
         error_mensage: this.error_message,
       });
     },
-    async getGateway(type: Type, metodo: MethodsState, product: Product) {
-      return new Promise((resolve) => {
-        
+    getGateway(type: string, metodo: string, global_settings: any[]) {
+
+     
         const toast = Toast.useToast();
   
         let gatewayKey = `${type}_${metodo}`;
@@ -514,8 +557,8 @@ export const usePaymentStore = defineStore("Payment", {
   
         let databaseConfiguration = '';
       
-        if (product.global_settings && product.global_settings.length > 0) {
-          databaseConfiguration = product.global_settings.find(config => config.key === gatewayKey);
+        if (global_settings && global_settings.length > 0) {
+          databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
       
           if (databaseConfiguration) {
             return databaseConfiguration.valueOf;
@@ -533,20 +576,32 @@ export const usePaymentStore = defineStore("Payment", {
           case 'SUBSCRIPTION_TWO_CREDIT_CARDS':
           case 'TRANSACTION_BOLETO':
           case 'SUBSCRIPTION_BOLETO':
-            resolve('PAGARME');
+            return 'PAGARME';
 
           case 'TRANSACTION_PIX':
           case 'SUBSCRIPTION_PIX':
-            resolve('IUGU');
+            return 'IUGU';
 
           case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
           case 'TRANSACTION_CREDIT_CARD_DLOCAL':
-            resolve('PAGARME');
+            return 'PAGARME';
           default:
             toast.warning("Erro ao buscar o gateway");
-            resolve(null);
+            return null;
         }
-      });
+    },
+    async cardGateway(dataGateway: any) {
+      const toast = Toast.useToast();
+
+      try {
+        //Tem que passar true para dizer que é uma rota que usa o endpoint do gateway
+        const response = await useApi().create("/card", dataGateway, null, true);
+        return response;
+      } catch (error) {
+        // Tratar erros
+        toast.warning("Falha ao obter o Gateway");
+        throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
+      }
     },
   },
 });

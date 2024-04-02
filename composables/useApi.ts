@@ -13,13 +13,14 @@ export default function () {
     url: string,
     method: "get" | "post" | "put" | "delete",
     config?: any,
-    body: any = null
+    body: any = null,
+    useGateway: boolean = false
   ): Promise<T | any> {
     if (body) config = { body };
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
-      baseURL: useRuntimeConfig().public.API_BASE_URL,
+      baseURL: useGateway ? useRuntimeConfig().API_GATEWAY_URL : useRuntimeConfig().public.API_BASE_URL,
       onRequest({ request, options }) {
         loading.changeLoading(request.toString());
         const headers: HeadersInit = new Headers();
@@ -55,6 +56,9 @@ export default function () {
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
           });
+        }
+        if (request === "/card") {
+          headers.set("X-Greenn-Gateway", useRuntimeConfig().public.API_GATEWAY_KEY);
         }
         options.headers = headers;
       },
@@ -93,20 +97,21 @@ export default function () {
     return retorno;
   }
 
-  async function read<T>(url: string, config?: any) {
-    return await instance<T>(url, "get", config);
+   // Adiciona useGateway como parâmetro na chamada de instance
+  async function read<T>(url: string, config?: any, useGateway: boolean = false) {
+    return await instance<T>(url, "get", config, null, useGateway);
   }
 
-  async function create<T>(url: string, body?: any, config?: any) {
-    return await instance<T>(url, "post", config, body);
+  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
+    return await instance<T>(url, "post", config, body, useGateway);
   }
 
-  async function update<T>(url: string, body?: any, config?: any) {
-    return await instance<T>(url, "put", config, body);
+  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
+    return await instance<T>(url, "put", config, body, useGateway);
   }
 
-  async function remove<T>(url: string, config?: any) {
-    return await instance<T>(url, "delete", config);
+  async function remove<T>(url: string, config?: any, useGateway: boolean = false) {
+    return await instance<T>(url, "delete", config, null, useGateway);
   }
 
   return {
