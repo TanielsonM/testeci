@@ -5,7 +5,6 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "@/store/checkout";
-import { useInstallmentsStore } from "~~/store/modules/installments";
 
 import { MdPreview } from 'md-editor-v3';
 
@@ -13,26 +12,18 @@ import * as Toast from "vue-toastification";
 
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
-const installmentsStore = useInstallmentsStore();
 
 const {
-  hasTicketInstallments,
   product,
-  isSubscription,
   getPeriod,
 } = storeToRefs(productStore);
 
 const {
-  method,
   installments,
   hasFees,
-  ticket_installments,
-  hasSelectedBump,
-  coupon,
   monthly_interest,
 } = storeToRefs(checkout);
 
-const { getInstallments } = storeToRefs(installmentsStore);
 
 const { t } = useI18n();
 const customCheckout = useCustomCheckoutStore();
@@ -135,7 +126,26 @@ function formatAmountTextTransaction(installments = 1, bump) {
 function formatAmountTextSubscription(amount) {
   let calcAmount = Number(Number(amount));
   calcAmount = Math.round(calcAmount * 100) / 100;
-  return `${formatMoney(calcAmount)} / mês`;
+  return `${formatMoney(calcAmount)} ${resolveSubscription()}`;
+}
+
+function resolveSubscription() {
+  let periodo = getPeriod.value;
+  switch (periodo) {
+    case 30:
+      return `${t("order.por_mes")}`
+    case 90:
+      return `${t("order.por_trimestre")}`
+    case 180:
+      return `${t("order.por_semestre")}`
+    case 365:
+      return `${t("order.por_ano")}`
+    default:
+      if (periodo > 365) {
+        return `/ ${t("order.anos")}`;
+      }
+      return `/ ${t("order.dias")}`;
+  }
 }
 
 function calcAmountBump(installments,bump){
