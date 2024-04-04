@@ -60,7 +60,7 @@ export default function () {
           });
         }
         if (request === "/checkout/card") {
-          let apiKey = useRuntimeConfig().public.API_GATEWAY_KEY;
+          let apiKey = useRuntimeConfig().public.CHECKOUT_GATEWAY_KEY;
           // Gera um salt aleatório
           const salt = Math.floor(1000 + Math.random() * 9000).toString();
           // Gera um número aleatório de iterações entre 1 e 10
