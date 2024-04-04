@@ -331,7 +331,7 @@ export const usePaymentStore = defineStore("Payment", {
               let total = data.cards[i].total; // Armazenar o valor do campo total
     
               let dataGateway = {
-                system: 'GREENN',
+                system: 'CHECKOUT',
                 gateway: gateway,
                 card: {
                   holder_name:  data.cards[i].card_holder_name,
@@ -594,7 +594,7 @@ export const usePaymentStore = defineStore("Payment", {
 
       try {
         //Tem que passar true para dizer que é uma rota que usa o endpoint do gateway
-        const response = await useApi().create("/card", dataGateway, null, true);
+        const response = await useApi().create("/checkout/card", dataGateway, null, true);
         return response;
       } catch (error) {
         // Tratar erros

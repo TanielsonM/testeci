@@ -5,6 +5,8 @@ import { HeadersState } from "@/types";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 import { useLoadingStore } from "@/store/loading/loading";
+
+import { MD5 } from 'crypto-js';
 const loading = useLoadingStore();
 const headStore = useHeadersStore();
 
@@ -57,8 +59,19 @@ export default function () {
             axiosRequest: options,
           });
         }
-        if (request === "/card") {
-          headers.set("X-Greenn-Gateway", useRuntimeConfig().public.API_GATEWAY_KEY);
+        if (request === "/checkout/card") {
+          let apiKey = useRuntimeConfig().public.API_GATEWAY_KEY;
+          // Gera um salt aleatório
+          const salt = Math.floor(1000 + Math.random() * 9000).toString();
+          // Gera um número aleatório de iterações entre 1 e 10
+          const iterations = Math.floor(1 + Math.random() * 10);
+          let textWithSalt = apiKey + salt;       
+          // Realiza a iteração adicionando o salt ao texto várias vezes
+          for (let i = 0; i < iterations; i++) {
+            textWithSalt = MD5(textWithSalt).toString();
+          }
+          const encrypted = textWithSalt + salt + iterations;
+          headers.set("X-Greenn-Gateway", encrypted);
         }
         options.headers = headers;
       },
