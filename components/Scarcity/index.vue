@@ -10,7 +10,7 @@ const custom_checkout = useCustomCheckoutStore();
     :style="{ backgroundColor: custom_checkout.scarcity.background }"
   >
     <section
-      class="flex h-full w-full max-w-[1250px] flex-wrap items-center justify-between gap-5"
+      class="flex h-full w-full max-w-[1250px] flex-wrap items-center justify-between gap-5 scarcity"
     >
       <section class="flex items-center gap-5">
         <span class="hidden md:block">
@@ -32,3 +32,13 @@ const custom_checkout = useCustomCheckoutStore();
     </section>
   </header>
 </template>
+
+<style lang="scss">
+@media(max-width:768px) {
+  .scarcity{
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    justify-items: start !important;
+  }
+}
+</style>
