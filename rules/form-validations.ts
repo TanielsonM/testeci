@@ -9,6 +9,8 @@ import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "~~/store/product";
+const checkout = useCheckoutStore();
+const { global_settings } = storeToRefs(checkout);
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
@@ -18,7 +20,7 @@ export const validateDocument = yup
   .test("cpfCnpj", "", (value) => validateCpfCnpj(value))
   .required();
 
-export const validateZip = yup.string().min(5).required();
+export const validateZip = global_settings.value.country === 'BR' ? yup.string().min(9).required() : yup.string().min(5).required();
 export const validateStreet = yup.string().min(4).required();
 export const validateNumber = yup.string().required();
 export const validateCity = yup.string().min(3).required();
