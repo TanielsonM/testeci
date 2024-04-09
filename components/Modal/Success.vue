@@ -165,6 +165,14 @@ if (
   );
 }
 
+const computedAmountPixel = computed(() => {
+  const sale: Sale = sales.value as Sale;
+  if(sale.sales[0].amount) {
+    return sale.sales[0].amount
+  }
+  return amountStore.getAmount || amountStore.getOriginalAmount
+})
+
 function openPix(id: number) {
   data.value.pixOpened = id;
 }
@@ -344,7 +352,7 @@ function openPix(id: number) {
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
-      :amount="amountStore.getAmount || amountStore.getOriginalAmount"
+      :amount="computedAmountPixel"
       :original_amount="amountStore.getOriginalAmount"
       :sale_id="parseInt(saleId!.toString())"
       :chc_id="parseInt(data.chc)"

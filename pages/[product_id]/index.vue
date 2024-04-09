@@ -346,6 +346,35 @@ onMounted(() => {
     }
   }
 });
+
+const showSteps = () => {
+  if (product?.value.is_checkout_address){
+    return true;
+  }
+
+  const showForCheckoutStep = checkout?.value?.showAddressStep && 
+    ((isMobile?.value && currentStep?.value === 2) || 
+    !isMobile?.value);
+
+  const showForOneStep = isOneStep?.value && checkout?.value?.showAddressStep;
+
+  return showForCheckoutStep || showForOneStep;  
+}
+
+const setStepIfShowAddress = () => {
+  if(checkout?.value?.showAddressStep || product?.value?.is_checkout_address){
+    return "03"
+  }
+
+  return "02"
+}
+
+const shouldDisplayComponent = () => {
+  const isStepCorrectOnMobile = isMobile?.value && currentStep?.value === (checkout?.value?.showAddressStep ? 3 : 2);
+
+  return isStepCorrectOnMobile || !isMobile?.value || isOneStep?.value;
+};
+
 </script>
 
 <template>
@@ -372,17 +401,11 @@ onMounted(() => {
             <FormPersonal :class="product?.method !== 'FREE' ? 'mb-8' : ''" />
           </template>
         </Steps>
-
         <!-- Address form -->
         <Steps
           :title="$t('components.steps.address')"
           step="02"
-          v-if="
-            product.is_checkout_address ||
-            (checkout.showAddressStep &&
-            ((isMobile && currentStep == 2) || !isMobile)) ||
-            (isOneStep && checkout.showAddressStep)
-          "
+          v-if="showSteps()"
           @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
           <template #content>
             <FormAddress />
@@ -399,10 +422,11 @@ onMounted(() => {
           </template>
         </Steps>
         <!-- Purchase Form -->
-        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep || product.is_checkout_address ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
-          !isMobile ||
-          isOneStep
-          ">
+        <Steps
+          :title="$t('checkout.pagamento.title')"
+          :step="setStepIfShowAddress()"
+          :free="product?.method !== 'FREE' ? false : true"
+          v-if="shouldDisplayComponent()">
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <template v-if="product?.method !== 'FREE'">
