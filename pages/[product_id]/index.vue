@@ -363,10 +363,10 @@ const showSteps = () => {
 
 const setStepIfShowAddress = () => {
   if(checkout?.value?.showAddressStep || product?.value?.is_checkout_address){
-    return "3"
+    return "03"
   }
 
-  return "2"
+  return "02"
 }
 
 const shouldDisplayComponent = () => {
@@ -401,7 +401,6 @@ const shouldDisplayComponent = () => {
             <FormPersonal :class="product?.method !== 'FREE' ? 'mb-8' : ''" />
           </template>
         </Steps>
-
         <!-- Address form -->
         <Steps
           :title="$t('components.steps.address')"

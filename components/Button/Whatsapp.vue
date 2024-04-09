@@ -19,7 +19,7 @@ const openWhatsapp = () => {
 
 <template>
   <section
-    class="whatsapp fixed bottom-10 right-10 flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-full bg-[#25d366]"
+    class="whatsapp fixed bottom-10 right-10 flex h-[60px] w-[60px] cursor-pointer items-center justify-center rounded-full bg-[#25d366] z-50"
     v-if="
       showWhatsappButton && whatsapp_options.number && whatsapp_options.message
     "
