@@ -38,7 +38,7 @@ const {
   hasCustomCheckout
 } = storeToRefs(checkout);
 
-const { currentStep, countSteps, isMobile } = storeToRefs(stepsStore);
+const { currentStep, getCountSteps, isMobile } = storeToRefs(stepsStore);
 const { error_message, isPaymentLoading, isPaymentFetching } = storeToRefs(payment);
 const {
   isOneStep,
@@ -275,13 +275,13 @@ async function callPayment() {
 }
 
 function incrementSteps() {
-  if (countSteps.value != 3) {
+  if (getCountSteps.value != 3) {
     stepsStore.incrementCount();
   }
 }
 
 function decreaseCount() {
-  if (countSteps.value === 3) {
+  if (getCountSteps.value === 3) {
     stepsStore.decreaseCount();
   }
 }
@@ -346,35 +346,6 @@ onMounted(() => {
     }
   }
 });
-
-const showSteps = () => {
-  if (product?.value.is_checkout_address){
-    return true;
-  }
-
-  const showForCheckoutStep = checkout?.value?.showAddressStep && 
-    ((isMobile?.value && currentStep?.value === 2) || 
-    !isMobile?.value);
-
-  const showForOneStep = isOneStep?.value && checkout?.value?.showAddressStep;
-
-  return showForCheckoutStep || showForOneStep;  
-}
-
-const setStepIfShowAddress = () => {
-  if(checkout?.value?.showAddressStep || product?.value?.is_checkout_address){
-    return "03"
-  }
-
-  return "02"
-}
-
-const shouldDisplayComponent = () => {
-  const isStepCorrectOnMobile = isMobile?.value && currentStep?.value === (checkout?.value?.showAddressStep ? 3 : 2);
-
-  return isStepCorrectOnMobile || !isMobile?.value || isOneStep?.value;
-};
-
 </script>
 
 <template>
@@ -402,11 +373,8 @@ const shouldDisplayComponent = () => {
           </template>
         </Steps>
         <!-- Address form -->
-        <Steps
-          :title="$t('components.steps.address')"
-          step="02"
-          v-if="showSteps()"
-          @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
+        <Steps :title="$t('components.steps.address')" step="02" v-if="checkout.showAddressStep && (((isMobile && currentStep == 2) || !isMobile)) || isOneStep
+          " @vnode-mounted="incrementSteps">
           <template #content>
             <FormAddress />
             <BaseToogle v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'" class="my-5" v-model:checked="sameAddress" id="address-form" :label="$t('general.address_toogle_label')" />
@@ -422,11 +390,10 @@ const shouldDisplayComponent = () => {
           </template>
         </Steps>
         <!-- Purchase Form -->
-        <Steps
-          :title="$t('checkout.pagamento.title')"
-          :step="setStepIfShowAddress()"
-          :free="product?.method !== 'FREE' ? false : true"
-          v-if="shouldDisplayComponent()">
+        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
+          !isMobile ||
+          isOneStep
+          ">
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <template v-if="product?.method !== 'FREE'">

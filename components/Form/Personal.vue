@@ -91,11 +91,7 @@ watch([name, email, cellphone, document], async () => {
   stepStore.changePaypalStatus();
 
   if (isPersonalValid) {
-    if (isAddressValid) {
-      if (currentStep === 1 || currentStep === 2) {
-        stepStore.setCurrentStep(2);
-      }
-    } else if (!isPersonalValid && !isAddressValid && currentStep === 2) {
+    if (!isPersonalValid && !isAddressValid && currentStep === 2) {
       stepStore.back();
     } else if (isPersonalValid && !isAddressValid && currentStep === 3) {
       stepStore.back();
