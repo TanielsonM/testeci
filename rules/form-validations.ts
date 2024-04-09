@@ -12,6 +12,8 @@ import { useProductStore } from "~~/store/product";
 const checkout = useCheckoutStore();
 const { global_settings } = storeToRefs(checkout);
 
+console.log(global_settings.value.country);
+
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
 export const validateEmail = yup.string().email().required();
@@ -20,7 +22,9 @@ export const validateDocument = yup
   .test("cpfCnpj", "", (value) => validateCpfCnpj(value))
   .required();
 
-export const validateZip = global_settings.value.country === 'BR' ? yup.string().min(9).required() : yup.string().min(5).required();
+export const validateZip = computed(() => {
+    return global_settings.value.country === 'BR' ? yup.string().min(9).required() : yup.string().min(5).required();
+  });
 export const validateStreet = yup.string().min(4).required();
 export const validateNumber = yup.string().required();
 export const validateCity = yup.string().min(3).required();
