@@ -12,8 +12,6 @@ import { useProductStore } from "~~/store/product";
 const checkout = useCheckoutStore();
 const { global_settings } = storeToRefs(checkout);
 
-console.log(global_settings.value.country);
-
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
 export const validateEmail = yup.string().email().required();
