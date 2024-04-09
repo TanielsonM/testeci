@@ -254,7 +254,13 @@ function closeModal() {
   error_message.value = "";
 }
 
+const timeStemp = ref(null);
+
 async function callPayment() {
+  const newDateTimeStemp = new Date();
+
+  if(timeStemp.value && (newDateTimeStemp.getTime() - timeStemp.value) < 1000) return
+  timeStemp.value = newDateTimeStemp.getTime();
   if(!isPaymentFetching.value) {
     if (captchaEnabled.value) {
       //não colocar await pois nenhuma dessa funções retornam promises
@@ -262,12 +268,10 @@ async function callPayment() {
       window.grecaptcha.reset();
       window.grecaptcha.execute();
     } else {
-      if (isPaymentLoading.value === true) {
-        await payment.payment(locale.value).finally(() => {
-          payment.setPaymentLoading(false);
-          payment.setPaymentFetching(false);
-        })
-      }
+      await payment.payment(locale.value).finally(() => {
+        payment.setPaymentLoading(false);
+        payment.setPaymentFetching(false);
+      })
     }
   }
 }
@@ -344,6 +348,35 @@ onMounted(() => {
     }
   }
 });
+
+const showSteps = () => {
+  if (product?.value.is_checkout_address){
+    return true;
+  }
+
+  const showForCheckoutStep = checkout?.value?.showAddressStep && 
+    ((isMobile?.value && currentStep?.value === 2) || 
+    !isMobile?.value);
+
+  const showForOneStep = isOneStep?.value && checkout?.value?.showAddressStep;
+
+  return showForCheckoutStep || showForOneStep;  
+}
+
+const setStepIfShowAddress = () => {
+  if(checkout?.value?.showAddressStep || product?.value?.is_checkout_address){
+    return "03"
+  }
+
+  return "02"
+}
+
+const shouldDisplayComponent = () => {
+  const isStepCorrectOnMobile = isMobile?.value && currentStep?.value === (checkout?.value?.showAddressStep ? 3 : 2);
+
+  return isStepCorrectOnMobile || !isMobile?.value || isOneStep?.value;
+};
+
 </script>
 
 <template>
@@ -370,12 +403,12 @@ onMounted(() => {
             <FormPersonal :class="product?.method !== 'FREE' ? 'mb-8' : ''" />
           </template>
         </Steps>
-
         <!-- Address form -->
-        <Steps :title="$t('components.steps.address')" step="02" v-if="(checkout.showAddressStep &&
-          ((isMobile && currentStep == 2) || !isMobile)) ||
-          (isOneStep && checkout.showAddressStep)
-          " @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
+        <Steps
+          :title="$t('components.steps.address')"
+          step="02"
+          v-if="showSteps()"
+          @vnode-mounted="incrementSteps" @vnode-before-unmount="decreaseCount">
           <template #content>
             <FormAddress />
             <BaseToogle v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'" class="my-5" v-model:checked="sameAddress" id="address-form" :label="$t('general.address_toogle_label')" />
@@ -391,10 +424,11 @@ onMounted(() => {
           </template>
         </Steps>
         <!-- Purchase Form -->
-        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
-          !isMobile ||
-          isOneStep
-          ">
+        <Steps
+          :title="$t('checkout.pagamento.title')"
+          :step="setStepIfShowAddress()"
+          :free="product?.method !== 'FREE' ? false : true"
+          v-if="shouldDisplayComponent()">
           <template #content>
             <section class="flex w-full flex-col gap-8">
               <template v-if="product?.method !== 'FREE'">
