@@ -77,7 +77,7 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const addressStore = useAddressStore();
   const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 
-  const validZip = await validateZip.isValid(charge.value.zipcode);
+  const validZip = await validateZip.value.isValid(charge.value.zipcode);
   const validStreet = await validateStreet.isValid(charge.value.street);
   const validNumber = await validateNumber.isValid(charge.value.number);
   const validCity = await validateCity.isValid(charge.value.city);
@@ -85,7 +85,7 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const validState = await validateState.isValid(charge.value.state);
 
   if (!sameAddress.value) {
-    const validChargeZip = await validateZip.isValid(shipping.value.zipcode);
+    const validChargeZip = await validateZip.value.isValid(shipping.value.zipcode);
     const validChargeStreet = await validateStreet.isValid(shipping.value.street);
     const validChargeNumber = await validateNumber.isValid(shipping.value.number);
     const validChargeCity = await validateCity.isValid(shipping.value.city);
