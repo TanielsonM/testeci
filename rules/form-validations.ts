@@ -9,8 +9,6 @@ import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "~~/store/product";
-const checkout = useCheckoutStore();
-const { global_settings } = storeToRefs(checkout);
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
