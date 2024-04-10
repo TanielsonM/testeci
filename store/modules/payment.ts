@@ -352,7 +352,7 @@ export const usePaymentStore = defineStore("Payment", {
                 let promise = this.cardGateway(dataGateway).then(responseGateway => {
                   // Atualizar o objeto data.cards[i] mantendo os campos amount e total
                   if(data.cards){
-                    data.cards[i] = { amount, total , ...responseGateway}; 
+                    data.cards[i] = {id: responseGateway.id, customer: responseGateway.customer || null, amount, total}; 
                   }
                 })
                 .catch(error => {
