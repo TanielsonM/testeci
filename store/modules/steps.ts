@@ -16,8 +16,16 @@ export const useStepStore = defineStore("Step", {
     isEmailValid: false
   }),
   getters: {
+    getCountSteps():number {
+      const checkout = useCheckoutStore();
+      const { showAddressStep } = storeToRefs(checkout);
+      if(showAddressStep.value){
+        return 3;
+      }
+      return 2;
+    },
     isLastStep(state): boolean {
-      return state.currentStep >= state.countSteps ? true : false;
+      return state.currentStep >= this.getCountSteps ? true : false;
     },
   },
   actions: {
@@ -71,7 +79,7 @@ export const useStepStore = defineStore("Step", {
       this.currentStep++;
     },
     back() {
-      this.currentStep--;
+      this.currentStep = this.currentStep - 1;
     },
     incrementCount() {
       this.countSteps++;

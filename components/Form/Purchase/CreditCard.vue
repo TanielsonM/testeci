@@ -2,6 +2,7 @@
 import moment from "moment";
 import { formatMoney } from "@/utils/money";
 import { useCheckoutStore } from "@/store/checkout";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useAmountStore } from "~~/store/modules/amount";
@@ -18,14 +19,16 @@ import {
 } from "@/rules/form-validations";
 
 const checkout = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const purchase = usePurchaseStore();
 const amountStore = useAmountStore();
 const prodStore = useProductStore();
 const instStore = useInstallmentsStore();
 const payment = usePaymentStore();
 
+const { getReservations, sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { getAmount } = storeToRefs(amountStore);
-const { method, installments, selectedCountry, allowed_methods } =
+const { method, installments, selectedCountry, allowed_methods, product } =
   storeToRefs(checkout);
 const { productType } = storeToRefs(prodStore);
 const { first, second } = storeToRefs(purchase);
@@ -218,6 +221,7 @@ watch(installments, () => {
         </p>
       </BaseButton>
       <BaseButton
+        v-if="!sellerHasFeatureTickets"
         color="info"
         class="pulse flex gap-1"
         :class="{ active: method === 'TWO_CREDIT_CARDS' }"

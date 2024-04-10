@@ -142,10 +142,18 @@ export const useCheckoutStore = defineStore("checkout", {
       };
     },
     showAddressStep() {
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+      const product = useProductStore();
+      let productEventHasAddress = false;
+      if(sellerHasFeatureTickets && product.is_checkout_address){
+        productEventHasAddress = true;
+      }
       return (
         !!this.antifraud ||
         this.hasPhysicalProduct ||
-        this.hasCheckoutAddress
+        this.hasCheckoutAddress ||
+        productEventHasAddress
       );
     },
     hasPhysicalProduct(state) {
@@ -368,6 +376,14 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     async getCoupon() {
+      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+      const { batches } = usePreCheckoutStore();
+      if(this.product_list.length && batches.length){
+        const toast = Toast.useToast();
+        toast.warning("Desculpe, o cupom não está disponível no momento para eventos.");
+        throw new Error; 
+      }
+      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
       let url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
