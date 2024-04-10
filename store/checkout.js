@@ -149,6 +149,10 @@ export const useCheckoutStore = defineStore("checkout", {
       if(sellerHasFeatureTickets && product.is_checkout_address){
         productEventHasAddress = true;
       }
+      console.log('showAddressStep', !!this.antifraud ||
+      this.hasPhysicalProduct ||
+      this.hasCheckoutAddress ||
+      productEventHasAddress)
       return (
         !!this.antifraud ||
         this.hasPhysicalProduct ||

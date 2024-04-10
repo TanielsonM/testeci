@@ -346,6 +346,16 @@ onMounted(() => {
     }
   }
 });
+
+const isCustomOne = computed(() => {
+  if(isOneStep?.value){
+    if(checkout?.showAddressStep){
+      return true;
+    }
+    return checkout?.showAddressStep;
+  }
+  return isOneStep?.value;
+});
 </script>
 
 <template>
@@ -374,7 +384,7 @@ onMounted(() => {
         </Steps>
         <!-- Address form -->
         <Steps :title="$t('components.steps.address')" step="02" v-if="
-        checkout.showAddressStep && ((isMobile && currentStep == 2) || !isMobile) || isOneStep 
+        (checkout.showAddressStep && ((isMobile && currentStep == 2) || !isMobile) || isCustomOne)
           " @vnode-mounted="incrementSteps">
           <template #content>
             <FormAddress />
