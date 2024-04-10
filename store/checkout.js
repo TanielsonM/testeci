@@ -142,10 +142,18 @@ export const useCheckoutStore = defineStore("checkout", {
       };
     },
     showAddressStep() {
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+      const product = useProductStore();
+      let productEventHasAddress = false;
+      if(sellerHasFeatureTickets && product.is_checkout_address){
+        productEventHasAddress = true;
+      }
       return (
         !!this.antifraud ||
         this.hasPhysicalProduct ||
-        this.hasCheckoutAddress
+        this.hasCheckoutAddress ||
+        productEventHasAddress
       );
     },
     hasPhysicalProduct(state) {
