@@ -373,7 +373,8 @@ onMounted(() => {
           </template>
         </Steps>
         <!-- Address form -->
-        <Steps :title="$t('components.steps.address')" step="02" v-if="checkout.showAddressStep && (((isMobile && currentStep == 2) || !isMobile)) || isOneStep
+        <Steps :title="$t('components.steps.address')" step="02" v-if="
+        checkout.showAddressStep && ((isMobile && currentStep == 2) || !isMobile) || isOneStep 
           " @vnode-mounted="incrementSteps">
           <template #content>
             <FormAddress />
