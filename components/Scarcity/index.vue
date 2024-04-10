@@ -36,6 +36,14 @@ const custom_checkout = useCustomCheckoutStore();
 <style lang="scss">
 @media(max-width:768px) {
   .scarcity{
+    flex-wrap: nowrap !important;
+    section{
+      width: 100% !important;
+    }
+  }
+}
+@media(max-width:350px) {
+  .scarcity{
     display: grid !important;
     grid-template-columns: 1fr !important;
     justify-items: start !important;
