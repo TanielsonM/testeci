@@ -9,6 +9,8 @@ import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "~~/store/product";
+const checkout = useCheckoutStore();
+const { global_settings } = storeToRefs(checkout);
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
@@ -18,7 +20,9 @@ export const validateDocument = yup
   .test("cpfCnpj", "", (value) => validateCpfCnpj(value))
   .required();
 
-export const validateZip = yup.string().min(5).required();
+export const validateZip = computed(() => {
+    return global_settings.value.country === 'BR' ? yup.string().min(9).required() : yup.string().min(5).required();
+  });
 export const validateStreet = yup.string().min(4).required();
 export const validateNumber = yup.string().required();
 export const validateCity = yup.string().min(3).required();
@@ -73,7 +77,7 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const addressStore = useAddressStore();
   const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 
-  const validZip = await validateZip.isValid(charge.value.zipcode);
+  const validZip = await validateZip.value.isValid(charge.value.zipcode);
   const validStreet = await validateStreet.isValid(charge.value.street);
   const validNumber = await validateNumber.isValid(charge.value.number);
   const validCity = await validateCity.isValid(charge.value.city);
@@ -81,7 +85,7 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const validState = await validateState.isValid(charge.value.state);
 
   if (!sameAddress.value) {
-    const validChargeZip = await validateZip.isValid(shipping.value.zipcode);
+    const validChargeZip = await validateZip.value.isValid(shipping.value.zipcode);
     const validChargeStreet = await validateStreet.isValid(shipping.value.street);
     const validChargeNumber = await validateNumber.isValid(shipping.value.number);
     const validChargeCity = await validateCity.isValid(shipping.value.city);
