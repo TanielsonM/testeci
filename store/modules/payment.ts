@@ -9,6 +9,7 @@ import { validateAll } from "@/rules/form-validations";
 
 //Notifications
 import * as Toast from "vue-toastification";
+import { toRaw } from 'vue';
 
 
 // Stores
@@ -60,7 +61,8 @@ const {
   isDynamicShipping,
   hasTicketInstallments,
   hasAffiliationLead,
-  product
+  product,
+  product_global_settings,
 } = storeToRefs(productStore);
 
 const { name, email, document, cellphone } = storeToRefs(personalStore);
@@ -316,7 +318,10 @@ export const usePaymentStore = defineStore("Payment", {
         checkoutStore.setLoading(true);
         
         try { 
-          let gateway = this.getGateway(product.value.type, method.value, product.value.global_settings);
+          console.log(product_global_settings.value);
+          console.log(product_global_settings);
+          alert("Pare");
+          let gateway = this.getGateway(product.value.type, method.value, product_global_settings.value);
 
           if(gateway){
             data.gateway = gateway;
@@ -557,28 +562,23 @@ export const usePaymentStore = defineStore("Payment", {
         error_mensage: this.error_message,
       });
     },
-    getGateway(type: string, metodo: string, global_settings: any[]):string {
-
-     
+    getGateway(type: string, metodo: string, global_settings: any[]):any {
+  
         const toast = Toast.useToast();
   
-        let gatewayKey = `${type}_${metodo}`;
-        gatewayKey = gatewayKey.toUpperCase();
-  
-        let databaseConfiguration = '';
-      
+        //concatena type com method tranformando em letras Maiúsculas
+        let gatewayKey = `${type.toUpperCase()}_${metodo.toUpperCase()}`;
+        
         if (global_settings && global_settings.length > 0) {
-          databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
-      
-          if (databaseConfiguration) {
-            return databaseConfiguration.valueOf.toString();
-          }
+          // Faz um find dentro das configurações globais
+          const databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
+
+            // Se encontrar, retorna o valor correspondente
+            if (databaseConfiguration) {
+              return databaseConfiguration.value;
+            }
         }
-      
-        if (databaseConfiguration && databaseConfiguration !== '') {
-          return databaseConfiguration;
-        }
-      
+
         switch (gatewayKey) {
           case 'TRANSACTION_CREDIT_CARD':
           case 'SUBSCRIPTION_CREDIT_CARD':
@@ -587,14 +587,12 @@ export const usePaymentStore = defineStore("Payment", {
           case 'TRANSACTION_BOLETO':
           case 'SUBSCRIPTION_BOLETO':
             return 'PAGARME';
-
           case 'TRANSACTION_PIX':
           case 'SUBSCRIPTION_PIX':
             return 'IUGU';
-
           case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
           case 'TRANSACTION_CREDIT_CARD_DLOCAL':
-            return 'PAGARME';
+            return 'DLOCAL';
           default:
             toast.warning("Erro ao buscar o gateway");
             return "";
@@ -647,10 +645,6 @@ export const usePaymentStore = defineStore("Payment", {
                   }
               };
               
-              //Essa parte comentei pois o New Checkout não tem venda internacional
-              /* if (this.language && this.language !== 'pt' && this.country_code !== 'BR') {
-                  delete address.address.zipcode;
-              } */
           }
   
           data.client_id = null; // Passando como nulo, pq até então o client não foi criado 
