@@ -63,6 +63,7 @@ const {
   hasAffiliationLead,
   product,
   product_global_settings,
+  recipientIsActivated
 } = storeToRefs(productStore);
 
 const { name, email, document, cellphone } = storeToRefs(personalStore);
@@ -318,7 +319,7 @@ export const usePaymentStore = defineStore("Payment", {
         checkoutStore.setLoading(true);
         
         try { 
-          let gateway = this.getGateway(product.value.type, method.value, product_global_settings.value);
+          let gateway = this.getGateway(product.value.type, method.value, product_global_settings.value, data.installments, recipientIsActivated.value);
 
           if(gateway){
             data.gateway = gateway;
@@ -559,22 +560,13 @@ export const usePaymentStore = defineStore("Payment", {
         error_mensage: this.error_message,
       });
     },
-    getGateway(type: string, metodo: string, global_settings: any[]):any {
-  
+    getGateway(type: string, metodo: string, global_settings: any[], installments:any, recipientIsActivated:boolean):any {
+      
         const toast = Toast.useToast();
   
         //concatena type com method tranformando em letras Maiúsculas
         let gatewayKey = `${type.toUpperCase()}_${metodo.toUpperCase()}`;
-        
-        if (global_settings && global_settings.length > 0) {
-          // Faz um find dentro das configurações globais
-          const databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
-
-            // Se encontrar, retorna o valor correspondente
-            if (databaseConfiguration) {
-              return databaseConfiguration.value;
-            }
-        }
+        let result = "";
 
         switch (gatewayKey) {
           case 'TRANSACTION_CREDIT_CARD':
@@ -583,17 +575,42 @@ export const usePaymentStore = defineStore("Payment", {
           case 'SUBSCRIPTION_TWO_CREDIT_CARDS':
           case 'TRANSACTION_BOLETO':
           case 'SUBSCRIPTION_BOLETO':
-            return 'PAGARME';
+            result = 'PAGARME';
           case 'TRANSACTION_PIX':
           case 'SUBSCRIPTION_PIX':
-            return 'IUGU';
+            result = 'IUGU';
           case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
           case 'TRANSACTION_CREDIT_CARD_DLOCAL':
-            return 'DLOCAL';
+            result = 'DLOCAL';
           default:
             toast.warning("Erro ao buscar o gateway");
-            return "";
+            result = "";
         }
+
+        if (global_settings && global_settings.length > 0) {
+          // Faz um find dentro das configurações globais
+          const databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
+
+            // Se encontrar, retorna o valor correspondente
+            if (databaseConfiguration) {
+              result = databaseConfiguration.value;
+            }
+        }
+
+        const gatewayHighInstallment = global_settings.find(config => config.key === 'TRANSACTION_CREDIT_CARD_LOW_INSTALLMENT');
+
+        if(installments <=2){
+          // Se encontrar, retorna o valor correspondente
+          if (gatewayHighInstallment) {
+            result = gatewayHighInstallment.value;
+          }
+        }
+
+        if(result == 'PAGARME' && !recipientIsActivated && gatewayHighInstallment == 'IUGU'){
+          result = 'IUGU';
+        }
+
+        return result;
     },
     async cardGateway(dataGateway: any) {
       const toast = Toast.useToast();
@@ -655,6 +672,6 @@ export const usePaymentStore = defineStore("Payment", {
               ...document,
               ...address
           };
-      }
+    }
   },
 });
