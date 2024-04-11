@@ -583,7 +583,6 @@ export const usePaymentStore = defineStore("Payment", {
           case 'TRANSACTION_CREDIT_CARD_DLOCAL':
             result = 'DLOCAL';
           default:
-            toast.warning("Erro ao buscar o gateway");
             result = "";
         }
 
@@ -608,6 +607,10 @@ export const usePaymentStore = defineStore("Payment", {
 
         if(result == 'PAGARME' && !recipientIsActivated && gatewayHighInstallment == 'IUGU'){
           result = 'IUGU';
+        }
+
+        if(result == ''){
+          toast.warning("Erro ao buscar o gateway");
         }
 
         return result;
