@@ -23,7 +23,6 @@ import { useAmountStore } from "./amount";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 // External SDK
-//import { loadMercadoPago } from "@mercadopago/sdk-js";
 
 const leadsStore = useLeadsStore();
 const checkoutStore = useCheckoutStore();
@@ -215,10 +214,7 @@ export const usePaymentStore = defineStore("Payment", {
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
         ) {
           const config = useRuntimeConfig();
-          //await loadMercadoPago();
-          /* const mp = new window.MercadoPago(config.public.MERCADOPAGO_API_PUBLIC_KEY, {
-            locale: "pt-BR",
-          }); */
+
           let parsedFirstAmount = Number(
             first.value.amount
               .toString()
@@ -241,23 +237,6 @@ export const usePaymentStore = defineStore("Payment", {
             card_holder_name: first.value.holder_name,
             card_number: first.value.number,
           });
-          // Mercado Pago token - First Card
-         /*  if (installments.value >= 10) {
-            const firstCardToken = mp.createCardToken({
-              cardNumber: first.value.number.replaceAll(" ", ""),
-              cardholderName: first.value.holder_name,
-              cardExpirationMonth: first.value.month,
-              cardExpirationYear: first.value.year,
-              securityCode: first.value.cvv,
-              identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
-              identificationNumber: document.value.replace(/[^\d]/g, ""),
-            });
-
-            await Promise.resolve(firstCardToken).then(function (res) {
-              cards[0].card_hash = res.id;
-              data.gateway = "MERCADOPAGO";
-            });
-          } */
           if (method.value === "TWO_CREDIT_CARDS") {
             let parsedSecondAmount = Number(
               second.value.amount
@@ -277,22 +256,7 @@ export const usePaymentStore = defineStore("Payment", {
               card_number: second.value.number,
             });
 
-            // Mercado Pago token - Second Card
-            /* if (installments.value >= 10) {
-              const secondCardToken = mp.createCardToken({
-                cardNumber: second.value.number.replaceAll(" ", ""),
-                cardholderName: second.value.holder_name,
-                cardExpirationMonth: second.value.month,
-                cardExpirationYear: second.value.year,
-                securityCode: second.value.cvv,
-                identificationType: document.value.replace(/[^\d]/g, "").length === 11 ? "CPF" : "CNPJ",
-                identificationNumber: document.value.replace(/[^\d]/g, ""),
-              });
-
-              await Promise.resolve(secondCardToken).then(function (res) {
-                cards[1].card_hash = res.id;
-              });
-            } */
+            
           }
           data.cards = cards;
         }
