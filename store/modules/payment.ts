@@ -318,9 +318,6 @@ export const usePaymentStore = defineStore("Payment", {
         checkoutStore.setLoading(true);
         
         try { 
-          console.log(product_global_settings.value);
-          console.log(product_global_settings);
-          alert("Pare");
           let gateway = this.getGateway(product.value.type, method.value, product_global_settings.value);
 
           if(gateway){
