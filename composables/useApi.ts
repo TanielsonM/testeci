@@ -6,7 +6,8 @@ import { GreennLogs } from "@/utils/greenn-logs";
 
 import { useLoadingStore } from "@/store/loading/loading";
 
-import { MD5 } from 'crypto-js';
+import md5 from 'crypto-js/md5';
+
 const loading = useLoadingStore();
 const headStore = useHeadersStore();
 
@@ -68,7 +69,7 @@ export default function () {
           let textWithSalt = apiKey + salt;       
           // Realiza a iteração adicionando o salt ao texto várias vezes
           for (let i = 0; i < iterations; i++) {
-            textWithSalt = MD5(textWithSalt).toString();
+            textWithSalt = md5(textWithSalt).toString();
           }
           const encrypted = textWithSalt + salt + iterations;
           headers.set("X-Greenn-Gateway", encrypted);
