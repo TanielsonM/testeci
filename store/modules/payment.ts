@@ -2,15 +2,13 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement, CurrencyData, MethodsState, Type } from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, CurrencyData} from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
 
 //Notifications
 import * as Toast from "vue-toastification";
-import { toRaw } from 'vue';
-
 
 // Stores
 import { usePersonalStore } from "../forms/personal";

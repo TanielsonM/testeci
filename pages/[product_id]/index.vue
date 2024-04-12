@@ -9,7 +9,6 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
-import * as Toast from "vue-toastification";
 
 
 // Stores
