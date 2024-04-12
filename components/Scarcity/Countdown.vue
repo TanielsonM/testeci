@@ -89,4 +89,14 @@ watch(
 .countdown {
   background: rgba(255, 255, 255, 0.2);
 }
+@media(max-width:768px) {
+  .countdown{
+    width: 100% !important;
+  }
+}
+@media(max-width:350px) {
+  .countdown{
+    width: initial !important;
+  }
+}
 </style>
