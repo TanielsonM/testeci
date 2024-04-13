@@ -294,6 +294,8 @@ export const usePaymentStore = defineStore("Payment", {
           
           let promises = [];
 
+          let errorRequestCard = false;
+
           if(data.cards ){
             for (let i = 0; i < data.cards.length; i++) {
               const card = data.cards[i];
@@ -323,6 +325,7 @@ export const usePaymentStore = defineStore("Payment", {
                 })
                 .catch(error => {
                   // Tratar erros
+                  errorRequestCard = true;
                   console.error(error);
                 });        
                 promises.push(promise);
@@ -332,102 +335,104 @@ export const usePaymentStore = defineStore("Payment", {
   
           // Aguardar a resolução de todas as promessas usando Promise.all()
           await Promise.all(promises);
-          // Payment request
-          await useApi()
-            .create("/payment", data)
-            .then(res => {
-              if (
-                res.sales !== undefined &&
-                Array.isArray(res.sales) &&
-                res.sales.every((item: SaleElement) => item.success)
-              ) {
-                GreennLogs.logger.info("🟢 Success Compra", {
-                  name: "Compra concluída com sucesso",
-                  product_id: product_id.value,
-                });
-                let query: any = {};
-                const principal_product = res.sales
-                  .filter(
-                    (item: SaleElement) => item.product.name === productName.value
-                  )
-                  .pop();
-                // Set principal product query
-                if (principal_product?.chc || res?.sales[0]?.chc) query.chc = principal_product?.chc || res?.sales[0]?.chc;
-                if (principal_product?.token || res?.sales[0]?.token) query.token = principal_product?.token || res?.sales[0]?.token;
-                if (principal_product?.sale_id || res?.sales[0]?.sale_id) {
-                  delete query.chc;
-                  query.s_id = res.sales[0].sale_id;
-                }
-                if (!!product_offer.value) query.offer = product_offer.value;
-
-                // Set query bumps
-                const route = useRoute();
-
-                // Se o produto for do tipo evento
-                if(product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
-                  product_list.value.forEach((ticket: {id: number, name: string, hash: string}, i) => {
-                    const sale = res.sales.find((item: any) => item.product.offer_hash === ticket.hash);
-                    if(sale) query['ticket_id_'+i] = (ticket.id + "-s_id_" + sale.sale_id)
-                  })
-                } else {
-                  const keys = Object.keys(route.query);
-                  const bumps = product_list.value.filter(
-                    (item: Product) => item.id !== parseInt(product_id.value)
-                  );
-
-                  bumps.forEach((bump: Product) => {
-                    const index = keys
-                      .filter((key) => route.query[key] === bump.id.toString())
+            if(!errorRequestCard){
+              // Payment request
+              await useApi()
+                .create("/payment", data)
+                .then(res => {
+                  if (
+                    res.sales !== undefined &&
+                    Array.isArray(res.sales) &&
+                    res.sales.every((item: SaleElement) => item.success)
+                  ) {
+                    GreennLogs.logger.info("🟢 Success Compra", {
+                      name: "Compra concluída com sucesso",
+                      product_id: product_id.value,
+                    });
+                    let query: any = {};
+                    const principal_product = res.sales
+                      .filter(
+                        (item: SaleElement) => item.product.name === productName.value
+                      )
                       .pop();
-                    const sale = res.sales
-                      .filter((item: any) => item.product.name === bump.name)
-                      .pop();
-                    if (!!sale && !!index) {
-                      if (bump.type === "SUBSCRIPTION") {
-                        if (sale.sale_id) {
-                          query[index] =
-                            route.query[index] +
-                            "-chc_" +
-                            sale.chc +
-                            "-s_id_" +
-                            sale.sale_id;
-                        } else {
-                          query[index] = route.query[index] + "-chc_" + sale.chc;
-                        }
-                      } else {
-                        query[index] = route.query[index] + "-s_id_" + sale.sale_id;
-                      }
+                    // Set principal product query
+                    if (principal_product?.chc || res?.sales[0]?.chc) query.chc = principal_product?.chc || res?.sales[0]?.chc;
+                    if (principal_product?.token || res?.sales[0]?.token) query.token = principal_product?.token || res?.sales[0]?.token;
+                    if (principal_product?.sale_id || res?.sales[0]?.sale_id) {
+                      delete query.chc;
+                      query.s_id = res.sales[0].sale_id;
                     }
-                  });
-                }
+                    if (!!product_offer.value) query.offer = product_offer.value;
 
-                const router = useRouter();
-                router.push({
-                  path: `/${product_id.value}/obrigado`,
-                  query,
-                });
-                return;
-              }
-              if (
-                Array.isArray(res?.sales) &&
-                res.sales.some((item: SaleElement) => !item.success)
-              ) {
-                this.validateError(res?.sales[0]);
-                return;
-              }
-              if (res.status === "error" && !res.sales?.success) {
-                this.validateError(res);
-                return;
-              }
-            })
-            .catch(err => {
-              console.error(err)
-              checkoutStore.setLoading(false);
-              this.setPaymentLoading(false);
-            }).finally(() =>{
-              this.setPaymentFetching(false);
-              this.setPaymentLoading(false);
-            })
+                    // Set query bumps
+                    const route = useRoute();
+
+                    // Se o produto for do tipo evento
+                    if(product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+                      product_list.value.forEach((ticket: {id: number, name: string, hash: string}, i) => {
+                        const sale = res.sales.find((item: any) => item.product.offer_hash === ticket.hash);
+                        if(sale) query['ticket_id_'+i] = (ticket.id + "-s_id_" + sale.sale_id)
+                      })
+                    } else {
+                      const keys = Object.keys(route.query);
+                      const bumps = product_list.value.filter(
+                        (item: Product) => item.id !== parseInt(product_id.value)
+                      );
+
+                      bumps.forEach((bump: Product) => {
+                        const index = keys
+                          .filter((key) => route.query[key] === bump.id.toString())
+                          .pop();
+                        const sale = res.sales
+                          .filter((item: any) => item.product.name === bump.name)
+                          .pop();
+                        if (!!sale && !!index) {
+                          if (bump.type === "SUBSCRIPTION") {
+                            if (sale.sale_id) {
+                              query[index] =
+                                route.query[index] +
+                                "-chc_" +
+                                sale.chc +
+                                "-s_id_" +
+                                sale.sale_id;
+                            } else {
+                              query[index] = route.query[index] + "-chc_" + sale.chc;
+                            }
+                          } else {
+                            query[index] = route.query[index] + "-s_id_" + sale.sale_id;
+                          }
+                        }
+                      });
+                    }
+
+                    const router = useRouter();
+                    router.push({
+                      path: `/${product_id.value}/obrigado`,
+                      query,
+                    });
+                    return;
+                  }
+                  if (
+                    Array.isArray(res?.sales) &&
+                    res.sales.some((item: SaleElement) => !item.success)
+                  ) {
+                    this.validateError(res?.sales[0]);
+                    return;
+                  }
+                  if (res.status === "error" && !res.sales?.success) {
+                    this.validateError(res);
+                    return;
+                  }
+                })
+                .catch(err => {
+                  console.error(err)
+                  checkoutStore.setLoading(false);
+                  this.setPaymentLoading(false);
+                }).finally(() =>{
+                  this.setPaymentFetching(false);
+                  this.setPaymentLoading(false);
+                })  
+            }
           }
           catch (error) {
             // Se ocorrer um erro em qualquer uma das promessas, ele será capturado aqui
