@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement, CurrencyData} from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, CurrencyData, PurcharseCard, GlobalSettingsCard} from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -281,7 +281,12 @@ export const usePaymentStore = defineStore("Payment", {
         checkoutStore.setLoading(true);
         
         try { 
-          let gateway = this.getGateway(product.value.type, method.value, product_global_settings.value, data.installments, recipientIsActivated.value);
+          let gateway = this.getGateway(
+                product.value.type, 
+                method.value, 
+                product_global_settings.value, 
+                data.installments ? Number(data.installments) : null, 
+                recipientIsActivated.value);
 
           if(gateway){
             data.gateway = gateway;
@@ -291,12 +296,8 @@ export const usePaymentStore = defineStore("Payment", {
 
           if(data.cards ){
             for (let i = 0; i < data.cards.length; i++) {
-              if (
-                data.cards[i] &&
-                data.cards[i].card_number &&
-                data.cards[i].card_holder_name &&
-                data.cards[i].card_expiration_date
-              ) {
+              const card = data.cards[i];
+              if ('card_holder_name' in card && 'card_number' in card && 'card_expiration_date' in card) {
                 let amount = data.cards[i].amount; // Armazenar o valor do campo amount
                 let total = data.cards[i].total; // Armazenar o valor do campo total
       
@@ -304,14 +305,14 @@ export const usePaymentStore = defineStore("Payment", {
                   system: 'CHECKOUT',
                   gateway: gateway,
                   card: {
-                    holder_name:  data.cards[i].card_holder_name,
-                    number:  data.cards[i].card_number.replace(/\s/g, ''),
-                    exp_month:   data.cards[i].card_expiration_date ? data.cards[i].card_expiration_date.substring(0, 2) : null ,
-                    exp_year: data.cards[i].card_expiration_date.substring(2),
-                    cvv: data.cards[i].card_cvv,
+                    holder_name: card.card_holder_name,
+                    number: card.card_number.replace(/\s/g, ''),
+                    exp_month: card.card_expiration_date ? card.card_expiration_date.substring(0, 2) : null,
+                    exp_year: card.card_expiration_date ? card.card_expiration_date.substring(2) : null,
+                    cvv: card.card_cvv,
                     costumer: this.customerData(data)
                   }
-                };
+                }
                 
                 // Criar a promessa e armazená-la no array de promessas
                 let promise = this.cardGateway(dataGateway).then(responseGateway => {
@@ -522,7 +523,16 @@ export const usePaymentStore = defineStore("Payment", {
         error_mensage: this.error_message,
       });
     },
-    getGateway(type: string, metodo: string, global_settings: any[], installments:any, recipientIsActivated:boolean):any {
+    isPurcharseCard(card: any): card is PurcharseCard {
+      return (
+        typeof card.amount !== 'undefined' &&
+        typeof card.card_cvv === 'string' &&
+        typeof card.card_expiration_date === 'string' &&
+        typeof card.card_holder_name === 'string' &&
+        typeof card.card_number === 'string'
+      );
+    },
+    getGateway(type: string, metodo: string, global_settings: GlobalSettingsCard[], installments: number | null, recipientIsActivated:boolean):any {
       
         const toast = Toast.useToast();
   
@@ -550,25 +560,31 @@ export const usePaymentStore = defineStore("Payment", {
 
         if (global_settings && global_settings.length > 0) {
           // Faz um find dentro das configurações globais
-          const databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
+            const databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
 
             // Se encontrar, retorna o valor correspondente
             if (databaseConfiguration) {
               result = databaseConfiguration.value;
             }
-        }
+       
 
-        const gatewayLowInstallment = global_settings.find(config => config.key === 'TRANSACTION_CREDIT_CARD_LOW_INSTALLMENT');
+            const gatewayLowInstallment = global_settings.find(config => config.key === 'TRANSACTION_CREDIT_CARD_LOW_INSTALLMENT');
+            let valuegatewayLowInstallment = null;
 
-        if(installments <=2){
-          // Se encontrar, retorna o valor correspondente
-          if (gatewayLowInstallment) {
-            result = gatewayLowInstallment.value;
-          }
-        }
+            if(gatewayLowInstallment){
+              valuegatewayLowInstallment = gatewayLowInstallment.value;
 
-        if(result == 'PAGARME' && !recipientIsActivated && gatewayLowInstallment == 'IUGU'){
-          result = 'IUGU';
+              if(installments && installments <=2){
+                // Se encontrar, retorna o valor correspondente
+                if (gatewayLowInstallment) {
+                  result = gatewayLowInstallment.value;
+                }
+              }
+
+              if(result == 'PAGARME' && !recipientIsActivated && valuegatewayLowInstallment == 'IUGU'){
+                result = 'IUGU';
+              }
+            }
         }
 
         if(result == ''){
