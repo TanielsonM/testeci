@@ -558,16 +558,16 @@ export const usePaymentStore = defineStore("Payment", {
             }
         }
 
-        const gatewayHighInstallment = global_settings.find(config => config.key === 'TRANSACTION_CREDIT_CARD_LOW_INSTALLMENT');
+        const gatewayLowInstallment = global_settings.find(config => config.key === 'TRANSACTION_CREDIT_CARD_LOW_INSTALLMENT');
 
         if(installments <=2){
           // Se encontrar, retorna o valor correspondente
-          if (gatewayHighInstallment) {
-            result = gatewayHighInstallment.value;
+          if (gatewayLowInstallment) {
+            result = gatewayLowInstallment.value;
           }
         }
 
-        if(result == 'PAGARME' && !recipientIsActivated && gatewayHighInstallment == 'IUGU'){
+        if(result == 'PAGARME' && !recipientIsActivated && gatewayLowInstallment == 'IUGU'){
           result = 'IUGU';
         }
 
