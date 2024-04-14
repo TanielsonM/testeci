@@ -21,7 +21,7 @@ const stepsStore = useStepStore();
 const checkoutStore = useCheckoutStore();
 const addressStore = useAddressStore();
 
-const { countSteps, isMobile, currentStep } = storeToRefs(stepsStore);
+const { getCountSteps, isMobile, currentStep } = storeToRefs(stepsStore);
 const { showAddressStep } = storeToRefs(checkoutStore)
 
 const shipping = ref({});
@@ -99,7 +99,7 @@ watch(
     if(props.bump.type_shipping_fee === 'DYNAMIC' && props.bump.has_shipping_fee === 1 && addressStore.zipcode) {
       await checkoutStore.calculateBumpsShipping(addressStore.zipcode);
     }
-    if (countSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
+    if (getCountSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
       stepsStore.back();
     }
   }
