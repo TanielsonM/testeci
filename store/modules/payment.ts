@@ -281,22 +281,24 @@ export const usePaymentStore = defineStore("Payment", {
         checkoutStore.setLoading(true);
         
         try { 
-          let gateway = this.getGateway(
-                product.value.type, 
-                method.value, 
-                product_global_settings.value, 
-                data.installments ? Number(data.installments) : null, 
-                recipientIsActivated.value);
-
-          if(gateway){
-            data.gateway = gateway;
-          }
+     
           
           let promises = [];
 
           let errorRequestCard = false;
 
           if(data.cards ){
+            
+            let gateway = this.getGateway(
+              product.value.type,
+              method.value,
+              product_global_settings.value,
+              data.installments ? Number(data.installments) : null,
+              recipientIsActivated.value);
+
+            if (gateway) {
+              data.gateway = gateway;
+            }
             for (let i = 0; i < data.cards.length; i++) {
               const card = data.cards[i];
               if ('card_holder_name' in card && 'card_number' in card && 'card_expiration_date' in card) {
@@ -590,10 +592,6 @@ export const usePaymentStore = defineStore("Payment", {
                 result = 'IUGU';
               }
             }
-        }
-
-        if(result == ''){
-          toast.warning("Erro ao buscar o gateway");
         }
 
         return result;
