@@ -10,7 +10,6 @@ import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
 
-
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();

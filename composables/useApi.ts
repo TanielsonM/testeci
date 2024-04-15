@@ -5,9 +5,6 @@ import { HeadersState } from "@/types";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 import { useLoadingStore } from "@/store/loading/loading";
-
-import md5 from 'crypto-js/md5';
-
 const loading = useLoadingStore();
 const headStore = useHeadersStore();
 
@@ -16,14 +13,13 @@ export default function () {
     url: string,
     method: "get" | "post" | "put" | "delete",
     config?: any,
-    body: any = null,
-    useGateway: boolean = false
+    body: any = null
   ): Promise<T | any> {
     if (body) config = { body };
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
-      baseURL: useGateway ? useRuntimeConfig().API_GATEWAY_URL : useRuntimeConfig().public.API_BASE_URL,
+      baseURL: useRuntimeConfig().public.API_BASE_URL,
       onRequest({ request, options }) {
         loading.changeLoading(request.toString());
         const headers: HeadersInit = new Headers();
@@ -59,20 +55,6 @@ export default function () {
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
           });
-        }
-        if (request === "/checkout/card") {
-          let apiKey = useRuntimeConfig().public.CHECKOUT_GATEWAY_KEY;
-          // Gera um salt aleatório
-          const salt = Math.floor(1000 + Math.random() * 9000).toString();
-          // Gera um número aleatório de iterações entre 1 e 10
-          const iterations = Math.floor(1 + Math.random() * 10);
-          let textWithSalt = apiKey + salt;       
-          // Realiza a iteração adicionando o salt ao texto várias vezes
-          for (let i = 0; i < iterations; i++) {
-            textWithSalt = md5(textWithSalt).toString();
-          }
-          const encrypted = textWithSalt + salt + iterations;
-          headers.set("X-Greenn-Gateway", encrypted);
         }
         options.headers = headers;
       },
@@ -111,21 +93,20 @@ export default function () {
     return retorno;
   }
 
-   // Adiciona useGateway como parâmetro na chamada de instance
-  async function read<T>(url: string, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "get", config, null, useGateway);
+  async function read<T>(url: string, config?: any) {
+    return await instance<T>(url, "get", config);
   }
 
-  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "post", config, body, useGateway);
+  async function create<T>(url: string, body?: any, config?: any) {
+    return await instance<T>(url, "post", config, body);
   }
 
-  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "put", config, body, useGateway);
+  async function update<T>(url: string, body?: any, config?: any) {
+    return await instance<T>(url, "put", config, body);
   }
 
-  async function remove<T>(url: string, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "delete", config, null, useGateway);
+  async function remove<T>(url: string, config?: any) {
+    return await instance<T>(url, "delete", config);
   }
 
   return {
