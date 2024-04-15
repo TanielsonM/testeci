@@ -312,7 +312,7 @@ export const usePaymentStore = defineStore("Payment", {
                     holder_name: card.card_holder_name,
                     number: card.card_number.replace(/\s/g, ''),
                     exp_month: card.card_expiration_date ? card.card_expiration_date.substring(0, 2) : null,
-                    exp_year: card.card_expiration_date ? card.card_expiration_date.substring(4, 5) : null,
+                    exp_year: card.card_expiration_date ? card.card_expiration_date.substring(4) : null,
                     cvv: card.card_cvv,
                     costumer: this.customerData(data)
                   }
@@ -605,7 +605,7 @@ export const usePaymentStore = defineStore("Payment", {
         return response;
       } catch (error) {
         // Tratar erros
-        toast.warning("Falha ao obter o Gateway");
+        toast.warning("Houve um erro ao tentar processar sua compra, por favor, aguarde novamente e tente mais tarde.");
         throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
       }
     },
