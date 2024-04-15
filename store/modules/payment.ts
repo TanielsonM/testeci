@@ -312,7 +312,7 @@ export const usePaymentStore = defineStore("Payment", {
                     holder_name: card.card_holder_name,
                     number: card.card_number.replace(/\s/g, ''),
                     exp_month: card.card_expiration_date ? card.card_expiration_date.substring(0, 2) : null,
-                    exp_year: card.card_expiration_date ? card.card_expiration_date.substring(2) : null,
+                    exp_year: card.card_expiration_date ? card.card_expiration_date.substring(4, 5) : null,
                     cvv: card.card_cvv,
                     costumer: this.customerData(data)
                   }
