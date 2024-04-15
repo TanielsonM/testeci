@@ -80,7 +80,7 @@ export type Payment = {
 
   metas: any;
 
-  cards?: PurcharseCard[];
+  cards?: HashCard[] | PurcharseCard[];
 
   name: string;
   email: string;
@@ -279,15 +279,32 @@ export type Product = {
   shipping?: Shipping;
   product_type_id?: number;
   user_identification?: string;
+  global_settings?: GlobalSettingsCard[];
 };
 
 export type PurcharseCard = {
   amount: string | number;
+  total?: string | number;
   card_cvv: string;
   card_expiration_date: string;
   card_holder_name: string;
   card_number: string;
 };
+
+
+export type HashCard = {
+  amount: string | number;
+  total?: string | number;
+  id: string | number;
+  customer?: object;
+};
+
+
+export type GlobalSettingsCard = {
+  key: string;
+  value: string;
+};
+
 
 export type Seller = {
   id: number;
@@ -814,4 +831,8 @@ export type ShippingSelected = {
   old_amount: number;
   frete: Frete;
   frete_anterior: number;
+};
+
+export type Type = {
+  type: string;
 };

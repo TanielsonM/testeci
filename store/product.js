@@ -8,7 +8,7 @@ import { usePreCheckoutStore } from "~~/store/preCheckout";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
-    product: {product_type_id: 0},
+    product: {product_type_id: 0, type: ''},
     amount: 0,
     original_amount: 0,
     is_gift: false,
@@ -17,6 +17,8 @@ export const useProductStore = defineStore("product", {
   getters: {
     seller_id: (state) => state.product.seller_id,
     product_id: (state) => state.product.id,
+    product_global_settings: (state) => state.product.global_settings,
+    recipientIsActivated: (state) => state.product.seller.recipientIsActivated,
     isSubscription: (state) => state.product.type === "SUBSCRIPTION",
     isValid(state) {
       return () => {
