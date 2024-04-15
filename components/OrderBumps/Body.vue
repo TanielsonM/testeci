@@ -4,26 +4,14 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 // Utils
 import { formatMoney } from "~/utils/money";
 import { useProductStore } from "~~/store/product";
-import { useCheckoutStore } from "@/store/checkout";
 
 import { MdPreview } from 'md-editor-v3';
 
 import * as Toast from "vue-toastification";
 
+
 const productStore = useProductStore();
-const checkout = useCheckoutStore();
-
-const {
-  product,
-  getPeriod,
-} = storeToRefs(productStore);
-
-const {
-  installments,
-  hasFees,
-  monthly_interest,
-} = storeToRefs(checkout);
-
+const { product } = storeToRefs(productStore);
 
 const { t } = useI18n();
 const customCheckout = useCustomCheckoutStore();
@@ -108,85 +96,14 @@ const exceptionSellerId = computed(() => {
   return false
 })
 
-function amountText(product, amount, bump){
-  if(product.type === "TRANSACTION"){
-    return formatAmountTextTransaction(installments.value, bump);
-  } else{
-    return formatAmountTextSubscription(amount);
-  }
-};
-
-function formatAmountTextTransaction(installments = 1, bump) {
-  let calcAmount = calcAmountBump(installments, bump);
-  return `${installments}x de ${formatMoney(
-    calcAmount
-  )} ${hasFees.value ? "" : "(Sem juros)"}`;
-}
-
-function formatAmountTextSubscription(amount) {
-  let calcAmount = Number(Number(amount));
-  calcAmount = Math.round(calcAmount * 100) / 100;
-  return `${formatMoney(calcAmount)} ${resolveSubscription()}`;
-}
-
-function resolveSubscription() {
-  let periodo = getPeriod.value;
-  switch (periodo) {
-    case 30:
-      return `${t("order.por_mes")}`
-    case 90:
-      return `${t("order.por_trimestre")}`
-    case 180:
-      return `${t("order.por_semestre")}`
-    case 365:
-      return `${t("order.por_ano")}`
+// Methods
+function getType(type = "") {
+  switch (type) {
+    case "SUBSCRIPTION":
+      return t("checkout.pagamento.bump.signature");
     default:
-      if (periodo > 365) {
-        return `/ ${t("order.anos")}`;
-      }
-      return `/ ${t("order.dias")}`;
+      return t("checkout.pagamento.bump.transaction");
   }
-}
-
-function calcAmountBump(installments,bump){
-  let n = installments;
-  if (typeof n === "string"){
-    n = parseInt(n);
-  } 
-  let total = bump.amount;
-
-  if (n === 1){
-    return total;
-  } else {
-    total = 0;
-  }
-  
-  let frete = 0;
-
-  let item = bump
-  let value = !!item.custom_charges?.length
-    ? item.custom_charges[0].amount
-    : item.amount;
-  // Verifica se bump tem frete
-  if (!!item.has_shipping_fee) {
-    frete +=
-      item.type_shipping_fee === "FIXED"
-        ? item.amount_fixed_shipping_fee
-        : item.shipping?.amount || 0;
-  }
-  // Cliente não paga juros
-  if (!!item.no_interest_installments) {
-    total += value;
-  }
-  // Cliente paga juros
-  else {
-    let i = parseFloat(monthly_interest.value) / 100;
-    total +=
-      (value * n) /
-      ((Math.pow(i + 1, n) - 1) / (Math.pow(i + 1, n) * i));
-  }
-  total = Math.round(total * 100) / 100;
-  return Number(Number((total + frete) / n));
 }
 </script>
 
@@ -204,6 +121,9 @@ function calcAmountBump(installments,bump){
           width="100%"
         />
         <section class="type-and-details">
+          <span class="item-info">
+            {{ getType(bump.type) }}
+          </span>
           <button
             class="item-details"
             @click.stop.prevent="details = !details"
@@ -249,7 +169,7 @@ function calcAmountBump(installments,bump){
             <span
               v-if="!hasTrial && !hasCustomCharges"
               class="info-value custom-color"
-              >{{ amountText(product, amount, bump)}}</span
+              >{{ `${formatMoney(amount)}` }}</span
             >
             <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
               <p
