@@ -605,7 +605,7 @@ export const usePaymentStore = defineStore("Payment", {
         return response;
       } catch (error) {
         // Tratar erros
-        toast.warning("Houve um erro ao tentar processar sua compra, por favor, aguarde novamente e tente mais tarde.");
+        toast.warning("Houve um erro ao tentar processar sua compra, por favor, aguarde um pouco e tente mais tarde.");
         throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
       }
     },
