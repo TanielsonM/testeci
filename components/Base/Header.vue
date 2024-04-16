@@ -11,7 +11,7 @@ const stepStore = useStepStore();
 
 const { topThumb, hasScarcity, hasCustomLogo, isOneStep } =
   storeToRefs(customCheckStore);
-const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
+const { getCountSteps, currentStep, isMobile } = storeToRefs(stepStore);
 </script>
 
 <template>
@@ -43,7 +43,7 @@ const { countSteps, currentStep, isMobile } = storeToRefs(stepStore);
           'bg-main-color': item == currentStep,
           'bg-main-transparent-color': item != currentStep,
         }"
-        v-for="item in countSteps"
+        v-for="item in getCountSteps"
         :key="item"
       ></div>
     </div>
