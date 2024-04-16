@@ -320,6 +320,9 @@ export const useCheckoutStore = defineStore("checkout", {
                 customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
               }
             } else {
+              if(response?.data.status === "REQUESTED" || response?.data.status === "DISAPPROVED" || !response?.data.is_active){
+                return;
+              }
               let bumpData = {
                 ...response.data,
                 checkbox: false,
