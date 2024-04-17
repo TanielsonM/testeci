@@ -144,9 +144,9 @@ export const useCheckoutStore = defineStore("checkout", {
     showAddressStep() {
       const preCheckout = usePreCheckoutStore();
       const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
-      const product = useProductStore();
+      const { product } = useProductStore();
       let productEventHasAddress = false;
-      if(sellerHasFeatureTickets && product.is_checkout_address){
+      if(sellerHasFeatureTickets.value && product.is_checkout_address){
         productEventHasAddress = true;
       }
       return (
