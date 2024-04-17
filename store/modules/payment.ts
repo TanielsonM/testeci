@@ -428,10 +428,6 @@ export const usePaymentStore = defineStore("Payment", {
                 })
                 .catch(err => {
                   console.error(err)
-                  if(err?.value?.status === 422){
-                    const toast = Toast.useToast();
-                    toast.warning(err?.value?.response?._data[0]);
-                  }
                   checkoutStore.setLoading(false);
                   this.setPaymentLoading(false);
                 }).finally(() =>{
