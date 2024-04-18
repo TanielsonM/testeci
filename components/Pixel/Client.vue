@@ -31,11 +31,8 @@ onMounted(async () => {
       const { event_id, pixels } = response;
 
       if (pixels && pixels.length) {
-        const hasTagManager = pixels.filter(
-          (item) => item.type == "GOOGLETAGMANAGER"
-        );
-
-        pixels.forEach((pixel) => {
+        
+        pixels.forEach((pixel) => {          
           handleIframe(
             pixel.host,
             pixel.product_id,
@@ -51,68 +48,6 @@ onMounted(async () => {
         });
       }
     });
-
-    function onCheckoutEvent() {
-      dataLayer.push({
-        event: 'checkout',
-        checkout: {
-          products: [
-            {
-              amount: props.amount || props.original_amount,
-              product_name: props.product_name,
-              product_id: props.product_id,
-            },
-          ],
-        },
-      });
-    }
-
-    function onPurchaseEvent() {
-      dataLayer.push({
-        event: "purchase",
-        purchase: {
-          sale_id: props.sale_id,
-          method: props.method,
-          products: [
-            {
-            amount: props.amount || props.original_amount,
-            product_id: props.product_id,
-            product_name: props.product_name,
-            }
-          ],
-        },
-      });
-    }
-  
-    function handleGtag(pixel_id: string, product_id: number, user_id: number, host: string,) {
-      (function (w: any, d: any, s: any, l: any, i: any) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", pixel_id);
-
-      let data = {
-        column: 'events_triggered_count',
-        seller_id: `${user_id}`,
-        pixel_id: `${pixel_id}`,
-        product_id: `${product_id}`,
-    };
-
-    fetch(`https://${host}/api/lexip/metrics`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-      
-    }
 
     function handleIframe(
       host: string,
