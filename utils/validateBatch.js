@@ -7,13 +7,17 @@ import { useGoBackToPrecheckoutStore } from "~~/store/modal/goBackToPrecheckout"
 
 const saleHasStarted = function (batch) {
   if(batch.release_type && batch.release_type === 'fixed_date') {
-    const today = moment();
-    const saleStartDate = moment(batch?.release_fixed_date); 
-    
-     return today.isSameOrAfter(saleStartDate)
+    return isTimerSameOrAfter(batch);
   } else {
     return true
   }
+}
+
+const isTimerSameOrAfter = function (batch) {
+  const today = moment();
+  const saleStartDate = moment(batch?.release_fixed_date); 
+  
+  return today.isSameOrAfter(saleStartDate);
 }
 
 const haveAvailableTickets = function (batch) {
@@ -132,5 +136,6 @@ export {
   goBackToPreCheckout,
   showBeforeBackNavigation,
   showUnloadAlertCheckout,
-  resetReservations
+  resetReservations,
+  isTimerSameOrAfter
 }
