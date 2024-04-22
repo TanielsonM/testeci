@@ -2,7 +2,6 @@
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
-import { useAddressStore } from "@/store/forms/address";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePaymentStore } from "~~/store/modules/payment";
 import { useStepStore } from "~~/store/modules/steps";
@@ -14,7 +13,6 @@ const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
 const preCheckout = usePreCheckoutStore();
-const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const route = useRoute();
@@ -23,7 +21,6 @@ const route = useRoute();
 const { t, locale } = useI18n();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product } = storeToRefs(productStore);
-const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
 
 const {
@@ -107,21 +104,6 @@ watch(selectedCountry, () => {
 
 watch(error_message, (val) => {
   if (val) alert_modal.value = true;
-});
-
-watch(sameAddress, (val) => {
-  if (!val) {
-    shipping.value.zipcode = "";
-    shipping.value.number = "";
-    shipping.value.street = "";
-    shipping.value.neighborhood = "";
-    shipping.value.city = "";
-    shipping.value.state = "";
-    shipping.value.complement = "";
-  }
-  checkout.calculateShipping(
-    val ? charge.value.zipcode : shipping.value.zipcode
-  );
 });
 
 // Functions
@@ -256,10 +238,7 @@ onMounted(() => {
             <section>
               <BaseButton @click="callPayment" v-if="method !== 'PAYPAL'" class="my-7" :loading="isPaymentLoading" :disabled="isPaymentLoading">
                 <span class="text-[15px] font-semibold">
-                  {{
-                    customCheckoutStore.purchase_text ||
-                    $t("checkout.footer.btn_compra")
-                  }}
+                  {{ $t("checkout.footer.btn_renovar_assinatura") }}
                 </span>
               </BaseButton>
             </section>
@@ -273,18 +252,6 @@ onMounted(() => {
             </span>
           </template>
         </Steps>
-
-        <!-- Next step buttom -->
-        <BaseButton @click="stepsStore.setStep(currentStep + 1)" v-if="isMobile &&
-          currentStep < (checkout.showAddressStep ? 3 : 2) &&
-          !isOneStep &&
-          method !== 'FREE'
-          ">
-          <span class="text-[15px] font-semibold">
-            {{ $t("checkout.steps.next_step") }}
-          </span>
-        </BaseButton>
-        
       </BaseCard>
       <!-- End purchase card -->
 

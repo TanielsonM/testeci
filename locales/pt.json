@@ -292,6 +292,7 @@
     },
     "footer": {
       "btn_compra": "Comprar agora",
+      "btn_renovar_assinatura": "Renovar assinatura",
       "btn_reservar": "Reservar agora",
       "info_seguranca": "Informações seguras e criptografadas",
       "icons": {
