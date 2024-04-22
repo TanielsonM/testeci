@@ -41,7 +41,7 @@ onMounted(async () => {
           });
           await Promise.all(promises);
           setTimeout(async () => {
-            const promises = reservations.forEach(async reservation => {
+            const promises = reservations.map(async reservation => {
               try {
                 await preCheckout.deleteReservation(reservation, null, true);
                 reservations = reservations.filter(x => x.id !== reservation.id);
