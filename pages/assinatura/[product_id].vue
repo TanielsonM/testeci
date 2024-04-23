@@ -266,12 +266,6 @@ onMounted(() => {
     <!-- Product Card -->
     <section class="flex w-full flex-col gap-10 lg:max-w-[370px] xl:min-w-[370px]">
       <ProductCard :product="product" />
-      <!-- Side Thumb -->
-      <img v-if="customCheckoutStore.sideThumb" :src="customCheckoutStore.sideThumb" alt="Thumb lateral" class="hidden w-full rounded-lg lg:block" />
-      <!-- End side Thumb -->
-      <!-- Side Thumb Mobile -->
-      <img v-if="customCheckoutStore.sideThumbMobile" :src="customCheckoutStore.sideThumbMobile" alt="Thumb lateral mobile" class="w-full rounded-lg lg:hidden" />
-      <!-- End side Thumb Mobile-->
     </section>
 
     <!-- Alert modal -->

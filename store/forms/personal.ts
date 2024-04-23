@@ -1,7 +1,7 @@
 interface Fields {
   fn: string | undefined;
-  email: string | undefined;
-  cellphone: string | undefined;
+  em: string | undefined;
+  ph: string | undefined;
   document: string | undefined;
   force: string | undefined;
 }
@@ -32,16 +32,16 @@ export const usePersonalStore = defineStore("personal", {
         this.name = fields.fn;
         this.forceName = this.force;
       }
-      if (fields?.email) {
-        this.email = fields.email;
+      if (fields?.em) {
+        this.email = fields.em;
         this.forceEmail = this.force;
       }
-      if (fields?.email) {
-        this.confirmEmail = fields.email;
+      if (fields?.em) {
+        this.confirmEmail = fields.em;
         this.forceConfirmEmail = this.force;
       }
-      if (fields?.cellphone) {
-        this.cellphone = fields.cellphone;
+      if (fields?.ph) {
+        this.cellphone = fields.ph;
         this.forceCellphone = this.force;
       }
       if (fields?.document) {

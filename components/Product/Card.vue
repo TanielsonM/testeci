@@ -88,6 +88,7 @@ const exceptionSellerId = computed(() => {
           {{ trialMessage }}
         </p>
         <ProductTotalAmount v-else />
+        <ProductCharges />
         <section
           class="custom_charges"
           v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId"
