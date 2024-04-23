@@ -285,6 +285,8 @@ export type HashCard = {
   total?: string | number;
   id: string | number;
   customer?: object;
+  first_digits?: string | number;
+  last_digits?: string | number;
 };
 
 
