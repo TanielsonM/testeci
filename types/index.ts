@@ -267,6 +267,7 @@ export type Product = {
   checked?: boolean;
   shipping?: Shipping;
   product_type_id?: number;
+  user_identification?: string;
   global_settings?: GlobalSettingsCard[];
 };
 

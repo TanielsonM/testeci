@@ -2,6 +2,7 @@ import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { storeToRefs } from "pinia";
 import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/utils/validateBatch";
+import * as Toast from "vue-toastification";
 
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({
@@ -110,11 +111,15 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       });
       return totalSelectedTickets;
     },
-    async checkHasTickets(offer) {
+    async checkHasTickets(offer, batch) {
       const hasTicket = await useApi().create('/event/reservation/check-amount', { offer_id: offer })
 
-      if(! hasTicket) 
+      if(!hasTicket){
+        if(batch.release_type === 'fixed_date' && isTimerSameOrAfter(batch)){
+          return this.hasAvailableTickets = true
+        }
         return this.hasAvailableTickets = false
+      }
       
       this.hasAvailableTickets = true
     },
@@ -122,19 +127,16 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       let batch = this.batches.find(x => x.id === batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
       
-      await this.checkHasTickets(ticket.id)
+      await this.checkHasTickets(ticket.id, batch)
       if(! this.hasAvailableTickets) {
         batch.soldOff = true
         return
       } else {
         batch.soldOff = false
       }
-
       if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
         ticket.selected_tickets += 1;
         batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
-        const checkoutStore = useCheckoutStore();
-        checkoutStore.setProductListPreCheckout(ticket);
         // if(this.reservations?.length && this.reservations.some(x => x.offer_id === ticket.id)) {
         //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
         //   const res = await this.putReservation(ticket);
@@ -142,13 +144,17 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         // } else {
         // Cria nova reserva do ingresso do lote selecionado
         if(batch.release_type !== "fixed_date"){
-          await this.createReservation(ticket.id, ticket);
-          localStorage.setItem('reservations', JSON.stringify(this.reservations));
+          let resp =  await this.createReservation(ticket.id, ticket);
+          if(resp){
+            localStorage.setItem('reservations', JSON.stringify(this.reservations));
+            const checkoutStore = useCheckoutStore();
+            checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:resp.token });
+          }
         }else{
           // Para eventos que estão configurados para liberar por data || esgotar lote
           this.updateAvailableTickets(batch.tickets, false);
         }
-        // }
+      // }
       }
     },
     async subTicket(batch_group, hash) {
@@ -187,11 +193,16 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.setLoadingReservation(true, ticket);
       try {
         const res = await useApi().create('/event/reservation', payload);
-        this.addReservation({ ...res, offer_id });
+        this.addReservation({ ...res, offer_id, offer_group_id:ticket.offer_group_id });
         this.updateAvailableTickets(res.tickets, false);
         return res;
       } catch (err) {
         this.hasAvailableTickets = false
+        if(err?.value?.status === 422){
+          const toast = Toast.useToast();
+          toast.warning("Ingresso configurado com data limite para vendas não tem controle de reservas.");
+          throw new Error; 
+        }
         return err;
       } finally {
         this.setLoadingReservation(false, ticket);
