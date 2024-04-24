@@ -146,9 +146,9 @@ export const useCheckoutStore = defineStore("checkout", {
     showAddressStep() {
       const preCheckout = usePreCheckoutStore();
       const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
-      const product = useProductStore();
+      const { product } = useProductStore();
       let productEventHasAddress = false;
-      if(sellerHasFeatureTickets && product.is_checkout_address){
+      if(sellerHasFeatureTickets.value && product.is_checkout_address){
         productEventHasAddress = true;
       }
       return (
@@ -331,6 +331,9 @@ export const useCheckoutStore = defineStore("checkout", {
                 customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
               }
             } else {
+              if(response?.data.status === "REQUESTED" || response?.data.status === "DISAPPROVED" || !response?.data.is_active){
+                return;
+              }
               let bumpData = {
                 ...response.data,
                 checkbox: false,
