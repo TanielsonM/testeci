@@ -233,7 +233,7 @@ export const useCheckoutStore = defineStore("checkout", {
       const { setProduct } = productStore;
       /* Get country */
       /* Set product url */
-      let url = `/product/test-checkout/${id}`;
+      let url = `/products/${id}`;
       // check if has custom checkout
       if (!!this.hasCustomCheckout && !isBump) {
         url += `/checkout/${this.hasCustomCheckout}`;
@@ -256,7 +256,7 @@ export const useCheckoutStore = defineStore("checkout", {
           .read(url, {
             ...configs,
             query,
-          })
+          }, false, true)
           .then(async (response) => {
             if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
               this.isCreditCard = true
