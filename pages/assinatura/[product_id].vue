@@ -265,7 +265,7 @@ onMounted(() => {
 
     <!-- Product Card -->
     <section class="flex w-full flex-col gap-10 lg:max-w-[370px] xl:min-w-[370px]">
-      <ProductCard :product="product" />
+      <ProductCard :urlSubscription="true" :product="product" />
     </section>
 
     <!-- Alert modal -->

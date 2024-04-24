@@ -123,8 +123,6 @@ personalStore.setFields(queryParams);
 
 const personalForm = ref(null);
 
-const {urlSubscription} = props;
-
 onMounted(() => {
   if(queryParams.em) {
     personalForm.value.setFieldValue('email-field', queryParams.em);
