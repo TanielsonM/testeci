@@ -6,7 +6,6 @@ import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
-import { haveAvailableTickets } from "@/utils/validateBatch";
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
@@ -343,11 +342,6 @@ export const useCheckoutStore = defineStore("checkout", {
             if (response.data.product_type_id === 3 && response?.batches && Array.isArray(response?.batches)) {
               const preCheckout = usePreCheckoutStore();
               response.batches.forEach(batch => {
-                if(haveAvailableTickets(batch)){
-                  batch.soldOff = false;
-                }else{
-                  batch.soldOff = true;
-                }
                 // Adicionar chave para contabilizar ingressos selecionados
                 batch.tickets = batch.tickets.map(x => {
                   return { ...x, selected_tickets: 0 }

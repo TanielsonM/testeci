@@ -106,28 +106,6 @@ const showBeforeBackNavigation = async function () {
   }
 }
 
-const resetReservations = async function () {
-  const preCheckout = usePreCheckoutStore();
-  const { getBatches, getReservations } = storeToRefs(preCheckout);
-  let batchs = getBatches.value;
-  const amountStore = useAmountStore();
-
-  batchs.forEach((batch) => {
-    batch.selected_batch_tickets = 0;
-    batch.tickets.forEach((ticket) => {
-      ticket.selected_tickets = 0;
-    });
-  });
-
-  localStorage.removeItem('reservations');
-
-  amountStore.reset();
-  preCheckout.setBatches(batchs);
-  const checkout = useCheckoutStore();
-  checkout.setCoupon(false, true);
-  checkout.resetProducts();
-}
-
 export {
   saleHasStarted,
   haveAvailableTickets,
@@ -136,6 +114,5 @@ export {
   goBackToPreCheckout,
   showBeforeBackNavigation,
   showUnloadAlertCheckout,
-  resetReservations,
   isTimerSameOrAfter
 }
