@@ -22,13 +22,14 @@ export const useInstallmentsStore = defineStore("installments", {
         product_id,
         coupon,
         installments,
+        history_subscription
       } = storeToRefs(checkout);
       const { getAmount } = storeToRefs(amountStore);
       return (n: number = installments.value) => {
         if (typeof n === "string") n = parseInt(n);
         let total = getAmount.value;
 
-        if (n === 1) return total;
+        if (n === 1 && !history_subscription) return total;
         else total = 0;
         let frete = 0;
 
@@ -50,6 +51,10 @@ export const useInstallmentsStore = defineStore("installments", {
           // Cliente não paga juros
           if (!!item.no_interest_installments) {
             total += value;
+          }
+          // Se for atualizaçao de assinatura
+          if (history_subscription) {
+            total = history_subscription?.value?.contract_amount;
           }
           // Cliente paga juros
           else {

@@ -57,6 +57,7 @@ function apply() {
         :class="{ 'rotate-180': isOpen }"
       />
     </span>
+    <!-- Abre e nao tem cupom aplicado -->
     <section
       v-if="isOpen && !coupon.applied"
       class="flex w-full flex-col gap-5"
@@ -79,8 +80,42 @@ function apply() {
         <p class="text-sm font-semibold">{{ $t("components.coupon.apply") }}</p>
       </BaseButton>
     </section>
+    <!-- Abre e tem cupom aplicado e nao pode remover pois esta renovando uma assinatura -->
+    <!-- <section
+      v-else-if="isOpen && coupon.applied && urlSubscription"
+      class="flex w-full flex-col items-start justify-start gap-2"
+    >
+      <p class="text-xs text-txt-color">
+        {{ $t("checkout.cupom.cupom") }}
+        <span class="font-bold">{{ coupon.name.toUpperCase() }}</span>
+        {{ $t("checkout.cupom.aplicado") }}
+      </p>
+      <a
+        class="cursor-pointer text-[13px] text-blue-600 hover:underline"
+        @click.prevent="checkout.setCoupon(false, true)"
+        >{{ $t("checkout.cupom.remover") }}</a
+      >
+      <BaseBadge variant="success" v-if="coupon.available">
+        {{
+          coupon.available > 10
+            ? `${$t("checkout.cupom.restam")} ${coupon.available} ${$t(
+                "checkout.cupom.disponiveis"
+              )}`
+            : `${$t("checkout.cupom.acabando")} ${$t(
+                "checkout.cupom.restam"
+              )} ${coupon.available} ${$t("checkout.cupom.disponiveis")}`
+        }}
+      </BaseBadge>
+      <section class="w-full" v-if="coupon.due_date">
+        <span class="text-[13px] text-txt-color">{{
+          $t("components.coupon.coupon_due_date")
+        }}</span>
+        <ProductCountDown :coupon="coupon" />
+      </section>
+    </section> -->
+    <!-- Abre e tem cupom aplicado e pode remover -->
     <section
-      v-else-if="isOpen"
+      v-else
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">

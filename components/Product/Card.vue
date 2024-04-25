@@ -236,7 +236,7 @@ const exceptionSellerId = computed(() => {
         </a>
       </p>
       <!-- Coupon -->
-      <ProductCoupon v-if="productStore.allowedCoupon && !(product.product_type_id === 3 && sellerHasFeatureTickets)" />
+      <ProductCoupon v-if="productStore.allowedCoupon && !sellerHasFeatureTickets" />
       <ProductCashback />
     </section>
     <EventTimer v-if="product.product_type_id === 3 && sellerHasFeatureTickets"/>
