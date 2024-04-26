@@ -8,7 +8,7 @@ import { usePaymentStore } from "~~/store/modules/payment";
 const payment = usePaymentStore();
 const checkout = useCheckoutStore();
 const product = useProductStore();
-const { coupon, hasCoupon } = storeToRefs(checkout);
+const { coupon, hasCoupon, history_subscription } = storeToRefs(checkout);
 const { productName } = storeToRefs(product);
 
 const { t } = useI18n();
@@ -41,6 +41,7 @@ function apply() {
     <span
       class="flex w-full flex-nowrap items-center justify-start gap-2"
       @click="isOpen = !isOpen"
+      v-if="!history_subscription"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
       <p class="w-full text-[13px] font-semibold text-txt-color">
@@ -59,7 +60,7 @@ function apply() {
     </span>
     <!-- Abre e nao tem cupom aplicado -->
     <section
-      v-if="isOpen && !coupon.applied"
+      v-if="isOpen && !coupon.applied && !history_subscription"
       class="flex w-full flex-col gap-5"
     >
       <BaseInput
@@ -81,41 +82,19 @@ function apply() {
       </BaseButton>
     </section>
     <!-- Abre e tem cupom aplicado e nao pode remover pois esta renovando uma assinatura -->
-    <!-- <section
-      v-else-if="isOpen && coupon.applied && urlSubscription"
+    <section
+      v-if="history_subscription"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">
         {{ $t("checkout.cupom.cupom") }}
-        <span class="font-bold">{{ coupon.name.toUpperCase() }}</span>
+        <span class="font-bold">{{ history_subscription.coupon.name.toUpperCase() }}</span>
         {{ $t("checkout.cupom.aplicado") }}
       </p>
-      <a
-        class="cursor-pointer text-[13px] text-blue-600 hover:underline"
-        @click.prevent="checkout.setCoupon(false, true)"
-        >{{ $t("checkout.cupom.remover") }}</a
-      >
-      <BaseBadge variant="success" v-if="coupon.available">
-        {{
-          coupon.available > 10
-            ? `${$t("checkout.cupom.restam")} ${coupon.available} ${$t(
-                "checkout.cupom.disponiveis"
-              )}`
-            : `${$t("checkout.cupom.acabando")} ${$t(
-                "checkout.cupom.restam"
-              )} ${coupon.available} ${$t("checkout.cupom.disponiveis")}`
-        }}
-      </BaseBadge>
-      <section class="w-full" v-if="coupon.due_date">
-        <span class="text-[13px] text-txt-color">{{
-          $t("components.coupon.coupon_due_date")
-        }}</span>
-        <ProductCountDown :coupon="coupon" />
-      </section>
-    </section> -->
+    </section>
     <!-- Abre e tem cupom aplicado e pode remover -->
     <section
-      v-else
+      v-if="isOpen && coupon.applied"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">
@@ -148,5 +127,3 @@ function apply() {
     </section>
   </section>
 </template>
-
-<style lang="scss" scoped></style>
