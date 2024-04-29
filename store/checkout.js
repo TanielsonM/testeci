@@ -233,7 +233,7 @@ export const useCheckoutStore = defineStore("checkout", {
       const { setProduct } = productStore;
       /* Get country */
       /* Set product url */
-      let url = `/products/${id}`;
+      let url = `/checkout/product/${id}`;
       // check if has custom checkout
       if (!!this.hasCustomCheckout && !isBump) {
         url += `/checkout/${this.hasCustomCheckout}`;
