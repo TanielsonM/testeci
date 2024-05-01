@@ -8,7 +8,7 @@ import { usePaymentStore } from "~~/store/modules/payment";
 const payment = usePaymentStore();
 const checkout = useCheckoutStore();
 const product = useProductStore();
-const { coupon, hasCoupon } = storeToRefs(checkout);
+const { coupon, hasCoupon, history_subscription } = storeToRefs(checkout);
 const { productName } = storeToRefs(product);
 
 const { t } = useI18n();
@@ -41,6 +41,7 @@ function apply() {
     <span
       class="flex w-full flex-nowrap items-center justify-start gap-2"
       @click="isOpen = !isOpen"
+      v-if="!history_subscription"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
       <p class="w-full text-[13px] font-semibold text-txt-color">
@@ -57,8 +58,9 @@ function apply() {
         :class="{ 'rotate-180': isOpen }"
       />
     </span>
+    <!-- Abre e nao tem cupom aplicado -->
     <section
-      v-if="isOpen && !coupon.applied"
+      v-if="isOpen && !coupon.applied && !history_subscription"
       class="flex w-full flex-col gap-5"
     >
       <BaseInput
@@ -79,8 +81,20 @@ function apply() {
         <p class="text-sm font-semibold">{{ $t("components.coupon.apply") }}</p>
       </BaseButton>
     </section>
+    <!-- Abre e tem cupom aplicado e nao pode remover pois esta renovando uma assinatura -->
     <section
-      v-else-if="isOpen"
+      v-if="history_subscription"
+      class="flex w-full flex-col items-start justify-start gap-2"
+    >
+      <p class="text-xs text-txt-color">
+        {{ $t("checkout.cupom.cupom") }}
+        <span class="font-bold">{{ history_subscription.coupon.name.toUpperCase() }}</span>
+        {{ $t("checkout.cupom.aplicado") }}
+      </p>
+    </section>
+    <!-- Abre e tem cupom aplicado e pode remover -->
+    <section
+      v-if="isOpen && coupon.applied"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">
@@ -113,5 +127,3 @@ function apply() {
     </section>
   </section>
 </template>
-
-<style lang="scss" scoped></style>

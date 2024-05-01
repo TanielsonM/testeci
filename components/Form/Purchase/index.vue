@@ -95,6 +95,7 @@ const showInstallments = computed(() => {
   return false;
 });
 
+// if subscription page is true
 const {urlSubscription} = props;
 </script>
 
@@ -111,7 +112,7 @@ const {urlSubscription} = props;
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="w-full lg:w-1/2"
         v-model="installments"
-        v-if="showInstallments"
+        v-if="showInstallments && !urlSubscription"
       >
         <!-- Fixed installment -->
         <option

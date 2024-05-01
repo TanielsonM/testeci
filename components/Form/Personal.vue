@@ -74,8 +74,8 @@ const documentText = computed(() => {
 
 const {
   name,
-  email,
-  cellphone,
+  em,
+  ph,
   document,
   confirmEmail,
   forceName,
@@ -88,7 +88,7 @@ const {
 const { isEmailValid } = storeToRefs(stepStore);
 const queryParams = useRoute().query;
 
-watch([name, email, cellphone, document], async () => {
+watch([name, em, ph, document], async () => {
   
   leadsStore.syncPersonal();
   let isPersonalValid = await validateFirstStep();
@@ -113,7 +113,7 @@ function validateEmailWithVeeValidate(validateField) {
 }
 
 function updateLead(isEmail = false) {
-  if (isEmail) email.value = email.value.trim();
+  if (isEmail) em.value = em.value.trim();
   setTimeout(function () {
     leadsStore.updateLead();
   }, 1000);
@@ -122,8 +122,6 @@ function updateLead(isEmail = false) {
 personalStore.setFields(queryParams);
 
 const personalForm = ref(null);
-
-const {urlSubscription} = props;
 
 onMounted(() => {
   if(queryParams.em) {
@@ -162,9 +160,9 @@ onMounted(() => {
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
       input-id="email-field"
-      v-model="email"
+      v-model="em"
       v-if="!urlSubscription"
-      :error="!email && hasSent ||email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.em && !isEmailValid)) : undefined"
+      :error="!em && hasSent ||em && hasSent ? (!validateEmail.isValidSync(em) || (!!queryParams.em && !isEmailValid)) : undefined"
       :disabled="forceEmail"
       rules="email"
     >
@@ -200,10 +198,10 @@ onMounted(() => {
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       input-id="cellphone-field"
-      v-model="cellphone"
+      v-model="ph"
       type="tel"
       v-if="!urlSubscription"
-      :error="cellphone || hasSent ? !phoneValidation() : undefined"
+      :error="ph || hasSent ? !phoneValidation() : undefined"
       :disabled="forceCellphone"
     >
       <template #error>

@@ -294,6 +294,7 @@
     },
     "footer": {
       "btn_compra": "Comprar agora",
+      "btn_renovar_assinatura": "Renovar assinatura",
       "btn_reservar": "Reservar agora",
       "info_seguranca": "Informações seguras e criptografadas",
       "icons": {
@@ -409,7 +410,8 @@
     "apos_trial": "Após período de avaliação",
     "vc_pagara": "Você pagará",
     "country_taxs": "Imposto(s) do país",
-    "gratis": "Grátis"
+    "gratis": "Grátis",
+    "cobranca": "cobrança"
   },
   "pg_obrigado": {
     "pix": {

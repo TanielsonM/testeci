@@ -15,6 +15,14 @@ const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { trial_position } = storeToRefs(custom_checkout);
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
+/* Props */
+const props = defineProps({
+  urlSubscription:{
+    type: Boolean,
+    default: false
+  },
+});
+
 /* Trial message */
 const trialMessage = computed({
   get() {
@@ -88,6 +96,7 @@ const exceptionSellerId = computed(() => {
           {{ trialMessage }}
         </p>
         <ProductTotalAmount v-else />
+        <ProductCharges v-if="urlSubscription"/>
         <section
           class="custom_charges"
           v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId"
@@ -227,7 +236,7 @@ const exceptionSellerId = computed(() => {
         </a>
       </p>
       <!-- Coupon -->
-      <ProductCoupon v-if="productStore.allowedCoupon && !(product.product_type_id === 3 && sellerHasFeatureTickets)" />
+      <ProductCoupon v-if="productStore.allowedCoupon && !sellerHasFeatureTickets" />
       <ProductCashback />
     </section>
     <EventTimer v-if="product.product_type_id === 3 && sellerHasFeatureTickets"/>
