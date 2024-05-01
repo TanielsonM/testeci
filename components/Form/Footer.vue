@@ -17,6 +17,11 @@ import EloIconDark from "@/assets/footer/elo-dark.svg";
 import BoletoBarcodeIconDark from "@/assets/footer/boleto-barcode-dark.svg";
 
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
+import { useProductStore } from "@/store/product";
+
+const product = useProductStore();
+const { cashback } = storeToRefs(product);
+const hasCashback = cashback.value.meta && cashback.value.months;
 
 /* Variables */
 const custom_checkout = useCustomCheckoutStore();
@@ -74,5 +79,10 @@ const imgs = [
         class="footer-icons max-h-[40px] max-w-[90px]"
       />
     </span>
+  </section>
+  <section v-if="hasCashback" class="md:justify-between">
+    <p class="text-[12px] font-normal text-txt-color md:flex">
+      {{ $t("checkout.termos_de_uso_texto") }}
+    </p>
   </section>
 </template>
