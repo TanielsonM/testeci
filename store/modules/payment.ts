@@ -126,6 +126,7 @@ export const usePaymentStore = defineStore("Payment", {
           products: product_list.value.map((item: Product) => ({
             product_id: product.value.product_type_id === 3 && sellerHasFeatureTickets?.value ? item.product_id : item.id,
             product_offer: item.hash,
+            user_identification: item.user_identification,
           })),
           // proposal_id: proposal_id,
           // User details
