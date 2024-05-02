@@ -16,6 +16,7 @@ import { useAddressStore } from "../forms/address";
 import { usePurchaseStore } from "../forms/purchase";
 import { useLeadsStore } from "../modules/leads";
 import { useCheckoutStore } from "../checkout";
+import { usePreCheckoutStore } from "../preCheckout";
 import { useInstallmentsStore } from "./installments";
 import { useAmountStore } from "./amount";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
@@ -68,7 +69,7 @@ const { charge, shipping, sameAddress } = storeToRefs(addressStore);
 const { first, second } = storeToRefs(purchaseStore);
 const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
-const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+const { sellerHasFeatureTickets, getBatches } = storeToRefs(preCheckout);
 
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
@@ -126,6 +127,7 @@ export const usePaymentStore = defineStore("Payment", {
           products: product_list.value.map((item: Product) => ({
             product_id: product.value.product_type_id === 3 && sellerHasFeatureTickets?.value ? item.product_id : item.id,
             product_offer: item.hash,
+            user_identification: item.user_identification,
           })),
           // proposal_id: proposal_id,
           // User details
@@ -151,6 +153,13 @@ export const usePaymentStore = defineStore("Payment", {
           upsell_id: hasUpsell.value,
           metas: url.value.query,
         };
+        if(sellerHasFeatureTickets?.value){
+          data.batches = getBatches.value.map((item: any) => ({
+            batch_id: item.id,
+            selected_tickets: item.selected_batch_tickets,
+          })).filter(batche => batche.selected_tickets !== 0);
+        }
+
         if (captchaEnabled.value) {
           data.captcha = captcha_code.value;
         }
@@ -457,6 +466,9 @@ export const usePaymentStore = defineStore("Payment", {
       checkoutStore.setLoading(false);
       this.loading = false;
       switch (error.code) {
+        case "TICKET_UNAVAILABLE":
+          this.error_message = "error.TICKET_UNAVAILABLE";
+          break;
         case "0001":
           this.error_message = "error.0001";
           // this.resetCheckout("CARD");

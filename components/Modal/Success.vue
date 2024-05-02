@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { formatMoney } from "@/utils/money";
 import { Sale, ProductOffer } from "@/types";
@@ -7,13 +8,16 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
+import { resetReservations } from "@/utils/validateBatch";
 
 const productStore = useProductStore();
 const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
+const preCheckout = usePreCheckoutStore();
 const { sales, productOffer } = storeToRefs(checkoutStore);
 const { product } = useProductStore();
-const { batches } = usePreCheckoutStore();
+const { batches,  } = usePreCheckoutStore();
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -39,6 +43,12 @@ const data = ref({
   pixOpened: 0,
   ticket: {} as any
 });
+
+onMounted(() => {
+  if (window.localStorage.getItem('reservations')) {
+    localStorage.removeItem('reservations');
+  }
+})
 
 if (
   (!!route.query.s_id && !route.query.chc) ||
@@ -165,6 +175,9 @@ if (
   );
 }
 
+if(sellerHasFeatureTickets){
+  resetReservations();
+}
 const computedAmountPixel = computed(() => {
   const sale: Sale = sales.value as Sale;
   if(sale.sales[0].amount) {
