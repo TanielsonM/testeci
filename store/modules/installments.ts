@@ -53,7 +53,7 @@ export const useInstallmentsStore = defineStore("installments", {
             total += value;
           }
           // Se for atualizaçao de assinatura
-          if (history_subscription) {
+          if (history_subscription.value !== null) {
             total = history_subscription?.value?.contract_amount;
           }
           // Cliente paga juros
