@@ -193,6 +193,10 @@ const exceptionSellerId = computed(() => {
           {{ $t("components.product_card.warranty_days") }}</span
         >
       </p>
+      <!-- payment update subscription info -->
+      <a class="text-xs text-blue-400">
+        {{ $t("components.product_card.payment_update_text") }}
+      </a>
       <!-- Author -->
       <p
         class="flex items-center gap-1 md:flex-col md:items-start"

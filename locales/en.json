@@ -64,7 +64,8 @@
       "warranty": "Warranty",
       "warranty_days": "warranty days",
       "is_subscription": "You are signing",
-      "gift_placeholder": "Write a message to the recipient of the gift."
+      "gift_placeholder": "Write a message to the recipient of the gift.",
+      "payment_update_text": "Updating payment details"
     },
     "locales": {
       "change_country": "Change Country",

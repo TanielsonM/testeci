@@ -64,7 +64,8 @@
       "warranty": "Garantia",
       "warranty_days": "dias de garantia",
       "is_subscription": "Você está assinando",
-      "gift_placeholder": "Escreva uma mensagem para quem receberá o presente"
+      "gift_placeholder": "Escreva uma mensagem para quem receberá o presente",
+      "payment_update_text": "Atualização dos dados de pagamento"
     },
     "locales": {
       "change_country": "Alterar País",
