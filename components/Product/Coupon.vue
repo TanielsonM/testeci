@@ -14,6 +14,13 @@ const { productName } = storeToRefs(product);
 const { t } = useI18n();
 const isOpen = ref(!!coupon.value.name);
 
+const props = defineProps({
+  urlSubscription:{
+    type: Boolean,
+    default: false
+  },
+});
+
 function apply() {
   payment.setPaymentLoading(true);
 
@@ -31,17 +38,26 @@ function apply() {
     payment.setPaymentLoading(false);
   });
 }
+
+const hasSubscriptionCoupon = computed(() => {
+  if (history_subscription.value === null || history_subscription.value.coupon === null) {
+    return false;
+  }
+  return true;
+});
+
 </script>
 
 <template>
   <section
     class="item-collapse flex w-full flex-col items-center gap-5 rounded border border-bd-color p-5"
     :opened="isOpen"
+    v-if="!coupon.applied && !urlSubscription"
   >
     <span
       class="flex w-full flex-nowrap items-center justify-start gap-2"
       @click="isOpen = !isOpen"
-      v-if="!history_subscription.coupon"
+      v-if="!coupon.applied && !urlSubscription"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
       <p class="w-full text-[13px] font-semibold text-txt-color">
@@ -60,7 +76,7 @@ function apply() {
     </span>
     <!-- Abre e nao tem cupom aplicado -->
     <section
-      v-if="isOpen && !coupon.applied && !history_subscription.coupon"
+      v-if="isOpen && !coupon.applied && !urlSubscription"
       class="flex w-full flex-col gap-5"
     >
       <BaseInput
@@ -83,7 +99,7 @@ function apply() {
     </section>
     <!-- Abre e tem cupom aplicado e nao pode remover pois esta renovando uma assinatura -->
     <section
-      v-if="history_subscription.coupon"
+      v-if="hasSubscriptionCoupon && urlSubscription"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">

@@ -54,7 +54,7 @@ export const validateFirstStep = async (): Promise<boolean> => {
   if (showDocumentInput) {
     const validDocument = await validateDocument.isValid(document.value);
     if (hasPhone?.value?.length >= 14) {
-      return validName && (validEmail && isEmailValid.value) && validDocument
+      return validName && validEmail && validDocument
     }
     return validName && (validEmail && isEmailValid.value) && validPhone && validDocument;
   }

@@ -74,8 +74,8 @@ const documentText = computed(() => {
 
 const {
   name,
-  em,
-  ph,
+  email,
+  cellphone,
   document,
   confirmEmail,
   forceName,
@@ -88,7 +88,7 @@ const {
 const { isEmailValid } = storeToRefs(stepStore);
 const queryParams = useRoute().query;
 
-watch([name, em, ph, document], async () => {
+watch([name, email, cellphone, document], async () => {
   
   leadsStore.syncPersonal();
   let isPersonalValid = await validateFirstStep();
@@ -113,7 +113,7 @@ function validateEmailWithVeeValidate(validateField) {
 }
 
 function updateLead(isEmail = false) {
-  if (isEmail) em.value = em.value.trim();
+  if (isEmail) email.value = email.value.trim();
   setTimeout(function () {
     leadsStore.updateLead();
   }, 1000);
@@ -124,8 +124,8 @@ personalStore.setFields(queryParams);
 const personalForm = ref(null);
 
 onMounted(() => {
-  if(queryParams.em) {
-    personalForm.value.setFieldValue('email-field', queryParams.em);
+  if(queryParams.email) {
+    personalForm.value.setFieldValue('email-field', queryParams.email);
     personalForm.value.validateField('email-field').then(res => {
       stepStore.setIsEmailValid(res.valid)
     })
@@ -160,9 +160,9 @@ onMounted(() => {
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
       input-id="email-field"
-      v-model="em"
+      v-model="email"
       v-if="!urlSubscription"
-      :error="!em && hasSent ||em && hasSent ? (!validateEmail.isValidSync(em) || (!!queryParams.em && !isEmailValid)) : undefined"
+      :error="!email && hasSent ||email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.email && !isEmailValid)) : undefined"
       :disabled="forceEmail"
       rules="email"
     >
@@ -198,10 +198,10 @@ onMounted(() => {
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
       input-name="cellphone-field"
       input-id="cellphone-field"
-      v-model="ph"
+      v-model="cellphone"
       type="tel"
       v-if="!urlSubscription"
-      :error="ph || hasSent ? !phoneValidation() : undefined"
+      :error="cellphone || hasSent ? !phoneValidation() : undefined"
       :disabled="forceCellphone"
     >
       <template #error>
