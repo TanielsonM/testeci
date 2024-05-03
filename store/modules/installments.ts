@@ -48,13 +48,13 @@ export const useInstallmentsStore = defineStore("installments", {
           if (item.id === parseInt(product_id.value) && coupon.value.applied) {
             value -= coupon.value.amount;
           }
-          // Cliente não paga juros
-          if (!!item.no_interest_installments) {
-            total += value;
-          }
           // Se for atualizaçao de assinatura
           if (history_subscription.value !== null) {
             total = history_subscription?.value?.contract_amount;
+          }
+          // Cliente não paga juros
+          if (!!item.no_interest_installments) {
+            total += value;
           }
           // Cliente paga juros
           else {
