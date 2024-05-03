@@ -194,7 +194,10 @@ const exceptionSellerId = computed(() => {
         >
       </p>
       <!-- payment update subscription info -->
-      <a class="text-xs text-blue-400">
+      <a 
+        v-if="urlSubscription"
+        class="text-xs text-blue-400"
+      >
         {{ $t("components.product_card.payment_update_text") }}
       </a>
       <!-- Author -->
