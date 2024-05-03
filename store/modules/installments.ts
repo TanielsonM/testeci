@@ -29,7 +29,7 @@ export const useInstallmentsStore = defineStore("installments", {
         if (typeof n === "string") n = parseInt(n);
         let total = getAmount.value;
 
-        if (n === 1 && !history_subscription) return total;
+        if (n === 1) return total;
         else total = 0;
         let frete = 0;
 
@@ -50,7 +50,7 @@ export const useInstallmentsStore = defineStore("installments", {
           }
           // Se for atualizaçao de assinatura
           if (history_subscription.value !== null) {
-            total = history_subscription?.value?.contract_amount;
+            value = history_subscription?.value?.contract_amount;
           }
           // Cliente não paga juros
           if (!!item.no_interest_installments) {
