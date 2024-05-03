@@ -41,7 +41,7 @@ function apply() {
     <span
       class="flex w-full flex-nowrap items-center justify-start gap-2"
       @click="isOpen = !isOpen"
-      v-if="!history_subscription"
+      v-if="!history_subscription.coupon"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
       <p class="w-full text-[13px] font-semibold text-txt-color">
@@ -60,7 +60,7 @@ function apply() {
     </span>
     <!-- Abre e nao tem cupom aplicado -->
     <section
-      v-if="isOpen && !coupon.applied && !history_subscription"
+      v-if="isOpen && !coupon.applied && !history_subscription.coupon"
       class="flex w-full flex-col gap-5"
     >
       <BaseInput
@@ -83,7 +83,7 @@ function apply() {
     </section>
     <!-- Abre e tem cupom aplicado e nao pode remover pois esta renovando uma assinatura -->
     <section
-      v-if="history_subscription"
+      v-if="history_subscription.coupon"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">
