@@ -52,7 +52,6 @@ const hasSubscriptionCoupon = computed(() => {
   <section
     class="item-collapse flex w-full flex-col items-center gap-5 rounded border border-bd-color p-5"
     :opened="isOpen"
-    v-if="!coupon.applied && !urlSubscription"
   >
     <span
       class="flex w-full flex-nowrap items-center justify-start gap-2"
