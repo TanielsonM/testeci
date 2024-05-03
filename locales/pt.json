@@ -503,6 +503,7 @@
     "CURRENCY_NOT_SUPPORTED": "Moeda não suportada.",
     "SUSPECTED_FRAUD": "Transação não permitida - Entre em contato com o banco ou tente outra forma de pagamento.",
     "GENERIC": "Ocorreu um erro durante o processamento da compra, verifique os dados e tente novamente, em caso de falhas, faça contato conosco para maiores orientações.",
+    "TICKET_UNAVAILABLE": "Desculpe-nos, ocorreu um erro durante o processamento da sua compra. Parece que este ingresso já foi adquirido por outra pessoa. Se você continuar enfrentando problemas, por favor, entre em contato conosco para receber orientações adicionais. Lamentamos qualquer inconveniente que isso possa ter causado.",
     "0404": "Nenhuma assinatura foi efetuada com este CPF/CNPJ."
   },
   "general": {

@@ -48,8 +48,19 @@ export type Installment = {
   value: number;
   index: number;
 };
+export type Batche = {
+  batch_id: number;
+  selected_tickets: number;
+};
+
+export type Batche = {
+  batch_id: number;
+  selected_tickets: number;
+};
 
 export type Payment = {
+  batches?: Batche[];
+
   amount: number;
   total: number;
 
@@ -267,6 +278,7 @@ export type Product = {
   checked?: boolean;
   shipping?: Shipping;
   product_type_id?: number;
+  user_identification?: string;
   global_settings?: GlobalSettingsCard[];
 };
 
@@ -285,6 +297,8 @@ export type HashCard = {
   total?: string | number;
   id: string | number;
   customer?: object;
+  first_digits?: string | number;
+  last_digits?: string | number;
 };
 
 

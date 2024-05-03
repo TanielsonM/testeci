@@ -34,6 +34,12 @@ onMounted(async () => {
       try {
         let reservations = JSON.parse(window.localStorage.getItem('reservations'));
         if (reservations?.length) {
+          const promises = reservations.map(async ({ batch_id }) => {
+            if (batch_id) {
+              await preCheckout.forceUpdateAvailableBatches(batch_id);
+            }
+          });
+          await Promise.all(promises);
           setTimeout(async () => {
             const promises = reservations.map(async reservation => {
               try {
