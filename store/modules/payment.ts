@@ -50,7 +50,8 @@ const {
   ticket_installments,
   url,
   paypal_details,
-  shipping_selected
+  shipping_selected,
+  history_subscription
 } = storeToRefs(checkoutStore);
 const {
   productName,
@@ -237,8 +238,8 @@ export const usePaymentStore = defineStore("Payment", {
           }
           let cards: any = [];
           cards.push({
-            total: Number(parsedFirstAmount).toFixed(2),
-            amount: Number(firstCardAmountWithoutInterest).toFixed(2),
+            total: Number(history_subscription?.value?.contract_amount).toFixed(2) ?? Number(parsedFirstAmount).toFixed(2),
+            amount: Number(history_subscription?.value?.contract_amount).toFixed(2) ?? Number(firstCardAmountWithoutInterest).toFixed(2),
             card_cvv: first.value.cvv,
             card_expiration_date: `${first.value.month}${first.value.year}`,
             card_holder_name: first.value.holder_name,
