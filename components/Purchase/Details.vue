@@ -54,6 +54,13 @@ function openGoBackPreCheckoutModal() {
 function formatTicketName(ticket){
   return `${ ticket?.selected_tickets }x ${ ticket?.batch_name } - ${ ticket?.ticket_name }`
 }
+
+const historySubscriptionCoupon = computed(() => {
+  if (history_subscription?.coupon || history_subscription?.coupon?.amount > 0) {
+    return true;
+  }
+  return false
+});
 </script>
 
 <template>
@@ -120,7 +127,7 @@ function formatTicketName(ticket){
     <!-- History Subscription Coupon -->
     <section
       class="-mt-[9px] flex flex-col items-start md:mt-auto"
-      v-if="history_subscription.coupon && history_subscription.coupon.amount > 0"
+      v-if="historySubscriptionCoupon"
     >
       <span class="infos-title">{{ $t("checkout.cupom.cupom") }}</span>
       <span class="infos-content flex w-full items-center justify-between">
