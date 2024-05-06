@@ -7,6 +7,7 @@ import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "@/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
 import { useAmountStore } from "~~/store/modules/amount";
+import { ref } from 'vue';
 
 const { t } = useI18n();
 const checkout = useCheckoutStore();
@@ -33,6 +34,8 @@ const {
   isSubscription,
   getPeriod,
 } = storeToRefs(productStore);
+
+const isRendered = ref(false);
 
 function formatAmountText(installments = 1) {
   return `${installments}x de ${formatMoney(
@@ -99,10 +102,19 @@ const couponAplied = computed(() => {
   }
   return false
 });
+
+onMounted(() => {
+  onClientRender();
+});
+
+function onClientRender() {
+  isRendered.value = true;
+}
 </script>
 
 <template>
-  <ClientOnly>
+  <Loading v-if="!isRendered" :alignment="'left'"/>
+  <ClientOnly v-else>
     <template v-if="product?.method === 'FREE'">
       {{ $t("order.gratis") }}
     </template>
