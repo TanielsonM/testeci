@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
+import { ref } from 'vue';
 
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
@@ -14,6 +15,7 @@ const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { trial_position } = storeToRefs(custom_checkout);
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+const isRendered = ref(false);
 
 /* Props */
 const props = defineProps({
@@ -46,6 +48,14 @@ const exceptionSellerId = computed(() => {
   }
   return false
 })
+
+onMounted(() => {
+  onClientRender();
+});
+
+function onClientRender() {
+  isRendered.value = true;
+}
 </script>
 
 <template>
@@ -82,24 +92,26 @@ const exceptionSellerId = computed(() => {
       <!--  -->
       <!-- Product Infos -->
       <section class="flex flex-col gap-1 text-txt-color">
-        <small class="text-blue-500" v-if="productStore.isSubscription">
-          {{ $t("components.product_card.is_subscription") }}
+        <Loading v-if="!isRendered"/>
+
+        <small class="text-blue-500" v-if="productStore.isSubscription && isRendered">
+          {{ $t("components.product_card.is_subscription") }} aaa
         </small>
-        <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">
+        <h1 v-if="isRendered" class="mb-[5px] text-[18px] font-[700] text-input-color">
           {{ product.name }}
         </h1>
         <p
           class="text-lg font-semibold leading-4 text-txt-color"
           :class="{ underline: productStore.hasTrial }"
-          v-if="productStore.hasTrial"
+          v-if="productStore.hasTrial && isRendered"
         >
           {{ trialMessage }}
         </p>
         <ProductTotalAmount v-else />
-        <ProductCharges v-if="urlSubscription"/>
+        <ProductCharges v-if="urlSubscription && isRendered"/>
         <section
           class="custom_charges"
-          v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId"
+          v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId && isRendered"
         >
           <section class="charges" :opened="opened">
             <p
