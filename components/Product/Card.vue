@@ -95,7 +95,7 @@ function onClientRender() {
         <Loading v-if="!isRendered"/>
 
         <small class="text-blue-500" v-if="productStore.isSubscription && isRendered">
-          {{ $t("components.product_card.is_subscription") }} aaa
+          {{ $t("components.product_card.is_subscription") }}
         </small>
         <h1 v-if="isRendered" class="mb-[5px] text-[18px] font-[700] text-input-color">
           {{ product.name }}
