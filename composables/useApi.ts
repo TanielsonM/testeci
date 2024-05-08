@@ -126,12 +126,12 @@ export default function () {
     return await instance<T>(url, "get", config, null, useGateway, useProductApi);
   }
 
-  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "post", config, body, useGateway);
+  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
+    return await instance<T>(url, "post", config, body, useGateway, useProductApi);
   }
 
-  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "put", config, body, useGateway);
+  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
+    return await instance<T>(url, "put", config, body, useGateway, useProductApi);
   }
 
   async function remove<T>(url: string, config?: any, useGateway: boolean = false) {
