@@ -82,7 +82,12 @@ export const useCheckoutStore = defineStore("checkout", {
     paypal_details: {},
     allow_free_offers : null,
     hasIntegrationWithGreennEnvios: false,
-    isCreditCard: false
+    isCreditCard: false,
+    // Donation
+    donationProduct: {
+      bump_id: "1",
+      product_id: "49124"
+    }
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -99,6 +104,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasBatches: (state) => state.url.fullPath.includes("bt_id"),
     hasDocument: (state) => state.url.query?.document,
     hasDebugPixel: (state) => state.url.query?.debugPixel === "true",
+    hasDonation: (state) => state.donationProduct,
     hasEmail: (state) => state.url.query?.em,
     hasForce: (state) => state.url.query?.force === "true",
     hasPhone: (state) => state.url.query?.ph,
@@ -217,6 +223,7 @@ export const useCheckoutStore = defineStore("checkout", {
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       await this.setCoupon(true, false, routeIsCheckout);
       if (this.hasBump) this.getBumps();
+      if (this.hasDonation) this.getBumps(true);
       if (this.hasBatches) this.getBatches()
       this.setLoading();
       if(res?.batches?.length) return res.batches;
@@ -431,8 +438,9 @@ export const useCheckoutStore = defineStore("checkout", {
       });
       this.batches_list = batchesWithOffers;
     },
-    async getBumps() {
-      if (!this.hasNewBump) {
+    async getBumps(isDonation = false) {
+      console.log('getBumps', !this.hasNewBump && !isDonation)
+      if (!this.hasNewBump && !isDonation) {
         await this.getOldBumps();
         return;
       }
@@ -473,6 +481,10 @@ export const useCheckoutStore = defineStore("checkout", {
           }
         }
       });
+
+      if(isDonation) {
+        bumpsWithOffers.push(this.hasDonation)
+      }
 
       if (bumpsWithOffers.length) {
         this.products_client_statistics = [];
