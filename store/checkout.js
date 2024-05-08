@@ -223,7 +223,7 @@ export const useCheckoutStore = defineStore("checkout", {
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       await this.setCoupon(true, false, routeIsCheckout);
       if (this.hasBump) this.getBumps();
-      if (this.hasDonation) this.getBumps(true);
+      if (!!res.data.seller?.donation_offer) this.getBumps(true);
       if (this.hasBatches) this.getBatches()
       this.setLoading();
       if(res?.batches?.length) return res.batches;
@@ -331,16 +331,24 @@ export const useCheckoutStore = defineStore("checkout", {
               if(response?.data.status === "REQUESTED" || response?.data.status === "DISAPPROVED" || !response?.data.is_active){
                 return;
               }
+
               let bumpData = {
                 ...response.data,
                 checkbox: false,
                 b_order: bumpOrder,
               }
+
+              if(this.bump_list.some(x => x.id === bumpData.id && x.offer_name === bumpData.offer_name)) {
+                console.log(bumpData)
+                return
+              }
+
               if(this.hasBumpForceCheck) {
                 bumpData.checkbox = true
                 bumpData.disabled = true
                 this.setProductList(bumpData);
               }
+
               this.bump_list.push(bumpData);
               this.bump_list = this.bump_list.sort((bump1, bump2) => {
                 return bump1.b_order - bump2.b_order;
@@ -439,7 +447,6 @@ export const useCheckoutStore = defineStore("checkout", {
       this.batches_list = batchesWithOffers;
     },
     async getBumps(isDonation = false) {
-      console.log('getBumps', !this.hasNewBump && !isDonation)
       if (!this.hasNewBump && !isDonation) {
         await this.getOldBumps();
         return;
