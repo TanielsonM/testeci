@@ -107,7 +107,6 @@ export const useLeadsStore = defineStore("Leads", {
       };
     },
     async syncLead(): Promise<void> {
-
       await useApi()
         .read(`/lead/${this.uuid}/${this.payment.product_id}`, {}, false, true)
         .then((response) => {
@@ -135,11 +134,14 @@ export const useLeadsStore = defineStore("Leads", {
           } else {
             this.createLead();
           }
+        })
+        .catch(() => {
+          this.createLead();
         });
     },
     async createLead(): Promise<void> {
       const data = {
-        product_id: this.payment.product_id,
+        product_id: Number(this.payment.product_id),
         seller_id: this.payment.seller_id,
         country_code: this.address.country_code ?? "BR",
         uuid: this.uuid,
