@@ -169,7 +169,7 @@ const exceptionSellerId = computed(() => {
     <InfoTrial class="mx-5" v-if="trial_position === 'top'" />
     <!-- Purchase Details -->
     <PurchaseDetails />
-    <DonationCampaign/>
+    <DonationCampaign v-if="product?.seller?.donation_tax" />
     <!-- More product infos -->
     <section class="flex flex-col gap-3 px-5 pb-5">
       <!-- Warranty -->
