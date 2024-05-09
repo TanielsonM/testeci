@@ -82,13 +82,7 @@ export const useCheckoutStore = defineStore("checkout", {
     paypal_details: {},
     allow_free_offers : null,
     hasIntegrationWithGreennEnvios: false,
-    isCreditCard: false,
-    // Donation
-    donationProduct: {
-      bump_id: "1",
-      product_id: "49124",
-      offer_hash: "Ed2i7P"
-    }
+    isCreditCard: false
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -105,7 +99,6 @@ export const useCheckoutStore = defineStore("checkout", {
     hasBatches: (state) => state.url.fullPath.includes("bt_id"),
     hasDocument: (state) => state.url.query?.document,
     hasDebugPixel: (state) => state.url.query?.debugPixel === "true",
-    hasDonation: (state) => state.donationProduct,
     hasEmail: (state) => state.url.query?.em,
     hasForce: (state) => state.url.query?.force === "true",
     hasPhone: (state) => state.url.query?.ph,
