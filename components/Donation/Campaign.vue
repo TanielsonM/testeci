@@ -1,4 +1,9 @@
 <script setup>
+import { useProductStore } from "~/store/product";
+
+const productStore = useProductStore();
+const { product } = storeToRefs(productStore);
+const donation_tax = product?.value?.seller?.donation_tax
 
 </script>
 
@@ -13,10 +18,10 @@
           <path d="M11.2758 18.1402L2.55978 10.2452C-2.17716 5.50827 4.78615 -3.58667 11.2758 3.77138C17.7654 -3.58667 24.6972 5.53986 19.9917 10.2452L11.2758 18.1402Z" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
-      <div class="donation-text">
+      <div class="donation-text mr-3">
         <span class="donation-text-sos">SOS Rio Grande do Sul</span><br>
-        <span class="donation-text-money mr-1">R$ 100,50</span>
-        <span class="donation-text-sos">Doado</span>
+        <span class="donation-text-money mr-1">{{ donation_tax }}%</span>
+        <span class="donation-text-sale">Dessa venda será doado</span>
       </div>
     </div>
   </div>
@@ -26,7 +31,6 @@
   .donation-card {
     position: absolute;
     top: 275px;
-    width: 240px;
     margin-right: -15px;
     background-color: #006B63;
     border: solid 1px transparent;
@@ -72,6 +76,10 @@
   }
   .donation-text-money {
     font-size: 19px;
+    font-weight: 600;
+  }
+  .donation-text-sale {
+    font-size: 12px;
     font-weight: 600;
   }
 </style>
