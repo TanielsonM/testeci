@@ -5,6 +5,10 @@ const productStore = useProductStore();
 const { product } = storeToRefs(productStore);
 const donation_tax = product?.value?.seller?.donation_tax
 
+const linkInfo = () => {
+  window.open('https://greenn.com.br/riograndedosul', '_blank');
+};
+
 </script>
 
 <template>
@@ -19,9 +23,13 @@ const donation_tax = product?.value?.seller?.donation_tax
         </svg>
       </div>
       <div class="donation-text mr-3">
-        <span class="donation-text-sos">SOS Rio Grande do Sul</span><br>
-        <span class="donation-text-money mr-1">{{ donation_tax }}%</span>
-        <span class="donation-text-sale">Do valor dessa venda será doado</span>
+        <span style="line-height: 100%;">
+          <span class="donation-text-sos">SOS Rio Grande do Sul</span>
+          <div class="donation-info" @click="linkInfo">?</div>
+          <br>
+          <span class="donation-text-money mr-1">{{ donation_tax }}%</span>
+          <span class="donation-text-sale">do lucro dessa venda será doado</span>
+        </span>
       </div>
     </div>
   </div>
@@ -50,11 +58,24 @@ const donation_tax = product?.value?.seller?.donation_tax
     }
   }
 
+  .donation-info {
+    color: #fff;
+    font-size: 10px;
+    border: solid 1px #fff;
+    border-radius: 100px;
+    padding: 0 5px 0 5px;
+    margin-right: 12px;
+    position: absolute;
+    bottom: 32px;
+    right: 0;
+    cursor: pointer;
+  }
+
   .donation-icon {
     padding: 5px;
     border: 1px solid #fff;
     border-radius: 50%;
-    height: 40px;
+    height: 38px;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
