@@ -481,30 +481,32 @@ export const useCheckoutStore = defineStore("checkout", {
       if(isDonation) {
         const productStore = useProductStore();
         const { product } = storeToRefs(productStore);
-        const donation_offer = product?.value?.seller?.donation_offer
+        const donation_offer = product?.value?.seller?.donation_offer;
+        const donation_rs = useRuntimeConfig().public.DONATION_RS.split(',');
+
         let offer_hash = ''
         switch (donation_offer) {
           case '10':
-            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[1]
+            offer_hash = donation_rs[1]
             break;
           case '20':
-            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[2]
+            offer_hash = donation_rs[2]
             break;
           case '50':
-            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[3]
+            offer_hash = donation_rs[3]
             break;
           case '100':
-            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[4]
+            offer_hash = donation_rs[4]
             break;
           case '1000':
-            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[5]
+            offer_hash = donation_rs[5]
             break;
         }
 
         bumpsWithOffers = [];
         bumpsWithOffers.push({
           bump_id: "1",
-          product_id: useRuntimeConfig().public.DONATION_RS.split(',')[0],
+          product_id: donation_rs[0],
           offer_hash: offer_hash
         })
       }
