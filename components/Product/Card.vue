@@ -4,10 +4,12 @@ import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const preCheckout = usePreCheckoutStore();
+const router = useRouter();
 const { t } = useI18n();
 
 /* State */
@@ -56,6 +58,13 @@ onMounted(() => {
 function onClientRender() {
   isRendered.value = true;
 }
+
+// verifica se é uma renovação
+const renovation = 
+  router.currentRoute.value.query.fn ? 
+  true : 
+  false;
+
 </script>
 
 <template>
@@ -94,7 +103,7 @@ function onClientRender() {
       <section class="flex flex-col gap-1 text-txt-color">
         <Loading v-if="!isRendered"/>
 
-        <small class="text-blue-500" v-if="productStore.isSubscription && isRendered">
+        <small class="text-blue-500" v-if="!renovation && productStore.isSubscription && isRendered">
           {{ $t("components.product_card.is_subscription") }}
         </small>
         <h1 v-if="isRendered" class="mb-[5px] text-[18px] font-[700] text-input-color">
@@ -103,7 +112,7 @@ function onClientRender() {
         <p
           class="text-lg font-semibold leading-4 text-txt-color"
           :class="{ underline: productStore.hasTrial }"
-          v-if="productStore.hasTrial && isRendered"
+          v-if="!renovation && productStore.hasTrial && isRendered"
         >
           {{ trialMessage }}
         </p>
@@ -186,7 +195,7 @@ function onClientRender() {
       {{ $t("checkout.recurring_shipping.isNotRecurring") }}
     </BaseBadge>
     <!-- Trial info -->
-    <InfoTrial class="mx-5" v-if="trial_position === 'top'" />
+    <InfoTrial class="mx-5" v-if="!renovation && trial_position === 'top'" />
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->
