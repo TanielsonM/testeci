@@ -504,7 +504,7 @@ export const useCheckoutStore = defineStore("checkout", {
         bumpsWithOffers = [];
         bumpsWithOffers.push({
           bump_id: "1",
-          product_id: "49124",
+          product_id: useRuntimeConfig().public.DONATION_RS.split(',')[0],
           offer_hash: offer_hash
         })
       }
