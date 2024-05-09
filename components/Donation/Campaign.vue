@@ -24,7 +24,7 @@ const linkInfo = () => {
       </div>
       <div class="donation-text mr-3">
         <span style="line-height: 100%;">
-          <span class="donation-text-sos">SOS Rio Grande do Sul</span>
+          <div class="donation-text-sos">SOS Rio Grande do Sul</div>
           <div class="donation-info" @click="linkInfo">?</div>
           <br>
           <span class="donation-text-money mr-1">{{ donation_tax }}%</span>
@@ -66,7 +66,7 @@ const linkInfo = () => {
     padding: 0 5px 0 5px;
     margin-right: 12px;
     position: absolute;
-    bottom: 32px;
+    bottom: 30px;
     right: 0;
     cursor: pointer;
   }
@@ -95,6 +95,8 @@ const linkInfo = () => {
 
   .donation-text-sos {
     font-size: 12px;
+    margin-top: 8px;
+    margin-bottom: -25px;
   }
   .donation-text-money {
     font-size: 16px;
