@@ -216,8 +216,7 @@ export const useCheckoutStore = defineStore("checkout", {
       /* Initial configs */
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       await this.setCoupon(true, false, routeIsCheckout);
-      if (this.hasBump) this.getBumps();
-      if (!!res.data.seller?.donation_offer) this.getBumps(true);
+      if (this.hasBump || !!res.data.seller?.donation_offer) this.getBumps(res);
       if (this.hasBatches) this.getBatches()
       this.setLoading();
       if(res?.batches?.length) return res.batches;
@@ -310,6 +309,9 @@ export const useCheckoutStore = defineStore("checkout", {
                 if (item.key == "CHECKOUT_CAPTCHA") {
                   this.global_settings.captcha =
                     item.value == "ENABLED" ? true : false;
+                }
+                if (item.key == "RS_DONATION_AVAILABLE_OFFERS") {
+                  this.global_settings.donation_rs = JSON.parse(item.value);
                 }
               });
             }
@@ -435,7 +437,9 @@ export const useCheckoutStore = defineStore("checkout", {
       });
       this.batches_list = batchesWithOffers;
     },
-    async getBumps(isDonation = false) {
+    async getBumps(res) {
+      const isDonation = !!res.data.seller?.donation_offer;
+
       if (!this.hasNewBump && !isDonation) {
         await this.getOldBumps();
         return;
@@ -482,32 +486,14 @@ export const useCheckoutStore = defineStore("checkout", {
         const productStore = useProductStore();
         const { product } = storeToRefs(productStore);
         const donation_offer = product?.value?.seller?.donation_offer;
-        const donation_rs = useRuntimeConfig().public.DONATION_RS.split(',');
+        const donation_rs = this.global_settings.donation_rs;
+        const offer_hash = donation_rs.find(x => x.offer_amount == donation_offer).offer_hash;
+        const product_id = donation_rs[0].product_id;
 
-        let offer_hash = ''
-        switch (donation_offer) {
-          case '10':
-            offer_hash = donation_rs[1]
-            break;
-          case '20':
-            offer_hash = donation_rs[2]
-            break;
-          case '50':
-            offer_hash = donation_rs[3]
-            break;
-          case '100':
-            offer_hash = donation_rs[4]
-            break;
-          case '1000':
-            offer_hash = donation_rs[5]
-            break;
-        }
-
-        bumpsWithOffers = [];
         bumpsWithOffers.push({
-          bump_id: "1",
-          product_id: donation_rs[0],
-          offer_hash: offer_hash
+          bump_id: "0",
+          product_id,
+          offer_hash
         })
       }
 

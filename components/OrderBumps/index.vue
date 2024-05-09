@@ -24,7 +24,7 @@ const addressStore = useAddressStore();
 const productStore = useProductStore();
 
 const { getCountSteps, isMobile, currentStep } = storeToRefs(stepsStore);
-const { showAddressStep } = storeToRefs(checkoutStore)
+const { showAddressStep, global_settings } = storeToRefs(checkoutStore)
 const { product } = storeToRefs(productStore);
 
 const shipping = ref({});
@@ -33,7 +33,7 @@ const shippingLoading = ref(false);
 
 // Computed methods
 const stylesheet = computed(() => {
-  if(product?.value?.seller?.donation_offer && props.bump.id == useRuntimeConfig().public.DONATION_RS.split(',')[0]) {
+  if(product?.value?.seller?.donation_offer && props.bump.id == global_settings.value.donation_rs[0].product_id) {
     return {
       "--background-header": "rgb(0, 175, 123)",
       "--background-body": "rgba(0, 175, 123, 0.1)",
