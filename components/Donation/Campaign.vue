@@ -21,7 +21,7 @@ const donation_tax = product?.value?.seller?.donation_tax
       <div class="donation-text mr-3">
         <span class="donation-text-sos">SOS Rio Grande do Sul</span><br>
         <span class="donation-text-money mr-1">{{ donation_tax }}%</span>
-        <span class="donation-text-sale">Dessa venda será doado</span>
+        <span class="donation-text-sale">Do valor dessa venda será doado</span>
       </div>
     </div>
   </div>
@@ -31,19 +31,20 @@ const donation_tax = product?.value?.seller?.donation_tax
   .donation-card {
     position: absolute;
     top: 275px;
-    margin-right: -15px;
+    margin-right: -13px;
     background-color: #006B63;
     border: solid 1px transparent;
-    border-radius: 5px;
+    border-radius: 10px 10px 0 10px;
     display: flex;
 
     &::after {
       content: '';
       height: 15px;
-      width: 15px;
+      width: 13px;
       background-color: #044a46;
       position: absolute;
-      bottom: -14px;
+      bottom: -15px;
+      margin-right: -1.3px;
       right: 0;
       clip-path: polygon(100% 0, 0% 100%, 0 0)
     }
@@ -79,7 +80,7 @@ const donation_tax = product?.value?.seller?.donation_tax
     font-weight: 600;
   }
   .donation-text-sale {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
   }
 </style>
