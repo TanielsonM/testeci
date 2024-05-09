@@ -482,7 +482,24 @@ export const useCheckoutStore = defineStore("checkout", {
         const productStore = useProductStore();
         const { product } = storeToRefs(productStore);
         const donation_offer = product?.value?.seller?.donation_offer
-        const offer_hash = JSON.parse(useRuntimeConfig().public.DONATION_RS)[donation_offer]
+        let offer_hash = ''
+        switch (donation_offer) {
+          case 10:
+            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[1]
+            break;
+          case 20:
+            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[2]
+            break;
+          case 50:
+            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[3]
+            break;
+          case 100:
+            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[4]
+            break;
+          case 1000:
+            offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[5]
+            break;
+        }
 
         bumpsWithOffers = [];
         bumpsWithOffers.push({
