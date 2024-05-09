@@ -223,7 +223,9 @@ export const useCheckoutStore = defineStore("checkout", {
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       await this.setCoupon(true, false, routeIsCheckout);
       if (this.hasBump) this.getBumps();
-      if (!!res.data.seller?.donation_offer) this.getBumps(true);
+      if (!!res.data.seller?.donation_offer) {
+        this.getBumps(true)
+      };
       if (this.hasBatches) this.getBatches()
       this.setLoading();
       if(res?.batches?.length) return res.batches;

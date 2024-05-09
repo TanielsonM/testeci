@@ -4,6 +4,7 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAddressStore } from "@/store/forms/address";
+import { useProductStore } from "~~/store/product";
 // Utils
 import { formatMoney } from "~/utils/money";
 
@@ -20,39 +21,54 @@ const checkout = useCustomCheckoutStore();
 const stepsStore = useStepStore();
 const checkoutStore = useCheckoutStore();
 const addressStore = useAddressStore();
+const productStore = useProductStore();
 
 const { getCountSteps, isMobile, currentStep } = storeToRefs(stepsStore);
 const { showAddressStep } = storeToRefs(checkoutStore)
+const { product } = storeToRefs(productStore);
 
 const shipping = ref({});
 const shippingOptions = ref([]);
 const shippingLoading = ref(false);
 
 // Computed methods
-const stylesheet = computed(() => ({
-  "--background-header": checkout.hasCustomBump
-    ? checkout.bump_options.background_color.color
-    : "#ff0c37",
-  "--background-body": checkout.hasCustomBump
-    ? checkout.bump_options.background_color.background
-    : "rgba(255, 12, 55, 0.1)",
-  "--font-color-body": checkout.hasCustomBump
-    ? checkout.bump_options.background_color.color
-    : "#ff0c37",
-  "--border-body-type": checkout.hasCustomBump
-    ? checkout.bump_options.border !== "off"
-      ? checkout.bump_options.border === "pontilhada"
-        ? `dashed`
-        : `solid`
-      : "none"
-    : "none",
-  "--border-body-color": checkout.hasCustomBump
-    ? checkout.bump_options.background_color.color
-    : "",
-  "--border-body-width": checkout.hasCustomBump
-    ? `${checkout.bump_options.border_px}px`
-    : "0",
-}));
+const stylesheet = computed(() => {
+  if(product?.value?.seller?.donation_offer && props.bump.id === 49124) {
+    return {
+      "--background-header": "rgb(0, 175, 123)",
+      "--background-body": "rgba(0, 175, 123, 0.1)",
+      "--font-color-body": 'rgb(0, 175, 123)',
+      "--border-body-type": `solid`,
+      "--border-body-color": 'rgb(0, 175, 123)',
+      "--border-body-width": '2px',
+    }
+  } else {
+    return {
+      "--background-header": checkout.hasCustomBump
+        ? checkout.bump_options.background_color.color
+        : "#ff0c37",
+      "--background-body": checkout.hasCustomBump
+        ? checkout.bump_options.background_color.background
+        : "rgba(255, 12, 55, 0.1)",
+      "--font-color-body": checkout.hasCustomBump
+        ? checkout.bump_options.background_color.color
+        : "#ff0c37",
+      "--border-body-type": checkout.hasCustomBump
+        ? checkout.bump_options.border !== "off"
+          ? checkout.bump_options.border === "pontilhada"
+            ? `dashed`
+            : `solid`
+          : "none"
+        : "none",
+      "--border-body-color": checkout.hasCustomBump
+        ? checkout.bump_options.background_color.color
+        : "",
+      "--border-body-width": checkout.hasCustomBump
+        ? `${checkout.bump_options.border_px}px`
+        : "0",
+    }
+  }
+});
 const hasCustomCharges = computed(() => {
   if (props.bump.custom_charges) return !!props.bump.custom_charges.length;
   return false;
