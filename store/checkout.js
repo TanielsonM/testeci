@@ -216,7 +216,7 @@ export const useCheckoutStore = defineStore("checkout", {
       /* Initial configs */
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       await this.setCoupon(true, false, routeIsCheckout);
-      if (this.hasBump || !!res.data.seller?.donation_offer) this.getBumps(res);
+      if (this.hasBump || (!!res.data.seller?.donation_offer && !! res.data.seller?.donation_product)) this.getBumps(res);
       if (this.hasBatches) this.getBatches()
       this.setLoading();
       if(res?.batches?.length) return res.batches;
@@ -309,9 +309,6 @@ export const useCheckoutStore = defineStore("checkout", {
                 if (item.key == "CHECKOUT_CAPTCHA") {
                   this.global_settings.captcha =
                     item.value == "ENABLED" ? true : false;
-                }
-                if (item.key == "RS_DONATION_AVAILABLE_OFFERS") {
-                  this.global_settings.donation_rs = JSON.parse(item.value);
                 }
               });
             }
@@ -438,7 +435,7 @@ export const useCheckoutStore = defineStore("checkout", {
       this.batches_list = batchesWithOffers;
     },
     async getBumps(res) {
-      const isDonation = !!res.data.seller?.donation_offer;
+      const isDonation = !!res.data.seller?.donation_offer && !!res.data?.seller?.donation_product;
 
       if (!this.hasNewBump && !isDonation) {
         await this.getOldBumps();
@@ -483,17 +480,10 @@ export const useCheckoutStore = defineStore("checkout", {
       });
 
       if(isDonation) {
-        const productStore = useProductStore();
-        const { product } = storeToRefs(productStore);
-        const donation_offer = product?.value?.seller?.donation_offer;
-        const donation_rs = this.global_settings.donation_rs;
-        const offer_hash = donation_rs.find(x => x.offer_amount == donation_offer).offer_hash;
-        const product_id = donation_rs[0].product_id;
-
         bumpsWithOffers.push({
           bump_id: "0",
-          product_id,
-          offer_hash
+          product_id: res.data?.seller?.donation_product,
+          offer_hash: res.data?.seller?.donation_offer
         })
       }
 

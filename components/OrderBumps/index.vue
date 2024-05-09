@@ -32,8 +32,12 @@ const shippingOptions = ref([]);
 const shippingLoading = ref(false);
 
 // Computed methods
-const stylesheet = computed(() => {
-  if(product?.value?.seller?.donation_offer && props.bump.id == global_settings.value.donation_rs[0].product_id) {
+const stylesheet = computed(() => {  
+  if(
+    !!product?.value?.seller?.donation_offer &&
+    !!product?.value?.seller?.donation_product &&
+    props.bump.id == product?.value?.seller?.donation_product
+  ) {
     return {
       "--background-header": "rgb(0, 175, 123)",
       "--background-body": "rgba(0, 175, 123, 0.1)",
