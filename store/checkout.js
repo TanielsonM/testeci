@@ -484,19 +484,19 @@ export const useCheckoutStore = defineStore("checkout", {
         const donation_offer = product?.value?.seller?.donation_offer
         let offer_hash = ''
         switch (donation_offer) {
-          case 10:
+          case '10':
             offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[1]
             break;
-          case 20:
+          case '20':
             offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[2]
             break;
-          case 50:
+          case '50':
             offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[3]
             break;
-          case 100:
+          case '100':
             offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[4]
             break;
-          case 1000:
+          case '1000':
             offer_hash = useRuntimeConfig().public.DONATION_RS.split(',')[5]
             break;
         }
