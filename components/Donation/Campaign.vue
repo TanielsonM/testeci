@@ -97,11 +97,10 @@ const linkInfo = () => {
     font-size: 12px;
   }
   .donation-text-money {
-    font-size: 19px;
+    font-size: 16px;
     font-weight: 600;
   }
   .donation-text-sale {
     font-size: 11px;
-    font-weight: 600;
   }
 </style>
