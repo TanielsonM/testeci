@@ -86,7 +86,8 @@ export const useCheckoutStore = defineStore("checkout", {
     // Donation
     donationProduct: {
       bump_id: "1",
-      product_id: "49124"
+      product_id: "49124",
+      offer_hash: "Ed2i7P"
     }
   }),
   getters: {
@@ -341,7 +342,6 @@ export const useCheckoutStore = defineStore("checkout", {
               }
 
               if(this.bump_list.some(x => x.id === bumpData.id && x.offer_name === bumpData.offer_name)) {
-                console.log(bumpData)
                 return
               }
 
@@ -492,7 +492,16 @@ export const useCheckoutStore = defineStore("checkout", {
       });
 
       if(isDonation) {
-        bumpsWithOffers.push(this.hasDonation)
+        const productStore = useProductStore();
+        const { product } = storeToRefs(productStore);
+        const donation_offer = product?.value?.seller?.donation_offer
+        const offer_hash = JSON.parse(useRuntimeConfig().public.DONATION_RS)[donation_offer]
+
+        bumpsWithOffers.push({
+          bump_id: "1",
+          product_id: "49124",
+          offer_hash: offer_hash
+        })
       }
 
       if (bumpsWithOffers.length) {

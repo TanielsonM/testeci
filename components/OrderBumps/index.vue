@@ -33,7 +33,7 @@ const shippingLoading = ref(false);
 
 // Computed methods
 const stylesheet = computed(() => {
-  if(product?.value?.seller?.donation_offer && props.bump.id === 49124) {
+  if(product?.value?.seller?.donation_offer && props.bump.id === JSON.parse(useRuntimeConfig().public.DONATION_RS).product_id) {
     return {
       "--background-header": "rgb(0, 175, 123)",
       "--background-body": "rgba(0, 175, 123, 0.1)",
