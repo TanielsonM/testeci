@@ -328,7 +328,7 @@ export const usePaymentStore = defineStore("Payment", {
                 }
                 
                 // Criar a promessa e armazená-la no array de promessas
-                let promise = this.cardGateway(dataGateway).then(responseGateway => {
+                let promise = await this.cardGateway(dataGateway).then(responseGateway => {
                   // Atualizar o objeto data.cards[i] mantendo os campos amount e total
                   if(data.cards){
                     data.cards[i] = {
