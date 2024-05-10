@@ -167,7 +167,7 @@ const exceptionSellerId = computed(() => {
     </BaseBadge>
     <!-- Trial info -->
     <InfoTrial class="mx-5" v-if="trial_position === 'top'" />
-    <DonationCampaign />
+    <DonationCampaign v-if="product?.seller?.donation_tax" />
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->
