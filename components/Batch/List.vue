@@ -91,6 +91,7 @@ const hasFixedBatch = () => {
 
   return (batches.value = collection || []);
 }
+
 function verifyIfHasSoldOffField(id) {
   let filter = batches.find(x => x.id == id)
 
@@ -140,7 +141,7 @@ function verifyIfHasSoldOffField(id) {
       </div>
       <ul v-if="!dependsOnAnotherBatch(batch) && saleHasStarted(batch)" class="text-txt-color">
         <li v-for="(ticket, i) in batch.tickets" :key="ticket?.hash" class="mb-6 pt-5 flex justify-between items-center border-[#E5E5E5]" :class="{ 'border-t': i !== 0 }">
-          <div class="ml-5" :class="{ 'line-through': batch.release_type !== 'fixed_date' && !haveAvailableTickets(batch) }">
+          <div class="ml-5" :class="{ 'line-through': batch.release_type !== 'fixed_date' && !haveAvailableTickets(batch) && batch.release_type !== null }">
             <h5 class="text-[18px] font-bold text-input-color mb-2">{{ ticket?.name }}</h5>
             <p class="text-[16px] font-[400] text-txt-color">{{ formatMoney(ticket?.amount) }}</p>
             <small v-if="ticket?.selected_tickets > 0" class="text-[14px] font-[400] text-main-color">
@@ -151,7 +152,8 @@ function verifyIfHasSoldOffField(id) {
             v-if="
               verifyIfHasSoldOffField(batches[index].id) ||
               batch.release_type === 'fixed_date' && haveAvailableTickets(batch) || 
-              (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0)"
+              (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0) ||
+              batch.release_type === null"
               class="flex items-center mr-5"
           >
             <template v-if="!ticket.load">
@@ -163,10 +165,10 @@ function verifyIfHasSoldOffField(id) {
               }" @click="preCheckout.subTicket(batch, ticket?.hash)" />
               <span class="mx-2 font-semibold">{{ ticket?.selected_tickets }}</span>
               <Icon name="mdi:plus-circle-outline" size="20" :class="{
-                'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch),
-                'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
-                'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch),
-                'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)
+                'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch) || batch.release_type === null,
+                'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch) || batch.release_type === null,
+                'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch) || batch.release_type === null,
+                'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch) || batch.release_type === null
               }" @click="preCheckout.addTicket(batch, ticket?.hash)" />
             </template>
             <template v-else>
