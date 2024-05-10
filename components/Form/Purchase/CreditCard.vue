@@ -220,7 +220,7 @@ watch(installments, () => {
           {{ $t("checkout.pagamento.metodos.um_cartao.title") }}
         </p>
       </BaseButton>
-      <BaseButton
+      <!-- <BaseButton
         v-if="!sellerHasFeatureTickets"
         color="info"
         class="pulse flex gap-1"
@@ -232,7 +232,7 @@ watch(installments, () => {
         <p class="text-[90%] font-semibold">
           {{ $t("checkout.pagamento.metodos.dois_cartoes.title") }}
         </p>
-      </BaseButton>
+      </BaseButton> -->
     </section>
     <section
       class="flex flex-wrap justify-center gap-5 xl:flex-nowrap xl:justify-between"
