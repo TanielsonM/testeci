@@ -37,8 +37,7 @@ const linkInfo = () => {
 
 <style scoped lang="scss">
   .donation-card {
-    position: absolute;
-    top: 275px;
+    position: relative;
     margin-right: -13px;
     background-color: #006B63;
     border: solid 1px transparent;
