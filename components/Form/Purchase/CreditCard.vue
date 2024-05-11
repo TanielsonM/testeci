@@ -205,7 +205,7 @@ watch(installments, () => {
 
 <template>
   <section class="flex flex-col gap-5">
-    <!-- <section
+    <section
       class="flex w-full items-center justify-between gap-5"
       v-if="showCreditCardsTabs"
     >
@@ -233,7 +233,7 @@ watch(installments, () => {
           {{ $t("checkout.pagamento.metodos.dois_cartoes.title") }}
         </p>
       </BaseButton>
-    </section> -->
+    </section>
     <section
       class="flex flex-wrap justify-center gap-5 xl:flex-nowrap xl:justify-between"
     >
