@@ -148,6 +148,7 @@ export const usePaymentStore = defineStore("Payment", {
           return;
         }
 
+        const leadsStore = useLeadsStore();
         leadsStore.changeStep(3);
         const total = computed(() => {
           if (method.value === "BOLETO" && hasTicketInstallments.value > 1) {
