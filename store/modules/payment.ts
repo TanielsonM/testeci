@@ -2,7 +2,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
-import { Payment, Product, PaymentError, SaleElement, CurrencyData, PurcharseCard, GlobalSettingsCard} from "~~/types";
+import { Payment, Product, PaymentError, SaleElement, CurrencyData, PurcharseCard, GlobalSettingsCard } from "~~/types";
 
 // Rules
 import { validateAll } from "@/rules/form-validations";
@@ -23,15 +23,60 @@ import { useCustomCheckoutStore } from "~~/store/customCheckout";
 
 // External SDK
 
-const leadsStore = useLeadsStore();
-const checkoutStore = useCheckoutStore();
-const productStore = useProductStore();
-const personalStore = usePersonalStore();
-const addressStore = useAddressStore();
-const purchaseStore = usePurchaseStore();
-const installmentsStore = useInstallmentsStore();
-const amountStore = useAmountStore();
-const preCheckout = usePreCheckoutStore();
+export function leadsStore() {
+  const store = useLeadsStore();
+  return store;
+}
+
+export function checkoutStore() {
+  const store = useCheckoutStore();
+  return store;
+}
+
+export function productStore() {
+  const store = useProductStore();
+  return store;
+}
+
+export function personalStore() {
+  const store = usePersonalStore();
+  return store;
+}
+
+export function installmentsStore() {
+  const store = useInstallmentsStore();
+  return store;
+}
+
+export function addressStore() {
+  const store = useAddressStore();
+  return store;
+}
+
+export function purchaseStore() {
+  const store = usePurchaseStore();
+  return store;
+}
+
+export function preCheckout() {
+  const store = usePreCheckoutStore();
+  return store;
+}
+
+export function amountStore() {
+  const store = useAmountStore();
+  return store;
+}
+
+// const leadsStore = useLeadsStore();
+// const checkoutStore = useCheckoutStore();
+// const productStore = useProductStore();
+// const personalStore = usePersonalStore();
+// const addressStore = useAddressStore();
+// const purchaseStore = usePurchaseStore();
+// const installmentsStore = useInstallmentsStore();
+// const amountStore = useAmountStore();
+// const preCheckout = usePreCheckoutStore();
 
 const {
   method,
@@ -78,7 +123,7 @@ export const usePaymentStore = defineStore("Payment", {
     hasSent: false,
     // Payment button loading
     loading: false,
-    fetching:false,
+    fetching: false,
   }),
   getters: {
     isPaymentLoading: state => state.loading,
@@ -153,7 +198,7 @@ export const usePaymentStore = defineStore("Payment", {
           upsell_id: hasUpsell.value,
           metas: url.value.query,
         };
-        if(sellerHasFeatureTickets?.value){
+        if (sellerHasFeatureTickets?.value) {
           data.batches = getBatches.value.map((item: any) => ({
             batch_id: item.id,
             selected_tickets: item.selected_batch_tickets,
@@ -186,8 +231,8 @@ export const usePaymentStore = defineStore("Payment", {
             shipping_selected: JSON.stringify({ address, ...shipping_selected.value })
           };
 
-          if(isDynamicShipping.value) {
-            data.shipping_selected = JSON.stringify({address, ...shipping_selected.value});
+          if (isDynamicShipping.value) {
+            data.shipping_selected = JSON.stringify({ address, ...shipping_selected.value });
           }
 
           product_list.value.forEach((item: any) => {
@@ -263,7 +308,7 @@ export const usePaymentStore = defineStore("Payment", {
               card_number: second.value.number,
             });
 
-            
+
           }
           data.cards = cards;
         }
@@ -288,16 +333,16 @@ export const usePaymentStore = defineStore("Payment", {
           objetoCompra: JSON.stringify(dataLog),
         });
         checkoutStore.setLoading(true);
-        
-        try { 
-     
-          
+
+        try {
+
+
           let promises = [];
 
           let errorRequestCard = false;
 
-          if(data.cards ){
-            
+          if (data.cards) {
+
             let gateway = this.getGateway(
               product.value.type,
               method.value,
@@ -313,7 +358,7 @@ export const usePaymentStore = defineStore("Payment", {
               if ('card_holder_name' in card && 'card_number' in card && 'card_expiration_date' in card) {
                 let amount = data.cards[i].amount; // Armazenar o valor do campo amount
                 let total = data.cards[i].total; // Armazenar o valor do campo total
-      
+
                 let dataGateway = {
                   system: 'CHECKOUT',
                   gateway: gateway,
@@ -326,137 +371,137 @@ export const usePaymentStore = defineStore("Payment", {
                     costumer: this.customerData(data)
                   }
                 }
-                
+
                 // Criar a promessa e armazená-la no array de promessas
                 let promise = await this.cardGateway(dataGateway).then(responseGateway => {
                   // Atualizar o objeto data.cards[i] mantendo os campos amount e total
-                  if(data.cards){
+                  if (data.cards) {
                     data.cards[i] = {
                       id: responseGateway.id,
-                      last_digits:  responseGateway.data ? responseGateway.data.last_digits : responseGateway.last_digits,
+                      last_digits: responseGateway.data ? responseGateway.data.last_digits : responseGateway.last_digits,
                       first_digits: responseGateway.data ? responseGateway.data.first_digits : responseGateway.first_digits,
                       customer: responseGateway.customer || null, amount, total
-                    }; 
+                    };
                   }
                 })
-                .catch(error => {
-                  // Tratar erros
-                  errorRequestCard = true;
-                  console.error(error);
-                  let dataError = Object.assign({},error?.value?.response?._data);
-                  dataError.code = dataError.object;
-                  this.validateError(dataError);
-                });        
+                  .catch(error => {
+                    // Tratar erros
+                    errorRequestCard = true;
+                    console.error(error);
+                    let dataError = Object.assign({}, error?.value?.response?._data);
+                    dataError.code = dataError.object;
+                    this.validateError(dataError);
+                  });
                 promises.push(promise);
               }
             }
           }
-  
+
           // Aguardar a resolução de todas as promessas usando Promise.all()
           await Promise.all(promises);
-            if(!errorRequestCard){
-              // Payment request
-              await useApi()
-                .create("/payment", data)
-                .then(res => {
-                  if (
-                    res.sales !== undefined &&
-                    Array.isArray(res.sales) &&
-                    res.sales.every((item: SaleElement) => item.success)
-                  ) {
-                    GreennLogs.logger.info("🟢 Success Compra", {
-                      name: "Compra concluída com sucesso",
-                      product_id: product_id.value,
-                    });
-                    let query: any = {};
-                    const principal_product = res.sales
-                      .filter(
-                        (item: SaleElement) => item.product.name === productName.value
-                      )
-                      .pop();
-                    // Set principal product query
-                    if (principal_product?.chc || res?.sales[0]?.chc) query.chc = principal_product?.chc || res?.sales[0]?.chc;
-                    if (principal_product?.token || res?.sales[0]?.token) query.token = principal_product?.token || res?.sales[0]?.token;
-                    if (principal_product?.sale_id || res?.sales[0]?.sale_id) {
-                      delete query.chc;
-                      query.s_id = res.sales[0].sale_id;
-                    }
-                    if (!!product_offer.value) query.offer = product_offer.value;
+          if (!errorRequestCard) {
+            // Payment request
+            await useApi()
+              .create("/payment", data)
+              .then(res => {
+                if (
+                  res.sales !== undefined &&
+                  Array.isArray(res.sales) &&
+                  res.sales.every((item: SaleElement) => item.success)
+                ) {
+                  GreennLogs.logger.info("🟢 Success Compra", {
+                    name: "Compra concluída com sucesso",
+                    product_id: product_id.value,
+                  });
+                  let query: any = {};
+                  const principal_product = res.sales
+                    .filter(
+                      (item: SaleElement) => item.product.name === productName.value
+                    )
+                    .pop();
+                  // Set principal product query
+                  if (principal_product?.chc || res?.sales[0]?.chc) query.chc = principal_product?.chc || res?.sales[0]?.chc;
+                  if (principal_product?.token || res?.sales[0]?.token) query.token = principal_product?.token || res?.sales[0]?.token;
+                  if (principal_product?.sale_id || res?.sales[0]?.sale_id) {
+                    delete query.chc;
+                    query.s_id = res.sales[0].sale_id;
+                  }
+                  if (!!product_offer.value) query.offer = product_offer.value;
 
-                    // Set query bumps
-                    const route = useRoute();
+                  // Set query bumps
+                  const route = useRoute();
 
-                    // Se o produto for do tipo evento
-                    if(product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
-                      product_list.value.forEach((ticket: {id: number, name: string, hash: string}, i) => {
-                        const sale = res.sales.find((item: any) => item.product.offer_hash === ticket.hash);
-                        if(sale) query['ticket_id_'+i] = (ticket.id + "-s_id_" + sale.sale_id)
-                      })
-                    } else {
-                      const keys = Object.keys(route.query);
-                      const bumps = product_list.value.filter(
-                        (item: Product) => item.id !== parseInt(product_id.value)
-                      );
+                  // Se o produto for do tipo evento
+                  if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+                    product_list.value.forEach((ticket: { id: number, name: string, hash: string }, i) => {
+                      const sale = res.sales.find((item: any) => item.product.offer_hash === ticket.hash);
+                      if (sale) query['ticket_id_' + i] = (ticket.id + "-s_id_" + sale.sale_id)
+                    })
+                  } else {
+                    const keys = Object.keys(route.query);
+                    const bumps = product_list.value.filter(
+                      (item: Product) => item.id !== parseInt(product_id.value)
+                    );
 
-                      bumps.forEach((bump: Product) => {
-                        const index = keys
-                          .filter((key) => route.query[key] === bump.id.toString())
-                          .pop();
-                        const sale = res.sales
-                          .filter((item: any) => item.product.name === bump.name)
-                          .pop();
-                        if (!!sale && !!index) {
-                          if (bump.type === "SUBSCRIPTION") {
-                            if (sale.sale_id) {
-                              query[index] =
-                                route.query[index] +
-                                "-chc_" +
-                                sale.chc +
-                                "-s_id_" +
-                                sale.sale_id;
-                            } else {
-                              query[index] = route.query[index] + "-chc_" + sale.chc;
-                            }
+                    bumps.forEach((bump: Product) => {
+                      const index = keys
+                        .filter((key) => route.query[key] === bump.id.toString())
+                        .pop();
+                      const sale = res.sales
+                        .filter((item: any) => item.product.name === bump.name)
+                        .pop();
+                      if (!!sale && !!index) {
+                        if (bump.type === "SUBSCRIPTION") {
+                          if (sale.sale_id) {
+                            query[index] =
+                              route.query[index] +
+                              "-chc_" +
+                              sale.chc +
+                              "-s_id_" +
+                              sale.sale_id;
                           } else {
-                            query[index] = route.query[index] + "-s_id_" + sale.sale_id;
+                            query[index] = route.query[index] + "-chc_" + sale.chc;
                           }
+                        } else {
+                          query[index] = route.query[index] + "-s_id_" + sale.sale_id;
                         }
-                      });
-                    }
-
-                    const router = useRouter();
-                    router.push({
-                      path: `/${product_id.value}/obrigado`,
-                      query,
+                      }
                     });
-                    return;
                   }
-                  if (
-                    Array.isArray(res?.sales) &&
-                    res.sales.some((item: SaleElement) => !item.success)
-                  ) {
-                    this.validateError(res?.sales[0]);
-                    return;
-                  }
-                  if (res.status === "error" && !res.sales?.success) {
-                    this.validateError(res);
-                    return;
-                  }
-                })
-                .catch(err => {
-                  console.error(err)
-                  checkoutStore.setLoading(false);
-                  this.setPaymentLoading(false);
-                }).finally(() =>{
-                  this.setPaymentFetching(false);
-                  this.setPaymentLoading(false);
-                })  
-            }
+
+                  const router = useRouter();
+                  router.push({
+                    path: `/${product_id.value}/obrigado`,
+                    query,
+                  });
+                  return;
+                }
+                if (
+                  Array.isArray(res?.sales) &&
+                  res.sales.some((item: SaleElement) => !item.success)
+                ) {
+                  this.validateError(res?.sales[0]);
+                  return;
+                }
+                if (res.status === "error" && !res.sales?.success) {
+                  this.validateError(res);
+                  return;
+                }
+              })
+              .catch(err => {
+                console.error(err)
+                checkoutStore.setLoading(false);
+                this.setPaymentLoading(false);
+              }).finally(() => {
+                this.setPaymentFetching(false);
+                this.setPaymentLoading(false);
+              })
           }
-          catch (error) {
-            // Se ocorrer um erro em qualquer uma das promessas, ele será capturado aqui
-            console.error("Erro:", error);
-          }
+        }
+        catch (error) {
+          // Se ocorrer um erro em qualquer uma das promessas, ele será capturado aqui
+          console.error("Erro:", error);
+        }
       } else {
         this.setPaymentFetching(false);
         this.setPaymentLoading(false);
@@ -559,62 +604,62 @@ export const usePaymentStore = defineStore("Payment", {
         typeof card.card_number === 'string'
       );
     },
-    getGateway(type: string, metodo: string, global_settings: GlobalSettingsCard[], installments: number | null, recipientIsActivated:boolean):any {
-      
-        const toast = Toast.useToast();
-  
-        //concatena type com method tranformando em letras Maiúsculas
-        let gatewayKey = `${type.toUpperCase()}_${metodo.toUpperCase()}`;
-        let result = "";
+    getGateway(type: string, metodo: string, global_settings: GlobalSettingsCard[], installments: number | null, recipientIsActivated: boolean): any {
 
-        switch (gatewayKey) {
-          case 'TRANSACTION_CREDIT_CARD':
-          case 'SUBSCRIPTION_CREDIT_CARD':
-          case 'TRANSACTION_TWO_CREDIT_CARDS':
-          case 'SUBSCRIPTION_TWO_CREDIT_CARDS':
-          case 'TRANSACTION_BOLETO':
-          case 'SUBSCRIPTION_BOLETO':
-            result = 'PAGARME';
-          case 'TRANSACTION_PIX':
-          case 'SUBSCRIPTION_PIX':
-            result = 'IUGU';
-          case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
-          case 'TRANSACTION_CREDIT_CARD_DLOCAL':
-            result = 'DLOCAL';
-          default:
-            result = "";
+      const toast = Toast.useToast();
+
+      //concatena type com method tranformando em letras Maiúsculas
+      let gatewayKey = `${type.toUpperCase()}_${metodo.toUpperCase()}`;
+      let result = "";
+
+      switch (gatewayKey) {
+        case 'TRANSACTION_CREDIT_CARD':
+        case 'SUBSCRIPTION_CREDIT_CARD':
+        case 'TRANSACTION_TWO_CREDIT_CARDS':
+        case 'SUBSCRIPTION_TWO_CREDIT_CARDS':
+        case 'TRANSACTION_BOLETO':
+        case 'SUBSCRIPTION_BOLETO':
+          result = 'PAGARME';
+        case 'TRANSACTION_PIX':
+        case 'SUBSCRIPTION_PIX':
+          result = 'IUGU';
+        case 'SUBSCRIPTION_CREDIT_CARD_DLOCAL':
+        case 'TRANSACTION_CREDIT_CARD_DLOCAL':
+          result = 'DLOCAL';
+        default:
+          result = "";
+      }
+
+      if (global_settings && global_settings.length > 0) {
+        // Faz um find dentro das configurações globais
+        const databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
+
+        // Se encontrar, retorna o valor correspondente
+        if (databaseConfiguration) {
+          result = databaseConfiguration.value;
         }
 
-        if (global_settings && global_settings.length > 0) {
-          // Faz um find dentro das configurações globais
-            const databaseConfiguration = global_settings.find(config => config.key === gatewayKey);
 
+        const gatewayLowInstallment = global_settings.find(config => config.key === 'TRANSACTION_CREDIT_CARD_LOW_INSTALLMENT');
+        let valuegatewayLowInstallment = null;
+
+        if (gatewayLowInstallment) {
+          valuegatewayLowInstallment = gatewayLowInstallment.value;
+
+          if (installments && installments <= 2) {
             // Se encontrar, retorna o valor correspondente
-            if (databaseConfiguration) {
-              result = databaseConfiguration.value;
+            if (gatewayLowInstallment) {
+              result = gatewayLowInstallment.value;
             }
-       
+          }
 
-            const gatewayLowInstallment = global_settings.find(config => config.key === 'TRANSACTION_CREDIT_CARD_LOW_INSTALLMENT');
-            let valuegatewayLowInstallment = null;
-
-            if(gatewayLowInstallment){
-              valuegatewayLowInstallment = gatewayLowInstallment.value;
-
-              if(installments && installments <=2){
-                // Se encontrar, retorna o valor correspondente
-                if (gatewayLowInstallment) {
-                  result = gatewayLowInstallment.value;
-                }
-              }
-
-              if(result == 'PAGARME' && !recipientIsActivated && valuegatewayLowInstallment == 'IUGU'){
-                result = 'IUGU';
-              }
-            }
+          if (result == 'PAGARME' && !recipientIsActivated && valuegatewayLowInstallment == 'IUGU') {
+            result = 'IUGU';
+          }
         }
+      }
 
-        return result;
+      return result;
     },
     async cardGateway(dataGateway: any) {
       const toast = Toast.useToast();
@@ -628,53 +673,53 @@ export const usePaymentStore = defineStore("Payment", {
         throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
       }
     },
-    documentType(data: any):string {
-       //Essa parte modifiquei pois o New Checkout não tem venda internacional
+    documentType(data: any): string {
+      //Essa parte modifiquei pois o New Checkout não tem venda internacional
       return data.document.length > 14 ? 'cnpj' : 'cpf';
     },
     customerData(data: any): any {
       let document_number = data.document.replace(/\D/g, '');
       let document_type = this.documentType(data);
       let zipcodeFormatted = data.zipcode ? data.zipcode.slice(0, 5) + '-' + data.zipcode.slice(5) : null;
-  
+
       let document = {};
-          if (document_number) {
-              document = {
-                  document: {
-                      type: document_type,
-                      number: document_number,
-                      document_type: document_type,
-                      document_number: document_number
-                  }
-              };
+      if (document_number) {
+        document = {
+          document: {
+            type: document_type,
+            number: document_number,
+            document_type: document_type,
+            document_number: document_number
           }
-  
-          let address = {};
-          if (data.city) {
-              address = {
-                  address: {
-                      street: data.street,
-                      street_number: data.number,
-                      state: data.state || data.uf,
-                      city: data.city,
-                      neighborhood: data.neighborhood,
-                      zipcode: zipcodeFormatted
-                  }
-              };
-              
+        };
+      }
+
+      let address = {};
+      if (data.city) {
+        address = {
+          address: {
+            street: data.street,
+            street_number: data.number,
+            state: data.state || data.uf,
+            city: data.city,
+            neighborhood: data.neighborhood,
+            zipcode: zipcodeFormatted
           }
-  
-          data.client_id = null; // Passando como nulo, pq até então o client não foi criado 
-          return {
-              external_id: String(data.client_id),
-              name: data.name,
-              phone: data.cellphone,
-              email: data.email,
-              document_number: document_number,
-              document_type: document_type,
-              ...document,
-              ...address
-          };
+        };
+
+      }
+
+      data.client_id = null; // Passando como nulo, pq até então o client não foi criado 
+      return {
+        external_id: String(data.client_id),
+        name: data.name,
+        phone: data.cellphone,
+        email: data.email,
+        document_number: document_number,
+        document_type: document_type,
+        ...document,
+        ...address
+      };
     }
   },
 });

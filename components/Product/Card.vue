@@ -56,16 +56,14 @@ const exceptionSellerId = computed(() => {
         class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px] flex-shrink-0"
         v-if="product.images.length"
       >
-        <nuxt-img
-          :src="product.images[0].path"
+        <img :src="product.images[0].path"
           preload
           alt="Imagem do produto"
           width="auto"
           height="auto"
           rel="preload"
           format="webp"
-          class="h-full w-full object-contain"
-        />
+          class="h-full w-full object-contain">
       </aside>
       <span
         v-else
