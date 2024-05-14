@@ -6,7 +6,7 @@ import { useProductStore } from "@/store/product";
 import { useCheckoutStore } from "@/store/checkout";
 import { GreennLogs } from "@/utils/greenn-logs";
 import { type leadsState } from "@/types";
-import useApi from "@/composables/useApi"; // Suponho que você tenha um composable/função para chamadas de API
+import useApi from "@/composables/useApi";
 
 // Definição do store de Leads
 export const useLeadsStore = defineStore("Leads", {

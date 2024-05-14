@@ -8,10 +8,10 @@ import { useLoadingStore } from "@/store/loading/loading";
 
 import md5 from 'crypto-js/md5';
 
-const loading = useLoadingStore();
-const headStore = useHeadersStore();
-
 export default function () {
+  const loading = useLoadingStore();
+  const headStore = useHeadersStore();
+
   async function instance<T>(
     url: string,
     method: "get" | "post" | "put" | "delete",
