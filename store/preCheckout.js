@@ -154,17 +154,17 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         //   localStorage.setItem('reservations', JSON.stringify(this.reservations));
         // } else {
         // Cria nova reserva do ingresso do lote selecionado
+        const checkoutStore = useCheckoutStore();
         if(batch.release_type !== "fixed_date" && batch.release_type !== null) {
           let resp =  await this.createReservation(ticket.id, ticket);
 
           if (resp) {
             localStorage.setItem('reservations', JSON.stringify(this.reservations));
-            const checkoutStore = useCheckoutStore();
             checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:resp.token });
           }
         } else {
         // Para eventos que estão configurados para liberar por data || esgotar lote || sem regra
-          this.updateAvailableTickets(batch.tickets, false);
+          checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:hash });
         }
       // }
       }
@@ -183,13 +183,13 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         checkoutStore.setProductListPreCheckout(ticket, addProduct);
         // if(ticket.selected_tickets === 0) {
         // Deleta a reserva do lote existente, já que foram removidos todos ingressos
-        if(batch.release_type !== "fixed_date"){
+        if(batch.release_type !== "fixed_date" && batch.release_type !== null){
           const reservation = this.reservations.find(x => x.offer_id === ticket.id);
           await this.deleteReservation(reservation, ticket);
           await this.checkHasTickets(ticket.id)
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
         }else{
-          // Para eventos que estão configurados para liberar por data || esgotar lote
+          // Para eventos que estão configurados para liberar por data || esgotar lote || sem regra
           this.updateAvailableTickets(batch.tickets, false);
         }
         // } else {
@@ -240,6 +240,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       }
     },
     async deleteReservation(reservation, ticket, preCheckout = false, checkout = false) {
+      console.log('precheckout1',ticket, preCheckout, checkout)
+      console.log('precheckout2',!ticket && !preCheckout || (ticket && !preCheckout && checkout))
       if(!ticket && !preCheckout || (ticket && !preCheckout && checkout)) return;
       const reservations = localStorage.getItem('reservations');
       if (reservations && !preCheckout) {
