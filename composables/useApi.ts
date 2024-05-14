@@ -29,7 +29,7 @@ export default function () {
       ...config,
       method,
       baseURL: useGateway
-        ? useRuntimeConfig().API_GATEWAY_URL
+        ? useRuntimeConfig().public.API_GATEWAY_URL
         : useRuntimeConfig().public.API_BASE_URL,
       onRequest({ request, options }) {
         loading.changeLoading(request.toString());

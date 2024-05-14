@@ -11,12 +11,12 @@ import { haveAvailableTickets } from "@/utils/validateBatch";
 // const purchaseStore = usePurchaseStore();
 // const amountStore = useAmountStore();
 
-export function purchaseStore() {
+function purchaseStore() {
   const store = usePurchaseStore();
   return store;
 }
 
-export function amountStore() {
+function amountStore() {
   const store = useAmountStore();
   return store;
 }
