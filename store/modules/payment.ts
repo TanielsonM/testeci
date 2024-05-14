@@ -168,9 +168,6 @@ export const usePaymentStore = defineStore("Payment", {
       const { getOriginalAmount, getAmount } = amountStore;
       const { sellerHasFeatureTickets, getBatches } = preCheckout;
 
-      console.log("method", method);
-      console.log("first", first);
-
       if (!this.fetching) {
         this.setPaymentLoading(true);
         this.setPaymentFetching(true);
@@ -193,9 +190,6 @@ export const usePaymentStore = defineStore("Payment", {
           }
           return getInstallments(1);
         });
-
-        // console.log('method.value', method.value);
-        console.log("method", method);
 
         let data: Payment = {
           // Purchase infos
@@ -332,9 +326,6 @@ export const usePaymentStore = defineStore("Payment", {
           }
           let cards: any = [];
 
-          console.log("first", first);
-          console.log("first.cvv", first.cvv);
-
           cards.push({
             total: Number(parsedFirstAmount).toFixed(2),
             amount: Number(firstCardAmountWithoutInterest).toFixed(2),
@@ -364,8 +355,6 @@ export const usePaymentStore = defineStore("Payment", {
             });
           }
           data.cards = cards;
-
-          console.log("data.cards", data.cards);
         }
         const allowed_installments = [
           "CREDIT_CARD",
