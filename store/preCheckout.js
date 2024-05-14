@@ -240,8 +240,6 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       }
     },
     async deleteReservation(reservation, ticket, preCheckout = false, checkout = false) {
-      console.log('precheckout1',ticket, preCheckout, checkout)
-      console.log('precheckout2',!ticket && !preCheckout || (ticket && !preCheckout && checkout))
       if(!ticket && !preCheckout || (ticket && !preCheckout && checkout)) return;
       const reservations = localStorage.getItem('reservations');
       if (reservations && !preCheckout) {
