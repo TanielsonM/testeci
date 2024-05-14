@@ -93,6 +93,7 @@ export default defineNuxtConfig({
       apiBase: process.env.API_HOST,
       API_BASE_URL: process.env.API_HOST,
       API_HOST_PRODUCT: process.env.API_HOST_PRODUCT,
+      PRODUCT_TO_API_FAST: process.env.PRODUCT_TO_API_FAST,
       API_GATEWAY_URL: process.env.API_GATEWAY_URL,
       CHECKOUT_GATEWAY_KEY: process.env.CHECKOUT_GATEWAY_KEY,
       RECAPTCHA_KEY: process.env.VUE_KEY_CAPTCHA,
