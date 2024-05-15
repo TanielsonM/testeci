@@ -92,7 +92,8 @@ export const useCheckoutStore = defineStore("checkout", {
     paypal_details: {},
     allow_free_offers : null,
     hasIntegrationWithGreennEnvios: false,
-    isCreditCard: false
+    isCreditCard: false,
+    history_subscription: null
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -112,6 +113,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasEmail: (state) => state.url.query?.em,
     hasForce: (state) => state.url.query?.force === "true",
     hasPhone: (state) => state.url.query?.ph,
+    hasSubscription: (state) => state.url.query?.subscription_id,
     hasUpsell: (state) => state.url.query?.up_id,
     hasBumpForceCheck: (state) => state.url.query?.b_fc,
     hasSelectedBump: (state) => state.bump_list.some((bump) => bump.checkbox),
@@ -197,7 +199,8 @@ export const useCheckoutStore = defineStore("checkout", {
       };
     },
     getShippingSelected: (state) => state.shipping_selected,
-    getIsCreditCard: (state) => state.isCreditCard
+    getIsCreditCard: (state) => state.isCreditCard,
+    getHistorySubscription: (state) => state?.history_subscription,
   },
   actions: {
     async init(byChangeCountry = false, routeIsCheckout = false) {
@@ -262,6 +265,10 @@ export const useCheckoutStore = defineStore("checkout", {
       const query = {
         country: this.selectedCountry,
       };
+      // Check if has subscription id in url
+      if(this.hasSubscription){
+        query.subscription_id = this.hasSubscription
+      }
       /* Call api to get product */
       try {
         return await useApi()
@@ -288,6 +295,10 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response?.checkout_payment?.paypal) {
               response.data.paypal = response.checkout_payment.paypal;
+            }
+
+            if (response?.history_subscription) {
+              this.history_subscription = response.history_subscription;
             }
 
             if (
@@ -613,6 +624,7 @@ export const useCheckoutStore = defineStore("checkout", {
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
       if (ticket) this.ticket_installments = ticket;
+      if (this.history_subscription) this.installments = this.history_subscription.contract_intallments
     },
     setMethod(method = "") {
 

@@ -4,6 +4,7 @@ import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
 import { usePaymentStore } from "@/store/modules/payment";
 import { useStepStore } from "@/store/modules/steps";
+import { defineProps } from 'vue';
 
 import {
   validateFirstStep,
@@ -22,6 +23,12 @@ const custom_checkout = useCustomCheckoutStore();
 const currentCountry = useState("currentCountry");
 const payment = usePaymentStore();
 const stepStore = useStepStore();
+const props = defineProps({
+  urlSubscription:{
+    type: Boolean,
+    default: false
+  },
+});
 
 const { hasSent } = storeToRefs(payment);
 
@@ -115,9 +122,10 @@ function updateLead(isEmail = false) {
 personalStore.setFields(queryParams);
 
 const personalForm = ref(null);
+
 onMounted(() => {
-  if(queryParams.em) {
-    personalForm.value.setFieldValue('email-field', queryParams.em);
+  if(queryParams.email) {
+    personalForm.value.setFieldValue('email-field', queryParams.email);
     personalForm.value.validateField('email-field').then(res => {
       stepStore.setIsEmailValid(res.valid)
     })
@@ -136,7 +144,7 @@ onMounted(() => {
       input-id="name-field"
       v-model="name"
       :error="name || hasSent ? !validateName.isValidSync(name) : undefined"
-      :disabled="forceName"
+      :disabled="forceName || urlSubscription"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.nome") }}
@@ -153,7 +161,8 @@ onMounted(() => {
       input-name="email-field"
       input-id="email-field"
       v-model="email"
-      :error="!email && hasSent ||email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.em && !isEmailValid)) : undefined"
+      v-if="!urlSubscription"
+      :error="!email && hasSent ||email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.email && !isEmailValid)) : undefined"
       :disabled="forceEmail"
       rules="email"
     >
@@ -191,6 +200,7 @@ onMounted(() => {
       input-id="cellphone-field"
       v-model="cellphone"
       type="tel"
+      v-if="!urlSubscription"
       :error="cellphone || hasSent ? !phoneValidation() : undefined"
       :disabled="forceCellphone"
     >
@@ -201,7 +211,7 @@ onMounted(() => {
     <BaseInput
       class="col-span-12"
       @blur="updateLead"
-      :class="{ 'xl:col-span-6': showDocumentInput }"
+      :class="{ 'xl:col-span-6': showDocumentInput && !urlSubscription }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"
       v-if="showDocumentInput"
@@ -216,7 +226,7 @@ onMounted(() => {
             : !validateRequired.isValidSync(document)
           : undefined
       "
-      :disabled="forceDocument"
+      :disabled="forceDocument || urlSubscription"
     >
       <template #error>
         {{ $t("checkout.dados_pessoais.feedbacks.document") }}

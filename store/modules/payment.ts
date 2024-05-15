@@ -147,6 +147,7 @@ export const usePaymentStore = defineStore("Payment", {
         paypal_details,
         shipping_selected,
         products_client_statistics,
+        history_subscription,
       } = checkoutStore;
 
       const {
@@ -326,14 +327,21 @@ export const usePaymentStore = defineStore("Payment", {
           }
           let cards: any = [];
 
-          cards.push({
+          let card = {
             total: Number(parsedFirstAmount).toFixed(2),
             amount: Number(firstCardAmountWithoutInterest).toFixed(2),
             card_cvv: first.cvv,
             card_expiration_date: `${first.month}${first.year}`,
             card_holder_name: first.holder_name,
             card_number: first.number,
-          });
+          };
+
+          if (history_subscription?.contract_amount) {
+            card.total = Number(history_subscription?.contract_amount).toFixed(2);
+            card.amount = Number(history_subscription?.contract_amount).toFixed(2);
+          }
+
+          cards.push(card);
 
           if (method === "TWO_CREDIT_CARDS") {
             let parsedSecondAmount = Number(

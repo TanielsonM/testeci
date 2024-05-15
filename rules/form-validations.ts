@@ -14,6 +14,8 @@ export function checkout() {
   const store = useCheckoutStore();
   return storeToRefs(store);
 }
+// const checkout = useCheckoutStore();
+// const { global_settings, hasPhone } = storeToRefs(checkout);
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
@@ -57,11 +59,23 @@ export const validateFirstStep = async (): Promise<boolean> => {
   );
   const stepStore = useStepStore();
   const { isEmailValid } = storeToRefs(stepStore);
+
   if (showDocumentInput) {
+    const store = useCheckoutStore();
+    const { hasPhone } = storeToRefs(store);
     const validDocument = await validateDocument.isValid(document.value);
-    return validName && (validEmail && isEmailValid.value) && validPhone && validDocument;
+    if (hasPhone?.value?.length >= 14) {
+      return validName && validEmail && validDocument;
+    }
+    return (
+      validName &&
+      validEmail &&
+      isEmailValid.value &&
+      validPhone &&
+      validDocument
+    );
   }
-  return validName && (validEmail && isEmailValid.value) && validPhone;
+  return validName && validEmail && isEmailValid.value && validPhone;
 };
 
 export const validateSecondStep = async (): Promise<boolean> => {

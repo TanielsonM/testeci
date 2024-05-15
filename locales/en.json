@@ -64,7 +64,8 @@
       "warranty": "Warranty",
       "warranty_days": "warranty days",
       "is_subscription": "You are signing",
-      "gift_placeholder": "Write a message to the recipient of the gift."
+      "gift_placeholder": "Write a message to the recipient of the gift.",
+      "payment_update_text": "Updating payment details"
     },
     "locales": {
       "change_country": "Change Country",
@@ -293,6 +294,7 @@
     },
     "footer": {
       "btn_compra": "Buy now",
+      "btn_renovar_assinatura": "Renovar assinatura",
       "btn_reservar": "Book now",
       "info_seguranca": "Secure and encrypted information",
       "icons": {
@@ -408,7 +410,9 @@
     "apos_trial": "After evaluation period",
     "vc_pagara": "You will pay",
     "country_taxs": "Country tax(s)",
-    "gratis": "Free"
+    "gratis": "Free",
+    "cobranca": "° charge"
+
   },
   "pg_obrigado": {
     "pix": {

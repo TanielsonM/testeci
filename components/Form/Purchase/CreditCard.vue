@@ -33,6 +33,12 @@ const { method, installments, selectedCountry, allowed_methods, product } =
 const { productType } = storeToRefs(prodStore);
 const { first, second } = storeToRefs(purchase);
 const { hasSent } = storeToRefs(payment);
+const props = defineProps({
+  urlSubscription: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const years = [
   { value: moment().year(), label: moment().year() },
@@ -201,13 +207,19 @@ function clearValue(value) {
 watch(installments, () => {
   purchase.setCardsAmount();
 });
+
+const {urlSubscription} = props;
+
+const canShowTabs = computed(() =>{
+  return showCreditCardsTabs && !urlSubscription
+});
 </script>
 
 <template>
   <section class="flex flex-col gap-5">
     <section
       class="flex w-full items-center justify-between gap-5"
-      v-if="showCreditCardsTabs"
+      v-if="canShowTabs"
     >
       <BaseButton
         color="info"
