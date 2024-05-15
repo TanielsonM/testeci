@@ -118,6 +118,7 @@ const renovation =
         </p>
         <ProductTotalAmount v-else />
         <ProductCharges v-if="urlSubscription && isRendered"/>
+        <!-- Custom Charges -->
         <section
           class="custom_charges"
           v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId && isRendered"
@@ -196,6 +197,7 @@ const renovation =
     </BaseBadge>
     <!-- Trial info -->
     <InfoTrial class="mx-5" v-if="!renovation && trial_position === 'top'" />
+    <DonationCampaign v-if="!renovation && product?.seller?.donation_tax" />
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->
