@@ -48,12 +48,12 @@ export const usePixelStore = defineStore("Pixel", {
   actions: {
     async syncPixels(event: string, amount: any) {
       this.event = event;
-      this.product_id = productStore.product_id;
-      this.method = checkoutStore.method;
-      this.affiliate_id = checkoutStore.hasAffiliateId;
-      this.email = personalStore.email;
-      this.cellphone = personalStore.cellphone;
-      this.amount = amount || amountStore.amount;
+      this.product_id = productStore().product_id;
+      this.method = checkoutStore().method;
+      this.affiliate_id = checkoutStore().hasAffiliateId;
+      this.email = personalStore().email;
+      this.cellphone = personalStore().cellphone;
+      this.amount = amount || amountStore().amount;
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
