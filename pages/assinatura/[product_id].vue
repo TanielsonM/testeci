@@ -77,7 +77,7 @@ onMounted(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
     window.addEventListener("myRecaptchaCallback", () => {
-      payment.payment(locale.value);
+      payment.payment(locale.value, true);
     });
     setInternationalURL()
   }
@@ -127,7 +127,7 @@ async function callPayment() {
       window.grecaptcha.reset();
       window.grecaptcha.execute();
     } else {
-      await payment.payment(locale.value).finally(() => {
+      await payment.payment(locale.value, true).finally(() => {
         payment.setPaymentLoading(false);
         payment.setPaymentFetching(false);
       })

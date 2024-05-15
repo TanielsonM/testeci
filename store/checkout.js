@@ -116,6 +116,8 @@ export const useCheckoutStore = defineStore("checkout", {
     hasSubscription: (state) => state.url.query?.subscription_id,
     hasUpsell: (state) => state.url.query?.up_id,
     hasBumpForceCheck: (state) => state.url.query?.b_fc,
+    urlClientId: (state) => state.url.query?.client_id,
+    urlClientDocument: (state) => state.url.query?.document,
     hasSelectedBump: (state) => state.bump_list.some((bump) => bump.checkbox),
     hasFreeBump: (state) => state.bump_list.every(bump => bump.method === 'FREE'),
     /**

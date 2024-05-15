@@ -76,28 +76,6 @@ export function amountStore() {
   return store;
 }
 
-// const leadsStore = useLeadsStore();
-// const checkoutStore = useCheckoutStore();
-// const productStore = useProductStore();
-// const personalStore = usePersonalStore();
-// const addressStore = useAddressStore();
-// const purchaseStore = usePurchaseStore();
-// const installmentsStore = useInstallmentsStore();
-// const amountStore = useAmountStore();
-// const preCheckout = usePreCheckoutStore();
-
-// const {
-//   productName,
-//   is_gift,
-//   gift_message,
-//   isDynamicShipping,
-//   hasTicketInstallments,
-//   hasAffiliationLead,
-//   product,
-//   product_global_settings,
-//   recipientIsActivated
-// } = storeToRefs(productStore());
-
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
@@ -118,7 +96,7 @@ export const usePaymentStore = defineStore("Payment", {
     setPaymentFetching(value = false) {
       this.fetching = value;
     },
-    async payment(language: string) {
+    async payment(language: string, isUpdateSubscription = false) {
       const checkoutStore = useCheckoutStore();
       const productStore = useProductStore();
       const personalStore = usePersonalStore();
@@ -148,6 +126,8 @@ export const usePaymentStore = defineStore("Payment", {
         shipping_selected,
         products_client_statistics,
         history_subscription,
+        urlClientId,
+        urlClientDocument
       } = checkoutStore;
 
       const {
@@ -467,10 +447,138 @@ export const usePaymentStore = defineStore("Payment", {
 
           // Aguardar a resolução de todas as promessas usando Promise.all()
           await Promise.all(promises);
-          if (!errorRequestCard) {
+          if(!isUpdateSubscription && !errorRequestCard) {
             // Payment request
             await useApi()
               .create("/payment", data)
+              .then((res) => {
+                if (
+                  res.sales !== undefined &&
+                  Array.isArray(res.sales) &&
+                  res.sales.every((item: SaleElement) => item.success)
+                ) {
+                  GreennLogs.logger.info("🟢 Success Compra", {
+                    name: "Compra concluída com sucesso",
+                    product_id: product_id,
+                  });
+                  let query: any = {};
+                  const principal_product = res.sales
+                    .filter(
+                      (item: SaleElement) => item.product.name === productName
+                    )
+                    .pop();
+                  // Set principal product query
+                  if (principal_product?.chc || res?.sales[0]?.chc)
+                    query.chc = principal_product?.chc || res?.sales[0]?.chc;
+                  if (principal_product?.token || res?.sales[0]?.token)
+                    query.token =
+                      principal_product?.token || res?.sales[0]?.token;
+                  if (principal_product?.sale_id || res?.sales[0]?.sale_id) {
+                    delete query.chc;
+                    query.s_id = res.sales[0].sale_id;
+                  }
+                  if (!!product_offer) query.offer = product_offer;
+
+                  // Set query bumps
+                  const route = useRoute();
+
+                  // Se o produto for do tipo evento
+                  if (
+                    product?.product_type_id === 3 &&
+                    sellerHasFeatureTickets
+                  ) {
+                    product_list.forEach(
+                      (
+                        ticket: { id: number; name: string; hash: string },
+                        i
+                      ) => {
+                        const sale = res.sales.find(
+                          (item: any) => item.product.offer_hash === ticket.hash
+                        );
+                        if (sale)
+                          query["ticket_id_" + i] =
+                            ticket.id + "-s_id_" + sale.sale_id;
+                      }
+                    );
+                  } else {
+                    const keys = Object.keys(route.query);
+                    const bumps = product_list.filter(
+                      (item: Product) => item.id !== parseInt(product_id)
+                    );
+
+                    bumps.forEach((bump: Product) => {
+                      const index = keys
+                        .filter(
+                          (key) => route.query[key] === bump.id.toString()
+                        )
+                        .pop();
+                      const sale = res.sales
+                        .filter((item: any) => item.product.name === bump.name)
+                        .pop();
+                      if (!!sale && !!index) {
+                        if (bump.type === "SUBSCRIPTION") {
+                          if (sale.sale_id) {
+                            query[index] =
+                              route.query[index] +
+                              "-chc_" +
+                              sale.chc +
+                              "-s_id_" +
+                              sale.sale_id;
+                          } else {
+                            query[index] =
+                              route.query[index] + "-chc_" + sale.chc;
+                          }
+                        } else {
+                          query[index] =
+                            route.query[index] + "-s_id_" + sale.sale_id;
+                        }
+                      }
+                    });
+                  }
+
+                  const router = useRouter();
+                  router.push({
+                    path: `/${product_id}/obrigado`,
+                    query,
+                  });
+                  return;
+                }
+                if (
+                  Array.isArray(res?.sales) &&
+                  res.sales.some((item: SaleElement) => !item.success)
+                ) {
+                  this.validateError(res?.sales[0]);
+                  return;
+                }
+                if (res.status === "error" && !res.sales?.success) {
+                  this.validateError(res);
+                  return;
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+                checkoutStore.setLoading(false);
+                this.setPaymentLoading(false);
+              })
+              .finally(() => {
+                this.setPaymentFetching(false);
+                this.setPaymentLoading(false);
+              });
+
+          } else if(!errorRequestCard) {
+            // Payment request
+            const body = {
+              client_id: urlClientId,
+              product_type: "COMMON",
+              amount: data.amount,
+              cpf_cnpj: urlClientDocument,
+              cards: data.cards,
+              id: product_id,
+              gateway: data.gateway
+            }
+
+            await useApi()
+              .update(`/payment/${product_id}`, body)
               .then((res) => {
                 if (
                   res.sales !== undefined &&
