@@ -119,7 +119,7 @@ const renovation =
         <!-- Custom Charges -->
         <section
           class="custom_charges"
-          v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId && isRendered"
+          v-if="!urlSubscription && !!productStore.hasCustomCharges.length && !exceptionSellerId && isRendered"
         >
           <section class="charges" :opened="opened">
             <p
