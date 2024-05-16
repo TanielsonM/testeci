@@ -190,7 +190,7 @@ export const useLeadsStore = defineStore("Leads", {
           };
 
           await useApi()
-            .update("lead", data, {}, false, false)
+            .update(`lead/${this.uuid}`, data, {}, false, false)
             .then((res) => {
               return res;
             });
