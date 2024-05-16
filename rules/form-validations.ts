@@ -64,7 +64,7 @@ export const validateFirstStep = async (): Promise<boolean> => {
     const store = useCheckoutStore();
     const { hasPhone } = storeToRefs(store);
     const validDocument = await validateDocument.isValid(document.value);
-    if (hasPhone?.value?.length >= 14) {
+    if (hasPhone?.value?.length >= 13) {
       return validName && validEmail && validDocument;
     }
     return (
