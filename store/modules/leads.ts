@@ -107,8 +107,13 @@ export const useLeadsStore = defineStore("Leads", {
       };
     },
     async syncLead(): Promise<void> {
+      const query = {
+        uuid: this.uuid,
+        product_id: this.payment.product_id,
+      };
+
       await useApi()
-        .read(`/lead/${this.uuid}/${this.payment.product_id}`, {}, false, false)
+        .read("/lead", { query })
         .then((response) => {
           if (response.uuid) {
             this.step = response.step;
