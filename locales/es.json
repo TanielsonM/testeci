@@ -117,6 +117,8 @@
     "captcha3": "Términos de servicio",
     "captcha4": "y",
     "captcha5": "aplicar",
+    "termos_de_uso": "Terminos de uso",
+    "termos_de_uso_texto":"*Consulta las normas de Cashback en nuestras Condiciones de uso",
     "venda_por_indicacao": "Venta por indicación. Clique aquí para saber más",
     "link_vendedor_nao_encontrado": "El enlace del vendedor no se encontró",
     "modal": {
@@ -499,6 +501,7 @@
     "CURRENCY_NOT_SUPPORTED": "Moneda no admitida.",
     "SUSPECTED_FRAUD": "Transacción no permitida: comuníquese con su banco o pruebe con otro método de pago",
     "GENERIC": "Ocurrió un error al procesar la compra, verifique los datos e intente nuevamente, en caso de fallas, contáctenos para obtener más orientación.",
+    "TICKET_UNAVAILABLE": "Lo sentimos, se produjo un error al procesar su compra. Parece que otra persona ya compró este boleto. Si continúa experimentando problemas, comuníquese con nosotros para obtener más orientación. Nos disculpamos por cualquier inconveniente que esto pueda haber causado.",
     "0404": "No se ha realizado ninguna firma con este documento."
   },
   "general": {

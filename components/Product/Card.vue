@@ -88,6 +88,7 @@ const exceptionSellerId = computed(() => {
           {{ trialMessage }}
         </p>
         <ProductTotalAmount v-else />
+        <!-- Custom Charges -->
         <section
           class="custom_charges"
           v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId"
@@ -166,6 +167,7 @@ const exceptionSellerId = computed(() => {
     </BaseBadge>
     <!-- Trial info -->
     <InfoTrial class="mx-5" v-if="trial_position === 'top'" />
+    <DonationCampaign v-if="product?.seller?.donation_tax" />
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->

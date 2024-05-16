@@ -117,6 +117,8 @@
     "captcha3": "Terms of Service",
     "captcha4": "and",
     "captcha5": "apply",
+    "termos_de_uso": "Terms of use",
+    "termos_de_uso_texto":"*See the Cashback regulations in our Terms of Use",
     "venda_por_indicacao": "Sale by indication. Click here to know more",
     "link_vendedor_nao_encontrado": "The seller link was not found",
     "modal": {
@@ -497,6 +499,7 @@
     "CURRENCY_NOT_SUPPORTED": "Currency not supported.",
     "SUSPECTED_FRAUD": "Transaction not allowed - Contact your bank or try another payment method",
     "GENERIC": "An error occurred while processing the purchase, please check the data and try again, in case of failures, please contact us for further guidance.",
+    "TICKET_UNAVAILABLE": "We're sorry, an error occurred while processing your purchase. It appears this ticket has already been purchased by someone else. If you continue to experience issues, please contact us for further guidance. We apologize for any inconvenience this may cause have caused.",
     "0404": "No signature has been made with this document."
   },
   "general": {

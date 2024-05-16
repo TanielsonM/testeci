@@ -109,6 +109,7 @@ export default defineNuxtConfig({
       VUE_APP_ENVIRONMENT: process.env.VUE_APP_ENVIRONMENT,
       VUE_APP_COMMIT_SHA: process.env.VUE_APP_COMMIT_SHA,
       BASE_URL: process.env.BASE_URL,
+      DONATION_RS: process.env.DONATION_RS,
     },
   },
   i18n: {
