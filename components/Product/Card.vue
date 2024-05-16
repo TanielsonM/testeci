@@ -3,12 +3,14 @@ import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
+import { useCheckoutStore } from "@/store/checkout";
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const preCheckout = usePreCheckoutStore();
+const checkout = useCheckoutStore();
 const router = useRouter();
 const { t } = useI18n();
 
@@ -17,6 +19,7 @@ const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { trial_position } = storeToRefs(custom_checkout);
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+const { history_subscription } = storeToRefs(checkout);
 const isRendered = ref(false);
 
 /* Props */
@@ -115,7 +118,7 @@ const renovation =
           {{ trialMessage }}
         </p>
         <ProductTotalAmount v-else />
-        <ProductCharges v-if="urlSubscription && isRendered"/>
+        <ProductCharges v-if="urlSubscription && history_subscription && isRendered"/>
         <!-- Custom Charges -->
         <section
           class="custom_charges"
