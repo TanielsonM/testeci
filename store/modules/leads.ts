@@ -108,7 +108,7 @@ export const useLeadsStore = defineStore("Leads", {
     },
     async syncLead(): Promise<void> {
       await useApi()
-        .read(`/lead/${this.uuid}/${this.payment.product_id}`, {}, false, true)
+        .read(`/lead/${this.uuid}/${this.payment.product_id}`, {}, false, false)
         .then((response) => {
           if (response.uuid) {
             this.step = response.step;
@@ -149,7 +149,7 @@ export const useLeadsStore = defineStore("Leads", {
       };
 
       await useApi()
-        .create("/lead", data, {}, false, true)
+        .create("/lead", data, {}, false, false)
         .then(() => {
           GreennLogs.logger.info("🟢 Lead criado com sucesso", {
             name: "Um lead foi adicionado",
@@ -188,7 +188,7 @@ export const useLeadsStore = defineStore("Leads", {
           };
 
           await useApi()
-            .update("lead", data, {}, false, true)
+            .update("lead", data, {}, false, false)
             .then((res) => {
               return res;
             });

@@ -233,14 +233,13 @@ export const useCheckoutStore = defineStore("checkout", {
       const { setProduct } = productStore;
 
       let useNewProductApi = false
+      let url = `/product/test-checkout/${id}`;
 
       if(useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(id)){
         useNewProductApi = true
+        url = `/checkout/product/${id}`;
       }
 
-      /* Get country */
-      /* Set product url */
-      let url = `/checkout/product/${id}`;
       // check if has custom checkout
       if (!!this.hasCustomCheckout && !isBump) {
         url += `/checkout/${this.hasCustomCheckout}`;
