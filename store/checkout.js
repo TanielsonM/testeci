@@ -6,6 +6,7 @@ import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
+import { haveAvailableTickets } from "@/utils/validateBatch";
 
 const purchaseStore = usePurchaseStore();
 const amountStore = useAmountStore();
@@ -215,7 +216,7 @@ export const useCheckoutStore = defineStore("checkout", {
       /* Initial configs */
       const res = await this.getProduct(this.product_id, this.product_offer, false, {}, 0, this.getBatcheList);
       await this.setCoupon(true, false, routeIsCheckout);
-      if (this.hasBump) this.getBumps();
+      if (this.hasBump || (!!res.data.seller?.donation_offer && !! res.data.seller?.donation_product)) this.getBumps(res);
       if (this.hasBatches) this.getBatches()
       this.setLoading();
       if(res?.batches?.length) return res.batches;
@@ -329,16 +330,19 @@ export const useCheckoutStore = defineStore("checkout", {
               if(response?.data.status === "REQUESTED" || response?.data.status === "DISAPPROVED" || !response?.data.is_active){
                 return;
               }
+
               let bumpData = {
                 ...response.data,
                 checkbox: false,
                 b_order: bumpOrder,
               }
+
               if(this.hasBumpForceCheck) {
                 bumpData.checkbox = true
                 bumpData.disabled = true
                 this.setProductList(bumpData);
               }
+
               this.bump_list.push(bumpData);
               this.bump_list = this.bump_list.sort((bump1, bump2) => {
                 return bump1.b_order - bump2.b_order;
@@ -348,6 +352,11 @@ export const useCheckoutStore = defineStore("checkout", {
             if (response.data.product_type_id === 3 && response?.batches && Array.isArray(response?.batches)) {
               const preCheckout = usePreCheckoutStore();
               response.batches.forEach(batch => {
+                if(haveAvailableTickets(batch)){
+                  batch.soldOff = false;
+                }else{
+                  batch.soldOff = true;
+                }
                 // Adicionar chave para contabilizar ingressos selecionados
                 batch.tickets = batch.tickets.map(x => {
                   return { ...x, selected_tickets: 0 }
@@ -431,8 +440,10 @@ export const useCheckoutStore = defineStore("checkout", {
       });
       this.batches_list = batchesWithOffers;
     },
-    async getBumps() {
-      if (!this.hasNewBump) {
+    async getBumps(res) {
+      const isDonation = !!res.data.seller?.donation_offer && !!res.data?.seller?.donation_product;
+
+      if (!this.hasNewBump && !isDonation) {
         await this.getOldBumps();
         return;
       }
@@ -473,6 +484,14 @@ export const useCheckoutStore = defineStore("checkout", {
           }
         }
       });
+
+      if(isDonation) {
+        bumpsWithOffers.push({
+          bump_id: "0",
+          product_id: res.data?.seller?.donation_product,
+          offer_hash: res.data?.seller?.donation_offer
+        })
+      }
 
       if (bumpsWithOffers.length) {
         this.products_client_statistics = [];

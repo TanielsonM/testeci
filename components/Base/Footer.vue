@@ -20,14 +20,17 @@ const props = defineProps({
   >
     <small v-if="captchaEnabled" class="text-[12px] font-normal text-txt-color">
       {{ $t("checkout.captcha") }}
-      <a class="text-[#007bff] hover:underline" href="https://policies.google.com/privacy"
-        >{{ $t("checkout.captcha2") }}
+      <a class="text-[#007bff] hover:underline" href="https://policies.google.com/privacy">
+        {{ $t("checkout.captcha2") }}
       </a>
       {{ $t("checkout.captcha4") }}
-      <a class="text-[#007bff] hover:underline" href="https://policies.google.com/terms">{{
-        $t("checkout.captcha3")
-      }}</a>
-      {{ $t("checkout.captcha5") }}.
+      <a class="text-[#007bff] hover:underline" href="https://policies.google.com/terms">
+        {{ $t("checkout.captcha3") }}
+      </a>
+      {{ $t("checkout.captcha5") }}| Greenn -
+      <a class="text-[#007bff] hover:underline use-term" href="https://greenn.com.br/termos-de-uso-greenn/">
+        {{ $t("checkout.termos_de_uso") }}.
+      </a>
     </small>
     <p
       v-if="installments_fee"
