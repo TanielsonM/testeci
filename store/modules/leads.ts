@@ -143,7 +143,7 @@ export const useLeadsStore = defineStore("Leads", {
     },
     async createLead(): Promise<void> {
       const data = {
-        product_id: this.payment.product_id,
+        product_id: Number(this.payment.product_id),
         seller_id: this.payment.seller_id,
         country_code: this.address.country_code ?? "BR",
         uuid: this.uuid,
@@ -151,7 +151,7 @@ export const useLeadsStore = defineStore("Leads", {
       };
 
       await useApi()
-        .create("/lead", data)
+        .create("/lead", data, {}, false, false)
         .then(() => {
           GreennLogs.logger.info("🟢 Lead criado com sucesso", {
             name: "Um lead foi adicionado",
@@ -166,29 +166,31 @@ export const useLeadsStore = defineStore("Leads", {
           if (this.personal.cellphone !== null) {
             updatedCellphone = updatedCellphone.replace(/\s/g, "");
           }
+
+          const data = {
+            product_id: Number(this.payment.product_id),
+            proposal_id: this.payment.proposal_id,
+            seller_id: this.payment.seller_id,
+            affiliate_id: this.payment.affiliate_id,
+            name: this.personal.name,
+            email: this.personal.email,
+            cpf: this.personal.document,
+            zip_code: this.address.zip_code,
+            street: this.address.street,
+            number: this.address.number,
+            neighborhood: this.address.neighborhood,
+            city: this.address.city,
+            state: this.address.state,
+            step: this.step,
+            uuid: this.uuid,
+            complement: this.address.complement,
+            country_code: this.address.country_code,
+            status: this.purchase.status,
+            cellphone: updatedCellphone,
+          };
+
           await useApi()
-            .update("lead/" + this.uuid, {
-              product_id: this.payment.product_id,
-              proposal_id: this.payment.proposal_id,
-              seller_id: this.payment.seller_id,
-              affiliate_id: this.payment.affiliate_id,
-              name: this.personal.name,
-              email: this.personal.email,
-              cpf: this.personal.document,
-              zip_code: this.address.zip_code,
-              street: this.address.street,
-              number: this.address.number,
-              neighborhood: this.address.neighborhood,
-              city: this.address.city,
-              state: this.address.state,
-              step: this.step,
-              uuid: this.uuid,
-              complement: this.address.complement,
-              id: this.uuid,
-              country_code: this.address.country_code,
-              status: this.purchase.status,
-              cellphone: updatedCellphone
-            })
+            .update("lead", data, {}, false, false)
             .then((res) => {
               return res;
             });

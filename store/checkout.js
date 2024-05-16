@@ -232,9 +232,15 @@ export const useCheckoutStore = defineStore("checkout", {
       const productStore = useProductStore();
       const { product, isValid } = storeToRefs(productStore);
       const { setProduct } = productStore;
-      /* Get country */
-      /* Set product url */
+
+      let useNewProductApi = false
       let url = `/product/test-checkout/${id}`;
+
+      if(useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(id)){
+        useNewProductApi = true
+        url = `/checkout/product/${id}`;
+      }
+
       // check if has custom checkout
       if (!!this.hasCustomCheckout && !isBump) {
         url += `/checkout/${this.hasCustomCheckout}`;
@@ -257,7 +263,7 @@ export const useCheckoutStore = defineStore("checkout", {
           .read(url, {
             ...configs,
             query,
-          })
+          }, false, useNewProductApi)
           .then(async (response) => {
             if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
               this.isCreditCard = true
