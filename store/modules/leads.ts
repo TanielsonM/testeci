@@ -134,9 +134,6 @@ export const useLeadsStore = defineStore("Leads", {
           } else {
             this.createLead();
           }
-        })
-        .catch(() => {
-          this.createLead();
         });
     },
     async createLead(): Promise<void> {
