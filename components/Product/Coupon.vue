@@ -12,7 +12,7 @@ const { coupon, hasCoupon, history_subscription } = storeToRefs(checkout);
 const { productName } = storeToRefs(product);
 
 const { t } = useI18n();
-const isOpen = ref(!!coupon.value.name);
+const isOpen = ref(!!coupon?.value?.name);
 
 const props = defineProps({
   urlSubscription:{
@@ -88,7 +88,7 @@ const hasSubscriptionCoupon = computed(() => {
       />
       <BaseButton
         color="info"
-        :disabled="!coupon.name.length"
+        :disabled="!coupon?.name?.length"
         :loading="coupon.loading"
         animation="top"
         @click="apply"
@@ -103,7 +103,7 @@ const hasSubscriptionCoupon = computed(() => {
     >
       <p class="text-xs text-txt-color">
         {{ $t("checkout.cupom.cupom") }}
-        <span class="font-bold">{{ history_subscription.coupon.name.toUpperCase() }}</span>
+        <span class="font-bold">{{ history_subscription?.coupon?.name.toUpperCase() }}</span>
         {{ $t("checkout.cupom.aplicado") }}
       </p>
     </section>
@@ -114,7 +114,7 @@ const hasSubscriptionCoupon = computed(() => {
     >
       <p class="text-xs text-txt-color">
         {{ $t("checkout.cupom.cupom") }}
-        <span class="font-bold">{{ coupon.name.toUpperCase() }}</span>
+        <span class="font-bold">{{ coupon?.name.toUpperCase() }}</span>
         {{ $t("checkout.cupom.aplicado") }}
       </p>
       <a
