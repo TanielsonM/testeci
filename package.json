@@ -1,10 +1,13 @@
 {
   "private": true,
+  "engines": {
+    "node": "^16.14"
+  },
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --port 3001 --dotenv .env.development",
-    "dev:heaven": "nuxt dev --port 3002 --dotenv .env.development",
-    "staging": "nuxt dev --port 3001 --dotenv .env.staging",
+    "dev": "nuxt dev --port 3000 --dotenv .env.development",
+    "dev:heaven": "nuxt dev --port 3001 --dotenv .env.development",
+    "staging": "nuxt dev --port 3000 --dotenv .env.staging",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
