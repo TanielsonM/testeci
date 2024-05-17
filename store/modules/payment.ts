@@ -266,11 +266,7 @@ export const usePaymentStore = defineStore("Payment", {
             
           }
           data.cards = cards;
-          const requestId = localStorage.getItem('requestId');
-          const visitorId = localStorage.getItem('visitorId');
-
-          data.requestId = requestId;
-          data.visitorId = visitorId;
+          
         }
         const allowed_installments = [
           "CREDIT_CARD",
@@ -318,7 +314,8 @@ export const usePaymentStore = defineStore("Payment", {
               if ('card_holder_name' in card && 'card_number' in card && 'card_expiration_date' in card) {
                 let amount = data.cards[i].amount; // Armazenar o valor do campo amount
                 let total = data.cards[i].total; // Armazenar o valor do campo total
-      
+                const requestId = localStorage.getItem('requestId');
+                const visitorId = localStorage.getItem('visitorId');
                 let dataGateway = {
                   system: 'CHECKOUT',
                   gateway: gateway,
@@ -328,7 +325,9 @@ export const usePaymentStore = defineStore("Payment", {
                     exp_month: card.card_expiration_date ? card.card_expiration_date.substring(0, 2) : null,
                     exp_year: card.card_expiration_date ? card.card_expiration_date.substring(4) : null,
                     cvv: card.card_cvv,
-                    costumer: this.customerData(data)
+                    costumer: this.customerData(data),
+                    requestId:requestId,
+                    visitorId:visitorId,
                   }
                 }
                 
