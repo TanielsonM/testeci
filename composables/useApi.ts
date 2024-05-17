@@ -17,13 +17,23 @@ export default function () {
     method: "get" | "post" | "put" | "delete",
     config?: any,
     body: any = null,
-    useGateway: boolean = false
+    useGateway: boolean = false,
+    useProductApi: boolean = false
   ): Promise<T | any> {
     if (body) config = { body };
+
+    const { API_GATEWAY_URL, API_BASE_URL, API_HOST_PRODUCT, CHECKOUT_GATEWAY_KEY } = useRuntimeConfig().public;
+
+    let baseURL: string = API_BASE_URL;
+
+    if (useGateway || useProductApi) {
+      baseURL = useGateway ? API_GATEWAY_URL : API_HOST_PRODUCT;
+    }
+
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
-      baseURL: useGateway ? useRuntimeConfig().API_GATEWAY_URL : useRuntimeConfig().public.API_BASE_URL,
+      baseURL: baseURL,
       onRequest({ request, options }) {
         loading.changeLoading(request.toString());
         const headers: HeadersInit = new Headers();
@@ -61,7 +71,7 @@ export default function () {
           });
         }
         if (request === "/checkout/card") {
-          let apiKey = useRuntimeConfig().public.CHECKOUT_GATEWAY_KEY;
+          let apiKey = CHECKOUT_GATEWAY_KEY;
           // Gera um salt aleatório
           const salt = Math.floor(1000 + Math.random() * 9000).toString();
           // Gera um número aleatório de iterações entre 1 e 10
@@ -117,16 +127,16 @@ export default function () {
   }
 
    // Adiciona useGateway como parâmetro na chamada de instance
-  async function read<T>(url: string, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "get", config, null, useGateway);
+  async function read<T>(url: string, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
+    return await instance<T>(url, "get", config, null, useGateway, useProductApi);
   }
 
-  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "post", config, body, useGateway);
+  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
+    return await instance<T>(url, "post", config, body, useGateway, useProductApi);
   }
 
-  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "put", config, body, useGateway);
+  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
+    return await instance<T>(url, "put", config, body, useGateway, useProductApi);
   }
 
   async function remove<T>(url: string, config?: any, useGateway: boolean = false) {
