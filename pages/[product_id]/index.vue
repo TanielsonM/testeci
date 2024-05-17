@@ -9,7 +9,6 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
-import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
 
 
 // Stores
@@ -184,24 +183,6 @@ function setInternationalURL() {
   }
 }
 
-const getVisitorData = async () => {
-  try {
-    const {data, error, isLoading, getData} = useVisitorData(
-      {extendedResult: true},
-      {immediate: false}
-    );
-      
-
-    await getData();
-    
-    localStorage.setItem('visitorId', data?.value?.visitorId);
-    localStorage.setItem('requestId', data?.value?.requestId);
-    } catch(e) {
-      console.log('Error:', e);
-    }
-  };
-
-
 onMounted(() => {
   if (process.client) {
     // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
@@ -224,8 +205,6 @@ onMounted(() => {
       payment.payment(locale.value);
     });
     setInternationalURL()
-    getVisitorData();
-
   }
 });
 

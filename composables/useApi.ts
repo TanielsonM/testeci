@@ -55,7 +55,7 @@ export default function () {
             document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
               "wd_not_found"
           );
-
+          
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
           });
@@ -73,6 +73,10 @@ export default function () {
           }
           const encrypted = textWithSalt + salt + iterations;
           headers.set("X-Greenn-Gateway", encrypted);
+
+          if (headStore["fingerprint-requestId"]) {
+            headers.set("X-Fingerprint-RID", headStore["fingerprint-requestId"]);
+          }
         }
         options.headers = headers;
       },
@@ -85,6 +89,7 @@ export default function () {
             "cache-token-": response.headers.get("cache-token-"),
             "trans-token-": response.headers.get("trans-token-"),
             "wd-token-": "",
+            "fingerprint-requestId": "",
           };
 
           headStore.updateHeaders(headers);

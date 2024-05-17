@@ -516,6 +516,7 @@ export type HeadersState = {
   "cache-token-": string | null;
   "trans-token-": string | null;
   "wd-token-": string;
+  "fingerprint-requestId" : string | null
 };
 
 export type Image = {
