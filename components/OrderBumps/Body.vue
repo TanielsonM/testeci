@@ -103,7 +103,6 @@ function getType(type = "") {
       return t("checkout.pagamento.bump.signature");
     default:
       return '';
-      // return t("checkout.pagamento.bump.transaction");
   }
 }
 </script>
