@@ -266,6 +266,11 @@ export const usePaymentStore = defineStore("Payment", {
             
           }
           data.cards = cards;
+          const requestId = localStorage.getItem('requestId');
+          const visitorId = localStorage.getItem('visitorId');
+
+          data.requestId = requestId;
+          data.visitorId = visitorId;
         }
         const allowed_installments = [
           "CREDIT_CARD",

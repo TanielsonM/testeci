@@ -129,6 +129,10 @@ export type Payment = {
   // Gateway
   gateway?: string;
   currency_data?: CurrencyData;
+
+  // Fingerprint
+  requestId?: string | null;
+  visitorId?: string | null;
 };
 
 export type CurrencyData = {

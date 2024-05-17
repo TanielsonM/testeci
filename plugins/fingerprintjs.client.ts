@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(fpjsPlugin, {
       loadOptions: {
         apiKey: config.public.FINGERPRINT_API_KEY,
-        endpoint: config.public.FINGERPRINT_ENDPOINT,
+        // endpoint: config.public.FINGERPRINT_ENDPOINT,
       },
     } as FpjsVueOptions);
   });

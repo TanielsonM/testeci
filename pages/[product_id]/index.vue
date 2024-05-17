@@ -12,7 +12,6 @@ import { storeToRefs } from "pinia";
 import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
 
 
-
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
@@ -193,7 +192,6 @@ const getVisitorData = async () => {
     );
       
 
-    consolo.log(data, getData)
     await getData();
     
     localStorage.setItem('visitorId', data?.value?.visitorId);
