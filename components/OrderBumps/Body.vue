@@ -102,7 +102,8 @@ function getType(type = "") {
     case "SUBSCRIPTION":
       return t("checkout.pagamento.bump.signature");
     default:
-      return t("checkout.pagamento.bump.transaction");
+      return '';
+      // return t("checkout.pagamento.bump.transaction");
   }
 }
 </script>
