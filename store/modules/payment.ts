@@ -100,7 +100,6 @@ export const usePaymentStore = defineStore("Payment", {
       this.fetching = value;
     },
     async payment(language: string) {
-      await this.setVisitorIdOnHeader()
       if (!this.fetching) {
         this.setPaymentLoading(true);
         this.setPaymentFetching(true);
@@ -230,6 +229,7 @@ export const usePaymentStore = defineStore("Payment", {
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
         ) {
           const config = useRuntimeConfig();
+          await this.setVisitorIdOnHeader()
 
           let parsedFirstAmount = Number(
             first.value.amount
@@ -547,6 +547,9 @@ export const usePaymentStore = defineStore("Payment", {
         case "EXPIRED_RATE_TOKEN":
           this.error_message = "error.EXPIRED_RATE_TOKEN";
           break;
+        case "CREDIT_CARD_INVALID":
+          this.error_message = "error.CREDIT_CARD_INVALID";
+          break;
         case "GENERIC":
         default:
           this.error_message = "error.GENERIC";
@@ -661,7 +664,6 @@ export const usePaymentStore = defineStore("Payment", {
           error_mensage: this.error_message,
         });
       }
-      
     },
     documentType(data: any):string {
        //Essa parte modifiquei pois o New Checkout não tem venda internacional
