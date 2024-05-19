@@ -129,6 +129,10 @@ export type Payment = {
   // Gateway
   gateway?: string;
   currency_data?: CurrencyData;
+
+  // Fingerprint
+  requestId?: string | null;
+  visitorId?: string | null;
 };
 
 export type CurrencyData = {
@@ -512,6 +516,7 @@ export type HeadersState = {
   "cache-token-": string | null;
   "trans-token-": string | null;
   "wd-token-": string;
+  "fingerprint-requestId" : string | null
 };
 
 export type Image = {

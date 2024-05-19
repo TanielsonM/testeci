@@ -491,6 +491,7 @@
     "DUPLICATE_PURCHASE": "You have already purchased this product",
     "PRODUCT_OUT_OF_STOCK": "Product out of stock. Unable to complete the purchase.",
     "CREDIT_CARD_OPERATOR": "Something went wrong with your purchase, please contact your card company.",
+    "CREDIT_CARD_INVALID": "We were unable to complete your request, please configure your details or try again later.",
     "INVALID_DATA": "Your card details were entered incorrectly, please check and try again.",
     "INVALID_CREDIT_CARD": "The card used is disabled, blocked or expired, contact your bank or card issuer.",
     "INSUFFICIENT_FUNDS": "There is not enough limit, Try with another card or payment method.",
