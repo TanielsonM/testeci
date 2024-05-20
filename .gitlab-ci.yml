@@ -91,8 +91,8 @@ Build Images:
     - docker push $LATEST_CHECKOUT_IMAGE_TAG
     
       #docker hub
-    # - docker push $DOCKER_HUB_IMAGE_TAG
-    # - docker push $DOCKER_HUB_LATEST_IMAGE_TAG
+    - docker push $DOCKER_HUB_IMAGE_TAG
+    - docker push $DOCKER_HUB_LATEST_IMAGE_TAG
     
     # Nuxt_v2
     # - export CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-ecr-address-v2.txt):${DEPLOY_HASH}"
