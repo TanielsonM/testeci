@@ -111,6 +111,24 @@ function verifyIfHasSoldOffField(id) {
   return true
 }
 
+function validateMinusBtn(ticket, batch, disabled = false) {
+  if(disabled && ticket?.selected_tickets === 0 || !saleHasStarted(batch)) {
+    return true
+  } else if(!disabled && ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
+    return true
+  }
+  return false
+}
+
+function validatePlusBtn(batch, disabled = false) {
+  if(disabled && !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch) || batch.release_type === null) {
+    return true
+  } else if(!disabled && haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch) || batch.release_type === null) {
+    return true
+  }
+  return false
+}
+
 </script>
 
 <template>
@@ -168,17 +186,17 @@ function verifyIfHasSoldOffField(id) {
           >
             <template v-if="!ticket.load">
               <Icon name="mdi:minus-circle-outline" size="20" :class="{
-                'text-gray-300': ticket?.selected_tickets === 0 || !saleHasStarted(batch),
-                'text-main-color': ticket?.selected_tickets > 0 && saleHasStarted(batch),
-                'hover:scale-110': ticket?.selected_tickets > 0 && saleHasStarted(batch),
-                'hover:cursor-pointer': ticket.selected_tickets > 0 && saleHasStarted(batch)
+                'text-gray-300': validateMinusBtn(ticket, batch, true),
+                'text-main-color': validateMinusBtn(ticket, batch),
+                'hover:scale-110': validateMinusBtn(ticket, batch),
+                'hover:cursor-pointer': validateMinusBtn(ticket, batch)
               }" @click="preCheckout.subTicket(batch, ticket?.hash)" />
               <span class="mx-2 font-semibold">{{ ticket?.selected_tickets }}</span>
               <Icon name="mdi:plus-circle-outline" size="20" :class="{
-                'text-gray-300': !haveAvailableTickets(batch) || !saleHasStarted(batch) || dependsOnAnotherBatch(batch) || batch.release_type === null,
-                'text-main-color': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch) || batch.release_type === null,
-                'hover:scale-110': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch) || batch.release_type === null,
-                'hover:cursor-pointer': haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch) || batch.release_type === null
+                'text-gray-300': validatePlusBtn(batch, true),
+                'text-main-color': validatePlusBtn(batch),
+                'hover:scale-110': validatePlusBtn(batch),
+                'hover:cursor-pointer': validatePlusBtn(batch)
               }" @click="preCheckout.addTicket(batch, ticket?.hash)" />
             </template>
             <template v-else>
