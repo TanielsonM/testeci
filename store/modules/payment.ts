@@ -15,9 +15,6 @@ import {
 // Rules
 import { validateAll } from "@/rules/form-validations";
 
-// FingerPrint
-import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
-
 //Notifications
 import * as Toast from "vue-toastification";
 
