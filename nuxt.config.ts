@@ -82,6 +82,8 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.API_HOST,
       API_BASE_URL: process.env.API_HOST,
+      API_HOST_PRODUCT: process.env.API_HOST_PRODUCT,
+      PRODUCT_TO_API_FAST: process.env.PRODUCT_TO_API_FAST,
       API_GATEWAY_URL: process.env.API_GATEWAY_URL,
       CHECKOUT_GATEWAY_KEY: process.env.CHECKOUT_GATEWAY_KEY,
       RECAPTCHA_KEY: process.env.VUE_KEY_CAPTCHA,
@@ -98,6 +100,8 @@ export default defineNuxtConfig({
       VUE_APP_COMMIT_SHA: process.env.VUE_APP_COMMIT_SHA,
       BASE_URL: process.env.BASE_URL,
       DONATION_RS: process.env.DONATION_RS,
+      FINGERPRINT_API_KEY: process.env.FINGERPRINT_API_KEY,
+      FINGERPRINT_ENDPOINT: process.env.FINGERPRINT_ENDPOINT,
     },
   },
   i18n: {

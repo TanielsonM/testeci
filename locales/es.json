@@ -498,6 +498,7 @@
     "CREDIT_CARD_OPERATOR": "Algo salió mal con su compra, comuníquese con la compañía de su tarjeta.",
     "INVALID_DATA": "Los datos de su tarjeta se ingresaron incorrectamente, verifique e intente nuevamente.",
     "INVALID_CREDIT_CARD": "La tarjeta utilizada está deshabilitada, bloqueada o vencida, comuníquese con su banco o emisor de la tarjeta.",
+    "CREDIT_CARD_INVALID": "No pudimos completar su solicitud, configure sus datos o vuelva a intentarlo más tarde.",
     "INSUFFICIENT_FUNDS": "No hay suficiente límite, prueba con otra tarjeta o método de pago.",
     "INVALID_PAYMENT_TYPE": "Método de pago no válido, intente con otra tarjeta o método de pago.",
     "INVALID_INSTALLMENTS": "Número o valor de cuotas no autorizadas, prueba con otra tarjeta o forma de pago.",

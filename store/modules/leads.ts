@@ -123,16 +123,17 @@ export const useLeadsStore = defineStore("Leads", {
         this.createLead();
       }
     },
-    async createLead() {
-      // Implementação de chamada de API para criar um novo lead
+    async createLead(): Promise<void> {
+      const data = {
+        product_id: Number(this.payment.product_id),
+        seller_id: this.payment.seller_id,
+        country_code: this.address.country_code ?? "BR",
+        uuid: this.uuid,
+        step: this.step
+      };
+
       await useApi()
-        .create("/lead", {
-          product_id: this.payment.product_id,
-          seller_id: this.payment.seller_id,
-          country_code: this.address.country_code,
-          uuid: this.uuid,
-          step: this.step,
-        })
+        .create("/lead", data, {}, false, false)
         .then(() => {
           GreennLogs.logger.info("Lead criado com sucesso", {
             uuid: this.uuid,
@@ -141,36 +142,42 @@ export const useLeadsStore = defineStore("Leads", {
     },
     async updateLead() {
       if (this.uuid) {
-        let updatedCellphone = this.personal.cellphone.replace(/\s/g, "");
-        await useApi()
-          .update("lead/" + this.uuid, {
-            product_id: this.payment.product_id,
+        try {
+          let updatedCellphone = this.personal.cellphone;
+          if (this.personal.cellphone !== null) {
+            updatedCellphone = updatedCellphone.replace(/\s/g, "");
+          }
+
+          const data = {
+            product_id: Number(this.payment.product_id),
             proposal_id: this.payment.proposal_id,
             seller_id: this.payment.seller_id,
             affiliate_id: this.payment.affiliate_id,
             name: this.personal.name,
             email: this.personal.email,
             cpf: this.personal.document,
-            zip_code: this.address?.zip_code,
-            street: this.address?.street,
-            number: this.address?.number,
-            neighborhood: this.address?.neighborhood,
-            city: this.address?.city,
-            state: this.address?.state,
+            zip_code: this.address.zip_code,
+            street: this.address.street,
+            number: this.address.number,
+            neighborhood: this.address.neighborhood,
+            city: this.address.city,
+            state: this.address.state,
             step: this.step,
             uuid: this.uuid,
-            complement: this.address?.complement,
-            id: this.uuid,
-            country_code: this.address?.country_code,
+            complement: this.address.complement,
+            country_code: this.address.country_code,
             status: this.purchase.status,
             cellphone: updatedCellphone,
-          })
-          .then((res) => {
-            return res;
-          })
-          .catch((error) => {
-            console.error("Erro ao atualizar lead", error);
-          });
+          };
+
+          await useApi()
+            .update(`lead/${this.uuid}`, data, {}, false, false)
+            .then((res) => {
+              return res;
+            });
+        } catch (error) {
+          console.error(error);
+        }
       }
     },
   },
