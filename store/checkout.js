@@ -626,7 +626,7 @@ export const useCheckoutStore = defineStore("checkout", {
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
       if (ticket) this.ticket_installments = ticket;
-      if (this.history_subscription) this.installments = this.history_subscription.contract_intallments
+      if (this.history_subscription) this.installments = this.history_subscription.contract_installments
     },
     setMethod(method = "") {
 
