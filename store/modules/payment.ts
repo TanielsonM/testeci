@@ -7,6 +7,9 @@ import { Payment, Product, PaymentError, SaleElement, CurrencyData, PurcharseCar
 // Rules
 import { validateAll } from "@/rules/form-validations";
 
+// FingerPrint
+import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-vue-v3';
+
 //Notifications
 import * as Toast from "vue-toastification";
 
@@ -20,6 +23,7 @@ import { usePreCheckoutStore } from "../preCheckout";
 import { useInstallmentsStore } from "./installments";
 import { useAmountStore } from "./amount";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
+import { useHeadersStore } from "../headers";
 
 // External SDK
 
@@ -32,6 +36,7 @@ const purchaseStore = usePurchaseStore();
 const installmentsStore = useInstallmentsStore();
 const amountStore = useAmountStore();
 const preCheckout = usePreCheckoutStore();
+const headerStore= useHeadersStore();
 
 const {
   method,
@@ -71,6 +76,8 @@ const { getInstallments, getTotal } = storeToRefs(installmentsStore);
 const { getOriginalAmount, getAmount } = storeToRefs(amountStore);
 const { sellerHasFeatureTickets, getBatches } = storeToRefs(preCheckout);
 
+const FINGERPRINT_BASE_URL = 'https://fpjscdn.net/v3/'
+
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
@@ -79,6 +86,7 @@ export const usePaymentStore = defineStore("Payment", {
     // Payment button loading
     loading: false,
     fetching:false,
+    fingerprintRequestId: '',
   }),
   getters: {
     isPaymentLoading: state => state.loading,
@@ -221,6 +229,7 @@ export const usePaymentStore = defineStore("Payment", {
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value)
         ) {
           const config = useRuntimeConfig();
+          await this.setVisitorIdOnHeader()
 
           let parsedFirstAmount = Number(
             first.value.amount
@@ -266,6 +275,7 @@ export const usePaymentStore = defineStore("Payment", {
             
           }
           data.cards = cards;
+          
         }
         const allowed_installments = [
           "CREDIT_CARD",
@@ -313,7 +323,8 @@ export const usePaymentStore = defineStore("Payment", {
               if ('card_holder_name' in card && 'card_number' in card && 'card_expiration_date' in card) {
                 let amount = data.cards[i].amount; // Armazenar o valor do campo amount
                 let total = data.cards[i].total; // Armazenar o valor do campo total
-      
+
+              
                 let dataGateway = {
                   system: 'CHECKOUT',
                   gateway: gateway,
@@ -323,7 +334,7 @@ export const usePaymentStore = defineStore("Payment", {
                     exp_month: card.card_expiration_date ? card.card_expiration_date.substring(0, 2) : null,
                     exp_year: card.card_expiration_date ? card.card_expiration_date.substring(4) : null,
                     cvv: card.card_cvv,
-                    costumer: this.customerData(data)
+                    costumer: this.customerData(data),
                   }
                 }
                 
@@ -536,6 +547,9 @@ export const usePaymentStore = defineStore("Payment", {
         case "EXPIRED_RATE_TOKEN":
           this.error_message = "error.EXPIRED_RATE_TOKEN";
           break;
+        case "CREDIT_CARD_INVALID":
+          this.error_message = "error.CREDIT_CARD_INVALID";
+          break;
         case "GENERIC":
         default:
           this.error_message = "error.GENERIC";
@@ -618,14 +632,37 @@ export const usePaymentStore = defineStore("Payment", {
     },
     async cardGateway(dataGateway: any) {
       const toast = Toast.useToast();
-
+     
       try {
         //Tem que passar true para dizer que é uma rota que usa o endpoint do gateway
+        
         const response = await useApi().create("/checkout/card", dataGateway, null, true);
         return response;
       } catch (error) {
         // Tratar erros
         throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
+      }
+    },
+
+    async setVisitorIdOnHeader(){
+      const config = useRuntimeConfig();
+      let composeUrl = FINGERPRINT_BASE_URL+config.public.FINGERPRINT_API_KEY
+      
+      try {
+        const fpPromise = import(composeUrl).then(
+          (FingerprintJS) =>
+            FingerprintJS.load()
+        );
+  
+        const { requestId } = await (await fpPromise).get();
+        headerStore.changeFingerprintHeader(requestId)
+
+      } catch (error) {
+        GreennLogs.logger.error("ErrorFingerPrint", {
+          name: "ErrorFingerPrint",
+          error_code: error ? error.code : null,
+          error_mensage: this.error_message,
+        });
       }
     },
     documentType(data: any):string {
