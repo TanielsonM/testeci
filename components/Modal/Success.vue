@@ -62,11 +62,11 @@ if (
   const thankYouData = sale.sales[0].product.custom_thank_you_pages || [];
 
   const customUrl: any = ref({
-    PIX: "",
-    BOLETO: "",
-    PAYPAL: "",
-    CREDIT_CARD: "",
-    TWO_CREDIT_CARDS: "",
+    PIX: "https://greenn.com.br/obrigado-pagamento-pix",
+    BOLETO: "https://greenn.com.br/obrigado-pagamento-boleto",
+    PAYPAL: "https://greenn.com.br/obrigado-pagamento-cartao",
+    CREDIT_CARD: "https://greenn.com.br/obrigado-pagamento-cartao",
+    TWO_CREDIT_CARDS: "https://greenn.com.br/obrigado-pagamento-cartao",
   });
 
   thankYouData.forEach(element => {
