@@ -126,8 +126,8 @@ const couponAplied = computed(() => {
       <small v-if="showInCashText" class="small-text leading-4">
         <template v-if="!history_subscription">
           {{ $t("order.a_vista") }}
+          {{ formatMoney(getInstallments(1)) }}
         </template>
-        {{ formatMoney(getInstallments(1)) }}
         <br />
         {{
           checkoutPayment &&
