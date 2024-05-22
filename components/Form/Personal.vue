@@ -124,7 +124,7 @@ personalStore.setFields(queryParams);
 const personalForm = ref(null);
 
 onMounted(() => {
-  if(queryParams.email) {
+  if(queryParams.em) {
     personalForm.value.setFieldValue('email-field', queryParams.em);
     personalForm.value.validateField('email-field').then(res => {
       stepStore.setIsEmailValid(res.valid)
@@ -162,7 +162,7 @@ onMounted(() => {
       input-id="email-field"
       v-model="email"
       v-if="!urlSubscription"
-      :error="!email && hasSent ||email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.email && !isEmailValid)) : undefined"
+      :error="!email && hasSent ||email && hasSent ? (!validateEmail.isValidSync(email) || (!!queryParams.em && !isEmailValid)) : undefined"
       :disabled="forceEmail"
       rules="email"
     >
