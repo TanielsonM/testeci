@@ -269,7 +269,7 @@ const renovation =
       <!-- Coupon -->
       <ProductCoupon 
         :urlSubscription="urlSubscription"
-        v-if="(urlSubscription && history_subscription.coupon) || (productStore.allowedCoupon && !sellerHasFeatureTickets)"
+        v-if="(urlSubscription && history_subscription.coupon) || (!urlSubscription && productStore.allowedCoupon && !sellerHasFeatureTickets)"
       />
       <ProductCashback />
     </section>
