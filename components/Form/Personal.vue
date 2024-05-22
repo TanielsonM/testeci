@@ -125,7 +125,7 @@ const personalForm = ref(null);
 
 onMounted(() => {
   if(queryParams.email) {
-    personalForm.value.setFieldValue('email-field', queryParams.email);
+    personalForm.value.setFieldValue('email-field', queryParams.em);
     personalForm.value.validateField('email-field').then(res => {
       stepStore.setIsEmailValid(res.valid)
     })
