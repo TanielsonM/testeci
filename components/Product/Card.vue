@@ -3,10 +3,15 @@ import { storeToRefs } from "pinia";
 import { useProductStore } from "~~/store/product";
 import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
+import { useCheckoutStore } from "@/store/checkout";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const productStore = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const preCheckout = usePreCheckoutStore();
+const checkout = useCheckoutStore();
+const router = useRouter();
 const { t } = useI18n();
 
 /* State */
@@ -14,6 +19,16 @@ const opened = ref(false);
 const { product, is_gift, gift_message } = storeToRefs(productStore);
 const { trial_position } = storeToRefs(custom_checkout);
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+const { history_subscription } = storeToRefs(checkout);
+const isRendered = ref(false);
+
+/* Props */
+const props = defineProps({
+  urlSubscription:{
+    type: Boolean,
+    default: false
+  },
+});
 
 /* Trial message */
 const trialMessage = computed({
@@ -38,6 +53,21 @@ const exceptionSellerId = computed(() => {
   }
   return false
 })
+
+onMounted(() => {
+  onClientRender();
+});
+
+function onClientRender() {
+  isRendered.value = true;
+}
+
+// verifica se é uma renovação
+const renovation = 
+  router.currentRoute.value.query.fn ? 
+  true : 
+  false;
+
 </script>
 
 <template>
@@ -56,16 +86,14 @@ const exceptionSellerId = computed(() => {
         class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px] flex-shrink-0"
         v-if="product.images.length"
       >
-        <nuxt-img
-          :src="product.images[0].path"
+        <img :src="product.images[0].path"
           preload
           alt="Imagem do produto"
           width="auto"
           height="auto"
           rel="preload"
           format="webp"
-          class="h-full w-full object-contain"
-        />
+          class="h-full w-full object-contain">
       </aside>
       <span
         v-else
@@ -74,24 +102,27 @@ const exceptionSellerId = computed(() => {
       <!--  -->
       <!-- Product Infos -->
       <section class="flex flex-col gap-1 text-txt-color">
-        <small class="text-blue-500" v-if="productStore.isSubscription">
+        <Loading v-if="!isRendered"/>
+
+        <small class="text-blue-500" v-if="!renovation && productStore.isSubscription && isRendered">
           {{ $t("components.product_card.is_subscription") }}
         </small>
-        <h1 class="mb-[5px] text-[18px] font-[700] text-input-color">
+        <h1 v-if="isRendered" class="mb-[5px] text-[18px] font-[700] text-input-color">
           {{ product.name }}
         </h1>
         <p
           class="text-lg font-semibold leading-4 text-txt-color"
           :class="{ underline: productStore.hasTrial }"
-          v-if="productStore.hasTrial"
+          v-if="!renovation && productStore.hasTrial && isRendered"
         >
           {{ trialMessage }}
         </p>
         <ProductTotalAmount v-else />
+        <ProductCharges v-if="urlSubscription && history_subscription && isRendered"/>
         <!-- Custom Charges -->
         <section
           class="custom_charges"
-          v-if="!!productStore.hasCustomCharges.length && !exceptionSellerId"
+          v-if="!urlSubscription && !!productStore.hasCustomCharges.length && !exceptionSellerId && isRendered"
         >
           <section class="charges" :opened="opened">
             <p
@@ -166,8 +197,8 @@ const exceptionSellerId = computed(() => {
       {{ $t("checkout.recurring_shipping.isNotRecurring") }}
     </BaseBadge>
     <!-- Trial info -->
-    <InfoTrial class="mx-5" v-if="trial_position === 'top'" />
-    <DonationCampaign v-if="product?.seller?.donation_tax" />
+    <InfoTrial class="mx-5" v-if="!renovation && trial_position === 'top'" />
+    <DonationCampaign v-if="!renovation && product?.seller?.donation_tax" />
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->
@@ -186,6 +217,13 @@ const exceptionSellerId = computed(() => {
           {{ $t("components.product_card.warranty_days") }}</span
         >
       </p>
+      <!-- payment update subscription info -->
+      <a 
+        v-if="urlSubscription"
+        class="text-xs text-blue-400"
+      >
+        {{ $t("components.product_card.payment_update_text") }}
+      </a>
       <!-- Author -->
       <p
         class="flex items-center gap-1 md:flex-col md:items-start"
@@ -229,7 +267,10 @@ const exceptionSellerId = computed(() => {
         </a>
       </p>
       <!-- Coupon -->
-      <ProductCoupon v-if="productStore.allowedCoupon && !(product.product_type_id === 3 && sellerHasFeatureTickets)" />
+      <ProductCoupon 
+        :urlSubscription="urlSubscription"
+        v-if="(urlSubscription && history_subscription.coupon) || (!urlSubscription && productStore.allowedCoupon && !sellerHasFeatureTickets)"
+      />
       <ProductCashback />
     </section>
     <EventTimer v-if="product.product_type_id === 3 && sellerHasFeatureTickets"/>

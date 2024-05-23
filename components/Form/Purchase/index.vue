@@ -15,6 +15,12 @@ const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
 const { trial_position } = storeToRefs(custom_checkout);
 const { getInstallments } = storeToRefs(installmentsStore);
+const props = defineProps({
+  urlSubscription: {
+    type: Boolean,
+    default: false
+  }
+})
 
 // Component forms
 const CREDIT_CARD = resolveComponent("FormPurchaseCreditCard");
@@ -88,12 +94,15 @@ const showInstallments = computed(() => {
   }
   return false;
 });
+
+// if subscription page is true
+const {urlSubscription} = props;
 </script>
 
 <template>
   <span class="flex w-full flex-col gap-5" v-if="selectedForm !== PIX">
     <transition name="slide-fade-bottom" mode="out-in">
-      <component :is="selectedForm" />
+      <component :urlSubscription="urlSubscription" :is="selectedForm" />
     </transition>
     <ClientOnly>
       <template #fallback>
@@ -103,7 +112,7 @@ const showInstallments = computed(() => {
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="w-full lg:w-1/2"
         v-model="installments"
-        v-if="showInstallments"
+        v-if="showInstallments && !urlSubscription"
       >
         <!-- Fixed installment -->
         <option

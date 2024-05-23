@@ -20,7 +20,8 @@ const {
   coupon,
   checkoutPayment,
   ticket_installments,
-  hasSelectedBump
+  hasSelectedBump,
+  history_subscription
 } = storeToRefs(checkout);
 
 const { getInstallments } = storeToRefs(installmentsStore);
@@ -91,6 +92,13 @@ const showInCashText = computed(() => {
     !hasPreSelectedInstallments.value
   );
 });
+
+const couponAplied = computed(() => {
+  if (coupon?.applied || history_subscription?.coupon) {
+    return true;
+  }
+  return false
+});
 </script>
 
 <template>
@@ -99,7 +107,7 @@ const showInCashText = computed(() => {
       {{ $t("order.gratis") }}
     </template>
     <template v-else>
-      <p v-if="coupon.applied" class="text-[13px] text-[#81858e] line-through">
+      <p v-if="couponAplied" class="text-[13px] text-[#81858e] line-through">
         {{ formatMoney(amountStore.getOriginalAmount) }}
       </p>
       <small
@@ -115,7 +123,7 @@ const showInCashText = computed(() => {
       <p class="text-lg font-semibold leading-4 text-txt-color">
         {{ amountText }}
       </p>
-      <small v-if="showInCashText" class="small-text leading-4">
+      <small v-if="showInCashText && !history_subscription" class="small-text leading-4">
         {{ $t("order.a_vista") }}
         {{ formatMoney(getInstallments(1)) }}
         <br />

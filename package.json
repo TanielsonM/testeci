@@ -1,7 +1,7 @@
 {
   "private": true,
   "engines": {
-    "node": "^16.14"
+    "node": "^18.16"
   },
   "scripts": {
     "build": "nuxt build",
@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^0.4.2",
-    "@nuxt/image-edge": "^1.0.0-27919678.2f5b64b",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/i18n": "8.0.0-beta.9",
     "@types/crypto-js": "^4.2.2",
@@ -34,7 +33,7 @@
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "nuxt": "3.1.2",
+    "nuxt": "3.11.2",
     "prettier": "^2.8.4",
     "prettier-plugin-tailwindcss": "^0.2.3",
     "sass": "^1.58.0",
@@ -48,6 +47,7 @@
     "@datadog/browser-rum": "^4.47.0",
     "@fingerprintjs/fingerprintjs-pro-vue-v3": "^1.5.0",
     "@mercadopago/sdk-js": "^0.0.3",
+    "@nuxt/devalue": "^2.0.2",
     "@nuxtjs/robots": "^3.0.0",
     "@nuxtjs/tailwindcss": "^6.3.1",
     "@pinia/nuxt": "^0.4.6",
@@ -64,5 +64,14 @@
     "vue-tel-input": "^8.1.1",
     "vue-toastification": "^2.0.0-rc.5",
     "yup": "^1.1.1"
+  },
+  "resolutions": {
+    "@antfu/utils": "0.7.3",
+    "@babel/traverse": "7.23.2",
+    "postcss": "8.4.31",
+    "protobufjs": "7.2.5",
+    "semver": "7.5.2",
+    "tar": "6.2.1",
+    "lodash.pick": "https://github.com/lodash/lodash/archive/f299b52f39486275a9e6483b60a410e06520c538.tar.gz"
   }
 }

@@ -109,7 +109,10 @@ const onInput = (event) => {
     </label>
     <section
       class="w-full items-center gap-5 rounded border border-bd-color bg-checkout p-4 transition-colors duration-300 focus-within:border-main-color hover:border-main-color focus:border-main-color"
-      :class="readonly ? customClass : null"
+      :class="[
+        { 'disabled': disabled },
+        { [customClass]: readonly }
+      ]"
     >
       <Icon
         :name="icon"
@@ -125,7 +128,7 @@ const onInput = (event) => {
           :type="type"
           :id="inputId"
           :value="modelValue"
-          :class="customClass"
+          :class="{ 'disabled': disabled, [customClass]: true }"
           :disabled="disabled"
           :readonly="readonly"
           :placeholder="placeholder"
@@ -142,7 +145,7 @@ const onInput = (event) => {
           :type="type"
           :id="inputId"
           :value="modelValue"
-          :class="customClass"
+          :class="{ 'disabled': disabled, [customClass]: true }"
           :disabled="disabled"
           :readonly="readonly"
           :placeholder="placeholder"
@@ -203,5 +206,9 @@ const onInput = (event) => {
   color: #000 !important;
   font-weight: 400 !important;
   font-size: 0.95rem;
+}
+
+.default-input .disabled {
+  background-color: #f4f4f4;
 }
 </style>

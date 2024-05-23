@@ -8,11 +8,18 @@ import { usePaymentStore } from "~~/store/modules/payment";
 const payment = usePaymentStore();
 const checkout = useCheckoutStore();
 const product = useProductStore();
-const { coupon, hasCoupon } = storeToRefs(checkout);
+const { coupon, hasCoupon, history_subscription } = storeToRefs(checkout);
 const { productName } = storeToRefs(product);
 
 const { t } = useI18n();
-const isOpen = ref(!!coupon.value.name);
+const isOpen = ref(!!coupon?.value?.name);
+
+const props = defineProps({
+  urlSubscription:{
+    type: Boolean,
+    default: false
+  },
+});
 
 function apply() {
   payment.setPaymentLoading(true);
@@ -31,6 +38,14 @@ function apply() {
     payment.setPaymentLoading(false);
   });
 }
+
+const hasSubscriptionCoupon = computed(() => {
+  if (history_subscription.value === null || history_subscription.value.coupon === null) {
+    return false;
+  }
+  return true;
+});
+
 </script>
 
 <template>
@@ -41,6 +56,7 @@ function apply() {
     <span
       class="flex w-full flex-nowrap items-center justify-start gap-2"
       @click="isOpen = !isOpen"
+      v-if="!coupon.applied && !urlSubscription"
     >
       <Icon name="carbon:ticket" size="28" class="text-blue-600" />
       <p class="w-full text-[13px] font-semibold text-txt-color">
@@ -57,8 +73,9 @@ function apply() {
         :class="{ 'rotate-180': isOpen }"
       />
     </span>
+    <!-- Abre e nao tem cupom aplicado -->
     <section
-      v-if="isOpen && !coupon.applied"
+      v-if="isOpen && !coupon.applied && !urlSubscription"
       class="flex w-full flex-col gap-5"
     >
       <BaseInput
@@ -71,7 +88,7 @@ function apply() {
       />
       <BaseButton
         color="info"
-        :disabled="!coupon.name.length"
+        :disabled="!coupon?.name?.length"
         :loading="coupon.loading"
         animation="top"
         @click="apply"
@@ -79,13 +96,25 @@ function apply() {
         <p class="text-sm font-semibold">{{ $t("components.coupon.apply") }}</p>
       </BaseButton>
     </section>
+    <!-- Abre e tem cupom aplicado e nao pode remover pois esta renovando uma assinatura -->
     <section
-      v-else-if="isOpen"
+      v-if="hasSubscriptionCoupon && urlSubscription"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">
         {{ $t("checkout.cupom.cupom") }}
-        <span class="font-bold">{{ coupon.name.toUpperCase() }}</span>
+        <span class="font-bold">{{ history_subscription?.coupon?.name.toUpperCase() }}</span>
+        {{ $t("checkout.cupom.aplicado") }}
+      </p>
+    </section>
+    <!-- Abre e tem cupom aplicado e pode remover -->
+    <section
+      v-if="isOpen && coupon.applied"
+      class="flex w-full flex-col items-start justify-start gap-2"
+    >
+      <p class="text-xs text-txt-color">
+        {{ $t("checkout.cupom.cupom") }}
+        <span class="font-bold">{{ coupon?.name.toUpperCase() }}</span>
         {{ $t("checkout.cupom.aplicado") }}
       </p>
       <a
@@ -113,5 +142,3 @@ function apply() {
     </section>
   </section>
 </template>
-
-<style lang="scss" scoped></style>
