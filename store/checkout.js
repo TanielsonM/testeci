@@ -110,7 +110,7 @@ export const useCheckoutStore = defineStore("checkout", {
     hasBatches: (state) => state.url.fullPath.includes("bt_id"),
     hasDocument: (state) => state.url.query?.document,
     hasDebugPixel: (state) => state.url.query?.debugPixel === "true",
-    hasEmail: (state) => state.url.query?.em,
+    hasEmail: (state) => decodeURI(state.url.query?.em),
     hasForce: (state) => state.url.query?.force === "true",
     hasPhone: (state) => state.url.query?.ph,
     hasSubscription: (state) => state.url.query?.subscription_id,

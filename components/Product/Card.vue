@@ -63,10 +63,7 @@ function onClientRender() {
 }
 
 // verifica se é uma renovação
-const renovation = 
-  router.currentRoute.value.query.fn ? 
-  true : 
-  false;
+const renovation = !!router.currentRoute.value.query.fn;
 
 </script>
 
@@ -269,7 +266,7 @@ const renovation =
       <!-- Coupon -->
       <ProductCoupon 
         :urlSubscription="urlSubscription"
-        v-if="(urlSubscription && history_subscription.coupon) || (!urlSubscription && productStore.allowedCoupon && !sellerHasFeatureTickets)"
+        v-if="(urlSubscription && history_subscription?.coupon) || (!urlSubscription && productStore.allowedCoupon && !sellerHasFeatureTickets)"
       />
       <ProductCashback />
     </section>
