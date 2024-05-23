@@ -33,11 +33,11 @@ export const usePersonalStore = defineStore("personal", {
         this.forceName = this.force;
       }
       if (fields?.em) {
-        this.email = fields.em;
+        this.email = decodeURI(fields.em);
         this.forceEmail = this.force;
       }
       if (fields?.em) {
-        this.confirmEmail = fields.em;
+        this.confirmEmail = decodeURI(fields.em);
         this.forceConfirmEmail = this.force;
       }
       if (fields?.ph) {
