@@ -62,9 +62,6 @@ function onClientRender() {
   isRendered.value = true;
 }
 
-// verifica se é uma renovação
-const renovation = !!router.currentRoute.value.query.fn;
-
 </script>
 
 <template>
@@ -101,7 +98,7 @@ const renovation = !!router.currentRoute.value.query.fn;
       <section class="flex flex-col gap-1 text-txt-color">
         <Loading v-if="!isRendered"/>
 
-        <small class="text-blue-500" v-if="!renovation && productStore.isSubscription && isRendered">
+        <small class="text-blue-500" v-if="!urlSubscription && productStore.isSubscription && isRendered">
           {{ $t("components.product_card.is_subscription") }}
         </small>
         <h1 v-if="isRendered" class="mb-[5px] text-[18px] font-[700] text-input-color">
@@ -110,7 +107,7 @@ const renovation = !!router.currentRoute.value.query.fn;
         <p
           class="text-lg font-semibold leading-4 text-txt-color"
           :class="{ underline: productStore.hasTrial }"
-          v-if="!renovation && productStore.hasTrial && isRendered"
+          v-if="!urlSubscription && productStore.hasTrial && isRendered"
         >
           {{ trialMessage }}
         </p>
@@ -194,8 +191,8 @@ const renovation = !!router.currentRoute.value.query.fn;
       {{ $t("checkout.recurring_shipping.isNotRecurring") }}
     </BaseBadge>
     <!-- Trial info -->
-    <InfoTrial class="mx-5" v-if="!renovation && trial_position === 'top'" />
-    <DonationCampaign v-if="!renovation && product?.seller?.donation_tax" />
+    <InfoTrial class="mx-5" v-if="!urlSubscription && trial_position === 'top'" />
+    <DonationCampaign v-if="!urlSubscription && product?.seller?.donation_tax" />
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->
