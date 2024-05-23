@@ -131,8 +131,8 @@ const historySubscriptionCoupon = computed(() => {
     >
       <span class="infos-title">{{ $t("checkout.cupom.cupom") }}</span>
       <span class="infos-content flex w-full items-center justify-between">
-        <p>{{ history_subscription.coupon.name.toUpperCase() }}</p>
-        <p>-{{ formatMoney(history_subscription.coupon.amount) }}</p>
+        <p>{{ history_subscription?.coupon?.name.toUpperCase() }}</p>
+        <p>-{{ formatMoney(history_subscription?.coupon?.amount) }}</p>
       </span>
     </section>
     <!-- Tax -->
