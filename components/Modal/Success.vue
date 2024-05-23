@@ -62,11 +62,11 @@ if (
   const thankYouData = sale.sales[0].product.custom_thank_you_pages || [];
 
   const customUrl: any = ref({
-    PIX: "https://greenn.com.br/obrigado-pagamento-pix",
-    BOLETO: "https://greenn.com.br/obrigado-pagamento-boleto",
-    PAYPAL: "https://greenn.com.br/obrigado-pagamento-cartao",
-    CREDIT_CARD: "https://greenn.com.br/obrigado-pagamento-cartao",
-    TWO_CREDIT_CARDS: "https://greenn.com.br/obrigado-pagamento-cartao",
+    PIX: product.thank_you_page ?? "https://greenn.com.br/obrigado-pagamento-pix",
+    BOLETO: product.thank_you_page ?? "https://greenn.com.br/obrigado-pagamento-boleto",
+    PAYPAL: product.thank_you_page ?? "https://greenn.com.br/obrigado-pagamento-cartao",
+    CREDIT_CARD: product.thank_you_page ?? "https://greenn.com.br/obrigado-pagamento-cartao",
+    TWO_CREDIT_CARDS: product.thank_you_page ?? "https://greenn.com.br/obrigado-pagamento-cartao",
   });
 
   thankYouData.forEach(element => {
