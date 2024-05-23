@@ -63,10 +63,7 @@ function onClientRender() {
 }
 
 // verifica se é uma renovação
-const renovation = 
-  router.currentRoute.value.query.fn ? 
-  true : 
-  false;
+const renovation = !!router.currentRoute.value.query.fn;
 
 </script>
 
