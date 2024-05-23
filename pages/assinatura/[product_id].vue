@@ -252,6 +252,17 @@ onMounted(() => {
             </span>
           </template>
         </Steps>
+
+        <!-- Next step buttom -->
+        <BaseButton @click="stepsStore.currentStep = 2" v-if="isMobile &&
+          currentStep < (checkout.showAddressStep ? 3 : 2) &&
+          !isOneStep &&
+          method !== 'FREE'
+          ">
+          <span class="text-[15px] font-semibold">
+            {{ $t("checkout.steps.next_step") }}
+          </span>
+        </BaseButton>
       </BaseCard>
       <!-- End purchase card -->
 
