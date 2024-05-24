@@ -286,7 +286,7 @@ export const usePaymentStore = defineStore("Payment", {
         const affiliate_id = useCookie(`affiliate_${product_id}`);
         const affiliate = useCookie("affiliate");
         if (hasAffiliateId) {
-          data.affiliate_id = hasAffiliateId.value;
+          data.affiliate_id = Number(hasAffiliateId);
         } else if (!hasAffiliationLead && affiliate_id.value) {
           data.affiliate_id = affiliate_id.value;
         } else if (hasAffiliationLead && affiliate.value) {
