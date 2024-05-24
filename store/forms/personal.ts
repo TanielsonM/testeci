@@ -29,15 +29,15 @@ export const usePersonalStore = defineStore("personal", {
     setFields(fields: Fields) {
       this.force = fields.force === "true";
       if (fields?.fn) {
-        this.name = fields.fn;
+        this.name = decodeURI(fields.fn);
         this.forceName = this.force;
       }
       if (fields?.em) {
-        this.email = fields.em;
+        this.email = decodeURI(fields.em);
         this.forceEmail = this.force;
       }
       if (fields?.em) {
-        this.confirmEmail = fields.em;
+        this.confirmEmail = decodeURI(fields.em);
         this.forceConfirmEmail = this.force;
       }
       if (fields?.ph) {

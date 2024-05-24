@@ -386,7 +386,7 @@ const isCustomOne = computed(() => {
         <!-- Address form -->
         <Steps :title="$t('components.steps.address')" step="02" v-if="
         (checkout.showAddressStep && ((isMobile && currentStep == 2) || !isMobile) || isCustomOne)
-          " @vnode-mounted="incrementSteps">
+          " @mounted="incrementSteps">
           <template #content>
             <FormAddress />
             <BaseToogle v-if="checkout.hasPhysicalProduct && product?.method !== 'FREE'" class="my-5" v-model:checked="sameAddress" id="address-form" :label="$t('general.address_toogle_label')" />

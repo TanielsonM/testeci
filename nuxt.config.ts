@@ -8,21 +8,11 @@ import en from "./locales/en.json";
 import es from "./locales/es.json";
 
 export default defineNuxtConfig({
-  ssr: true,
-  image: {
-    presets: {
-      default: {
-        quality: 75,
-        width: 1200,
-        height: 1200,
-      },
-    },
-  },
+  ssr: false,
   modules: [
     "@nuxtjs/tailwindcss",
     "nuxt-icon",
     "@nuxtjs/i18n",
-    "@nuxt/image-edge",
     "@nuxtjs/robots",
     "@nuxt/devtools",
     "@vue-macros/nuxt",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SaleElement } from "@/types";
+import { type SaleElement } from "@/types";
 import { formatMoney } from "@/utils/money";
 import { useI18n } from "vue-i18n";
 

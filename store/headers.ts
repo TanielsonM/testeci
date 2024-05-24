@@ -1,4 +1,5 @@
-import { HeadersState } from "@/types";
+import { type HeadersState } from "@/types";
+import { defineStore } from "pinia";
 
 export const useHeadersStore = defineStore("", {
   state: (): HeadersState => ({
