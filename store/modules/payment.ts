@@ -82,8 +82,6 @@ export function amountStore() {
   return store;
 }
 
-const FINGERPRINT_BASE_URL = 'https://fpjscdn.net/v3/'
-
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
@@ -92,7 +90,10 @@ export const usePaymentStore = defineStore("Payment", {
     // Payment button loading
     loading: false,
     fetching:false,
+<<<<<<< Updated upstream
     fingerprintRequestId: ''
+=======
+>>>>>>> Stashed changes
   }),
   getters: {
     isPaymentLoading: (state) => state.loading,
@@ -300,8 +301,8 @@ export const usePaymentStore = defineStore("Payment", {
         if (
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method)
         ) {
-          const config = useRuntimeConfig();
-          await this.setVisitorIdOnHeader()
+          // const config = useRuntimeConfig();
+          // await this.setVisitorIdOnHeader()
 
           let parsedFirstAmount = Number(
             first.amount
@@ -904,6 +905,7 @@ export const usePaymentStore = defineStore("Payment", {
         throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
       }
     },
+<<<<<<< Updated upstream
     async setVisitorIdOnHeader(){
       const headerStore = useHeadersStore();
 
@@ -927,6 +929,9 @@ export const usePaymentStore = defineStore("Payment", {
         });
       }
     },
+=======
+
+>>>>>>> Stashed changes
     documentType(data: any):string {
        //Essa parte modifiquei pois o New Checkout não tem venda internacional
       return data.document.length > 14 ? 'cnpj' : 'cpf';
