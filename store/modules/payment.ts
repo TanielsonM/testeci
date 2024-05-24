@@ -90,10 +90,6 @@ export const usePaymentStore = defineStore("Payment", {
     // Payment button loading
     loading: false,
     fetching:false,
-<<<<<<< Updated upstream
-    fingerprintRequestId: ''
-=======
->>>>>>> Stashed changes
   }),
   getters: {
     isPaymentLoading: (state) => state.loading,
@@ -905,33 +901,6 @@ export const usePaymentStore = defineStore("Payment", {
         throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
       }
     },
-<<<<<<< Updated upstream
-    async setVisitorIdOnHeader(){
-      const headerStore = useHeadersStore();
-
-      const config = useRuntimeConfig();
-      let composeUrl = FINGERPRINT_BASE_URL+config.public.FINGERPRINT_API_KEY
-      
-      try {
-        const fpPromise = import(composeUrl).then(
-          (FingerprintJS) =>
-            FingerprintJS.load()
-        );
-  
-        const { requestId } = await (await fpPromise).get();
-        headerStore.changeFingerprintHeader(requestId)
-
-      } catch (error) {
-        GreennLogs.logger.error("ErrorFingerPrint", {
-          name: "ErrorFingerPrint",
-          error_code: error ? error.code : null,
-          error_mensage: this.error_message,
-        });
-      }
-    },
-=======
-
->>>>>>> Stashed changes
     documentType(data: any):string {
        //Essa parte modifiquei pois o New Checkout não tem venda internacional
       return data.document.length > 14 ? 'cnpj' : 'cpf';
