@@ -283,7 +283,6 @@ export const usePaymentStore = defineStore("Payment", {
           });
         }
         // Affiliate id
-
         const affiliate_id = useCookie(`affiliate_${product_id}`);
         const affiliate = useCookie("affiliate");
         if (hasAffiliateId) {
