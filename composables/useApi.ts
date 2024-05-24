@@ -35,9 +35,11 @@ export default function () {
       method,
       baseURL,
       onRequest({ request, options }) {
+        const sessionId = GreennLogs.getInternalContext()?.session_id ?? '';
         loading.changeLoading(request.toString());
         const headers: HeadersInit = new Headers();
         headers.set("Content-type", "application/json");
+        headers.set("X-Session-Id", sessionId)
         if (request === "/payment") {
           // controller-token-
           if (headStore["controller-token-"]) {
