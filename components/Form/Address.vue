@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Data
 import states from "@/data/states";
-import { Frete, Address, ShippingAddress } from "@/types";
+import { type Frete, type ShippingAddress } from "@/types";
 // Store
 import { useCheckoutStore } from "@/store/checkout";
 import { useAddressStore } from "@/store/forms/address";

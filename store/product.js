@@ -2,7 +2,6 @@ import { useCheckoutStore } from "@/store/checkout";
 import { useCustomCheckoutStore } from "@/store/customCheckout";
 import { formatMoney } from "~~/utils/money";
 import { useInstallmentsStore } from "./modules/installments";
-import { defineStore } from "pinia";
 import { useAmountStore } from "./modules/amount";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 
