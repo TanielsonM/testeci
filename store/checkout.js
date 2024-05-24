@@ -222,9 +222,11 @@ export const useCheckoutStore = defineStore("checkout", {
 
       const { params, query, fullPath } = useRoute();
 
-      GreennLogs.logger.info("🟢 Checkout init", {
-        params: params, query: query, fullPath: fullPath
-      });
+      if (process.client) {
+        GreennLogs.logger.info("🟢 Checkout init", {
+          params: params, query: query, fullPath: fullPath
+        });
+      }
 
       this.url.params = params;
       this.url.query = query;
