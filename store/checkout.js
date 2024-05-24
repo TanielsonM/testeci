@@ -287,6 +287,12 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           }, false, useNewProductApi)
           .then(async (response) => {
+            if (response?.history_subscription) {
+              response.data.method = 'CREDIT_CARD'
+              this.history_subscription = response.history_subscription;
+              this.isCreditCard = true
+            }
+
             if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
               this.isCreditCard = true
             }
@@ -305,10 +311,6 @@ export const useCheckoutStore = defineStore("checkout", {
 
             if (response?.checkout_payment?.paypal) {
               response.data.paypal = response.checkout_payment.paypal;
-            }
-
-            if (response?.history_subscription) {
-              this.history_subscription = response.history_subscription;
             }
 
             if (
