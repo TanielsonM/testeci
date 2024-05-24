@@ -33,9 +33,7 @@ export default function () {
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
-      baseURL: useGateway
-        ? useRuntimeConfig().public.API_GATEWAY_URL
-        : useRuntimeConfig().public.API_BASE_URL,
+      baseURL,
       onRequest({ request, options }) {
         const sessionId = GreennLogs.getInternalContext()?.session_id ?? '';
         loading.changeLoading(request.toString());
