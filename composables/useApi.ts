@@ -8,10 +8,10 @@ import { useLoadingStore } from "@/store/loading/loading";
 
 import md5 from 'crypto-js/md5';
 
-const loading = useLoadingStore();
-const headStore = useHeadersStore();
-
 export default function () {
+  const loading = useLoadingStore();
+  const headStore = useHeadersStore();
+
   async function instance<T>(
     url: string,
     method: "get" | "post" | "put" | "delete",
@@ -33,7 +33,9 @@ export default function () {
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
-      baseURL: baseURL,
+      baseURL: useGateway
+        ? useRuntimeConfig().public.API_GATEWAY_URL
+        : useRuntimeConfig().public.API_BASE_URL,
       onRequest({ request, options }) {
         const sessionId = GreennLogs.getInternalContext()?.session_id ?? '';
         loading.changeLoading(request.toString());
@@ -67,7 +69,6 @@ export default function () {
             document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
               "wd_not_found"
           );
-          
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
           });
@@ -78,7 +79,7 @@ export default function () {
           const salt = Math.floor(1000 + Math.random() * 9000).toString();
           // Gera um número aleatório de iterações entre 1 e 10
           const iterations = Math.floor(1 + Math.random() * 10);
-          let textWithSalt = apiKey + salt;       
+          let textWithSalt = apiKey + salt;
           // Realiza a iteração adicionando o salt ao texto várias vezes
           for (let i = 0; i < iterations; i++) {
             textWithSalt = md5(textWithSalt).toString();

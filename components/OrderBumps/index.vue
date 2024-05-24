@@ -115,12 +115,14 @@ const isFixedShipping = computed(
 watch(
   () => props.bump.checkbox,
   async () => {
-    checkoutStore.setProductList(props.bump);
+    if(process.client){
+      checkoutStore.setProductList(props.bump);
     if(props.bump.type_shipping_fee === 'DYNAMIC' && props.bump.has_shipping_fee === 1 && addressStore.zipcode) {
       await checkoutStore.calculateBumpsShipping(addressStore.zipcode);
     }
     if (getCountSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
       stepsStore.back();
+    }
     }
   }
 );
