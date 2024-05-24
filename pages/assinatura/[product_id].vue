@@ -293,5 +293,10 @@ onMounted(() => {
         </section>
       </section>
     </BaseModal>
+
+    <!-- Client Only section -->
+    <ClientOnly class="hidden">
+      <Captcha />
+    </ClientOnly>
   </NuxtLayout>
 </template>
