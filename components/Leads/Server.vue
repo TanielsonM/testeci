@@ -14,9 +14,11 @@ watch(uuid, () => {
   leadStore.syncPayment();
   leadStore.syncLead();
 
-  leadTimer = setInterval(() => {
-    leadStore.updateLead();
-  }, 60000);
+  if (process.client) {
+    leadTimer = setInterval(() => {
+      leadStore.updateLead();
+    }, 60000);
+  }
 });
 
 onBeforeUnmount(() => {
