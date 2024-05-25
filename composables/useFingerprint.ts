@@ -16,6 +16,8 @@ export const useFingerprint = async () => {
             error_code: err ? err.code : null,
             error_mensage: err.message,
         });
+        response.value = 'fingerprint_error'
+
     }
 
     return { requestId: response.value };
