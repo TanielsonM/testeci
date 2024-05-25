@@ -9,10 +9,10 @@ export const useFingerprint = async () => {
             const fpPromise = FingerprintJS.load({
                 apiKey: config.public.FINGERPRINT_API_KEY,
                 endpoint: [
-                    config.public.FINGERPRINT_API_KEY
+                    config.public.FINGERPRINT_ENDPOINT
                   ],
                   scriptUrlPattern: [
-                    `${config.public.FINGERPRINT_ENDPOINT}?apiKey=<apiKey>&version=<version>&loaderVersion=<loaderVersion>`
+                    `${config.public.FINGERPRINT_PATH}?apiKey=<apiKey>&version=<version>&loaderVersion=<loaderVersion>`
                   ]
             });
             const { requestId } = await (await fpPromise).get();
