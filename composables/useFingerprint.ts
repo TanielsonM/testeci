@@ -4,10 +4,17 @@ import { useRuntimeConfig } from 'nuxt/app';
 export const useFingerprint = async () => {
     const response = ref<null | string>(null);
     const config = useRuntimeConfig();
-    const apiKey = config.public.FINGERPRINT_API_KEY;
     if (process.client) {
         try {
-            const fpPromise = FingerprintJS.load({ apiKey });
+            const fpPromise = FingerprintJS.load({
+                apiKey: config.public.FINGERPRINT_API_KEY,
+                endpoint: [
+                    config.public.FINGERPRINT_ENDPOINT
+                  ],
+                  scriptUrlPattern: [
+                    `${config.public.FINGERPRINT_PATH}?apiKey=<apiKey>&version=<version>&loaderVersion=<loaderVersion>`
+                  ]
+            });
             const { requestId } = await (await fpPromise).get();
             response.value = requestId
         } catch (error) {
