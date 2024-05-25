@@ -102,6 +102,7 @@ export default defineNuxtConfig({
       DONATION_RS: process.env.DONATION_RS,
       FINGERPRINT_API_KEY: process.env.FINGERPRINT_API_KEY,
       FINGERPRINT_ENDPOINT: process.env.FINGERPRINT_ENDPOINT,
+      FINGERPRINT_PATH: process.env.FINGERPRINT_PATH,
     },
   },
   i18n: {
