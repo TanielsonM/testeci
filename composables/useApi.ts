@@ -30,8 +30,11 @@ export default function () {
       baseURL = useGateway ? API_GATEWAY_URL : API_HOST_PRODUCT;
     }
 
-    // get fingerprintRequestId, espera a promessa finalizar e atribui a fingerprintRequestId
-    const fingerprintRequestId = await useFingerprint()
+    let fingerprintRequestId: { requestId: string | null } | null = null;
+
+    if (url === "/checkout/card") {
+      fingerprintRequestId = await useFingerprint();
+    }
 
     const { data, error } = await useFetch<T>(url, {
       ...config,
@@ -93,8 +96,8 @@ export default function () {
 
           headers.set("X-Greenn-Gateway", encrypted);
 
-          // Define o x-fingerprint-rid se tiver valor dentro do fingerprintRequestID
-          if(fingerprintRequestId && fingerprintRequestId.requestId){
+          // Define o x-fingerprint-rid se tiver valor dentro do fingerprintRequestId
+          if (fingerprintRequestId && fingerprintRequestId.requestId) {
             headers.set("X-Fingerprint-RID", fingerprintRequestId.requestId.toString());
 
             GreennLogs.logger.info('axiosRequest.card', {
@@ -115,7 +118,6 @@ export default function () {
             "cache-token-": response.headers.get("cache-token-"),
             "trans-token-": response.headers.get("trans-token-"),
             "wd-token-": "",
-            "fingerprint-requestId": "",
           };
 
           headStore.updateHeaders(headers);
