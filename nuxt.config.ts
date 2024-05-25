@@ -8,7 +8,7 @@ import en from "./locales/en.json";
 import es from "./locales/es.json";
 
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   modules: [
     "@nuxtjs/tailwindcss",
     "nuxt-icon",
@@ -102,6 +102,7 @@ export default defineNuxtConfig({
       DONATION_RS: process.env.DONATION_RS,
       FINGERPRINT_API_KEY: process.env.FINGERPRINT_API_KEY,
       FINGERPRINT_ENDPOINT: process.env.FINGERPRINT_ENDPOINT,
+      FINGERPRINT_PATH: process.env.FINGERPRINT_PATH,
     },
   },
   i18n: {

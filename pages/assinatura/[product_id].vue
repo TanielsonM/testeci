@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
 
 // Watch`s
 watch(method, (method) => {
-  checkout.setMethod(method);
+  checkout.setMethod('CREDIT_CARD');
 });
 
 watch(selectedCountry, () => {
@@ -223,13 +223,15 @@ onMounted(() => {
           </template>
         </Steps>
         <!-- Purchase Form -->
-        <Steps :title="$t('checkout.pagamento.title')" :step="checkout.showAddressStep ? '03' : '02'" :free="product?.method !== 'FREE' ? false : true" v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) ||
-          !isMobile ||
-          isOneStep
-          ">
+        <Steps
+          :title="$t('checkout.pagamento.title')"
+          :step="checkout.showAddressStep ? '03' : '02'"
+          :free="product?.method !== 'FREE' ? false : true"
+          v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) || !isMobile || isOneStep"
+        >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <template v-if="method !== 'PIX'">
+              <template>
                 <FormPurchase :urlSubscription="true" />
               </template>
             </section>
@@ -293,5 +295,10 @@ onMounted(() => {
         </section>
       </section>
     </BaseModal>
+
+    <!-- Client Only section -->
+    <ClientOnly class="hidden">
+      <Captcha />
+    </ClientOnly>
   </NuxtLayout>
 </template>

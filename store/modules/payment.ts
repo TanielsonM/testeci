@@ -82,8 +82,6 @@ export function amountStore() {
   return store;
 }
 
-const FINGERPRINT_BASE_URL = 'https://fpjscdn.net/v3/'
-
 export const usePaymentStore = defineStore("Payment", {
   state: () => ({
     error: false,
@@ -92,7 +90,6 @@ export const usePaymentStore = defineStore("Payment", {
     // Payment button loading
     loading: false,
     fetching:false,
-    fingerprintRequestId: ''
   }),
   getters: {
     isPaymentLoading: (state) => state.loading,
@@ -286,7 +283,7 @@ export const usePaymentStore = defineStore("Payment", {
         const affiliate_id = useCookie(`affiliate_${product_id}`);
         const affiliate = useCookie("affiliate");
         if (hasAffiliateId) {
-          data.affiliate_id = hasAffiliateId.value;
+          data.affiliate_id = Number(hasAffiliateId);
         } else if (!hasAffiliationLead && affiliate_id.value) {
           data.affiliate_id = affiliate_id.value;
         } else if (hasAffiliationLead && affiliate.value) {
@@ -300,8 +297,8 @@ export const usePaymentStore = defineStore("Payment", {
         if (
           ["CREDIT_CARD", "DEBIT_CARD", "TWO_CREDIT_CARDS"].includes(method)
         ) {
-          const config = useRuntimeConfig();
-          await this.setVisitorIdOnHeader()
+          // const config = useRuntimeConfig();
+          // await this.setVisitorIdOnHeader()
 
           let parsedFirstAmount = Number(
             first.amount
@@ -902,29 +899,6 @@ export const usePaymentStore = defineStore("Payment", {
       } catch (error) {
         // Tratar erros
         throw error; // Lançar o erro novamente para que ele possa ser tratado onde a função cardGateway() foi chamada
-      }
-    },
-    async setVisitorIdOnHeader(){
-      const headerStore = useHeadersStore();
-
-      const config = useRuntimeConfig();
-      let composeUrl = FINGERPRINT_BASE_URL+config.public.FINGERPRINT_API_KEY
-      
-      try {
-        const fpPromise = import(composeUrl).then(
-          (FingerprintJS) =>
-            FingerprintJS.load()
-        );
-  
-        const { requestId } = await (await fpPromise).get();
-        headerStore.changeFingerprintHeader(requestId)
-
-      } catch (error) {
-        GreennLogs.logger.error("ErrorFingerPrint", {
-          name: "ErrorFingerPrint",
-          error_code: error ? error.code : null,
-          error_mensage: this.error_message,
-        });
       }
     },
     documentType(data: any):string {

@@ -34,9 +34,11 @@ const secondText = computed(() => {
   return seconds.value;
 });
 
-const intervalSeconds = setInterval(() => {
+if (process.client) {
+  const intervalSeconds = setInterval(() => {
   seconds.value = seconds.value - 1;
 }, 1000);
+}
 
 function saveTime() {
   cookie.value = JSON.stringify({
