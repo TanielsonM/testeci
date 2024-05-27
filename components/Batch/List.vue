@@ -3,7 +3,8 @@ import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/utils/validateBatch";
-import moment from "@/plugins/moment.js";
+
+const { $moment } = useNuxtApp();
 
 const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
@@ -134,7 +135,7 @@ function verifyIfHasSoldOffField(id) {
               {{ $t("pre_checkout.sales_available") }}
             </template>
             <template v-else>
-              {{ $t("pre_checkout.sales_start_in") }} {{ moment(batch?.release_fixed_date).format('LLL') }}
+              {{ $t("pre_checkout.sales_start_in") }} {{ $moment(batch?.release_fixed_date).format('LLL') }}
             </template>
           </p>
         </div>

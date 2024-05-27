@@ -1,7 +1,7 @@
 // plugins/moment.js
 import moment from "moment";
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
   moment.locale("pt-br", {
     months:
       "Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro".split(
@@ -57,5 +57,9 @@ export default defineNuxtPlugin((nuxtApp) => {
   });
 
   // Make moment available throughout your application
-  nuxtApp.provide("moment", moment);
+  return {
+    provide: {
+      moment
+    }
+  }
 });
