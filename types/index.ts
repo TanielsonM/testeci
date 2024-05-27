@@ -48,10 +48,6 @@ export type Installment = {
   value: number;
   index: number;
 };
-export type Batche = {
-  batch_id: number;
-  selected_tickets: number;
-};
 
 export type Batche = {
   batch_id: number;
@@ -516,7 +512,6 @@ export type HeadersState = {
   "cache-token-": string | null;
   "trans-token-": string | null;
   "wd-token-": string;
-  "fingerprint-requestId" : string | null
 };
 
 export type Image = {

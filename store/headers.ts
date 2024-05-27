@@ -1,4 +1,5 @@
-import { HeadersState } from "@/types";
+import { type HeadersState } from "@/types";
+import { defineStore } from "pinia";
 
 export const useHeadersStore = defineStore("", {
   state: (): HeadersState => ({
@@ -8,7 +9,6 @@ export const useHeadersStore = defineStore("", {
     "cache-token-": "",
     "trans-token-": "",
     "wd-token-": "",
-    "fingerprint-requestId" : ""
   }),
   actions: {
     updateHeaders(headers: HeadersState) {
@@ -18,10 +18,6 @@ export const useHeadersStore = defineStore("", {
       this["cache-token-"] = headers["cache-token-"];
       this["trans-token-"] = headers["trans-token-"];
       this["wd-token-"] = headers["wd-token-"];
-      this["fingerprint-requestId"] = headers["fingerprint-requestId"];
-    },
-    changeFingerprintHeader(requestId:string){
-      this["fingerprint-requestId"] = requestId
     },
   },
 });

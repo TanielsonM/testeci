@@ -9,8 +9,13 @@ import { useAddressStore } from "@/store/forms/address";
 import { usePurchaseStore } from "@/store/forms/purchase";
 import { useCheckoutStore } from "@/store/checkout";
 import { useProductStore } from "~~/store/product";
-const checkout = useCheckoutStore();
-const { global_settings } = storeToRefs(checkout);
+
+export function checkout() {
+  const store = useCheckoutStore();
+  return storeToRefs(store);
+}
+// const checkout = useCheckoutStore();
+// const { global_settings, hasPhone } = storeToRefs(checkout);
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
@@ -21,8 +26,11 @@ export const validateDocument = yup
   .required();
 
 export const validateZip = computed(() => {
-    return global_settings.value.country === 'BR' ? yup.string().min(9).required() : yup.string().min(5).required();
-  });
+  const store = useCheckoutStore();
+  const { global_settings } = storeToRefs(store);
+
+  return global_settings.value.country === 'BR' ? yup.string().min(9).required() : yup.string().min(5).required();
+});
 export const validateStreet = yup.string().min(4).required();
 export const validateNumber = yup.string().required();
 export const validateCity = yup.string().min(3).required();
@@ -51,11 +59,23 @@ export const validateFirstStep = async (): Promise<boolean> => {
   );
   const stepStore = useStepStore();
   const { isEmailValid } = storeToRefs(stepStore);
+
   if (showDocumentInput) {
+    const store = useCheckoutStore();
+    const { hasPhone } = storeToRefs(store);
     const validDocument = await validateDocument.isValid(document.value);
-    return validName && (validEmail && isEmailValid.value) && validPhone && validDocument;
+    if (hasPhone?.value?.length >= 13) {
+      return validName && validEmail && validDocument;
+    }
+    return (
+      validName &&
+      validEmail &&
+      isEmailValid.value &&
+      validPhone &&
+      validDocument
+    );
   }
-  return validName && (validEmail && isEmailValid.value) && validPhone;
+  return validName && validEmail && isEmailValid.value && validPhone;
 };
 
 export const validateSecondStep = async (): Promise<boolean> => {
@@ -64,8 +84,8 @@ export const validateSecondStep = async (): Promise<boolean> => {
   const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
   let validShippingIntegration = false;
 
-  if((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length) {
-    if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
+  if ((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length) {
+    if (!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
       validShippingIntegration = false;
     } else {
       validShippingIntegration = true;
@@ -213,8 +233,8 @@ export const validateAll = async (): Promise<boolean> => {
   if (checkout.showAddressStep) {
     const productStore = useProductStore();
     const { hasIntegrationWithGreennEnvios } = storeToRefs(checkout);
-    if(!validStepTwo && ((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length)) {
-      if(!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
+    if (!validStepTwo && ((productStore.hasShippingFee && productStore.isDynamicShipping) || !!checkout.getBumpsWithShippingFee.length)) {
+      if (!hasIntegrationWithGreennEnvios.value || (!!checkout.getBumpsWithShippingFee.length && checkout.getBumpsWithShippingFee.some(bump => !bump.hasIntegrationWithGreennEnvios))) {
         const toast = Toast.useToast();
         toast.error("Esse produto não possui integração para envio");
         return false;
@@ -223,7 +243,7 @@ export const validateAll = async (): Promise<boolean> => {
 
     if (
       checkout.method === "CREDIT_CARD" ||
-      checkout.method === "TWO_CREDIT_CARDS" || 
+      checkout.method === "TWO_CREDIT_CARDS" ||
       isMobile.value
     ) {
       return validStepOne && validStepTwo && validStepThree;

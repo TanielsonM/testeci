@@ -1,4 +1,4 @@
-import { StepState } from "~~/types";
+import { type StepState } from "~~/types";
 import { usePaymentStore } from "~~/store/modules/payment";
 import {
   validateFirstStep,

@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { formatMoney } from "@/utils/money";
-import { Sale, ProductOffer } from "@/types";
+import { type Sale, type ProductOffer } from "@/types";
 import { useProductStore } from "~~/store/product";
 import { useCheckoutStore } from "~~/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";

@@ -8,8 +8,18 @@ import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
 
-const purchaseStore = usePurchaseStore();
-const amountStore = useAmountStore();
+// const purchaseStore = usePurchaseStore();
+// const amountStore = useAmountStore();
+
+function purchaseStore() {
+  const store = usePurchaseStore();
+  return store;
+}
+
+function amountStore() {
+  const store = useAmountStore();
+  return store;
+}
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -82,7 +92,8 @@ export const useCheckoutStore = defineStore("checkout", {
     paypal_details: {},
     allow_free_offers : null,
     hasIntegrationWithGreennEnvios: false,
-    isCreditCard: false
+    isCreditCard: false,
+    history_subscription: null
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -99,11 +110,14 @@ export const useCheckoutStore = defineStore("checkout", {
     hasBatches: (state) => state.url.fullPath.includes("bt_id"),
     hasDocument: (state) => state.url.query?.document,
     hasDebugPixel: (state) => state.url.query?.debugPixel === "true",
-    hasEmail: (state) => state.url.query?.em,
+    hasEmail: (state) => decodeURI(state.url.query?.em),
     hasForce: (state) => state.url.query?.force === "true",
     hasPhone: (state) => state.url.query?.ph,
+    hasSubscription: (state) => state.url.query?.subscription_id,
     hasUpsell: (state) => state.url.query?.up_id,
     hasBumpForceCheck: (state) => state.url.query?.b_fc,
+    urlClientId: (state) => state.url.query?.client_id,
+    urlClientDocument: (state) => state.url.query?.document,
     hasSelectedBump: (state) => state.bump_list.some((bump) => bump.checkbox),
     hasFreeBump: (state) => state.bump_list.every(bump => bump.method === 'FREE'),
     /**
@@ -187,7 +201,8 @@ export const useCheckoutStore = defineStore("checkout", {
       };
     },
     getShippingSelected: (state) => state.shipping_selected,
-    getIsCreditCard: (state) => state.isCreditCard
+    getIsCreditCard: (state) => state.isCreditCard,
+    getHistorySubscription: (state) => state?.history_subscription,
   },
   actions: {
     async init(byChangeCountry = false, routeIsCheckout = false) {
@@ -196,6 +211,7 @@ export const useCheckoutStore = defineStore("checkout", {
       const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
       if(product.id && product.product_type_id === 3 && sellerHasFeatureTickets?.value) return
       this.resetProducts();
+      const amountStore = useAmountStore();
       amountStore.reset();
       this.setLoading(true);
 
@@ -206,9 +222,11 @@ export const useCheckoutStore = defineStore("checkout", {
 
       const { params, query, fullPath } = useRoute();
 
-      GreennLogs.logger.info("🟢 Checkout init", {
-        params: params, query: query, fullPath: fullPath
-      });
+      if (process.client) {
+        GreennLogs.logger.info("🟢 Checkout init", {
+          params: params, query: query, fullPath: fullPath
+        });
+      }
 
       this.url.params = params;
       this.url.query = query;
@@ -257,6 +275,10 @@ export const useCheckoutStore = defineStore("checkout", {
       const query = {
         country: this.selectedCountry,
       };
+      // Check if has subscription id in url
+      if(this.hasSubscription){
+        query.subscription_id = this.hasSubscription
+      }
       /* Call api to get product */
       try {
         return await useApi()
@@ -265,6 +287,12 @@ export const useCheckoutStore = defineStore("checkout", {
             query,
           }, false, useNewProductApi)
           .then(async (response) => {
+            if (response?.history_subscription) {
+              response.data.method = 'CREDIT_CARD'
+              this.history_subscription = response.history_subscription;
+              this.isCreditCard = true
+            }
+
             if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
               this.isCreditCard = true
             }
@@ -541,6 +569,7 @@ export const useCheckoutStore = defineStore("checkout", {
       if(routeIsCheckout) return;
       const store = useAmountStore();
       const prodStore = useProductStore();
+      const purchaseStore = usePurchaseStore();
       if (remove) {
         store.setAmount(store.getOriginalAmount - store.getAmount);
         this.coupon = {
@@ -607,8 +636,10 @@ export const useCheckoutStore = defineStore("checkout", {
       if (maxInstallments) this.max_installments = maxInstallments;
       if (fixed) this.fixed_installments = fixed;
       if (ticket) this.ticket_installments = ticket;
+      if (this.history_subscription) this.installments = this.history_subscription.contract_installments
     },
     setMethod(method = "") {
+
       this.method = method;
 
       const can_pay_in_installments = [
@@ -621,6 +652,7 @@ export const useCheckoutStore = defineStore("checkout", {
         return;
       }
       const store = useProductStore();
+      const purchaseStore = usePurchaseStore();
 
       this.setInstallments(
         store.hasPreSelectedInstallments ?? store.resolveInstallments(),
@@ -654,15 +686,16 @@ export const useCheckoutStore = defineStore("checkout", {
       this.is_heaven = url.includes(config.public.HEAVEN_CHECKOUT_PAGE);
     },
     setProductListPreCheckout(product, addProduct = true) {
+      const amountStore2 = useAmountStore();
       const index = this.product_list.findIndex(item => item.id === product.id);
 
       if (addProduct) {
-        amountStore.setAmount(
+        amountStore2.setAmount(
           !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
         );
-        amountStore.setOriginalAmount(
+        amountStore2.setOriginalAmount(
           !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
@@ -673,43 +706,45 @@ export const useCheckoutStore = defineStore("checkout", {
           !!product.has_shipping_fee &&
           product?.method !== 'FREE'
         ) {
-          amountStore.setAmount(product?.shipping?.amount || 0);
-          amountStore.setOriginalAmount(product?.shipping?.amount || 0);
+          amountStore2.setAmount(product?.shipping?.amount || 0);
+          amountStore2.setOriginalAmount(product?.shipping?.amount || 0);
         }
         this.checkAllowedMethods();
         this.product_list.push(product);
         return;
       }
       this.product_list.splice(index, 1);
-      amountStore.setAmount(
+      amountStore2.setAmount(
         !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
-      amountStore.setOriginalAmount(
+      amountStore2.setOriginalAmount(
         !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
 
       if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee && product?.method !== 'FREE') {
-        amountStore.setAmount(product?.shipping?.amount * -1 || 0);
-        amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
+        amountStore2.setAmount(product?.shipping?.amount * -1 || 0);
+        amountStore2.setOriginalAmount(product?.shipping?.amount * -1 || 0);
       }
       this.checkAllowedMethods();
     },
     setProductList(product) {
+      const amountStore3 = useAmountStore();
+
       const index = this.product_list
         .map((item) => item.id)
         .indexOf(product.id);
 
       if (index === -1) {
-        amountStore.setAmount(
+        amountStore3.setAmount(
           !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
         );
-        amountStore.setOriginalAmount(
+        amountStore3.setOriginalAmount(
           !!product?.custom_charges?.length
             ? product.custom_charges[0].amount
             : product.amount
@@ -720,28 +755,28 @@ export const useCheckoutStore = defineStore("checkout", {
           !!product.has_shipping_fee &&
           product?.method !== 'FREE'
         ) {
-          amountStore.setAmount(product?.shipping?.amount || 0);
-          amountStore.setOriginalAmount(product?.shipping?.amount || 0);
+          amountStore3.setAmount(product?.shipping?.amount || 0);
+          amountStore3.setOriginalAmount(product?.shipping?.amount || 0);
         }
         this.checkAllowedMethods();
         this.product_list.push(product);
         return;
       }
       this.product_list.splice(index, 1);
-      amountStore.setAmount(
+      amountStore3.setAmount(
         !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
-      amountStore.setOriginalAmount(
+      amountStore3.setOriginalAmount(
         !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
           : product.amount * -1
       );
 
       if (product.format === "PHYSICALPRODUCT" && !!product.has_shipping_fee && product?.method !== 'FREE') {
-        amountStore.setAmount(product?.shipping?.amount * -1 || 0);
-        amountStore.setOriginalAmount(product?.shipping?.amount * -1 || 0);
+        amountStore3.setAmount(product?.shipping?.amount * -1 || 0);
+        amountStore3.setOriginalAmount(product?.shipping?.amount * -1 || 0);
       }
       this.checkAllowedMethods();
     },

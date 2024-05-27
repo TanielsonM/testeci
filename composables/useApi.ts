@@ -5,13 +5,12 @@ import { HeadersState } from "@/types";
 import { GreennLogs } from "@/utils/greenn-logs";
 
 import { useLoadingStore } from "@/store/loading/loading";
-
 import md5 from 'crypto-js/md5';
 
-const loading = useLoadingStore();
-const headStore = useHeadersStore();
-
 export default function () {
+  const loading = useLoadingStore();
+  const headStore = useHeadersStore();
+
   async function instance<T>(
     url: string,
     method: "get" | "post" | "put" | "delete",
@@ -22,22 +21,33 @@ export default function () {
   ): Promise<T | any> {
     if (body) config = { body };
 
-    const { API_GATEWAY_URL, API_BASE_URL, API_HOST_PRODUCT, CHECKOUT_GATEWAY_KEY } = useRuntimeConfig().public;
+    const { API_GATEWAY_URL, API_BASE_URL, API_HOST_PRODUCT, CHECKOUT_GATEWAY_KEY, FINGERPRINT_API_KEY } = useRuntimeConfig().public;
 
     let baseURL: string = API_BASE_URL;
+
 
     if (useGateway || useProductApi) {
       baseURL = useGateway ? API_GATEWAY_URL : API_HOST_PRODUCT;
     }
 
+    let fingerprintRequestId: { requestId: string | null } | null = null;
+
+    if (url === "/checkout/card") {
+      fingerprintRequestId = await useFingerprint();
+    }
+
     const { data, error } = await useFetch<T>(url, {
       ...config,
       method,
-      baseURL: baseURL,
+      baseURL,
       onRequest({ request, options }) {
+
+        const sessionId = GreennLogs.getInternalContext()?.session_id ?? '';
         loading.changeLoading(request.toString());
         const headers: HeadersInit = new Headers();
         headers.set("Content-type", "application/json");
+        headers.set("X-Session-Id", sessionId)
+     
         if (request === "/payment") {
           // controller-token-
           if (headStore["controller-token-"]) {
@@ -65,28 +75,37 @@ export default function () {
             document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
               "wd_not_found"
           );
-          
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
           });
         }
         if (request === "/checkout/card") {
+
+
           let apiKey = CHECKOUT_GATEWAY_KEY;
           // Gera um salt aleatório
           const salt = Math.floor(1000 + Math.random() * 9000).toString();
           // Gera um número aleatório de iterações entre 1 e 10
           const iterations = Math.floor(1 + Math.random() * 10);
-          let textWithSalt = apiKey + salt;       
+          let textWithSalt = apiKey + salt;
           // Realiza a iteração adicionando o salt ao texto várias vezes
           for (let i = 0; i < iterations; i++) {
             textWithSalt = md5(textWithSalt).toString();
           }
           const encrypted = textWithSalt + salt + iterations;
+
           headers.set("X-Greenn-Gateway", encrypted);
 
-          if (headStore["fingerprint-requestId"]) {
-            headers.set("X-Fingerprint-RID", headStore["fingerprint-requestId"]);
+          // Define o x-fingerprint-rid se tiver valor dentro do fingerprintRequestId
+          if (fingerprintRequestId && fingerprintRequestId.requestId) {
+            headers.set("X-Fingerprint-RID", fingerprintRequestId.requestId.toString());
+
+            GreennLogs.logger.info('axiosRequest.card', {
+              'axiosRequest': config,
+              'extra': { 'fingerprint_request_id': fingerprintRequestId.requestId.toString() ?? '' }
+            });
           }
+  
         }
         options.headers = headers;
       },
@@ -99,7 +118,6 @@ export default function () {
             "cache-token-": response.headers.get("cache-token-"),
             "trans-token-": response.headers.get("trans-token-"),
             "wd-token-": "",
-            "fingerprint-requestId": "",
           };
 
           headStore.updateHeaders(headers);
@@ -142,6 +160,8 @@ export default function () {
   async function remove<T>(url: string, config?: any, useGateway: boolean = false) {
     return await instance<T>(url, "delete", config, null, useGateway);
   }
+  
+  
 
   return {
     read,

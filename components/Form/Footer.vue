@@ -70,7 +70,7 @@ const imgs = [
     >
       {{ $t("components.footer.annual_fee") }}
     </p>
-    <span class="flex flex-wrap items-center justify-between">
+    <span class="flex flex-wrap items-center justify-center" style="filter: grayscale(1); opacity: 0.7">
       <img
         v-for="(img, index) in imgs"
         :src="img.src"

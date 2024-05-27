@@ -5,10 +5,30 @@ import { useCheckoutStore } from "../checkout";
 import { usePersonalStore } from "./../forms/personal";
 import { useAmountStore } from "./amount";
 
-const productStore = useProductStore();
-const checkoutStore = useCheckoutStore();
-const personalStore = usePersonalStore();
-const amountStore = useAmountStore();
+// const productStore = useProductStore();
+// const checkoutStore = useCheckoutStore();
+// const personalStore = usePersonalStore();
+// const amountStore = useAmountStore();
+
+export function productStore() {
+  const store = useProductStore();
+  return store;
+}
+
+export function checkoutStore() {
+  const store = useCheckoutStore();
+  return store;
+}
+
+export function personalStore() {
+  const store = usePersonalStore();
+  return store;
+}
+
+export function amountStore() {
+  const store = useAmountStore();
+  return store;
+}
 
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
@@ -28,12 +48,12 @@ export const usePixelStore = defineStore("Pixel", {
   actions: {
     async syncPixels(event: string, amount: any) {
       this.event = event;
-      this.product_id = productStore.product_id;
-      this.method = checkoutStore.method;
-      this.affiliate_id = checkoutStore.hasAffiliateId;
-      this.email = personalStore.email;
-      this.cellphone = personalStore.cellphone;
-      this.amount = amount || amountStore.amount;
+      this.product_id = productStore().product_id;
+      this.method = checkoutStore().method;
+      this.affiliate_id = checkoutStore().hasAffiliateId;
+      this.email = personalStore().email;
+      this.cellphone = personalStore().cellphone;
+      this.amount = amount || amountStore().amount;
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {

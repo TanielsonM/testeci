@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Sale } from "@/types";
+import { type Sale } from "@/types";
 import { formatMoney } from "@/utils/money";
 import { useModalStore } from "~~/store/modal/success";
 

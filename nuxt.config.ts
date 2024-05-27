@@ -9,20 +9,10 @@ import es from "./locales/es.json";
 
 export default defineNuxtConfig({
   ssr: true,
-  image: {
-    presets: {
-      default: {
-        quality: 75,
-        width: 1200,
-        height: 1200,
-      },
-    },
-  },
   modules: [
     "@nuxtjs/tailwindcss",
     "nuxt-icon",
     "@nuxtjs/i18n",
-    "@nuxt/image-edge",
     "@nuxtjs/robots",
     "@nuxt/devtools",
     "@vue-macros/nuxt",
@@ -112,6 +102,7 @@ export default defineNuxtConfig({
       DONATION_RS: process.env.DONATION_RS,
       FINGERPRINT_API_KEY: process.env.FINGERPRINT_API_KEY,
       FINGERPRINT_ENDPOINT: process.env.FINGERPRINT_ENDPOINT,
+      FINGERPRINT_PATH: process.env.FINGERPRINT_PATH,
     },
   },
   i18n: {
