@@ -1,10 +1,10 @@
 <script setup>
-import moment from "@/plugins/moment";
 import { useProductStore } from "~~/store/product";
 
+const { $moment } = useNuxtApp();
 const { product } = useProductStore();
-const startDateMonth = product.start_date ? (moment(product.start_date).format('MMM')).toUpperCase() : '---';
-const startDateDay = product.start_date ? moment(product.start_date).format('DD') : 'X';
+const startDateMonth = product.start_date ? ($moment(product.start_date).format('MMM')).toUpperCase() : '---';
+const startDateDay = product.start_date ? $moment(product.start_date).format('DD') : 'X';
 </script>
 
 <template>
