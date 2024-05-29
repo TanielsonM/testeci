@@ -249,6 +249,7 @@ watch(sameAddress, (val) => {
 // Functions
 function closeModal() {
   payment.setPaymentLoading(false);
+  payment.setPaymentFetching(false);
   alert_modal.value = false;
   error_message.value = "";
 }
