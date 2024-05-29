@@ -32,7 +32,7 @@ export default function () {
 
     let fingerprintRequestId: { requestId: string | null } | null = null;
 
-    if (url === "/checkout/card") {
+    if (url === "/checkout/card" || url === "/payment") {
       fingerprintRequestId = await useFingerprint();
     }
 
@@ -75,6 +75,14 @@ export default function () {
             document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
               "wd_not_found"
           );
+          if (fingerprintRequestId && fingerprintRequestId.requestId) {
+            headers.set("X-Fingerprint-RID", fingerprintRequestId.requestId.toString());
+
+            GreennLogs.logger.info('axiosRequest.card', {
+              'axiosRequest': config,
+              'extra': { 'fingerprint_request_id': fingerprintRequestId.requestId.toString() ?? '' }
+            });
+          }
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
           });
