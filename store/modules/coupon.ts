@@ -22,15 +22,21 @@ export const useCouponStore = defineStore("Coupon", {
   actions: {
     async getCoupon(): Promise<Coupon> {
       const store: CheckoutState = useCheckoutStore();
-      let url = `/coupon/check/${this.coupon.name}/${store.url.params.product_id}`;
+      const { isProductApiFast } = useApiFast();
+
+      const product_id = store.url.params.product_id;
+
+      let url = `/coupon/check/${this.coupon.name}/${product_id}`;
+
       if (store.url.params.hash) {
         url = url + `/offer/${store.url.params.hash}`;
       }
       const query = {
         country: store.selectedCountry,
-      };
+      };      
+
       try {
-        const res = await useApi().read(url, { query });
+        const res = await useApi().read(url, { query }, false, isProductApiFast(product_id));
         return res;
       } catch (error) {
         throw error;
