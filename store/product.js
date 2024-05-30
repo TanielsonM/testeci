@@ -7,7 +7,7 @@ import { usePreCheckoutStore } from "~~/store/preCheckout";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
-    product: {product_type_id: 0, type: '', seller: {}},
+    product: {product_type_id: 0, type: '', seller: {}, thank_you_page: ''},
     amount: 0,
     original_amount: 0,
     is_gift: false,
