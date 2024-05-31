@@ -209,17 +209,13 @@ watch(installments, () => {
 });
 
 const {urlSubscription} = props;
-
-const canShowTabs = computed(() =>{
-  return showCreditCardsTabs && !urlSubscription
-});
 </script>
 
 <template>
   <section class="flex flex-col gap-5">
     <section
       class="flex w-full items-center justify-between gap-5"
-      v-if="canShowTabs"
+      v-if="showCreditCardsTabs && !urlSubscription"
     >
       <BaseButton
         color="info"
