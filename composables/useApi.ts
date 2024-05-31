@@ -78,7 +78,7 @@ export default function () {
           if (fingerprintRequestId && fingerprintRequestId.requestId) {
             headers.set("X-Fingerprint-RID", fingerprintRequestId.requestId.toString());
 
-            GreennLogs.logger.info('axiosRequest.card', {
+            GreennLogs.logger.info('axiosRequest.payment', {
               'axiosRequest': config,
               'extra': { 'fingerprint_request_id': fingerprintRequestId.requestId.toString() ?? '' }
             });
