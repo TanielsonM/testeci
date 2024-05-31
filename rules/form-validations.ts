@@ -268,6 +268,8 @@ export const validateAll = async (): Promise<boolean> => {
 };
 
 const validateCpfCnpj = (value: any) => {
+  const currentCountry: any = useState("currentCountry");
+  if (currentCountry.value != 'BR') return true;
   if (!value) return false;
 
   const cleanValue = value.replace(/[^\d]/g, "");
