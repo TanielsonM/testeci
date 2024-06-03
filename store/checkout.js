@@ -7,14 +7,7 @@ import { useAmountStore } from "./modules/amount";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
-
-// const purchaseStore = usePurchaseStore();
-// const amountStore = useAmountStore();
-
-function purchaseStore() {
-  const store = usePurchaseStore();
-  return store;
-}
+import useApi from "@/composables/useApi";
 
 function amountStore() {
   const store = useAmountStore();
