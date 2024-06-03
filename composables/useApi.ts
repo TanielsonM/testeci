@@ -21,7 +21,7 @@ export default function () {
   ): Promise<T | any> {
     if (body) config = { body };
 
-    const { API_GATEWAY_URL, API_BASE_URL, API_HOST_PRODUCT, CHECKOUT_GATEWAY_KEY, FINGERPRINT_API_KEY } = useRuntimeConfig().public;
+    const { API_GATEWAY_URL, API_BASE_URL, API_HOST_PRODUCT, CHECKOUT_GATEWAY_KEY } = useRuntimeConfig().public;
 
     let baseURL: string = API_BASE_URL;
 
