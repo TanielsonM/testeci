@@ -272,6 +272,15 @@ export const useCheckoutStore = defineStore("checkout", {
       if(this.hasSubscription){
         query.subscription_id = this.hasSubscription
       }
+
+      try {
+        // Configure a URL da requisição para a rota de API do Nuxt
+        const response = await $fetch(`/api/${id}`, {customKey: 123});
+        // console.log('getProduct', response);
+      } catch (err) {
+        // console.error('getProduct', err)
+      }
+
       /* Call api to get product */
       try {
         return await useApi()

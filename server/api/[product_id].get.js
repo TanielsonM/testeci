@@ -1,6 +1,7 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 export default defineEventHandler(async (event) => {
+  console.log(event)
   const config = useRuntimeConfig();
   const { product_id } = event.context.params;
 
@@ -15,22 +16,28 @@ export default defineEventHandler(async (event) => {
   };
 
   try {
-    const response = await $fetch(`${config.public.API_BASE_URL}/api/product/test-checkout/${product_id}`, {
+    const response = await fetch(`${config.public.API_BASE_URL}/product/test-checkout/${product_id}`, {
       method: 'GET',
       headers: requestHeaders,
     });
 
-    const responseHeaders = new Headers();
-    responseHeaders.set("controller-token-", response.headers.get("controller-token-"));
-    responseHeaders.set("requestray-token-", response.headers.get("requestray-token-"));
-    responseHeaders.set("firewall-token-", response.headers.get("firewall-token-"));
-    responseHeaders.set("cache-token-", response.headers.get("cache-token-"));
-    responseHeaders.set("trans-token-", response.headers.get("trans-token-"));
-  
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar produto ${product_id}`);
+    }
+
+    const responseHeaders = {
+      "controller-token-": response.headers.get("controller-token-"),
+      "requestray-token-": response.headers.get("requestray-token-"),
+      "firewall-token-": response.headers.get("firewall-token-"),
+      "cache-token-": response.headers.get("cache-token-"),
+      "trans-token-": response.headers.get("trans-token-"),
+    };
+    setResponseHeaders(event, responseHeaders);
+
     return {
       statusCode: response.status,
-      body: JSON.stringify(await response.json()),
-      headers: responseHeaders,
+      body: await response.json(),
+      headers: responseHeaders
     };
   } catch (error) {
     return createError({
