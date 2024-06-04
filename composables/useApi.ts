@@ -1,5 +1,5 @@
 // Types
-import { HeadersState } from "@/types";
+import { type HeadersState } from "@/types";
 
 // Utils
 import { GreennLogs } from "@/utils/greenn-logs";
