@@ -16,5 +16,5 @@ resource "aws_ecr_repository" "checkout-nginx-repository" {
 
 resource "aws_ecr_repository_policy" "checkout-nginx-repo-policy" {
   repository = aws_ecr_repository.checkout-nginx-repository.name
-  policy     = file("./policies/checkout-repo-policy.json")
+  policy     = file("./policys/checkout-repo-policy.json")
 }
