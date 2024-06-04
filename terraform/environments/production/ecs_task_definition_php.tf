@@ -44,7 +44,7 @@ resource "aws_ecs_task_definition" "node" {
           dd_source      = "node"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
-          dd_tags        = "project:fluent-bit"
+          dd_tags        = "project:fluent-bit${VUE_APP_ENVIRONMENT}"
           Name           = "datadog"
           apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
@@ -89,11 +89,11 @@ resource "aws_ecs_task_definition" "node" {
         options = {
           dd_message_key = "log"
           provider       = "ecs"
-          dd_service     = "payfast-back"
+          dd_service     = "payfast-nginx"
           dd_source      = "nginx"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
-          dd_tags        = "project:fluent-bit"
+          dd_tags        = "project:fluent-bit${VUE_APP_ENVIRONMENT}"
           Name           = "datadog"
           apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
