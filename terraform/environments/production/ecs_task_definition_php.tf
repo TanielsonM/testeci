@@ -44,7 +44,7 @@ resource "aws_ecs_task_definition" "node" {
           dd_source      = "node"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
-          dd_tags        = "project:fluent-bit${var.environment}"
+          dd_tags        = "project:fluent-bit,environment:${var.environment}"
           Name           = "datadog"
           apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
@@ -93,7 +93,7 @@ resource "aws_ecs_task_definition" "node" {
           dd_source      = "nginx"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
-          dd_tags        = "project:fluent-bit${var.environment}"
+          dd_tags        = "project:fluent-bit,environment:${var.environment}"
           Name           = "datadog"
           apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
