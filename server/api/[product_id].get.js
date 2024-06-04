@@ -1,13 +1,14 @@
 import { GreennLogs } from "@/utils/greenn-logs";
 
 export default defineEventHandler(async (event) => {
-  console.log(event)
-  const config = useRuntimeConfig();
   const { product_id } = event.context.params;
-
   if (!product_id) {
     throw new Error('product_id não fornecido');
   }
+
+  const { url, useNewProductApi } = getQuery(event);
+  const { API_BASE_URL, API_HOST_PRODUCT } = useRuntimeConfig().public;
+  const baseURL = useNewProductApi ? API_HOST_PRODUCT : API_BASE_URL;
 
   const sessionId = GreennLogs.getInternalContext()?.session_id ?? '';
   const requestHeaders = {
@@ -16,7 +17,7 @@ export default defineEventHandler(async (event) => {
   };
 
   try {
-    const response = await fetch(`${config.public.API_BASE_URL}/product/test-checkout/${product_id}`, {
+    const response = await fetch(`${baseURL}${url}`, {
       method: 'GET',
       headers: requestHeaders,
     });
@@ -34,11 +35,7 @@ export default defineEventHandler(async (event) => {
     };
     setResponseHeaders(event, responseHeaders);
 
-    return {
-      statusCode: response.status,
-      body: await response.json(),
-      headers: responseHeaders
-    };
+    return await response.json();
   } catch (error) {
     return createError({
       statusCode: error.response?.status || 500,

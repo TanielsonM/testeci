@@ -144,7 +144,7 @@ export const useLeadsStore = defineStore("Leads", {
       if (this.uuid) {
         try {
           let updatedCellphone = this.personal?.cellphone;
-          if (this.personal.cellphone !== null) {
+          if (this.personal?.cellphone !== null && updatedCellphone) {
             updatedCellphone = updatedCellphone.replace(/\s/g, "");
           }
 
