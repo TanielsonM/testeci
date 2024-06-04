@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "node" {
       HealthCheck = {
         Command = [
           "CMD-SHELL",
-          "curl -f http://localhost:3000/ || exit 1"
+          "curl -f http://localhost:3000/api/health || exit 1"
         ],
         Interval = 10,
         Timeout  = 2,
@@ -77,7 +77,7 @@ resource "aws_ecs_task_definition" "node" {
       HealthCheck = {
         Command = [
           "CMD-SHELL",
-          "curl -f http://localhost/ || exit 1",
+          "curl -f http://localhost/api/health || exit 1",
         ],
         Interval = 10,
         Timeout  = 2,
@@ -100,11 +100,11 @@ resource "aws_ecs_task_definition" "node" {
       }
     }
   ], local.default_sidecar_container_definition))
-  lifecycle {
-    ignore_changes = [
-      container_definitions
-    ]
-  }
+  # lifecycle {
+  #   ignore_changes = [
+  #     container_definitions
+  #   ]
+  # }
 }
 
 
