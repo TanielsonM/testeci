@@ -96,12 +96,12 @@ Build Images:
     
     # Nginx
     - export NGINX_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-nginx-ecr-address.txt):${DEPLOY_HASH}"
-    - export LATEST_NGINX_CHECKOUT_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-nginx-ecr-address.txt):latest"
+    - export LATEST_NGINX_IMAGE_TAG="$(cat ${TF_ROOT}/aws-checkout-nginx-ecr-address.txt):latest"
     - aws ecr get-login-password | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query "Account" --output text).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-    - docker pull $LATEST_NGINX_CHECKOUT_IMAGE_TAG || true
-    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_NGINX_CHECKOUT_IMAGE_TAG -f "nginx.Dockerfile" -t $NGINX_IMAGE_TAG -t $LATEST_NGINX_CHECKOUT_IMAGE_TAG .
+    - docker pull $LATEST_NGINX_IMAGE_TAG || true
+    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $LATEST_IMAGE_TAG -f "nginx.Dockerfile" -t $NGINX_IMAGE_TAG -t $LATEST_NGINX_IMAGE_TAG .
     - docker push $NGINX_IMAGE_TAG
-    - docker push $LATEST_NGINX_CHECKOUT_IMAGE_TAG
+    - docker push $LATEST_NGINX_IMAGE_TAG
   needs:
     - Terraform Plan
   # cache:
