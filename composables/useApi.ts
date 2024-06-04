@@ -69,12 +69,6 @@ export default function () {
           if (headStore["trans-token-"]) {
             headers.set("Trans-Token-", headStore["trans-token-"]);
           }
-          // wd-token-
-          headers.set(
-            "Wd-Token-",
-            document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
-              "wd_not_found"
-          );
           GreennLogs.logger.info("axiosRequest", {
             axiosRequest: options,
           });
@@ -116,8 +110,7 @@ export default function () {
             "requestray-token-": response.headers.get("requestray-token-"),
             "firewall-token-": response.headers.get("firewall-token-"),
             "cache-token-": response.headers.get("cache-token-"),
-            "trans-token-": response.headers.get("trans-token-"),
-            "wd-token-": "",
+            "trans-token-": response.headers.get("trans-token-")
           };
 
           headStore.updateHeaders(headers);

@@ -9,11 +9,9 @@ export default defineEventHandler(async (event) => {
   }
 
   const sessionId = GreennLogs.getInternalContext()?.session_id ?? '';
-  const wdToken = document.querySelector("[data-wd]")?.getAttribute("data-wd") || "wd_not_found";
   const requestHeaders = {
     "Content-Type": "application/json",
-    "X-Session-Id": sessionId,
-    "Wd-Token-": wdToken
+    "X-Session-Id": sessionId
   };
 
   try {
@@ -28,7 +26,6 @@ export default defineEventHandler(async (event) => {
     responseHeaders.set("firewall-token-", response.headers.get("firewall-token-"));
     responseHeaders.set("cache-token-", response.headers.get("cache-token-"));
     responseHeaders.set("trans-token-", response.headers.get("trans-token-"));
-    responseHeaders.set("wd-token-", "");
   
     return {
       statusCode: response.status,

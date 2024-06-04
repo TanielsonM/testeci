@@ -7,8 +7,7 @@ export const useHeadersStore = defineStore("", {
     "requestray-token-": "",
     "firewall-token-": "",
     "cache-token-": "",
-    "trans-token-": "",
-    "wd-token-": "",
+    "trans-token-": ""
   }),
   actions: {
     updateHeaders(headers: HeadersState) {
@@ -17,7 +16,6 @@ export const useHeadersStore = defineStore("", {
       this["firewall-token-"] = headers["firewall-token-"];
       this["cache-token-"] = headers["cache-token-"];
       this["trans-token-"] = headers["trans-token-"];
-      this["wd-token-"] = headers["wd-token-"];
-    },
-  },
+    }
+  }
 });
