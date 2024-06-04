@@ -22,11 +22,12 @@ export const useCouponStore = defineStore("Coupon", {
   actions: {
     async getCoupon(): Promise<Coupon> {
       const store: CheckoutState = useCheckoutStore();
-      const { isProductApiFast } = useApiFast();
-
+      
       const product_id = store.url.params.product_id;
-
+      
       let url = `/coupon/check/${this.coupon.name}/${product_id}`;
+
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(product_id);
 
       if (store.url.params.hash) {
         url = url + `/offer/${store.url.params.hash}`;
@@ -36,7 +37,7 @@ export const useCouponStore = defineStore("Coupon", {
       };      
 
       try {
-        const res = await useApi().read(url, { query }, false, isProductApiFast(product_id));
+        const res = await useApi().read(url, { query }, false, useApiFast);
         return res;
       } catch (error) {
         throw error;

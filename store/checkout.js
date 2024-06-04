@@ -441,7 +441,7 @@ export const useCheckoutStore = defineStore("checkout", {
         country: this.selectedCountry,
       };
 
-       const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(product_id);
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(product_id);
 
       try {
         const res = await useApi().read(url, { query }, false, useApiFast);
