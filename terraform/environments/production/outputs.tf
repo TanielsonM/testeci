@@ -3,5 +3,5 @@ output "aws-checkout-ecr-address" {
 }
 
 output "aws-checkout-nginx-ecr-address" {
-  value = aws_ecr_repository.checkout-repository.repository_url
+  value = aws_ecr_repository.checkout-nginx-repository.repository_url
 }

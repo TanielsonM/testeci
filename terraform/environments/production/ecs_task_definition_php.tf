@@ -100,11 +100,11 @@ resource "aws_ecs_task_definition" "node" {
       }
     }
   ], local.default_sidecar_container_definition))
-  # lifecycle {
-  #   ignore_changes = [
-  #     container_definitions
-  #   ]
-  # }
+  lifecycle {
+    ignore_changes = [
+      container_definitions
+    ]
+  }
 }
 
 

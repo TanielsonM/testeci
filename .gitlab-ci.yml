@@ -52,7 +52,7 @@ Terraform Plan:
       - ${TF_ROOT}/aws-checkout-nginx-ecr-address.txt
       - ${TF_ROOT}/plan.cache
 
-Build Images:
+.Build Images:
   image: docker:20.10.16-dind-alpine3.16
   stage: Build
   environment: ${CI_COMMIT_BRANCH}
@@ -130,4 +130,4 @@ Terraform Deploy:
     - python3 clear_cache.py
   needs:
     - Terraform Plan
-    - Build Images
+    # - Build Images
