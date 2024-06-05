@@ -33,7 +33,8 @@ export default function () {
     let fingerprintRequestId: { requestId: string | null } | null = null;
 
     if (url === "/checkout/card") {
-      fingerprintRequestId = await useFingerprint();
+      const requestLoad = useFingerprint();
+      fingerprintRequestId = await requestLoad();
     }
 
     const { data, error } = await useFetch<T>(url, {
