@@ -62,11 +62,11 @@ if (
   const thankYouData = sale.sales[0].product.custom_thank_you_pages || [];
 
   const customUrl: any = ref({
-    PIX: "",
-    BOLETO: "",
-    PAYPAL: "",
-    CREDIT_CARD: "",
-    TWO_CREDIT_CARDS: "",
+    PIX: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-pix}`,
+    BOLETO: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-boleto}`,
+    PAYPAL: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-cartao}`,
+    CREDIT_CARD: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-cartao}`,
+    TWO_CREDIT_CARDS: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-cartao}`,
   });
 
   thankYouData.forEach(element => {
@@ -118,8 +118,7 @@ if (
   };
 
   modal.setAction(closeAction);
-  
-  if (customUrl.value[sale.sales[0].method]) {
+  if (!!customUrl.value[sale.sales[0].method]) {
     modal.setIframe(customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`);
   } else {
     modal.setIframe(sale.sales[0].product.thank_you_page);
