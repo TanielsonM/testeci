@@ -1,7 +1,7 @@
 import { type HeadersState } from "@/types";
 import { defineStore } from "pinia";
 
-export const useHeadersStore = defineStore("", {
+export const useHeadersStore = defineStore("header", {
   state: (): HeadersState => ({
     "controller-token-": "",
     "requestray-token-": "",

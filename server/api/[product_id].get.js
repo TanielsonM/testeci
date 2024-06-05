@@ -1,4 +1,5 @@
 import { GreennLogs } from "@/utils/greenn-logs";
+import { useHeadersStore } from "~~/store/headers";
 
 export default defineEventHandler(async (event) => {
   const { product_id } = event.context.params;
@@ -42,7 +43,7 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     return createError({
       statusCode: error.response?.status || 500,
-      statusMessage: 'Erro ao processar a solicitação',
+      statusMessage: 'Erro ao processar a solicitação: '+error,
       message: error.message,
     });
   }
