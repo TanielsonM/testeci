@@ -6,9 +6,9 @@ export default defineEventHandler(async (event) => {
     throw new Error('product_id não fornecido');
   }
 
-  const { url, useNewProductApi } = getQuery(event);
+  const { url, useNewProductApi } = getQuery(event);  
   const { API_BASE_URL, API_HOST_PRODUCT } = useRuntimeConfig().public;
-  const baseURL = useNewProductApi ? API_HOST_PRODUCT : API_BASE_URL;
+  const baseURL = JSON.parse(useNewProductApi) ? API_HOST_PRODUCT : API_BASE_URL;
 
   const sessionId = GreennLogs.getInternalContext()?.session_id ?? '';
   const requestHeaders = {
@@ -23,7 +23,8 @@ export default defineEventHandler(async (event) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar produto ${product_id}`);
+      const errorText = await response.text();
+      throw new Error(`Erro ao buscar produto ${product_id}: ${errorText}`);
     }
 
     const responseHeaders = {
