@@ -35,6 +35,8 @@ export default defineEventHandler(async (event) => {
       "trans-token-": response.headers.get("trans-token-"),
     };
     setResponseHeaders(event, responseHeaders);
+    const headStore = useHeadersStore();
+    headStore.updateHeaders(responseHeaders);
 
     return await response.json();
   } catch (error) {
