@@ -507,7 +507,7 @@
     "GENERIC": "Ocurrió un error al procesar la compra, verifique los datos e intente nuevamente, en caso de fallas, contáctenos para obtener más orientación.",
     "TICKET_UNAVAILABLE": "Lo sentimos, se produjo un error al procesar su compra. Parece que otra persona ya compró este boleto. Si continúa experimentando problemas, comuníquese con nosotros para obtener más orientación. Nos disculpamos por cualquier inconveniente que esto pueda haber causado.",
     "0404": "No se ha realizado ninguna firma con este documento.",
-    "ERROR_PROCESSING_PAYMENT": "Ocurrió un error al procesar su pago, tente nuevamente mas tarde."
+    "SUSPECTED_INTERN_FRAUD": "Pruebe con otro método de pago o comuníquese con su banco: transacción no permitida."
   },
   "general": {
     "close": "Cerrar",
