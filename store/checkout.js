@@ -280,7 +280,7 @@ export const useCheckoutStore = defineStore("checkout", {
             useNewProductApi
           }
         });
-        // console.log('getProduct res', response);
+
         if (response?.history_subscription) {
           response.data.method = 'CREDIT_CARD'
           this.history_subscription = response.history_subscription;
