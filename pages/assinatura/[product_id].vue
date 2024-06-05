@@ -231,9 +231,7 @@ onMounted(() => {
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
-              <template>
                 <FormPurchase :urlSubscription="true" />
-              </template>
             </section>
 
             <!-- Payment button -->
