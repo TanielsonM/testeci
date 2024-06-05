@@ -566,6 +566,7 @@ export const usePaymentStore = defineStore("Payment", {
               .catch((err) => {
                 console.error(err);
                 checkoutStore.setLoading(false);
+                this.validateError(err);
                 this.setPaymentLoading(false);
               })
               .finally(() => {
@@ -717,6 +718,7 @@ export const usePaymentStore = defineStore("Payment", {
 
       checkoutStore.setLoading(false);
       this.loading = false;
+
       switch (error.code) {
         case "TICKET_UNAVAILABLE":
           this.error_message = "error.TICKET_UNAVAILABLE";
@@ -790,6 +792,9 @@ export const usePaymentStore = defineStore("Payment", {
           break;
         case "CREDIT_CARD_INVALID":
           this.error_message = "error.CREDIT_CARD_INVALID";
+          break;
+        case "ERROR_PROCESSING_PAYMENT":
+          this.error_message = "error.ERROR_PROCESSING_PAYMENT";
           break;
         case "GENERIC":
         default:
