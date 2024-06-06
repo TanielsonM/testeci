@@ -37,7 +37,7 @@ resource "aws_ecs_service" "node" {
 
 
 resource "aws_appautoscaling_target" "node_target" {
-  count               = var.environment == "production" ? 1 : 0
+  # count               = var.environment == "production" ? 1 : 0
   max_capacity       = 20 #normal
   min_capacity       = 2 #normal
   # max_capacity       = 100 #lancamento
@@ -49,7 +49,7 @@ resource "aws_appautoscaling_target" "node_target" {
 }
 
 resource "aws_appautoscaling_policy" "node_cpu" {
-  count               = var.environment == "production" ? 1 : 0
+  # count               = var.environment == "production" ? 1 : 0
   name               = "node-cpu"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.node_target[count.index].resource_id
