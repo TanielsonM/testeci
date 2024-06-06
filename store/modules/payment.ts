@@ -718,7 +718,7 @@ export const usePaymentStore = defineStore("Payment", {
 
       checkoutStore.setLoading(false);
       this.loading = false;
-      console.log(error);
+
       switch (error.code) {
         case "TICKET_UNAVAILABLE":
           this.error_message = "error.TICKET_UNAVAILABLE";
