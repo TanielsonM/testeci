@@ -14,7 +14,7 @@ resource "aws_ecs_service" "node" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.club-node-target-group.arn
-    container_name   = "nginx"
+    container_name   = "node"
     container_port   = "80"
   }
 

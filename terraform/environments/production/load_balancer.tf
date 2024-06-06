@@ -39,7 +39,7 @@ resource "aws_lb_listener" "alb_listener_https" {
 resource "aws_lb_target_group" "club-node-target-group" {
   health_check {
     interval            = 30
-    path                = "/api/health"
+    path                = "/"
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = 29
