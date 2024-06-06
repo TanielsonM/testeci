@@ -1,12 +1,12 @@
 FROM node:18-alpine
 
-RUN apk add curl nginx supervisor
+RUN apk add curl supervisor
 
-RUN rm -rf /etc/nginx
+# RUN rm -rf /etc/nginx
 
 COPY ./resources/supervisor /etc/supervisor
 
-COPY ./resources/nginx /etc/nginx
+# COPY ./resources/nginx /etc/nginx
 
 WORKDIR /app
 
