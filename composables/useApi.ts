@@ -32,7 +32,7 @@ export default function () {
 
     let fingerprintRequestId: { requestId: string | null } | null = null;
 
-    if (url === "/checkout/card") {
+    if (url === "/checkout/card" || url === "/payment") {
       const requestLoad = useFingerprint();
       fingerprintRequestId = await requestLoad();
     }
