@@ -1,10 +1,8 @@
 // Types
-import { type CheckoutState, type CouponState, type Coupon } from "@/types";
+import { CheckoutState, CouponState, Coupon } from "@/types";
 // Stores
 import { useCheckoutStore } from "@/store/checkout";
 import { useAmountStore } from "./amount";
-
-import useApi from "@/composables/useApi";
 
 export const useCouponStore = defineStore("Coupon", {
   state: (): CouponState => ({

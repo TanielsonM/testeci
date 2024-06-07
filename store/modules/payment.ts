@@ -3,13 +3,13 @@ import { GreennLogs } from "@/utils/greenn-logs";
 
 // Types
 import {
-  type Payment,
-  type Product,
-  type PaymentError,
-  type SaleElement,
-  type CurrencyData,
-  type PurcharseCard,
-  type GlobalSettingsCard
+  Payment,
+  Product,
+  PaymentError,
+  SaleElement,
+  CurrencyData,
+  PurcharseCard,
+  GlobalSettingsCard,
 } from "~~/types";
 
 // Rules
@@ -27,9 +27,8 @@ import { useCheckoutStore } from "../checkout";
 import { usePreCheckoutStore } from "../preCheckout";
 import { useInstallmentsStore } from "./installments";
 import { useAmountStore } from "./amount";
+import { useCustomCheckoutStore } from "~~/store/customCheckout";
 import { useHeadersStore } from "../headers";
-
-import useApi from "@/composables/useApi";
 
 // External SDK
 
@@ -224,7 +223,7 @@ export const usePaymentStore = defineStore("Payment", {
               batch_id: item.id,
               selected_tickets: item.selected_batch_tickets,
             }))
-            .filter((batche: any) => batche.selected_tickets !== 0);
+            .filter((batche) => batche.selected_tickets !== 0);
         }
 
         if (captchaEnabled) {
