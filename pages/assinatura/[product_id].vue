@@ -225,9 +225,9 @@ onMounted(() => {
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
-          :step="'02'"
+          :step="checkout.showAddressStep ? '03' : '02'"
           :free="product?.method !== 'FREE' ? false : true"
-          v-if="(isMobile && currentStep == 2) || !isMobile || isOneStep"
+          v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) || !isMobile || isOneStep"
         >
           <template #content>
             <section class="flex w-full flex-col gap-8">
@@ -254,8 +254,8 @@ onMounted(() => {
         </Steps>
 
         <!-- Next step buttom -->
-        <BaseButton @click="stepsStore.currentStep = 2" v-if="isMobile &&
-          currentStep < (2) &&
+        <BaseButton @click="stepsStore.currentStep = 3" v-if="isMobile &&
+          currentStep < (checkout.showAddressStep ? 3 : 2) &&
           !isOneStep &&
           method !== 'FREE'
           ">
