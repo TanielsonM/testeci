@@ -238,7 +238,7 @@ export const usePaymentStore = defineStore("Payment", {
           data.gift_message = gift_message;
         }
         // Physical product
-        if (hasPhysicalProduct) {
+        if (hasPhysicalProduct && !isUpdateSubscription) {
           const address: any = sameAddress ? charge : shipping;
           data = {
             ...data,
@@ -255,7 +255,7 @@ export const usePaymentStore = defineStore("Payment", {
             }),
           };
 
-          if (isDynamicShipping) {
+          if (isDynamicShipping && !isUpdateSubscription) {
             data.shipping_selected = JSON.stringify({
               address,
               ...shipping_selected,
