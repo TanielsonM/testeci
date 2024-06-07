@@ -1,5 +1,4 @@
 import { GreennLogs } from "@/utils/greenn-logs";
-import { useHeadersStore } from "~~/store/headers";
 
 export default defineEventHandler(async (event) => {
   const { product_id } = event.context.params;
@@ -35,11 +34,8 @@ export default defineEventHandler(async (event) => {
       "cache-token-": response.headers.get("cache-token-"),
       "trans-token-": response.headers.get("trans-token-"),
     };
-    setResponseHeaders(event, responseHeaders);
-    const headStore = useHeadersStore();
-    headStore.updateHeaders(responseHeaders);
 
-    return await response.json();
+    return {response: await response.json(), responseHeaders};
   } catch (error) {
     return createError({
       statusCode: error.response?.status || 500,

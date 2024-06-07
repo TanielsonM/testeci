@@ -4,6 +4,7 @@ import { useProductStore } from "~/store/product";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
+import { useHeadersStore } from "./headers";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
@@ -273,13 +274,16 @@ export const useCheckoutStore = defineStore("checkout", {
 
       /* Call api to get product */
       try {
-        const response = await $fetch(`/api/${id}`, {
+        const {response, responseHeaders} = await $fetch(`/api/${id}`, {
           query: {
             ...query,
             url,
             useNewProductApi
           }
         });
+
+        const headStore = useHeadersStore();
+        headStore.updateHeaders(responseHeaders);
 
         if (response?.history_subscription) {
           response.data.method = 'CREDIT_CARD'
@@ -403,7 +407,7 @@ export const useCheckoutStore = defineStore("checkout", {
         return response
       } catch (err) {
         if (!isBump) {
-          this.setError("Ocorreu um erro ao processar a sua solicitação");
+          this.setError("Ocorreu um erro ao processar a sua solicitação: "+ err);
           this.global_settings.country = "BR";
         }
         this.setLoading();
