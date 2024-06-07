@@ -164,8 +164,8 @@ export const useLeadsStore = defineStore("Leads", {
             state: this.address?.state,
             step: this.step,
             uuid: this.uuid,
-            complement: this.address.complement,
-            country_code: this.address.country_code,
+            complement: this.address?.complement,
+            country_code: this.address?.country_code,
             status: this.purchase.status,
             cellphone: updatedCellphone,
           };
