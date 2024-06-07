@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "node" {
       portMappings = [
         {
           protocol      = "tcp"
-          containerPort = 80
+          containerPort = 3000
         }
       ]
       volumesFrom = []
@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "node" {
       HealthCheck = {
         Command = [
           "CMD-SHELL",
-          "curl -f http://localhost:80/ || exit 1"
+          "curl -f http://localhost:3000/api/health || exit 1"
         ],
         Interval = 10,
         Timeout  = 2,
@@ -44,11 +44,67 @@ resource "aws_ecs_task_definition" "node" {
           dd_source      = "node"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
-          dd_tags        = "project:fluent-bit"
+          dd_tags        = "project:fluent-bit,environment:${var.environment}"
+          Name           = "datadog"
+          apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
+        }
+      }
+    },
+  {
+      essential   = true
+      image       = "${aws_ecr_repository.checkout-nginx-repository.repository_url}:${var.deploy_hash}",
+      name        = "nginx"
+      networkMode = "awsvpc"
+      portMappings = [
+        {
+          protocol      = "tcp"
+          containerPort = 80
+          hostPort      = 80
+        }
+      ]
+      volumesFrom = []
+      mountPoints = []
+      secrets     = []
+      dependsOn = [
+        {
+          condition     = "HEALTHY"
+          containerName = "node"
+        }
+      ]
+      linuxParameters = {
+        initProcessEnabled = true
+      }
+      HealthCheck = {
+        Command = [
+          "CMD-SHELL",
+          "curl -f http://localhost/api/health || exit 1",
+        ],
+        Interval = 10,
+        Timeout  = 2,
+        Retries  = 2
+      }
+      firelensConfiguration = null
+      logConfiguration = {
+        logDriver = "awsfirelens"
+        options = {
+          dd_message_key = "log"
+          provider       = "ecs"
+          dd_service     = "payfast-nginx"
+          dd_source      = "nginx"
+          Host           = "http-intake.logs.datadoghq.com"
+          TLS            = "on"
+          dd_tags        = "project:fluent-bit,environment:${var.environment}"
           Name           = "datadog"
           apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
       }
     }
   ], local.default_sidecar_container_definition))
+  # lifecycle {
+  #   ignore_changes = [
+  #     container_definitions
+  #   ]
+  # }
 }
+
+

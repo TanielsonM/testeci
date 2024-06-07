@@ -61,7 +61,7 @@ Este guia irá ajudá-lo a executar o projeto localmente usando o Docker Compose
   ```sh
   docker-compose -f local.docker-compose.yaml up --build
    ```
-- Acesse a aplicação em seu navegador em http://localhost:3000.
+- Acesse a aplicação em seu navegador em http://localhost:81.
 
 ## Comandos Úteis:
 1. Verificar os contêineres em execução:
