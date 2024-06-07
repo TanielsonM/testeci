@@ -1,14 +1,11 @@
-import { pixelState, Pixel } from "@/types";
+import { type pixelState, type Pixel } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
 import { usePersonalStore } from "./../forms/personal";
 import { useAmountStore } from "./amount";
 
-// const productStore = useProductStore();
-// const checkoutStore = useCheckoutStore();
-// const personalStore = usePersonalStore();
-// const amountStore = useAmountStore();
+import useApi from "@/composables/useApi";
 
 export function productStore() {
   const store = useProductStore();

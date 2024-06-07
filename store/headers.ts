@@ -1,14 +1,13 @@
 import { type HeadersState } from "@/types";
 import { defineStore } from "pinia";
 
-export const useHeadersStore = defineStore("", {
+export const useHeadersStore = defineStore("header", {
   state: (): HeadersState => ({
     "controller-token-": "",
     "requestray-token-": "",
     "firewall-token-": "",
     "cache-token-": "",
-    "trans-token-": "",
-    "wd-token-": "",
+    "trans-token-": ""
   }),
   actions: {
     updateHeaders(headers: HeadersState) {
@@ -17,7 +16,6 @@ export const useHeadersStore = defineStore("", {
       this["firewall-token-"] = headers["firewall-token-"];
       this["cache-token-"] = headers["cache-token-"];
       this["trans-token-"] = headers["trans-token-"];
-      this["wd-token-"] = headers["wd-token-"];
-    },
-  },
+    }
+  }
 });

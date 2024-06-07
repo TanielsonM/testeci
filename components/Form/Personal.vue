@@ -4,7 +4,6 @@ import { usePersonalStore } from "@/store/forms/personal";
 import { useLeadsStore } from "@/store/modules/leads";
 import { usePaymentStore } from "@/store/modules/payment";
 import { useStepStore } from "@/store/modules/steps";
-import { defineProps } from 'vue';
 
 import {
   validateFirstStep,
