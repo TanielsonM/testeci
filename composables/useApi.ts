@@ -135,11 +135,13 @@ export default function () {
 
     if (error.value?.statusCode === 500) {
       loading.changeLoading();
-
-      throw showError({
-        statusCode: error.value.statusCode,
-        message: `Ocorreu um erro ao processar a sua solicitação`,
-      });
+      
+      if (!error.value?.message.includes('<no response> Failed to fetch')) {
+        throw showError({
+          statusCode: error.value.statusCode,
+          message: `Ocorreu um erro ao processar a sua solicitação`,
+        });
+      }
     }
     if (error.value) {
       loading.changeLoading();

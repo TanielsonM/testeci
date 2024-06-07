@@ -55,59 +55,29 @@ export const usePixelStore = defineStore("Pixel", {
       this.cellphone = personalStore().cellphone;
       this.amount = amount || amountStore().amount;
     },
-    isAdBlockActive(): Promise<boolean> {
-      return new Promise((resolve) => {
-          const testScript = document.createElement('script');
-          testScript.type = 'text/javascript';
-          testScript.async = true;
-          testScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-          testScript.onerror = () => resolve(true);
-          testScript.onload = () => resolve(false);
-  
-          document.body.appendChild(testScript);
-  
-          setTimeout(() => {
-              if (testScript.parentNode) {
-                  testScript.parentNode.removeChild(testScript);
-              }
-          }, 1000);
-      });
-    },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
-          product_id: this.product_id,
-          event: this.event,
-          event_id: this.event_id,
-          method: this.method,
-          sale_id: this.sale_id,
-          chc_id: this.client_has_contract,
-          em: this.email,
-          ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
-          amount: this.amount,
-          a_id: this.affiliate_id
+        product_id: this.product_id,
+        event: this.event,
+        event_id: this.event_id,
+        method: this.method,
+        sale_id: this.sale_id,
+        chc_id: this.client_has_contract,
+        em: this.email,
+        ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
+        amount: this.amount,
+        a_id: this.affiliate_id
       };
-  
-      // Verifica se o AdBlock está ativo
-      const adBlockActive = await this.isAdBlockActive();
-      if (adBlockActive) {
-          console.warn("AdBlock detected, skipping API call.");
-          return { event_id: "", pixels: [] };
-      }
-  
-      try {
-          const response = await useApi().read("lexip", { query });
-  
-          // Verifica se a resposta é um objeto válido
-          if (response && typeof response === 'object' && 'event_id' in response && 'pixels' in response) {
-              return response;
-          } else {
-              console.warn("Unexpected response format:", response);
-              return { event_id: "", pixels: [] };
+
+      return await useApi()
+        .read("lexip", { query })
+        .then((response) => {
+          if (response) {
+            return response;
           }
-      } catch (error) {
-          console.error("API call failed:", error);
-          return { event_id: "", pixels: [] };
-      }
-    }
+
+          return {};
+        });
+    },
   },
 });
