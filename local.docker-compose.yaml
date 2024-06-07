@@ -17,6 +17,6 @@ services:
       context: .
       dockerfile: local_nginx.Dockerfile
     ports:
-      - "80:80"
+      - "81:80"
     depends_on:
       - node
