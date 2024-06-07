@@ -83,11 +83,11 @@ export const useLeadsStore = defineStore("Leads", {
       };
 
       if (
-        this.address.zip_code &&
-        this.address.state &&
-        this.address.street &&
-        this.address.number &&
-        this.address.neighborhood &&
+        this.address?.zip_code &&
+        this.address?.state &&
+        this.address?.street &&
+        this.address?.number &&
+        this.address?.neighborhood &&
         this.step <= 1
       ) {
         this.changeStep(2);
@@ -156,12 +156,12 @@ export const useLeadsStore = defineStore("Leads", {
             name: this.personal.name,
             email: this.personal.email,
             cpf: this.personal.document,
-            zip_code: this.address.zip_code,
-            street: this.address.street,
-            number: this.address.number,
-            neighborhood: this.address.neighborhood,
-            city: this.address.city,
-            state: this.address.state,
+            zip_code: this.address?.zip_code,
+            street: this.address?.street,
+            number: this.address?.number,
+            neighborhood: this.address?.neighborhood,
+            city: this.address?.city,
+            state: this.address?.state,
             step: this.step,
             uuid: this.uuid,
             complement: this.address.complement,
