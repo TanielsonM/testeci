@@ -402,7 +402,6 @@ export const useCheckoutStore = defineStore("checkout", {
 
         return response
       } catch (err) {
-        console.error('getProduct', err)
         if (!isBump) {
           this.setError("Ocorreu um erro ao processar a sua solicitação");
           this.global_settings.country = "BR";
