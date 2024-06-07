@@ -3,7 +3,6 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { storeToRefs } from "pinia";
 import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/utils/validateBatch";
 import * as Toast from "vue-toastification";
-import useApi from "@/composables/useApi";
 
 export const usePreCheckoutStore = defineStore("preCheckout", {
   state: () => ({

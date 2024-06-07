@@ -4,11 +4,17 @@ import { useProductStore } from "~/store/product";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { usePurchaseStore } from "./forms/purchase";
 import { useAmountStore } from "./modules/amount";
-import { useHeadersStore } from "./headers";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
-import useApi from "@/composables/useApi";
+
+// const purchaseStore = usePurchaseStore();
+// const amountStore = useAmountStore();
+
+function purchaseStore() {
+  const store = usePurchaseStore();
+  return store;
+}
 
 function amountStore() {
   const store = useAmountStore();
@@ -266,152 +272,153 @@ export const useCheckoutStore = defineStore("checkout", {
         url += `/batches/[${batches}]`;
       }
       /* Set country in query */
-      const query = { country: this.selectedCountry };
+      const query = {
+        country: this.selectedCountry,
+      };
       // Check if has subscription id in url
       if(this.hasSubscription){
         query.subscription_id = this.hasSubscription
       }
-
       /* Call api to get product */
       try {
-        const {response, responseHeaders} = await $fetch(`/api/${id}`, {
-          query: {
-            ...query,
-            url,
-            useNewProductApi
-          }
-        });
-
-        const headStore = useHeadersStore();
-        headStore.updateHeaders(responseHeaders);
-
-        if (response?.history_subscription) {
-          response.data.method = 'CREDIT_CARD'
-          this.history_subscription = response.history_subscription;
-          this.isCreditCard = true
-        }
-
-        if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
-          this.isCreditCard = true
-        }
-
-        if(this.global_settings.country !== 'BR') {
-          this.redirectOfferPanel(response?.data, this.global_settings.country)
-        }
-
-        if (response.allow_free_offers){
-          this.setAllowFreeOffers(response.allow_free_offers)
-        }
-
-        if (response?.checkout_payment?.data?.amount) {
-          response.data.amount = response.checkout_payment.data.amount;
-        }
-
-        if (response?.checkout_payment?.paypal) {
-          response.data.paypal = response.checkout_payment.paypal;
-        }
-
-        if (
-          response.data.format === "PHYSICALPRODUCT" &&
-          !!response.data.has_shipping_fee &&
-          response.data.method !== 'FREE'
-        ) {
-          const shipping = { amount: undefined };
-          if (response.data.type_shipping_fee === "FIXED") {
-            shipping.amount = response.data.amount_fixed_shipping_fee;
-          }
-          response.data = { ...response.data, shipping };
-        }
-
-        if (
-          !isBump &&
-          response?.global_settings &&
-          Array.isArray(response?.global_settings)
-        ) {
-          response.global_settings.forEach((item) => {
-            if (item.key == "PAGARME_ANTIFRAUDE") {
-              this.global_settings.antifraud =
-                item.value == "ENABLED" ? true : false;
+        return await useApi()
+          .read(url, {
+            ...configs,
+            query,
+          }, false, useNewProductApi)
+          .then(async (response) => {
+            if (response?.history_subscription) {
+              response.data.method = 'CREDIT_CARD'
+              this.history_subscription = response.history_subscription;
+              this.isCreditCard = true
             }
-            if (item.key == "MONTHLY_INTEREST") {
-              this.global_settings.monthly_interest = parseFloat(
-                item.value
-              );
+
+            if(response.data.method.includes('CREDIT_CARD', 'TWO_CREDIT_CARDS')) {
+              this.isCreditCard = true
             }
-            if (item.key == "CHECKOUT_CAPTCHA") {
-              this.global_settings.captcha =
-                item.value == "ENABLED" ? true : false;
+
+            if(this.global_settings.country !== 'BR') {
+              this.redirectOfferPanel(response?.data, this.global_settings.country)
             }
-          });
-        }
 
-        if (response?.data && !isBump) {
-          this.checkoutPayment = response.checkout_payment;
-          await setProduct(response.data, response.batches);
-          if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
-            const customCheckout = useCustomCheckoutStore();
-            customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
-          }
-        } else {
-          if(response?.data.status === "REQUESTED" || response?.data.status === "DISAPPROVED" || !response?.data.is_active){
-            return;
-          }
-
-          let bumpData = {
-            ...response.data,
-            checkbox: false,
-            b_order: bumpOrder,
-          }
-
-          if(this.hasBumpForceCheck) {
-            bumpData.checkbox = true
-            bumpData.disabled = true
-            this.setProductList(bumpData);
-          }
-
-          this.bump_list.push(bumpData);
-          this.bump_list = this.bump_list.sort((bump1, bump2) => {
-            return bump1.b_order - bump2.b_order;
-          });
-        }
-
-        if (response.data.product_type_id === 3 && response?.batches && Array.isArray(response?.batches)) {
-          const preCheckout = usePreCheckoutStore();
-          response.batches.forEach(batch => {
-            if(haveAvailableTickets(batch)){
-              batch.soldOff = false;
-            }else{
-              batch.soldOff = true;
+            if (response.allow_free_offers){
+              this.setAllowFreeOffers(response.allow_free_offers)
             }
-            // Adicionar chave para contabilizar ingressos selecionados
-            batch.tickets = batch.tickets.map(x => {
-              return { ...x, selected_tickets: 0 }
-            })
-            // Ordenar ingressos
-            batch.tickets.sort((a, b) => {
-              if (a.batch_order < b.batch_order) return -1;
-              if (a.batch_order > b.batch_order) return 1;
-              return 0;
-            });
+
+            if (response?.checkout_payment?.data?.amount) {
+              response.data.amount = response.checkout_payment.data.amount;
+            }
+
+            if (response?.checkout_payment?.paypal) {
+              response.data.paypal = response.checkout_payment.paypal;
+            }
+
+            if (
+              response.data.format === "PHYSICALPRODUCT" &&
+              !!response.data.has_shipping_fee &&
+              response.data.method !== 'FREE'
+            ) {
+              const shipping = { amount: undefined };
+              if (response.data.type_shipping_fee === "FIXED") {
+                shipping.amount = response.data.amount_fixed_shipping_fee;
+              }
+              response.data = { ...response.data, shipping };
+            }
+
+            if (
+              !isBump &&
+              response?.global_settings &&
+              Array.isArray(response?.global_settings)
+            ) {
+              response.global_settings.forEach((item) => {
+                if (item.key == "PAGARME_ANTIFRAUDE") {
+                  this.global_settings.antifraud =
+                    item.value == "ENABLED" ? true : false;
+                }
+                if (item.key == "MONTHLY_INTEREST") {
+                  this.global_settings.monthly_interest = parseFloat(
+                    item.value
+                  );
+                }
+                if (item.key == "CHECKOUT_CAPTCHA") {
+                  this.global_settings.captcha =
+                    item.value == "ENABLED" ? true : false;
+                }
+              });
+            }
+
+            if (response?.data && !isBump) {
+              this.checkoutPayment = response.checkout_payment;
+              await setProduct(response.data, response.batches);
+              if (!!this.hasCustomCheckout && isValid.value() && (product.method != 'FREE' || (product.method == 'FREE' && this.allow_free_offers != null && this.allow_free_offers !== 'DISABLED'))) {
+                const customCheckout = useCustomCheckoutStore();
+                customCheckout.setCustomCheckout(response.custom_checkout, response.purchase_notification);
+              }
+            } else {
+              if(response?.data.status === "REQUESTED" || response?.data.status === "DISAPPROVED" || !response?.data.is_active){
+                return;
+              }
+
+              let bumpData = {
+                ...response.data,
+                checkbox: false,
+                b_order: bumpOrder,
+              }
+
+              if(this.hasBumpForceCheck) {
+                bumpData.checkbox = true
+                bumpData.disabled = true
+                this.setProductList(bumpData);
+              }
+
+              this.bump_list.push(bumpData);
+              this.bump_list = this.bump_list.sort((bump1, bump2) => {
+                return bump1.b_order - bump2.b_order;
+              });
+            }
+
+            if (response.data.product_type_id === 3 && response?.batches && Array.isArray(response?.batches)) {
+              const preCheckout = usePreCheckoutStore();
+              response.batches.forEach(batch => {
+                if(haveAvailableTickets(batch)){
+                  batch.soldOff = false;
+                }else{
+                  batch.soldOff = true;
+                }
+                // Adicionar chave para contabilizar ingressos selecionados
+                batch.tickets = batch.tickets.map(x => {
+                  return { ...x, selected_tickets: 0 }
+                })
+                // Ordenar ingressos
+                batch.tickets.sort((a, b) => {
+                  if (a.batch_order < b.batch_order) return -1;
+                  if (a.batch_order > b.batch_order) return 1;
+                  return 0;
+                });
+              })
+              // Ordenar lotes
+              response.batches.sort((a, b) => {
+                if (a.order < b.order) return -1;
+                if (a.order > b.order) return 1;
+                return 0;
+              });
+
+              preCheckout.setBatches(response.batches);
+            }
+
+            return response
           })
-          // Ordenar lotes
-          response.batches.sort((a, b) => {
-            if (a.order < b.order) return -1;
-            if (a.order > b.order) return 1;
-            return 0;
+          .catch((err) => {
+            console.error(err);
+            if (!isBump) throw err;
           });
-
-          preCheckout.setBatches(response.batches);
-        }
-
-        return response
-      } catch (err) {
+      } catch (error) {
+        console.error(error);
         if (!isBump) {
-          this.setError("Ocorreu um erro ao processar a sua solicitação: "+ err);
+          this.setError("Ocorreu um erro ao processar a sua solicitação");
           this.global_settings.country = "BR";
         }
         this.setLoading();
-        throw err;
       }
     },
     async getCoupon() {

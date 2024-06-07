@@ -51,7 +51,10 @@ export default defineNuxtConfig({
         {
           "http-equiv": "x-ua-compatible",
           content: "IE=edge",
-        }
+        },
+        {
+          "data-wd": "{{wd}}",
+        },
       ],
       link: [
         {

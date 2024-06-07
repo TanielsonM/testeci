@@ -2,7 +2,7 @@
 import moment from "moment";
 
 export default defineNuxtPlugin(() => {
-  moment.updateLocale("pt-br", {
+  moment.locale("pt-br", {
     months:
       "Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro".split(
         "_"
