@@ -460,7 +460,7 @@ export const usePaymentStore = defineStore("Payment", {
           if(!isUpdateSubscription && !errorRequestCard) {
             // Payment request
             await useApi()
-              .create("/payment", data)
+              .create("/payment", data, {}, false, false, true)
               .then((res) => {
                 if (
                   res.sales !== undefined &&
@@ -589,7 +589,7 @@ export const usePaymentStore = defineStore("Payment", {
             }
 
             await useApi()
-              .update(`/payment/${product_id}`, body)
+              .update(`/payment/${product_id}`, body, {}, false, false, true)
               .then((res) => {
                 if (
                   res.sales !== undefined &&
