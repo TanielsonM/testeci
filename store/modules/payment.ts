@@ -158,7 +158,7 @@ export const usePaymentStore = defineStore("Payment", {
       if (!this.fetching) {
         this.setPaymentLoading(true);
         this.setPaymentFetching(true);
-        const allValid = await validateAll();
+        const allValid = await validateAll(isUpdateSubscription);
         if (!allValid) {
           this.hasSent = true;
           this.setPaymentLoading(false);
@@ -206,12 +206,12 @@ export const usePaymentStore = defineStore("Payment", {
           // client_statistic: products_client_statistics.value,
           // Address
           zipcode: charge.zipcode ? charge.zipcode.replace(/[-]/g, "") : null,
-          street: charge.street,
-          number: charge.number,
-          complement: charge.complement,
-          neighborhood: charge.neighborhood,
-          city: charge.city,
-          state: charge.state,
+          street: charge.street ?? "",
+          number: charge.number ?? "",
+          complement: charge.complement ?? "",
+          neighborhood: charge.neighborhood ?? "",
+          city: charge.city ?? "",
+          state: charge.state ?? "",
           // Others
           language,
           upsell_id: hasUpsell,
@@ -238,7 +238,7 @@ export const usePaymentStore = defineStore("Payment", {
           data.gift_message = gift_message;
         }
         // Physical product
-        if (hasPhysicalProduct) {
+        if (hasPhysicalProduct && !isUpdateSubscription) {
           const address: any = sameAddress ? charge : shipping;
           data = {
             ...data,
@@ -255,29 +255,31 @@ export const usePaymentStore = defineStore("Payment", {
             }),
           };
 
-          if (isDynamicShipping) {
+          if (isDynamicShipping && !isUpdateSubscription) {
             data.shipping_selected = JSON.stringify({
               address,
               ...shipping_selected,
             });
           }
 
-          product_list.forEach((item: any) => {
-            if (item?.shipping) {
-              const index = data.products
-                .map((prod) => prod.product_id)
-                .indexOf(item.id);
-              const shippingSelected: any = shipping_selected;
-
-              data.products[index].shipping_amount = item.shipping.amount;
-              data.products[index].shipping_service_id = item.shipping.id;
-              data.products[index].shipping_service_name = item.shipping.name;
-              data.products[index].shipping_selected = JSON.stringify({
-                address,
-                ...shipping_selected,
-              });
-            }
-          });
+          if(!isUpdateSubscription){
+            product_list.forEach((item: any) => {
+              if (item?.shipping) {
+                const index = data.products
+                  .map((prod) => prod.product_id)
+                  .indexOf(item.id);
+                const shippingSelected: any = shipping_selected;
+  
+                data.products[index].shipping_amount = item.shipping.amount;
+                data.products[index].shipping_service_id = item.shipping.id;
+                data.products[index].shipping_service_name = item.shipping.name;
+                data.products[index].shipping_selected = JSON.stringify({
+                  address,
+                  ...shipping_selected,
+                });
+              }
+            });
+          }
         }
         // Affiliate id
         const affiliate_id = useCookie(`affiliate_${product_id}`);
@@ -458,7 +460,7 @@ export const usePaymentStore = defineStore("Payment", {
           if(!isUpdateSubscription && !errorRequestCard) {
             // Payment request
             await useApi()
-              .create("/payment", data)
+              .create("/payment", data, {}, false, false, true)
               .then((res) => {
                 if (
                   res.sales !== undefined &&
@@ -587,7 +589,7 @@ export const usePaymentStore = defineStore("Payment", {
             }
 
             await useApi()
-              .update(`/payment/${product_id}`, body)
+              .update(`/payment/${product_id}`, body, {}, false, false, true)
               .then((res) => {
                 if (
                   res.sales !== undefined &&

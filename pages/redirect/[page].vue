@@ -5,7 +5,7 @@ const isGreennPage = ref(false);
 const externalPage = ref("");
 
 await useApi()
-  .read(`/link/${route.params.page}`)
+  .read(`/link/${route.params.page}`, {}, false, false, true)
   .then((res) => {
     const url = new URL(res.url);
     const currentQuery = new URLSearchParams(route.query);

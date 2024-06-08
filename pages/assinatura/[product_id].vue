@@ -207,7 +207,7 @@ onMounted(() => {
     <section class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]">
       <!-- Purchase card -->
       <BaseCard class="w-full p-5 md:px-[60px] md:py-[50px]">
-        <BaseButton color="transparent" size="sm" class="mb-4" v-if="currentStep > 1 && currentStep <= 3 && isMobile && !isOneStep" @click="stepsStore.back()">
+        <BaseButton color="transparent" size="sm" class="mb-4" v-if="currentStep > 1 && currentStep <= 3 && isMobile && !isOneStep" @click="currentStep = 1">
           <div class="flex items-start justify-start text-left">
             <Icon name="mdi:arrow-left" class="mr-4" size="20" />
             <p class="text-left">{{ $t("checkout.steps.back") }}</p>
@@ -225,7 +225,7 @@ onMounted(() => {
         <!-- Purchase Form -->
         <Steps
           :title="$t('checkout.pagamento.title')"
-          :step="checkout.showAddressStep ? '03' : '02'"
+          :step="'02'"
           :free="product?.method !== 'FREE' ? false : true"
           v-if="(isMobile && currentStep == (checkout.showAddressStep ? 3 : 2)) || !isMobile || isOneStep"
         >
@@ -254,7 +254,7 @@ onMounted(() => {
         </Steps>
 
         <!-- Next step buttom -->
-        <BaseButton @click="stepsStore.currentStep = 2" v-if="isMobile &&
+        <BaseButton @click="stepsStore.currentStep = checkout.showAddressStep ? 3 : 2" v-if="isMobile &&
           currentStep < (checkout.showAddressStep ? 3 : 2) &&
           !isOneStep &&
           method !== 'FREE'
