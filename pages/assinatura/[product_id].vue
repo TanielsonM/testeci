@@ -254,7 +254,7 @@ onMounted(() => {
         </Steps>
 
         <!-- Next step buttom -->
-        <BaseButton @click="stepsStore.currentStep = 3" v-if="isMobile &&
+        <BaseButton @click="stepsStore.currentStep = checkout.showAddressStep ? 3 : 2" v-if="isMobile &&
           currentStep < (checkout.showAddressStep ? 3 : 2) &&
           !isOneStep &&
           method !== 'FREE'
