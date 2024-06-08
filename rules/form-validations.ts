@@ -228,8 +228,8 @@ export const validateAll = async (isUpdateSubscription): Promise<boolean> => {
   const { isMobile } = storeToRefs(stepStore);
   const validStepOne = await validateFirstStep();
 
-  const validStepTwo  = true;
-  if(!isUpdateSubscription){
+  let validStepTwo = true;
+  if (!isUpdateSubscription) {
     validStepTwo = await validateSecondStep();
   }
   const validStepThree = await validateThristStep();
