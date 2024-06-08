@@ -17,7 +17,8 @@ export default function () {
     config?: any,
     body: any = null,
     useGateway: boolean = false,
-    useProductApi: boolean = false
+    useProductApi: boolean = false,
+    isErrorApi: boolean = false
   ): Promise<T | any> {
     if (body) config = { body };
 
@@ -47,7 +48,7 @@ export default function () {
         const headers: HeadersInit = new Headers();
         headers.set("Content-type", "application/json");
         headers.set("X-Session-Id", sessionId)
-     
+
         if (request === "/payment") {
           // controller-token-
           if (headStore["controller-token-"]) {
@@ -69,12 +70,6 @@ export default function () {
           if (headStore["trans-token-"]) {
             headers.set("Trans-Token-", headStore["trans-token-"]);
           }
-          // wd-token-
-          headers.set(
-            "Wd-Token-",
-            document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
-              "wd_not_found"
-          );
           if (fingerprintRequestId && fingerprintRequestId.requestId) {
             headers.set("X-Fingerprint-RID", fingerprintRequestId.requestId.toString());
 
@@ -113,7 +108,7 @@ export default function () {
               'extra': { 'fingerprint_request_id': fingerprintRequestId.requestId.toString() ?? '' }
             });
           }
-  
+
         }
         options.headers = headers;
       },
@@ -125,7 +120,6 @@ export default function () {
             "firewall-token-": response.headers.get("firewall-token-"),
             "cache-token-": response.headers.get("cache-token-"),
             "trans-token-": response.headers.get("trans-token-"),
-            "wd-token-": "",
           };
 
           headStore.updateHeaders(headers);
@@ -136,10 +130,12 @@ export default function () {
     if (error.value?.statusCode === 500) {
       loading.changeLoading();
 
-      throw showError({
-        statusCode: error.value.statusCode,
-        message: `Ocorreu um erro ao processar a sua solicitação`,
-      });
+      if (isErrorApi) {
+        throw showError({
+          statusCode: error.value.statusCode,
+          message: `Ocorreu um erro ao processar a sua solicitação`,
+        });
+      }
     }
     if (error.value) {
       loading.changeLoading();
@@ -152,24 +148,23 @@ export default function () {
     return retorno;
   }
 
-   // Adiciona useGateway como parâmetro na chamada de instance
-  async function read<T>(url: string, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
-    return await instance<T>(url, "get", config, null, useGateway, useProductApi);
+  // Adiciona useGateway como parâmetro na chamada de instance
+  async function read<T>(url: string, config?: any, useGateway: boolean = false, useProductApi: boolean = false, isErrorApi: boolean = false) {
+    return await instance<T>(url, "get", config, null, useGateway, useProductApi, isErrorApi);
   }
 
-  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
-    return await instance<T>(url, "post", config, body, useGateway, useProductApi);
+  async function create<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false, isErrorApi: boolean = false) {
+    return await instance<T>(url, "post", config, body, useGateway, useProductApi, isErrorApi);
   }
 
-  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false) {
-    return await instance<T>(url, "put", config, body, useGateway, useProductApi);
+  async function update<T>(url: string, body?: any, config?: any, useGateway: boolean = false, useProductApi: boolean = false, isErrorApi: boolean = false) {
+    return await instance<T>(url, "put", config, body, useGateway, useProductApi, isErrorApi);
   }
 
-  async function remove<T>(url: string, config?: any, useGateway: boolean = false) {
-    return await instance<T>(url, "delete", config, null, useGateway);
+  async function remove<T>(url: string, config?: any, useGateway: boolean = false, isErrorApi: boolean = false) {
+    return await instance<T>(url, "delete", config, null, useGateway, isErrorApi);
   }
-  
-  
+
 
   return {
     read,
