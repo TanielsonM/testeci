@@ -273,7 +273,7 @@ export const useCheckoutStore = defineStore("checkout", {
       }
       /* Set country in query */
       const query = {
-        country: this.selectedCountry,
+        country: this.selectedCountry ?? "BR",
       };
       // Check if has subscription id in url
       if(this.hasSubscription){
