@@ -144,12 +144,12 @@ export default function () {
       loading.changeLoading();
 
       if (isErrorApi) {
-        handleApiError(error.value);
+        handleApiError(error.value, url);
       }
     }
 
-    function handleApiError(error) {
-      const errorMessages = {
+    function handleApiError(error, url) {
+      const baseErrorMessages = {
         400: "Requisição inválida. Verifique os dados enviados.",
         401: "Não autorizado.",
         403: "Acesso negado.",
@@ -162,7 +162,19 @@ export default function () {
 
       const defaultMessage = "Ocorreu um erro desconhecido. Tente novamente.";
 
-      const message = errorMessages[error.statusCode] || defaultMessage;
+      if (url.includes("link") && error.statusCode === 404) {
+        throw showError({
+          statusCode: 404,
+          message: "Link indisponível. Verifique o endereço solicitado.",
+        });
+      } else if (url.includes("product") && error.statusCode === 404) {
+        throw showError({
+          statusCode: 404,
+          message: "Este produto não existe ou não está disponível.",
+        });
+      }
+
+      const message = baseErrorMessages[error.statusCode] || defaultMessage;
 
       throw showError({
         statusCode: error.statusCode,
