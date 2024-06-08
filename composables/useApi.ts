@@ -151,13 +151,13 @@ export default function () {
     function handleApiError(error) {
       const errorMessages = {
         400: "Requisição inválida. Verifique os dados enviados.",
-        401: "Não autorizado. Faça autenticação para acessar o recurso.",
-        403: "Acesso negado. Você não tem permissão para fazer isso.",
+        401: "Não autorizado.",
+        403: "Acesso negado.",
         404: "Recurso não encontrado. Verifique o endereço solicitado.",
-        500: "Erro interno do servidor. Tente novamente mais tarde.",
-        502: "Bad Gateway. O servidor obteve uma resposta inválida.",
-        503: "Serviço indisponível. O servidor está temporariamente fora de serviço (manutenção).",
-        504: "Gateway Timeout. O servidor demorou para responder.",
+        500: "Erro interno. Tente novamente.",
+        502: "O servidor obteve uma resposta inválida.",
+        503: "Serviço indisponível.",
+        504: "O servidor demorou para responder.",
       };
 
       const defaultMessage = "Ocorreu um erro desconhecido. Tente novamente.";
