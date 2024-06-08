@@ -158,7 +158,7 @@ export const usePaymentStore = defineStore("Payment", {
       if (!this.fetching) {
         this.setPaymentLoading(true);
         this.setPaymentFetching(true);
-        const allValid = await validateAll();
+        const allValid = await validateAll(isUpdateSubscription);
         if (!allValid) {
           this.hasSent = true;
           this.setPaymentLoading(false);
