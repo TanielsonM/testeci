@@ -511,7 +511,6 @@ export type HeadersState = {
   "firewall-token-": string | null;
   "cache-token-": string | null;
   "trans-token-": string | null;
-  "wd-token-": string;
 };
 
 export type Image = {

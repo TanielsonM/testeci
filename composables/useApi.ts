@@ -70,12 +70,6 @@ export default function () {
           if (headStore["trans-token-"]) {
             headers.set("Trans-Token-", headStore["trans-token-"]);
           }
-          // wd-token-
-          headers.set(
-            "Wd-Token-",
-            document.querySelector("[data-wd]")?.getAttribute("data-wd") ||
-            "wd_not_found"
-          );
           if (fingerprintRequestId && fingerprintRequestId.requestId) {
             headers.set("X-Fingerprint-RID", fingerprintRequestId.requestId.toString());
 
@@ -126,7 +120,6 @@ export default function () {
             "firewall-token-": response.headers.get("firewall-token-"),
             "cache-token-": response.headers.get("cache-token-"),
             "trans-token-": response.headers.get("trans-token-"),
-            "wd-token-": "",
           };
 
           headStore.updateHeaders(headers);
