@@ -165,7 +165,7 @@ export default function () {
       if (url.includes("link") && error.statusCode === 404) {
         throw showError({
           statusCode: 404,
-          message: "Link indisponível. Verifique o endereço solicitado.",
+          message: "Este link não existe ou não está disponível.",
         });
       } else if (url.includes("product") && error.statusCode === 404) {
         throw showError({
