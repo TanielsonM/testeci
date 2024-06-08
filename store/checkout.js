@@ -285,7 +285,7 @@ export const useCheckoutStore = defineStore("checkout", {
           .read(url, {
             ...configs,
             query,
-          }, false, useNewProductApi)
+          }, false, useNewProductApi, !isBump)
           .then(async (response) => {
             if (response?.history_subscription) {
               response.data.method = 'CREDIT_CARD'
