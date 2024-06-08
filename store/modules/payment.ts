@@ -206,12 +206,12 @@ export const usePaymentStore = defineStore("Payment", {
           // client_statistic: products_client_statistics.value,
           // Address
           zipcode: charge.zipcode ? charge.zipcode.replace(/[-]/g, "") : null,
-          street: charge.street,
-          number: charge.number,
-          complement: charge.complement,
-          neighborhood: charge.neighborhood,
-          city: charge.city,
-          state: charge.state,
+          street: charge.street ?? "",
+          number: charge.number ?? "",
+          complement: charge.complement ?? "",
+          neighborhood: charge.neighborhood ?? "",
+          city: charge.city ?? "",
+          state: charge.state ?? "",
           // Others
           language,
           upsell_id: hasUpsell,
@@ -262,22 +262,24 @@ export const usePaymentStore = defineStore("Payment", {
             });
           }
 
-          product_list.forEach((item: any) => {
-            if (item?.shipping) {
-              const index = data.products
-                .map((prod) => prod.product_id)
-                .indexOf(item.id);
-              const shippingSelected: any = shipping_selected;
-
-              data.products[index].shipping_amount = item.shipping.amount;
-              data.products[index].shipping_service_id = item.shipping.id;
-              data.products[index].shipping_service_name = item.shipping.name;
-              data.products[index].shipping_selected = JSON.stringify({
-                address,
-                ...shipping_selected,
-              });
-            }
-          });
+          if(!isUpdateSubscription){
+            product_list.forEach((item: any) => {
+              if (item?.shipping) {
+                const index = data.products
+                  .map((prod) => prod.product_id)
+                  .indexOf(item.id);
+                const shippingSelected: any = shipping_selected;
+  
+                data.products[index].shipping_amount = item.shipping.amount;
+                data.products[index].shipping_service_id = item.shipping.id;
+                data.products[index].shipping_service_name = item.shipping.name;
+                data.products[index].shipping_selected = JSON.stringify({
+                  address,
+                  ...shipping_selected,
+                });
+              }
+            });
+          }
         }
         // Affiliate id
         const affiliate_id = useCookie(`affiliate_${product_id}`);
