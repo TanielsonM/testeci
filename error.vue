@@ -12,7 +12,8 @@ const checkout = useCheckoutStore();
 <template>
   <main class="flex h-screen w-screen flex-col items-center">
     <section
-      class="flex h-[80px] w-full items-center justify-center bg-red-600"
+      class="flex h-[80px] w-full items-center justify-center"
+      :class="error.code === 404 ? 'bg-red-600' : 'bg-blue-600'"
     >
       <p class="text-base font-semibold text-white">{{ error.message }}</p>
     </section>
