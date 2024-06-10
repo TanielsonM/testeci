@@ -505,7 +505,8 @@
     "SUSPECTED_FRAUD": "Transaction not allowed - Contact your bank or try another payment method",
     "GENERIC": "An error occurred while processing the purchase, please check the data and try again, in case of failures, please contact us for further guidance.",
     "TICKET_UNAVAILABLE": "We're sorry, an error occurred while processing your purchase. It appears this ticket has already been purchased by someone else. If you continue to experience issues, please contact us for further guidance. We apologize for any inconvenience this may cause have caused.",
-    "0404": "No signature has been made with this document."
+    "0404": "No signature has been made with this document.",
+    "SUSPECTED_INTERN_FRAUD": "Try another payment method or contact your bank - Transaction not allowed."
   },
   "general": {
     "close": "Close",
