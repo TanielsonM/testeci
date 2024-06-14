@@ -109,10 +109,11 @@ export const useLeadsStore = defineStore("Leads", {
       };
     },
     async syncLead() {
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(this.payment.product_id);
       // Implementação de chamada de API para sincronizar ou recuperar um lead
       const response = await useApi().read("/lead", {
         query: { uuid: this.uuid, product_id: this.payment.product_id },
-      });
+      }, false, useApiFast);
 
       if (response && response.uuid) {
         this.step = response.step;
@@ -132,8 +133,10 @@ export const useLeadsStore = defineStore("Leads", {
         step: this.step
       };
 
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(this.payment.product_id);
+
       await useApi()
-        .create("/lead", data, {}, false, false)
+        .create("/lead", data, {}, false, useApiFast)
         .then(() => {
           GreennLogs.logger.info("Lead criado com sucesso", {
             uuid: this.uuid,
@@ -170,8 +173,10 @@ export const useLeadsStore = defineStore("Leads", {
             cellphone: updatedCellphone,
           };
 
+          const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(this.payment.product_id);
+
           await useApi()
-            .update(`lead/${this.uuid}`, data, {}, false, false)
+            .update(`lead/${this.uuid}`, data, {}, false, useApiFast)
             .then((res) => {
               return res;
             });
