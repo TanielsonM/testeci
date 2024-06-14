@@ -285,7 +285,7 @@ export const useCheckoutStore = defineStore("checkout", {
           .read(url, {
             ...configs,
             query,
-          }, false, useNewProductApi)
+          }, false, useNewProductApi, !isBump)
           .then(async (response) => {
             if (response?.history_subscription) {
               response.data.method = 'CREDIT_CARD'
@@ -429,16 +429,22 @@ export const useCheckoutStore = defineStore("checkout", {
         toast.warning("Desculpe, o cupom não está disponível no momento para eventos.");
         throw new Error; 
       }
+
+      const product_id = this.url.params.product_id;
+
       // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-      let url = `/coupon/check/${this.coupon.name}/${this.url.params.product_id}`;
+      let url = `/coupon/check/${this.coupon.name}/${product_id}`;
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
       }
       const query = {
         country: this.selectedCountry,
       };
+
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(product_id);
+
       try {
-        const res = await useApi().read(url, { query });
+        const res = await useApi().read(url, { query }, false, useApiFast);
         return res;
       } catch (error) {
         console.error(error);

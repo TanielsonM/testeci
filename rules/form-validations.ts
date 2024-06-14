@@ -222,12 +222,16 @@ export const validateThristStep = async (): Promise<boolean> => {
   );
 };
 
-export const validateAll = async (): Promise<boolean> => {
+export const validateAll = async (isUpdateSubscription): Promise<boolean> => {
   const checkout = useCheckoutStore();
   const stepStore = useStepStore();
   const { isMobile } = storeToRefs(stepStore);
   const validStepOne = await validateFirstStep();
-  const validStepTwo = await validateSecondStep();
+
+  let validStepTwo = true;
+  if (!isUpdateSubscription) {
+    validStepTwo = await validateSecondStep();
+  }
   const validStepThree = await validateThristStep();
 
   if (checkout.showAddressStep) {

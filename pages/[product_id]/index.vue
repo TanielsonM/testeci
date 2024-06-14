@@ -10,6 +10,8 @@ import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
 
+const nuxtApp = useNuxtApp();
+
 
 // Stores
 const customCheckoutStore = useCustomCheckoutStore();
@@ -74,90 +76,6 @@ const tabs = computed(() => {
           label: "Paypal",
           icon: "mdi:paypal",
         };
-      /* case "SAFETYPAY-CASH":
-        return {
-          value: item,
-          label: "SAFETYPAY-CASH",
-          icon: "bi:credit-card-fill",
-        };
-      case "EFT":
-        return {
-          value: item,
-          label: "EFT",
-          icon: "bi:credit-card-fill",
-        };
-      case "BANKTRANSFER":
-        return {
-          value: item,
-          label: "BANKTRANSFER",
-          icon: "bi:credit-card-fill",
-        };
-      case "DEBITCARD":
-        return {
-          value: item,
-          label: t("checkout.pagamento.metodos.cartao_debito"),
-          icon: "bi:credit-card-fill",
-        };
-      case "EFECTY":
-        return {
-          value: item,
-          label: "EFECTY",
-          icon: "bi:credit-card-fill",
-        };
-      case "MULTICAJA":
-        return {
-          value: item,
-          label: "MULTICAJA",
-          icon: "bi:credit-card-fill",
-        };
-      case "SENCILLITO":
-        return {
-          value: item,
-          label: "SENCILLITO",
-          icon: "bi:credit-card-fill",
-        };
-      case "SERVIPAG":
-        return {
-          value: item,
-          label: "SERVIPAG",
-          icon: "bi:credit-card-fill",
-        };
-      case "PAGOSNET":
-        return {
-          value: item,
-          label: "PAGOSNET",
-          icon: "bi:credit-card-fill",
-        };
-      case "RAPIPAGO":
-        return {
-          value: item,
-          label: "RAPIPAGO",
-          icon: "bi:credit-card-fill",
-        };
-      case "PAGOFACIL":
-        return {
-          value: item,
-          label: "PAGOFACIL",
-          icon: "bi:credit-card-fill",
-        };
-      case "WEBPAY":
-        return {
-          value: item,
-          label: "WEBPAY",
-          icon: "bi:credit-card-fill",
-        };
-      case "OXXO":
-        return {
-          value: item,
-          label: "OXXO",
-          icon: "bi:credit-card-fill",
-        };
-      case "SPEI":
-        return {
-          value: item,
-          label: "SPEI",
-          icon: "bi:credit-card-fill",
-        }; */
       case "PIX":
         return {
           value: item,
@@ -324,16 +242,18 @@ await checkout.init().then(() => {
 
 
 
-  useSeoMeta({
-    ogTitle: ogTitle,
-    ogDescription: ogDescription,
-    ogType: "website",
-    ogUrl: urlForOG.href,
-    ogImage: product?.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
-    ogImageHeight: "500",
-    ogImageWidth: "500",
-    ogSiteName: "Greenn - A plataforma de pagamentos simples",
-  });
+  nuxtApp.runWithContext(() =>
+    useSeoMeta({
+      ogTitle: ogTitle,
+      ogDescription: ogDescription,
+      ogType: "website",
+      ogUrl: urlForOG.href,
+      ogImage: product?.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
+      ogImageHeight: "500",
+      ogImageWidth: "500",
+      ogSiteName: "Greenn - A plataforma de pagamentos simples",
+    })
+  );
 });
 
 onMounted(() => {
