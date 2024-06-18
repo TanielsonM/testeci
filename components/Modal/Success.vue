@@ -109,9 +109,10 @@ if (
   */
   const addQueryParams = (url: string) => {
     const urlObj = new URL(url);
-    for (const [key, value] of current_query.entries()) {
+
+    current_query.forEach((value, key) => {
       urlObj.searchParams.append(key, value);
-    }
+    });
     return urlObj.toString();
   };
 
