@@ -104,12 +104,15 @@ if (
   }
 
   /**
-  * Verifica se a URL contém "https://api.whatsapp.com".
-  * Se não contiver, adiciona os parâmetros de consulta (`current_query`).
-  * Ação necessaria para não quebrar os clientes que usam o link do whatsapp na pagina de Obrigado
+  * Verifica se existem parametros pra adicionar
+  * Se contiver, adiciona os parâmetros de consulta (`current_query`).
   */
   const addQueryParams = (url: string) => {
-    return url.includes("https://api.whatsapp.com") ? url : url + `?${current_query.toString()}`;
+    const urlObj = new URL(url);
+    for (const [key, value] of current_query.entries()) {
+      urlObj.searchParams.append(key, value);
+    }
+    return urlObj.toString();
   };
 
   const closeAction = () => {
