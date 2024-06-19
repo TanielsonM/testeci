@@ -7,7 +7,11 @@ const externalPage = ref("");
 await useApi()
   .read(`/link/${route.params.page}`, {}, false, false, true)
   .then((res) => {
-    const url = new URL(res.url);
+    let urlString = res.url;
+    if (!urlString.startsWith("http://") && !urlString.startsWith("https://")) {
+      urlString = "https://" + urlString;
+    }
+    const url = new URL(urlString);
     const currentQuery = new URLSearchParams(route.query);
     const query = new URLSearchParams(url.searchParams);
     if (currentQuery) {
