@@ -273,7 +273,7 @@ export const useCheckoutStore = defineStore("checkout", {
       }
       /* Set country in query */
       const query = {
-        country: this.selectedCountry ?? "BR",
+        country: this.selectedCountry,
       };
       // Check if has subscription id in url
       if(this.hasSubscription){
@@ -933,20 +933,23 @@ export const useCheckoutStore = defineStore("checkout", {
         const promises = this.getBumpsWithShippingFee.map((bump) =>
           useApi()
             .create(`envios/calculate/${bump.id}`, {
-              shipping_address_zip_code: zip,
-            })
+                shipping_address_zip_code: zip,
+              },
+              {},
+              false,
+              false,
+              true
+            )
             .then((res) => {
               bump.hasIntegrationWithGreennEnvios = true;
               return res;
             })
             .catch((err) => {
-              console.log('eerrerrerrerrrr2', err);
-
               // Product does not have integration with "Greenn envios"
-              if (err.value.statusCode) {
+              if (err.status === 422) {
                 const toast = Toast.useToast();
                 toast.error("Esse produto não possui integração para envio");
-                bump.hasIntegrationWithGreennEnvios = false;
+                this.hasIntegrationWithGreennEnvios = false;
               }
             })
         );
