@@ -949,7 +949,7 @@ export const useCheckoutStore = defineStore("checkout", {
               if (err.status === 422) {
                 const toast = Toast.useToast();
                 toast.error("Esse produto não possui integração para envio");
-                this.hasIntegrationWithGreennEnvios = false;
+                bump.hasIntegrationWithGreennEnvios = false;
               }
             })
         );
