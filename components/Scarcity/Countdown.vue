@@ -21,23 +21,26 @@ let minutes = cookie.value
   ? ref(cookie.value.minutes)
   : ref(date.getMinutes() - 1);
 let seconds = cookie.value ? ref(cookie.value.seconds) : ref(59);
+
 const minutesText = computed(() => {
   if (minutes.value < 10) {
     return `0${minutes.value}`;
   }
   return minutes.value;
 });
-const secondText = computed(() => {
+const secondsText = computed(() => {
   if (seconds.value < 10) {
     return `0${seconds.value}`;
   }
   return seconds.value;
 });
 
+let intervalSeconds;
+
 if (process.client) {
-  const intervalSeconds = setInterval(() => {
-  seconds.value = seconds.value - 1;
-}, 1000);
+  intervalSeconds = setInterval(() => {
+    seconds.value = seconds.value - 1;
+  }, 1000);
 }
 
 function saveTime() {
@@ -51,13 +54,13 @@ watch(
   () => seconds.value,
   (value) => {
     saveTime();
-    if (value <= 0 && minutes.value) {
+    if (value <= 0 && minutes.value > 0) {
       seconds.value = 59;
       minutes.value = minutes.value - 1;
-    }
-    if (value <= 0 && minutes.value <= 0) {
-      window.clearInterval(intervalSeconds);
+    } else if (value <= 0 && minutes.value <= 0) {
+      clearInterval(intervalSeconds);
       seconds.value = 0;
+      minutes.value = 0;
     }
   }
 );
@@ -65,8 +68,9 @@ watch(
 watch(
   () => minutes.value,
   (value) => {
-    if (!value) {
+    if (value <= 0) {
       clearInterval(intervalSeconds);
+      minutes.value = 0;
       seconds.value = 0;
     }
   }
@@ -82,7 +86,7 @@ watch(
       <span class="font-semibold text-white md:text-xl"
         >{{ minutesText }}m :</span
       >
-      <span class="font-semibold text-white md:text-xl">{{ secondText }}s</span>
+      <span class="font-semibold text-white md:text-xl">{{ secondsText }}s</span>
     </section>
   </ClientOnly>
 </template>
@@ -91,13 +95,13 @@ watch(
 .countdown {
   background: rgba(255, 255, 255, 0.2);
 }
-@media(max-width:768px) {
-  .countdown{
+@media (max-width: 768px) {
+  .countdown {
     width: 100% !important;
   }
 }
-@media(max-width:350px) {
-  .countdown{
+@media (max-width: 350px) {
+  .countdown {
     width: initial !important;
   }
 }
