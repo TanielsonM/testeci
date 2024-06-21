@@ -272,6 +272,10 @@ export const validateAll = async (isUpdateSubscription): Promise<boolean> => {
 };
 
 const validateCpfCnpj = (value: any) => {
+  //Quando é um um documento de outro pais desabilita a validação de CPF
+  const currentCountry: any = useState("currentCountry");
+  if (currentCountry.value != 'BR') return true;
+  
   if (!value) return false;
 
   const cleanValue = value.replace(/[^\d]/g, "");
