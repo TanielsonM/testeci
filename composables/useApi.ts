@@ -172,6 +172,10 @@ export default function () {
           statusCode: 404,
           message: "Este produto não existe ou não está disponível.",
         });
+      } else if (url.includes("calculate") && error.statusCode === 422) {
+        const customError = new Error("Esse produto não possui integração para envio.");
+        customError.status = 422;
+        throw customError;
       }
 
       const message = baseErrorMessages[error.statusCode] || defaultMessage;
