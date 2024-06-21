@@ -103,25 +103,37 @@ if (
       break;
   }
 
+  /**
+  * Verifica se existem parametros pra adicionar
+  * Se contiver, adiciona os parâmetros de consulta (`current_query`).
+  */
+  const addQueryParams = (url: string) => {
+    const urlObj = new URL(url);
+
+    current_query.forEach((value, key) => {
+      urlObj.searchParams.append(key, value);
+    });
+    return urlObj.toString();
+  };
+
   const closeAction = () => {
     if (customUrl.value[sale.sales[0].method]) {
-      //window.location.href = customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`;
-      window.location.href = customUrl.value[sale.sales[0].method];
-    } 
-    else {
+      window.location.href = addQueryParams(customUrl.value[sale.sales[0].method]);
+    } else {
       const redirectTo = sale.sales[0].product.thank_you_page 
-      ? sale.sales[0].product.thank_you_page 
-      : `${runtimeConfig.public.BASE_URL}/checkout-obrigado?${current_query.toString()}`;
+        ? addQueryParams(sale.sales[0].product.thank_you_page)
+        : `${runtimeConfig.public.BASE_URL}/checkout-obrigado?${current_query.toString()}`;
 
       window.location.href = redirectTo;
     }
   };
 
   modal.setAction(closeAction);
+
   if (!!customUrl.value[sale.sales[0].method]) {
-    modal.setIframe(customUrl.value[sale.sales[0].method] + `?${current_query.toString()}`);
+    modal.setIframe(addQueryParams(customUrl.value[sale.sales[0].method]));
   } else {
-    modal.setIframe(sale.sales[0].product.thank_you_page);
+    modal.setIframe(addQueryParams(sale.sales[0].product.thank_you_page));
   }
 } else {
   const chc = route.query.chc;
