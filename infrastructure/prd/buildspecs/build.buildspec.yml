@@ -17,20 +17,23 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest --build-arg BUILDKIT_INLINE_CACHE=1 -f "Dockerfile" .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -t $REPOSITORY_URI-node:latest -f "Dockerfile" .
+      - docker build -t $REPOSITORY_URI-nginx:latest -f "nginx.Dockerfile" .
+      - docker tag $REPOSITORY_URI-node:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI-nginx:latest $REPOSITORY_URI:$IMAGE_TAG
       - echo Build completed on `date`
       
   post_build:
     commands:
       - echo Pushing the Docker image...
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '{"imageUri":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - docker push REPOSITORY_URI-node:latest
+      - docker $REPOSITORY_URI-nginx:latest
+      - printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' $REPOSITORY_URI-nginx:$IMAGE_TAG $REPOSITORY_URI-nginx:$IMAGE_TAG > imageDetail.json
+      # - printf '{"nginxUrl":"%s","NodeUrl":"%s"}' $REPOSITORY_URI-nginx:$IMAGE_TAG $REPOSITORY_URI-nginx:$IMAGE_TAG > imageDetail.json
       
 artifacts:
   files:
     - imageDetail.json
-    - ./production/k8s/manifest.yaml
 
 
 
@@ -44,5 +47,3 @@ artifacts:
 
 
 
-
-    
