@@ -36,7 +36,7 @@ container_security_group = [
 #########################
 
 application_host_header_values = [
-  "payfast.greenn.com.br",
+  "payfast-prod.greenn.com.br",
   "payfastdebug.greenn.com.br",
   "pay-staging.greenn.com.br"
 ]
