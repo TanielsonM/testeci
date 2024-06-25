@@ -17,18 +17,18 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI-node:latest -f "Dockerfile" .
-      - docker build -t $REPOSITORY_URI-nginx:latest -f "nginx.Dockerfile" .
-      - docker tag $REPOSITORY_URI-node:latest $REPOSITORY_URI:$IMAGE_TAG
-      - docker tag $REPOSITORY_URI-nginx:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -t $REPOSITORY_URI:node -f "Dockerfile" .
+      - docker build -t $REPOSITORY_URI:nginx -f "nginx.Dockerfile" .
+      - docker tag $REPOSITORY_URI:node $REPOSITORY_URI:node-$IMAGE_TAG
+      - docker tag $REPOSITORY_URI:nginx $REPOSITORY_URI:nginx-$IMAGE_TAG
       - echo Build completed on `date`
       
   post_build:
     commands:
       - echo Pushing the Docker image...
-      - docker push $REPOSITORY_URI-node:latest
-      - docker push $REPOSITORY_URI-nginx:latest
-      - printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' $REPOSITORY_URI-nginx:$IMAGE_TAG $REPOSITORY_URI-nginx:$IMAGE_TAG > imageDetail.json
+      - docker push $REPOSITORY_URI:node-$IMAGE_TAG
+      - docker push $REPOSITORY_URI:nginx-$IMAGE_TAG
+      - printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' $REPOSITORY_URI:nginx-$IMAGE_TAG REPOSITORY_URI:node-$IMAGE_TAG > imageDetail.sh
       # - printf '{"nginxUrl":"%s","NodeUrl":"%s"}' $REPOSITORY_URI-nginx:$IMAGE_TAG $REPOSITORY_URI-nginx:$IMAGE_TAG > imageDetail.json
       
 artifacts:

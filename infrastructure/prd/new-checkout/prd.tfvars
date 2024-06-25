@@ -15,6 +15,7 @@ min_capacity = 0
 
 name = "greenn-pci-prd-new-checkout-svc"
 environment = "production"
+cluster_name = "test"
 
 #############################
 ### NETWORK CONFIGURATION ###
