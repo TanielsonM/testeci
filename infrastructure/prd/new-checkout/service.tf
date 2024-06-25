@@ -4,7 +4,7 @@ resource "aws_ecs_service" "new-checkout-svc" {
   cluster                = var.cluster_name
   task_definition        = aws_ecs_task_definition.new-checkout-td.arn
   desired_count          = 1
-  launch_type            = "FARGATE"
+  launch_type            = "EC2"
   enable_execute_command = true
 
   network_configuration {
