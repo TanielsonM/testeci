@@ -15,15 +15,14 @@ phases:
       - "unzip -o terraform.zip" 
       - "mv terraform /bin"
       - "rm terraform.zip"
+      - . ./imageDetail.sh
       
   build:
     commands:
-      - . ./imageDetail.sh
       - "cd ${TERRAFORM_PATH}"
       - "echo ## TERRAFORM APPLY : Starting with the Terraform Apply"
       - envsubst < .prd-template > prd.tfvars
-      - cat prd.tfvars
       - terraform init
       - terraform validate
       - terraform plan -var-file prd.tfvars
-      - terraform apply -var-file prd.tfvars 
+      - terraform apply -var-file prd.tfvars -auto-approve

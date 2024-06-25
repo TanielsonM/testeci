@@ -33,7 +33,8 @@ phases:
       
 artifacts:
   files:
-    - '**/*'
+    - imageDetail.sh
+    - 'infrastructure/prd/new-checkout'
 
 
 
