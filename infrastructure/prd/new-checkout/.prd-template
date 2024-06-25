@@ -13,8 +13,9 @@ min_capacity = 0
 ### GENERAL CONFIGURATION ###
 #############################
 
-name = "greenn-pci-prd"
-environment = "production"
+name = "greenn"
+environment = "prd-pci"
+application = "new-checkout
 cluster_name = "greenn-prd-pci-cluster"
 
 #############################

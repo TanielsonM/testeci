@@ -7,7 +7,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
 
   family                   = "new-checkout"
   network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
+  requires_compatibilities = ["EC2"]
 
   cpu    = local.cpu
   memory = local.memory
