@@ -39,4 +39,6 @@ application_host_header_values = [
   "payfastdebug.greenn.com.br",
   "pay-staging.greenn.com.br"
 ]
+
+target_deployment_role = "${TARGET_DEPLOYMENT_ROLE}"
 alb_https_listener = "arn:aws:elasticloadbalancing:us-east-1:590184113591:listener/app/greenn-prd-pci-alb/c2cd98123c4ea2ce/38c6fd6ddc19e459"
