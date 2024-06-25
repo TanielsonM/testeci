@@ -1,6 +1,6 @@
 
 resource "aws_ecs_service" "new-checkout-svc" {
-  name                   = "${var.name}-new-checkout-svc"
+  name                   = "${var.name}-svc"
   cluster                = var.cluster_name
   task_definition        = aws_ecs_task_definition.new-checkout-td.arn
   desired_count          = 1
