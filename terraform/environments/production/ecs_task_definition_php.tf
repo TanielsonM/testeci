@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "node" {
         }
       }
     },
-  {
+    {
       essential   = true
       image       = "${aws_ecr_repository.checkout-nginx-repository.repository_url}:${var.deploy_hash}",
       name        = "nginx"

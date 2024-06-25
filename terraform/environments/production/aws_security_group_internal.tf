@@ -87,13 +87,13 @@ resource "aws_security_group_rule" "eg_internal_dns_udp" {
 }
 
 resource "aws_security_group_rule" "eg_internal_ntp" {
-  security_group_id        = aws_security_group.internal.id
-  type                     = "egress"
-   cidr_blocks = [
+  security_group_id = aws_security_group.internal.id
+  type              = "egress"
+  cidr_blocks = [
     "0.0.0.0/0"
   ]
-  description              = "NTP"
-  from_port                = 123
-  protocol                 = "UDP"
-  to_port                  = 123
+  description = "NTP"
+  from_port   = 123
+  protocol    = "UDP"
+  to_port     = 123
 }

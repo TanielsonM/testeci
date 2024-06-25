@@ -7,9 +7,9 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  azs                 = local.azs
-  public_subnets      = local.public_subnets.production
-  private_subnets     = local.private_subnets.production
+  azs             = local.azs
+  public_subnets  = local.public_subnets.production
+  private_subnets = local.private_subnets.production
 
 
   enable_nat_gateway     = true

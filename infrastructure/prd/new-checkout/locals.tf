@@ -2,7 +2,7 @@ locals {
   default_sidecar_container_definition = [
     {
       name             = "log_router",
-      image            = "amazon/aws-for-fluent-bit",
+      image            = "730335633389.dkr.ecr.us-east-1.amazonaws.com/greenn-addons:aws-for-fluent-bit-latest",
       logConfiguration = null,
       firelensConfiguration = {
         type = "fluentbit",
@@ -13,7 +13,7 @@ locals {
     },
     {
       name  = "datadog-agent",
-      image = "public.ecr.aws/datadog/agent:latest",
+      image = "730335633389.dkr.ecr.us-east-1.amazonaws.com/greenn-datadog:agent",
       environment = [
         {
           name  = "ECS_FARGATE",
