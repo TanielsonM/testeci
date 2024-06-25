@@ -1,4 +1,7 @@
 {
   "i18n-ally.localesPaths": ["locales", "assets/locales"],
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "yaml.schemas": {
+    "https://json.schemastore.org/yamllint.json": "file:///home/luccajbastos/Documents/clouddog-wp/customers/greenn/repositorys/new-checkout/infrastructure/prd/buildspecs/plan.buildspec.yml"
+  }
 }
