@@ -1,7 +1,7 @@
 resource "aws_iam_policy" "ecs_exec_policy" {
   name = "ecs_exec_policy"
 
-  policy = file("./modules/new-checkout/policy.json")
+  policy = file("./infrastructure/prd/new-checkout/policy.json")
 }
 
 data "aws_iam_policy_document" "ecs_task_execution_role_base" {
