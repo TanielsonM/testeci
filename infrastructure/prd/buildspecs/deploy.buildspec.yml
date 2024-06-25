@@ -21,7 +21,8 @@ phases:
       - . ./imageDetail.sh
       - "cd ${TERRAFORM_PATH}"
       - "echo ## TERRAFORM APPLY : Starting with the Terraform Apply"
-      - envsubst > prd.tfvars
+      - envsubst < .prd-template > prd.tfvars
+      - cat prd.tfvars
       - terraform init
       - terraform validate
       - terraform plan -var-file prd.tfvars

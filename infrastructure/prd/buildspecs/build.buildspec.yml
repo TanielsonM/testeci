@@ -28,7 +28,7 @@ phases:
       - echo Pushing the Docker image...
       - docker push $REPOSITORY_URI:node-$IMAGE_TAG
       - docker push $REPOSITORY_URI:nginx-$IMAGE_TAG
-      - printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' $REPOSITORY_URI:nginx-$IMAGE_TAG REPOSITORY_URI:node-$IMAGE_TAG > imageDetail.sh
+      - printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' $REPOSITORY_URI:nginx-$IMAGE_TAG $REPOSITORY_URI:node-$IMAGE_TAG > imageDetail.sh
       # - printf '{"nginxUrl":"%s","NodeUrl":"%s"}' $REPOSITORY_URI-nginx:$IMAGE_TAG $REPOSITORY_URI-nginx:$IMAGE_TAG > imageDetail.json
       
 artifacts:
