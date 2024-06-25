@@ -7,7 +7,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
 
   family                   = "new-checkout"
   network_mode             = "awsvpc"
-  requires_compatibilities = ["EC2"]
+  requires_compatibilities = ["FARGATE"]
 
   cpu    = local.cpu
   memory = local.memory
@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
     {
       essential   = true
       image       = "${var.php_default_image}",
-      name        = "node"
+      name        = "greenn-new-checkout-container"
       networkMode = "awsvpc"
       portMappings = [
         {
@@ -57,7 +57,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
     {
       essential   = true
       image       = "${var.nginx_default_image}",
-      name        = "nginx"
+      name        = "greenn-nginx-container"
       networkMode = "awsvpc"
       portMappings = [
         {
