@@ -20,7 +20,7 @@ phases:
     commands:
       - "cd ${TERRAFORM_PATH}"
       - "echo ## TERRAFORM APPLY : Starting with the Terraform Apply"
-      - . ./imaegDetail.sh
+      - . ./imageDetail.sh
       - envsubst > prd.tfvars
       - terraform init
       - terraform validate
