@@ -6,3 +6,11 @@ provider "aws" {
     external_id = "AWS_DEVOPS_DEPLOYMENT"
   }
 }
+
+terraform {
+  backend "s3" {
+    bucket = "greenn-devops-state"
+    key    = "greenn-pci-prd/container.tfstate"
+    region = "us-east-1"
+  }
+}
