@@ -26,8 +26,8 @@ phases:
   post_build:
     commands:
       - echo Pushing the Docker image...
-      - docker push REPOSITORY_URI-node:latest
-      - docker $REPOSITORY_URI-nginx:latest
+      - docker push $REPOSITORY_URI-node:latest
+      - docker push $REPOSITORY_URI-nginx:latest
       - printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' $REPOSITORY_URI-nginx:$IMAGE_TAG $REPOSITORY_URI-nginx:$IMAGE_TAG > imageDetail.json
       # - printf '{"nginxUrl":"%s","NodeUrl":"%s"}' $REPOSITORY_URI-nginx:$IMAGE_TAG $REPOSITORY_URI-nginx:$IMAGE_TAG > imageDetail.json
       

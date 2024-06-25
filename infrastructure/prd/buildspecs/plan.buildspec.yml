@@ -20,6 +20,7 @@ phases:
     commands:
       - "cd ${TERRAFORM_PATH}"
       - "echo ## TERRAFORM APPLY : Starting with the Terraform Apply"
+      - terraform init
       - terraform validate
       - terraform plan -var-file prd.tfvars 
 
