@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
     {
       essential   = true
       image       = "${var.php_default_image}",
-      name        = "greenn-new-checkout-container"
+      name        = "node"
       networkMode = "awsvpc"
       portMappings = [
         {
@@ -57,7 +57,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
     {
       essential   = true
       image       = "${var.nginx_default_image}",
-      name        = "greenn-nginx-container"
+      name        = "nginx"
       networkMode = "awsvpc"
       portMappings = [
         {
