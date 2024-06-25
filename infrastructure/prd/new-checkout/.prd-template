@@ -14,7 +14,7 @@ min_capacity = 0
 #############################
 
 name = "greenn"
-environment = "prd-pci"
+environment = "production"
 application = "new-checkout"
 cluster_name = "greenn-prd-pci-cluster"
 
