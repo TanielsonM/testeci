@@ -33,7 +33,7 @@ phases:
       
 artifacts:
   files:
-    - imageDetail.json
+    - imageDetail.sh
 
 
 
