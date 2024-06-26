@@ -14,8 +14,8 @@ min_capacity = 0
 #############################
 
 name = "greenn"
-environment = "production"
-application = "new-checkout"
+environment = "preprod"
+application = "payfast-pci"
 cluster_name = "greenn-prd-pci-cluster"
 
 #############################
@@ -37,8 +37,7 @@ container_security_group = [
 
 application_host_header_values = [
   "payfast-prod.greenn.com.br",
-  "payfastdebug.greenn.com.br",
-  "pay-staging.greenn.com.br"
+  "payfast.greenn.com.br"
 ]
 
 target_deployment_role = "${TARGET_DEPLOYMENT_ROLE}"
