@@ -1,8 +1,8 @@
 
-resource "aws_ecs_service" "new-checkout-svc" {
+resource "aws_ecs_service" "payfast-svc" {
   name                   = "${var.name}-${var.application}-svc"
   cluster                = var.cluster_name
-  task_definition        = aws_ecs_task_definition.new-checkout-td.arn
+  task_definition        = aws_ecs_task_definition.payfast-pci-td.arn
   desired_count          = 1
   launch_type            = "FARGATE"
   enable_execute_command = true
@@ -14,7 +14,7 @@ resource "aws_ecs_service" "new-checkout-svc" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.new-checkout-tg.arn
+    target_group_arn = aws_lb_target_group.payfast-pci-tg.arn
     container_name   = "greenn-payfast-pci-nginx-pod"
     container_port   = "80"
   }
