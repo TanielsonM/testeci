@@ -3,7 +3,7 @@ resource "aws_appautoscaling_target" "node_target" {
 
   max_capacity       = 20
   min_capacity       = 2
-  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.new-checkout-svc.name}"
+  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.payfast-svc.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 }
@@ -31,7 +31,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action" {
   name               = "scheduled_scaling"
   service_namespace  = "ecs"
   scalable_dimension = "ecs:service:DesiredCount"
-  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.new-checkout-svc.name}"
+  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.payfast-svc.name}"
   scalable_target_action {
     min_capacity = 2  #normal
     max_capacity = 20 #normal
@@ -46,7 +46,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_10" {
   name               = "scheduled_scaling_min_10"
   service_namespace  = "ecs"
   scalable_dimension = "ecs:service:DesiredCount"
-  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.new-checkout-svc.name}"
+  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.payfast-svc.name}"
   scalable_target_action {
     min_capacity = 10
     max_capacity = 50
@@ -59,7 +59,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_40" {
   name               = "scheduled_scaling_min_40"
   service_namespace  = "ecs"
   scalable_dimension = "ecs:service:DesiredCount"
-  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.new-checkout-svc.name}"
+  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.payfast-svc.name}"
   scalable_target_action {
     min_capacity = 10
     max_capacity = 50

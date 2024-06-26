@@ -32,7 +32,7 @@ resource "aws_ecs_service" "payfast-svc" {
   deployment_maximum_percent         = 200
 
   depends_on = [
-    aws_lb_listener_rule.checkout-https
+    aws_lb_listener_rule.payfast-https
   ]
 }
 
