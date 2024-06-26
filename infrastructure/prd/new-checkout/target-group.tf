@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "payfast-pci-tg" {
 
 
 resource "aws_lb_listener_rule" "payfast-https" {
-  priority     = "1"
+  priority     = "20"
   listener_arn = var.alb_https_listener
   action {
     type             = "forward"
