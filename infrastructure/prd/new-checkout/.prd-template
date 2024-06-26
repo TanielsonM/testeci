@@ -14,7 +14,7 @@ min_capacity = 0
 #############################
 
 name = "greenn"
-environment = "preprod"
+environment = "production"
 application = "payfast-pci"
 cluster_name = "greenn-prd-pci-cluster"
 
