@@ -15,7 +15,7 @@ resource "aws_ecs_service" "new-checkout-svc" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.new-checkout-tg.arn
-    container_name   = "nginx"
+    container_name   = "greenn-payfast-pci-nginx-pod"
     container_port   = "80"
   }
 

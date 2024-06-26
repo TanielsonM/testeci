@@ -3,9 +3,9 @@ locals {
   memory = var.memory
 }
 
-resource "aws_ecs_task_definition" "new-checkout-td" {
+resource "aws_ecs_task_definition" "payfast-pci-td" {
 
-  family                   = "new-checkout"
+  family                   = "payfast-pci-family"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
 
@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
     {
       essential   = true
       image       = "${var.php_default_image}",
-      name        = "node"
+      name        = "greenn-payfast-pci-php-pod"
       networkMode = "awsvpc"
       portMappings = [
         {
@@ -44,7 +44,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
         options = {
           dd_message_key = "log"
           provider       = "ecs"
-          dd_service     = "payfast-back"
+          dd_service     = "payfast-pci-back"
           dd_source      = "node"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
@@ -57,7 +57,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
     {
       essential   = true
       image       = "${var.nginx_default_image}",
-      name        = "nginx"
+      name        = "greenn-payfast-pci-nginx-pod"
       networkMode = "awsvpc"
       portMappings = [
         {
@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
       dependsOn = [
         {
           condition     = "HEALTHY"
-          containerName = "node"
+          containerName = "greenn-payfast-pci-php-pod"
         }
       ]
       linuxParameters = {
@@ -93,7 +93,7 @@ resource "aws_ecs_task_definition" "new-checkout-td" {
         options = {
           dd_message_key = "log"
           provider       = "ecs"
-          dd_service     = "payfast-nginx"
+          dd_service     = "payfast-pci-nginx"
           dd_source      = "nginx"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
