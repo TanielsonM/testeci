@@ -122,6 +122,7 @@
     "termos_de_uso_texto":"*Consulta las normas de Cashback en nuestras Condiciones de uso",
     "venda_por_indicacao": "Venta por indicación. Clique aquí para saber más",
     "link_vendedor_nao_encontrado": "El enlace del vendedor no se encontró",
+    "salvar_dados": "Guardar datos para futuras compras",
     "modal": {
       "text_expiration": "Atención, tu sesión ha caducado",
       "text_loading": "Deberá recargar la página para continuar comprando este evento.",
@@ -225,6 +226,7 @@
       "metodos": {
         "cartao_credito": "Tarjeta de crédito",
         "cartao_debito": "Tarjeta de débito",
+        "boleto": "Boleto",
         "um_cartao": {
           "title": "Una tarjeta",
           "numero": "Número",
@@ -248,9 +250,11 @@
           "valor": "Importe a cobrar"
         },
         "paypal": {
+          "paypal": "Paypal",
           "btn_text": "Comprar ahora"
         },
         "pix": {
+          "pix": "Pix",
           "text": "Los pagos con Pix se liquidan muy rápidamente y luego se liberan los productos.",
           "pix_info1": {
             "titulo": "Rápido",

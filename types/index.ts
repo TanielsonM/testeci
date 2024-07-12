@@ -129,6 +129,12 @@ export type Payment = {
   // Fingerprint
   requestId?: string | null;
   visitorId?: string | null;
+  
+  // Button to save credit card data
+  reuse_credit_card?: boolean;
+
+   //whatsapp sale id 
+   wpp_id?: string | null
 };
 
 export type CurrencyData = {
@@ -183,6 +189,7 @@ export type pixelState = {
   client_has_contract?: Number;
   email?: string;
   cellphone?: string;
+  name?: string;
 };
 
 export type Product = {

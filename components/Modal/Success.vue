@@ -9,6 +9,7 @@ import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
 import { resetReservations } from "@/utils/validateBatch";
+import { usePersonalStore } from "~/store/forms/personal";
 
 const productStore = useProductStore();
 const amountStore = useAmountStore();
@@ -18,6 +19,7 @@ const { sales, productOffer } = storeToRefs(checkoutStore);
 const { product } = useProductStore();
 const { batches,  } = usePreCheckoutStore();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+const personalStore = usePersonalStore();
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -381,6 +383,9 @@ function openPix(id: number) {
       :sale_id="parseInt(saleId!.toString())"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
+      :name="personalStore.name"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
     />
   </ClientOnly>
 </template>

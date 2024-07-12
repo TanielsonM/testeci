@@ -134,7 +134,7 @@ export const useProductStore = defineStore("product", {
       );
 
       // Se for evento o valor deve começar zerado, para aumentar de acordo com a seleção de ingressos
-      if (product.product_type_id === 3 && !!batches?.length) {
+      if (product.product_type_id == 3 && !!batches?.length) {
         checkout.resetProducts();
         amountStore.reset();
       } else {

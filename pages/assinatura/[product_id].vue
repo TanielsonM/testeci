@@ -61,7 +61,7 @@ function setInternationalURL() {
 onMounted(() => {
   if (process.client) {
     // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
-    if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+    if (product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value) {
       // Quando o usuário clica em voltar no navegador
       window.addEventListener('popstate', showBeforeBackNavigation);
 
@@ -84,7 +84,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+  if (product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value) {
     window.removeEventListener('popstate', showBeforeBackNavigation);
     window.removeEventListener('beforeunload', showUnloadAlertCheckout);
   }

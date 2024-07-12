@@ -9,7 +9,7 @@ const product = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const installmentsStore = useInstallmentsStore();
 
-const { method, installments, max_installments, hasFees, fixed_installments } =
+const { method, installments, max_installments, hasFees, fixed_installments, reuseCreditCard, setReuseCreditCard, secondSaleFlag } =
   storeToRefs(checkout);
 const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
@@ -97,6 +97,17 @@ const showInstallments = computed(() => {
 
 // if subscription page is true
 const {urlSubscription} = props;
+
+const showReuseCreditCard = computed(() => {
+  if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value) && secondSaleFlag.value) {
+    return true;
+  }
+  return false;
+});
+
+function saveData() {
+  setReuseCreditCard(reuseCreditCard)
+}
 </script>
 
 <template>
@@ -119,6 +130,7 @@ const {urlSubscription} = props;
           :value="fixed_installments"
           v-if="!!fixed_installments"
           class="cursor-pointer select-none rounded hover:bg-main-color"
+          translate="no"
         >
           {{
             `${fixed_installments}x ${hasFees ? "" : "(Sem juros)"} ${$t(
@@ -133,6 +145,7 @@ const {urlSubscription} = props;
           :key="index"
           :value="d"
           class="cursor-pointer select-none rounded hover:bg-main-color"
+          translate="no"
         >
           {{
             index + 1 > 1
@@ -147,6 +160,15 @@ const {urlSubscription} = props;
           }}
         </option>
       </BaseSelect>
+      <!-- checkbox to save data of credit card -->
+      <BaseCheckbox
+        v-if="showReuseCreditCard"
+        :saveData="true"
+        v-model:checked="reuseCreditCard"
+        :label="`${$t('checkout.salvar_dados')}`"
+        @click="saveData()"
+        :id="'reuseCreditCardCheckbox'"
+      />
     </ClientOnly>
     <InfoTrial class="w-2/3" v-if="trial_position == 'bottom'" />
   </span>
