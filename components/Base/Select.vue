@@ -70,6 +70,7 @@ const onChange = (event) => {
   <label
     for="input"
     class="flex w-full flex-col items-start gap-2 text-[14px] font-semibold text-txt-color lg:text-[15px]"
+    translate="no"
   >
     {{ label }}
     <select
@@ -81,7 +82,7 @@ const onChange = (event) => {
       :name="selectName"
       @change="onChange"
     >
-      <option v-if="placeholder" selected disabled value="" class="opacity-75">
+      <option v-if="placeholder" selected disabled value="" class="opacity-75" translate="no">
         {{ placeholder }}
       </option>
       <slot>

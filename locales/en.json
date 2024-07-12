@@ -122,6 +122,7 @@
     "termos_de_uso_texto":"*See the Cashback regulations in our Terms of Use",
     "venda_por_indicacao": "Sale by indication. Click here to know more",
     "link_vendedor_nao_encontrado": "The seller link was not found",
+    "salvar_dados": "Save data for future purchases",
     "modal": {
       "text_expiration": "Attention, your session has expired",
       "text_loading": "You will need to reload the page to continue purchasing this event.",
@@ -224,6 +225,7 @@
       "metodos": {
         "cartao_credito": "Credit Card",
         "cartao_debito": "Debit Card",
+        "boleto": "Ticket",
         "um_cartao": {
           "title": "One card",
           "numero": "Number",
@@ -247,9 +249,11 @@
           "valor": "Value to be discounted"
         },
         "paypal": {
+          "paypal": "Paypal",
           "btn_text": "Buy now"
         },
         "pix": {
+          "pix": "Pix",
           "text": "Payments with Pix are very quick to clear and then have the products released.",
           "pix_info1": {
             "titulo": "Fast",

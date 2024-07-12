@@ -37,7 +37,7 @@ const dependsOnAnotherBatch = function (batch) {
     const preCheckout = usePreCheckoutStore();
     const { getBatches } = storeToRefs(preCheckout);
     if(getBatches?.value && Array.isArray(getBatches.value)) {
-      const dependentBatch = getBatches.value.find(x => x.id === batch?.release_offer_group_stock_id);
+      const dependentBatch = getBatches.value.find(x => x.id == batch?.release_offer_group_stock_id);
       return haveAvailableTickets(dependentBatch);
     } else return false
   } else {

@@ -77,7 +77,7 @@ const historySubscriptionCoupon = computed(() => {
         :key="index"
       >
         <p>{{ item.name }}</p>
-        <p class="min-w-fit">
+        <p class="min-w-fit" translate="no">
           {{
             !item.has_shipping_fee
               ? $t("checkout.pagamento.bump.free")

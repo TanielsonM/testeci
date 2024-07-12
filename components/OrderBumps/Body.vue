@@ -81,7 +81,7 @@ const redirect = () => {
 // Computeds
 const hasTrial = computed(() => !!props.bump.trial);
 const isBumpSellerEqual = computed(() => {
-  return product.value.seller.id === props.bump.seller.id;
+  return product.value.seller.id == props.bump.seller.id;
 });
 
 const showDescription = computed(() =>

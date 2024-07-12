@@ -1,4 +1,6 @@
 <script setup>
+import { defineProps, defineEmits } from 'vue';
+
 const props = defineProps({
   id: {
     type: [String, Number],
@@ -25,22 +27,45 @@ const props = defineProps({
     required: false,
     default: () => false,
   },
+  saveData: {
+    type: Boolean,
+    required: false,
+    default: () => false,
+  },
 });
+
 const emit = defineEmits(["update:checked"]);
 
+const handleChange = (event) => {
+  emit('update:checked', event.target.checked);
+};
 </script>
 
 <template>
   <input
-    @input="(event) => emit('update:checked', event.target.checked)"
     type="checkbox"
+    @change="handleChange"
     :checked="checked"
-    :id="`checkbox-${props.id}`"
+    :id="`checkbox-${id}`"
     class="mr-2 hidden"
-    :disabled="props.disabled"
+    :disabled="disabled"
   />
   <label
-    :for="`checkbox-${props.id}`"
+    v-if="saveData"
+    :for="`checkbox-${id}`"
+    class="flex cursor-pointer select-none items-center gap-3"
+  >
+    <div class="flex items-center justify-center rounded h-6 w-6 border-2 border-greenn">
+      <div class="flex h-4 w-4 items-center justify-center text-txt-color" v-if="checked">
+        <Icon name="mdi:check-bold" />
+      </div>
+    </div>
+    <span class="text-sm text-txt-color">{{ label }}</span>
+  </label>
+
+  <label
+    v-else
+    :for="`checkbox-${id}`"
     class="flex cursor-pointer select-none flex-row items-center gap-3 font-bold"
   >
     <div class="flex h-4 w-4 items-center justify-center rounded bg-white">

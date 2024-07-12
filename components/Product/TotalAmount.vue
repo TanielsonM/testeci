@@ -120,7 +120,7 @@ const couponAplied = computed(() => {
       >
         {{ $t("order.vc_pagara") }}
       </small>
-      <p class="text-lg font-semibold leading-4 text-txt-color">
+      <p class="text-lg font-semibold leading-4 text-txt-color" translate="no">
         {{ amountText }}
       </p>
       <small v-if="showInCashText && !history_subscription" class="small-text leading-4">

@@ -104,6 +104,7 @@ const onInput = (event) => {
       v-if="!!label"
       for="input"
       class="flex w-full flex-col items-start gap-2 text-[14px] font-semibold text-txt-color lg:text-[15px]"
+      translate="no"
     >
       {{ label }}
     </label>
@@ -156,6 +157,7 @@ const onInput = (event) => {
           @blur="emit('blur')"
           @change="emit('change')"
           @focus="emit('focus')"
+          translate="no"
         />
       </VeeField>
       <Icon

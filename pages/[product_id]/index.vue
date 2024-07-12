@@ -67,19 +67,19 @@ const tabs = computed(() => {
       case "BOLETO":
         return {
           value: item,
-          label: "Boleto",
+          label: t("checkout.pagamento.metodos.boleto"),
           icon: "fa-solid:file-invoice-dollar",
         };
       case "PAYPAL":
         return {
           value: item,
-          label: "Paypal",
+          label: t("checkout.pagamento.metodos.paypal.paypal"),
           icon: "mdi:paypal",
         };
       case "PIX":
         return {
           value: item,
-          label: "Pix",
+          label: t("checkout.pagamento.metodos.pix.pix"),
           icon: "material-symbols:qr-code",
         };
     }
@@ -104,7 +104,7 @@ function setInternationalURL() {
 onMounted(() => {
   if (process.client) {
     // validar se for evento presencial e localStorage estiver vazio e pinia tb das reservas, jogar de volta pro precheckout
-    if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+    if (product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value) {
       // Quando o usuário clica em voltar no navegador
       window.addEventListener('popstate', showBeforeBackNavigation);
 
@@ -127,7 +127,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (product?.value?.product_type_id === 3 && sellerHasFeatureTickets?.value) {
+  if (product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value) {
     window.removeEventListener('popstate', showBeforeBackNavigation);
     window.removeEventListener('beforeunload', showUnloadAlertCheckout);
   }
@@ -430,19 +430,19 @@ const isCustomOne = computed(() => {
     <!-- Alert modal -->
     <BaseModal :title="product.name" :is-open="alert_modal" @close="closeModal" :close-button="false">
       <section class="flex w-full max-w-[400px] flex-col gap-5">
-        <h6 class="text-[15px] font-semibold text-txt-color">
+        <h6 class="text-[15px] font-semibold text-txt-color text-center">
           {{ $t("checkout.dados_pessoais.title_error") }}
         </h6>
-        <p class="text-txt-color">{{ $t(error_message) }}</p>
-        <section class="mt-10 flex w-full justify-end">
-          <BaseButton color="blue" class="w-[40%] bg-main-color text-txt-color" @click="closeModal">
+        <p class="text-txt-color text-center">{{ $t(error_message) }}</p>
+        <section class="mt-10 flex w-full ml-1">
+          <BaseButton color="blue" class="w-[40%] bg-main-color text-txt-color " @click="closeModal">
             {{ $t("checkout.dados_pessoais.btn_error") }}
           </BaseButton>
         </section>
       </section>
     </BaseModal>
 
-    <template v-if="product.product_type_id === 3 && sellerHasFeatureTickets">
+    <template v-if="product.product_type_id == 3 && sellerHasFeatureTickets">
       <EventExpiredSessionModal />
       <EventGoBackWarningModal />
     </template>

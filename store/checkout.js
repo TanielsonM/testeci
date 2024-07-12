@@ -93,7 +93,10 @@ export const useCheckoutStore = defineStore("checkout", {
     allow_free_offers : null,
     hasIntegrationWithGreennEnvios: false,
     isCreditCard: false,
-    history_subscription: null
+    history_subscription: null,
+    whatsappSaleId: null,
+    reuseCreditCard: true,
+    secondSaleFlag: false
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -120,6 +123,7 @@ export const useCheckoutStore = defineStore("checkout", {
     urlClientDocument: (state) => state.url.query?.document,
     hasSelectedBump: (state) => state.bump_list.some((bump) => bump.checkbox),
     hasFreeBump: (state) => state.bump_list.every(bump => bump.method === 'FREE'),
+    getWhatsappSaleId: (state) => state.url.query?.wpp_id,
     /**
      * Others
      */
@@ -236,6 +240,7 @@ export const useCheckoutStore = defineStore("checkout", {
       await this.setCoupon(true, false, routeIsCheckout);
       if (this.hasBump || (!!res.data.seller?.donation_offer && !! res.data.seller?.donation_product)) this.getBumps(res);
       if (this.hasBatches) this.getBatches()
+      if (this.getWhatsappSaleId) this.getWppSaleId()
       this.setLoading();
       if(res?.batches?.length) return res.batches;
     },
@@ -377,7 +382,7 @@ export const useCheckoutStore = defineStore("checkout", {
               });
             }
 
-            if (response.data.product_type_id === 3 && response?.batches && Array.isArray(response?.batches)) {
+            if (response.data.product_type_id == 3 && response?.batches && Array.isArray(response?.batches)) {
               const preCheckout = usePreCheckoutStore();
               response.batches.forEach(batch => {
                 if(haveAvailableTickets(batch)){
@@ -404,6 +409,10 @@ export const useCheckoutStore = defineStore("checkout", {
               });
 
               preCheckout.setBatches(response.batches);
+            }
+
+            if (response?.second_sale_flag) {
+              this.secondSaleFlag = response.second_sale_flag
             }
 
             return response
@@ -466,13 +475,35 @@ export const useCheckoutStore = defineStore("checkout", {
         let matches = key.match(batcheRegex);
         if (matches) {
           // caso esteja repetido, ignoramos
-          if (!batchesWithOffers.find((item) => item.batche_id === value)) {
+          if (!batchesWithOffers.find((item) => item.batche_id == value)) {
             // setamos o id do lote
             batchesWithOffers.push( value );
           }
         }
       });
       this.batches_list = batchesWithOffers;
+    },
+    async getWppSaleId() {
+      this.whatsappSaleId = [];
+      // parse apenas dos params
+      let searchParams = new URLSearchParams(this.url.query);
+      // instancia o array final
+      let wppSaleIds = [];
+      // regex para pegar ids dos wppSale
+      let wppSaleRegex = new RegExp("(wpp_id)(\\d*$)", "i");
+      // passamos uma vez apenas pegando o id dos wppSales
+      searchParams.forEach((value, key) => {
+        let matches = key.match(wppSaleRegex);
+        if (matches) {
+          // caso esteja repetido, ignoramos
+          if (!wppSaleIds.find((item) => item.wpp_id === value)) {
+            // setamos o id do wppSale
+            wppSaleIds.push( value );
+          }
+        }
+      });
+      this.whatsappSaleId = wppSaleIds[0];
+
     },
     async getBumps(res) {
       const isDonation = !!res.data.seller?.donation_offer && !!res.data?.seller?.donation_product;
@@ -495,7 +526,7 @@ export const useCheckoutStore = defineStore("checkout", {
         let matches = key.match(bumpRegex);
         if (matches) {
           // caso esteja repetido, ignoramos
-          if (!bumpsWithOffers.find((item) => item.bump_id === matches[2])) {
+          if (!bumpsWithOffers.find((item) => item.bump_id == matches[2])) {
             // setamos o id do produto junto com a posicional para depois encontrar a oferta
             bumpsWithOffers.push({ bump_id: matches[2], product_id: value });
           }
@@ -693,7 +724,7 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setProductListPreCheckout(product, addProduct = true) {
       const amountStore2 = useAmountStore();
-      const index = this.product_list.findIndex(item => item.id === product.id);
+      const index = this.product_list.findIndex(item => item.id == product.id);
 
       if (addProduct) {
         amountStore2.setAmount(
@@ -920,7 +951,7 @@ export const useCheckoutStore = defineStore("checkout", {
       this.deliveryOptions = {};
     },
     async changeBumpShippingAmount(id, amount) {
-      const pdt = this.product_list.find((product) => product.id === id);
+      const pdt = this.product_list.find((product) => product.id == id);
       if (pdt) {
         const oldAmount = pdt.shipping?.amount || 0;
         amountStore.setAmount(parseFloat(amount) - oldAmount);
@@ -965,7 +996,7 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setSelectedShipping(product_id, shipping) {
       const product = this.product_list
-        .filter((item) => item.id === parseInt(product_id))
+        .filter((item) => item.id == parseInt(product_id))
         .pop();
       if (product.type_shipping_fee === "FIXED") {
         product.shipping_options = [];
@@ -973,14 +1004,14 @@ export const useCheckoutStore = defineStore("checkout", {
       }
       // Remove shipping amount
       this.product_list.forEach((item) => {
-        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+        if (item.id == parseInt(product_id) && item.shipping?.amount) {
           amountStore.setAmount(parseFloat(item.shipping?.amount) * -1);
           amountStore.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
         }
       });
       // Set shipping infos in product
       this.product_list = this.product_list.map((item) => {
-        if (item.id === parseInt(product_id)) {
+        if (item.id == parseInt(product_id)) {
           item.shipping = {
             amount: parseFloat(shipping.price),
             name: shipping.name,
@@ -992,7 +1023,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
       // Add shipping amount
       this.product_list.forEach((item) => {
-        if (item.id === parseInt(product_id) && item.shipping?.amount) {
+        if (item.id == parseInt(product_id) && item.shipping?.amount) {
           amountStore.setAmount(parseFloat(item.shipping?.amount));
           amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
         }
@@ -1016,6 +1047,9 @@ export const useCheckoutStore = defineStore("checkout", {
         const novaUrl = `${novaRota}${parametros}${queries}`;
         window.location.href = novaUrl;
       }
+    },
+    setReuseCreditCard(check) {
+      return (this.reuseCreditCard = !check);
     }
   }
 });
