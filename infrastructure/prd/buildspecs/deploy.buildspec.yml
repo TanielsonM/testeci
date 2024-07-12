@@ -26,3 +26,11 @@ phases:
       - terraform validate
       - terraform plan -var-file prd.tfvars
       - terraform apply -var-file prd.tfvars -auto-approve
+  
+  post_build:
+    commands:
+      - "echo ## TERRAFORM APPLY : Completed"
+      - "echo ## Cleanning CloudFlare cache"
+      - "./infrastructure/scripts/clear_cache.py $CLOUDFLARE_API_TOKEN"
+      - "echo ## CloudFlare cache cleared"
+      - "echo ## TERRAFORM APPLY : Completed"
