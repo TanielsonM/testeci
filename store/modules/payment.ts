@@ -22,7 +22,7 @@ import * as Toast from "vue-toastification";
 import { usePersonalStore } from "../forms/personal";
 import { useAddressStore } from "../forms/address";
 import { usePurchaseStore } from "../forms/purchase";
-import { useLeadsStore } from "../modules/leads";
+import { useLeadsStore } from "./leads";
 import { useCheckoutStore } from "../checkout";
 import { usePreCheckoutStore } from "../preCheckout";
 import { useInstallmentsStore } from "./installments";
@@ -133,9 +133,12 @@ export const usePaymentStore = defineStore("Payment", {
         products_client_statistics,
         history_subscription,
         urlClientId,
-        urlClientDocument
-      } = checkoutStore;
+        urlClientDocument,
+        reuseCreditCard,
+        whatsappSaleId
 
+      } = checkoutStore;
+      
       const {
         productName,
         is_gift,
@@ -154,6 +157,7 @@ export const usePaymentStore = defineStore("Payment", {
       const { getInstallments, getTotal } = installmentsStore;
       const { getOriginalAmount, getAmount } = amountStore;
       const { sellerHasFeatureTickets, getBatches } = preCheckout;
+
 
       if (!this.fetching) {
         this.setPaymentLoading(true);
@@ -189,7 +193,7 @@ export const usePaymentStore = defineStore("Payment", {
           product_id: product_id.value,
           products: product_list.map((item: Product) => ({
             product_id:
-              product.product_type_id === 3 && sellerHasFeatureTickets
+              product.product_type_id == 3 && sellerHasFeatureTickets
                 ? item.product_id
                 : item.id,
             product_offer: item.hash,
@@ -214,9 +218,12 @@ export const usePaymentStore = defineStore("Payment", {
           state: charge.state ?? "",
           // Others
           language,
-          upsell_id: hasUpsell,
           metas: url.query,
+          upsell_id: hasUpsell ? hasUpsell.value : null,          
+          wpp_id: whatsappSaleId,
+          reuse_credit_card: reuseCreditCard,
         };
+        
         if (sellerHasFeatureTickets) {
           data.batches = getBatches
             .map((item: any) => ({
@@ -494,7 +501,7 @@ export const usePaymentStore = defineStore("Payment", {
 
                   // Se o produto for do tipo evento
                   if (
-                    product?.product_type_id === 3 &&
+                    product?.product_type_id == 3 &&
                     sellerHasFeatureTickets
                   ) {
                     product_list.forEach(
@@ -519,7 +526,7 @@ export const usePaymentStore = defineStore("Payment", {
                     bumps.forEach((bump: Product) => {
                       const index = keys
                         .filter(
-                          (key) => route.query[key] === bump.id.toString()
+                          (key) => route.query[key] == bump.id.toString()
                         )
                         .pop();
                       const sale = res.sales
@@ -623,7 +630,7 @@ export const usePaymentStore = defineStore("Payment", {
 
                   // Se o produto for do tipo evento
                   if (
-                    product?.product_type_id === 3 &&
+                    product?.product_type_id == 3 &&
                     sellerHasFeatureTickets
                   ) {
                     product_list.forEach(
@@ -648,7 +655,7 @@ export const usePaymentStore = defineStore("Payment", {
                     bumps.forEach((bump: Product) => {
                       const index = keys
                         .filter(
-                          (key) => route.query[key] === bump.id.toString()
+                          (key) => route.query[key] == bump.id.toString()
                         )
                         .pop();
                       const sale = res.sales

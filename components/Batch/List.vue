@@ -19,7 +19,7 @@ const getTicketInstallments = function (batch_group, ticket_hash) {
     coupon,
     installments,
   } = storeToRefs(checkout);
-  const batch = getBatches.value.find(x => x.id === batch_group.id);
+  const batch = getBatches.value.find(x => x.id == batch_group.id);
   const ticket = batch.tickets.find(x => x?.hash === ticket_hash);
 
   const getAmount = ticket.selected_tickets * ticket.amount;
@@ -38,7 +38,7 @@ const getTicketInstallments = function (batch_group, ticket_hash) {
         : batch.shipping?.amount || 0;
   }
   // Verifica se tem cupom
-  if (batch?.product_id === parseInt(product_id.value) && coupon.value.applied) {
+  if (batch?.product_id == parseInt(product_id.value) && coupon.value.applied) {
     value -= coupon.value.amount;
   }
   // Cliente não paga juros
@@ -60,7 +60,7 @@ const dependentBatchName = function (batch) {
   if (!batch?.release_offer_group_stock_id) return '';
   else {
     if (getBatches?.value && Array.isArray(getBatches.value)) {
-      const dependentBatch = getBatches.value.find(x => x.id === batch.release_offer_group_stock_id);
+      const dependentBatch = getBatches.value.find(x => x.id == batch.release_offer_group_stock_id);
       return dependentBatch?.name;
     } else return '';
   }

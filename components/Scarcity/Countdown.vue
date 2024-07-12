@@ -86,7 +86,7 @@ watch(
       <span class="font-semibold text-white md:text-xl"
         >{{ minutesText }}m :</span
       >
-      <span class="font-semibold text-white md:text-xl">{{ secondsText }}s</span>
+      <span translate="no" class="font-semibold text-white md:text-xl">{{ secondsText }}s</span>
     </section>
   </ClientOnly>
 </template>

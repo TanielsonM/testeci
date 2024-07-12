@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { usePersonalStore } from "~/store/forms/personal";
 import { usePixelStore } from "~~/store/modules/pixel";
 
 // Props interface
@@ -11,6 +12,7 @@ interface Props {
   original_amount: number;
   email?: string;
   cellphone?: string;
+  name?: string;
   sale_id?: number;
   chc_id?: number;
   product_name?: string;
@@ -18,6 +20,7 @@ interface Props {
 
 const pixelStore = usePixelStore();
 const props = defineProps<Props>();
+const personalStore = usePersonalStore()
 
 onMounted(async () => {
   if (process.client) {
@@ -43,7 +46,10 @@ onMounted(async () => {
             props.amount,
             props.affiliate_id,
             props.sale_id,
-            props.original_amount
+            props.original_amount,
+            props.name,
+            props.email,
+            props.cellphone
           );
         });
       }
@@ -59,7 +65,10 @@ onMounted(async () => {
       amount: number,
       affiliate_id: number | string | undefined | null,
       sale_id: number | undefined,
-      original_amount: number
+      original_amount: number,
+      name: string | undefined,
+      email: string | undefined,
+      cellphone: string | undefined
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -71,8 +80,11 @@ onMounted(async () => {
       if (!!amount) query.append("amount", amount.toString());
       if (!!affiliate_id) query.append("affiliate_id", affiliate_id.toString());
       if (!!sale_id) query.append("sale_id", sale_id.toString());
-      if (!!original_amount)
-        query.append("original_amount", amount.toString());
+      if (!!original_amount)query.append("original_amount", amount.toString());
+
+      if (!!name)query.append("name", name.toString());
+      if (!!email)query.append("email", email.toString());
+      if (!!cellphone)query.append("cellphone", cellphone.toString().replace(/\s+/g, ''));
 
       const iframe = document.createElement("iframe");
       iframe.src = `${url}?${query.toString()}`;

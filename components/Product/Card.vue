@@ -49,7 +49,7 @@ const trialMessage = computed({
 const exceptionSellerId = computed(() => {
   if(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION) {
     const ids = JSON.parse(useRuntimeConfig().public.CUSTOM_CHARGES_EXCEPTION)
-    return ids.some(x => parseInt(x) === parseInt(product.value.seller.id))
+    return ids.some(x => parseInt(x) == parseInt(product.value.seller.id))
   }
   return false
 })
@@ -77,7 +77,7 @@ function onClientRender() {
     <section class="flex w-full items-center px-5">
       <!-- Product Image -->
       <aside
-        class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded bg-stone-100 md:mr-[15px] md:max-w-[100px] xl:max-w-[120px] flex-shrink-0"
+        class="mr-[30px] flex max-h-[120px] min-h-[120px] max-w-[90px] items-center overflow-hidden rounded md:mr-[15px] md:max-w-[100px] xl:max-w-[120px] flex-shrink-0"
         v-if="product.images.length"
       >
         <img :src="product.images[0].path"
@@ -267,7 +267,7 @@ function onClientRender() {
       />
       <ProductCashback />
     </section>
-    <EventTimer v-if="product.product_type_id === 3 && sellerHasFeatureTickets"/>
+    <EventTimer v-if="product.product_type_id == 3 && sellerHasFeatureTickets"/>
   </BaseCard>
 </template>
 

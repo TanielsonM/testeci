@@ -2,7 +2,7 @@ import { pixelState, Pixel } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
-import { usePersonalStore } from "./../forms/personal";
+import { usePersonalStore } from "../forms/personal";
 import { useAmountStore } from "./amount";
 
 // const productStore = useProductStore();
@@ -43,6 +43,7 @@ export const usePixelStore = defineStore("Pixel", {
     client_has_contract: undefined,
     email: undefined,
     cellphone: undefined,
+    name: undefined,
   }),
   getters: {},
   actions: {
@@ -54,6 +55,7 @@ export const usePixelStore = defineStore("Pixel", {
       this.email = personalStore().email;
       this.cellphone = personalStore().cellphone;
       this.amount = amount || amountStore().amount;
+      this.name = personalStore().name;
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
@@ -66,7 +68,8 @@ export const usePixelStore = defineStore("Pixel", {
         em: this.email,
         ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
         amount: this.amount,
-        a_id: this.affiliate_id
+        a_id: this.affiliate_id,
+        name: this.name,
       };
 
       return await useApi()

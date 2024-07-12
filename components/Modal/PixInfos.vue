@@ -94,7 +94,7 @@ const data = ref({
 });
 
 const displayCode = () => {
-  emit("openedPixEvent", props.opened === props.id ? 0 : props.id);
+  emit("openedPixEvent", props.opened == props.id ? 0 : props.id);
 };
 
 const handleResize = () => {
@@ -227,7 +227,7 @@ onBeforeUnmount(() => {
             >{{
               !onlyButtons
                 ? $t("pg_obrigado.pix.btn_visualizar_qr")
-                : opened === id
+                : opened == id
                 ? $t("pg_obrigado.pix.fechar_codigo")
                 : $t("pg_obrigado.pix.ver_codigo")
             }}</BaseButton
@@ -247,7 +247,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
-    <div class="w-full" v-if="opened === id && salesLength == 1 && !isMobile">
+    <div class="w-full" v-if="opened == id && salesLength == 1 && !isMobile">
       <BaseTextarea
         class="w-full"
         :input-id="`ticket_${id}`"
@@ -259,7 +259,7 @@ onBeforeUnmount(() => {
     </div>
 
     <div
-      v-if="opened === id && salesLength > 1"
+      v-if="opened == id && salesLength > 1"
       class="flex w-full items-center justify-center"
     >
       <img :src="url" />

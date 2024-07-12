@@ -48,7 +48,7 @@ function clicked(value) {
       class="button flex items-center justify-center gap-3 rounded-lg border border-bd-color py-4 text-[13px] font-semibold text-txt-color"
     >
       <Icon :name="tab.icon" v-if="tab?.icon" size="16" />
-      <p>{{ tab?.label }}</p>
+      <p translate="no">{{ tab?.label }}</p>
     </button>
   </section>
 </template>

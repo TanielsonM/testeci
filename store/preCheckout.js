@@ -17,7 +17,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     getLoadingReservation: (state) => state.loadingReservation,
     isPresentialEvent(state) {
       const { product } = useProductStore();
-      return product?.product_type_id === 3 && !!this.batches?.length;
+      return product?.product_type_id == 3 && !!this.batches?.length;
     },
     ticketList() {
       const checkoutStore = useCheckoutStore();
@@ -31,9 +31,9 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           if (batch.selected_batch_tickets) {
             batch.tickets.filter(ticket => ticket.selected_tickets)
               .forEach(ticketEach => {
-                if (id === ticketEach.id) {
+                if (id == ticketEach.id) {
                   const existingItem = batchesArry.find(item =>
-                    item.id === id
+                    item.id == id
                   );
                   if (existingItem) {
                     return
@@ -66,7 +66,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     },
     forceUpdateAvailableBatches(id) {
       return new Promise((resolve, reject) => {
-        let batch = this.batches.find(x => x.id === id);
+        let batch = this.batches.find(x => x.id == id);
         if (batch) {
           batch.available_tickets = batch.available_tickets +1;
           resolve(); 
@@ -78,7 +78,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     updateAvailableTickets(tickets, selected = false) {
       if (Array.isArray(tickets)) {
         tickets.forEach((ticket,index) => {
-          let batch = this.batches.find(x => x.id === ticket.batch_id);
+          let batch = this.batches.find(x => x.id == ticket.batch_id);
           if(batch){
             batch.selected_batch_tickets = batch?.selected_batch_tickets ?? 0;
             if(selected){
@@ -95,14 +95,14 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.reservations.push(value);
     },
     updateReservation(value) {
-      const reservation = this.reservations.find(x => x.id === value.id);
+      const reservation = this.reservations.find(x => x.id == value.id);
       const index = this.reservations.indexOf(reservation);
       if (index !== -1) {
         this.reservations.splice(index, 1, value);
       }
     },
     removeReservation(value) {
-      const reservation = this.reservations.find(x => x.id === value.id);
+      const reservation = this.reservations.find(x => x.id == value.id);
       const index = this.reservations.indexOf(reservation);
       if (index !== -1) {
         this.reservations.splice(index, 1);
@@ -135,7 +135,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.hasAvailableTickets = true
     },
     async addTicket(batch_group, hash) {
-      let batch = this.batches.find(x => x.id === batch_group.id);
+      let batch = this.batches.find(x => x.id == batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
       this.setLoadingReservation(true, ticket);
       await this.checkHasTickets(ticket.id, batch)
@@ -171,8 +171,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.setLoadingReservation(false, ticket);
     },
     async subTicket(batch_group, hash) {
-      const batch = this.batches.find(x => x.id === batch_group.id);
-      let ticket = batch.tickets.find(x => x.hash === hash);
+      const batch = this.batches.find(x => x.id == batch_group.id);
+      let ticket = batch.tickets.find(x => x.hash == hash);
       this.setLoadingReservation(true, ticket);
       if (ticket?.selected_tickets > 0 && saleHasStarted(batch)) {
         ticket.selected_tickets -= 1;
@@ -184,7 +184,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
         // if(ticket.selected_tickets === 0) {
         // Deleta a reserva do lote existente, já que foram removidos todos ingressos
         if(batch.release_type !== "fixed_date" && batch.release_type !== null){
-          const reservation = this.reservations.find(x => x.offer_id === ticket.id);
+          const reservation = this.reservations.find(x => x.offer_id == ticket.id);
           await this.deleteReservation(reservation, ticket);
           await this.checkHasTickets(ticket.id)
           localStorage.setItem('reservations', JSON.stringify(this.reservations));
@@ -224,7 +224,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       }
     },
     async putReservation(ticket) {
-      const reservation = this.reservations.find(x => x.offer_id === ticket.id);
+      const reservation = this.reservations.find(x => x.offer_id == ticket.id);
       const payload = { ...reservation, quantity: ticket.selected_tickets };
       this.setLoadingReservation(true, ticket);
       try {
@@ -250,7 +250,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           if (this.reservations?.length) this.removeReservation(reservation);
           localStorage.removeItem('reservations');
           this.batches.forEach(batch => {
-            if (batch.tickets.some(x => x.id === reservation.offer_id)) {
+            if (batch.tickets.some(x => x.id == reservation.offer_id)) {
               this.updateAvailableTickets(res.tickets, false);
             }
           })

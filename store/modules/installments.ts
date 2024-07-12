@@ -49,7 +49,7 @@ export const useInstallmentsStore = defineStore("installments", {
                 : item.shipping?.amount || 0;
           }
           // Verifica se tem cupom
-          if (item.id === parseInt(product_id.value) && coupon.value.applied) {
+          if (item.id == parseInt(product_id.value) && coupon.value.applied) {
             value -= coupon.value.amount;
           }
           // Se for atualizaçao de assinatura
@@ -103,7 +103,7 @@ export const useInstallmentsStore = defineStore("installments", {
                 : item.shipping?.amount || 0;
           }
           // Verifica se tem cupom
-          if (item.id === parseInt(product_id.value) && coupon.value.applied) {
+          if (item.id == parseInt(product_id.value) && coupon.value.applied) {
             value -= coupon.value.amount;
           }
           // Cliente não paga juros
