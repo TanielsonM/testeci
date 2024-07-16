@@ -137,38 +137,37 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     async addTicket(batch_group, hash) {
       let batch = this.batches.find(x => x.id == batch_group.id);
       let ticket = batch.tickets.find(x => x.hash === hash);
-      this.setLoadingReservation(true, ticket);
-      await this.checkHasTickets(ticket.id, batch)
-      if(!haveAvailableTickets(batch)) {
-        batch.soldOff = true
-        return
-      } else {
-        batch.soldOff = false
-      }
-      if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
-        ticket.selected_tickets += 1;
-        batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
-        // if(this.reservations?.length && this.reservations.some(x => x.offer_id === ticket.id)) {
-        //   // Edita a reserva do lote existente com a nova quantidade de ingressos selecionados
-        //   const res = await this.putReservation(ticket);
-        //   localStorage.setItem('reservations', JSON.stringify(this.reservations));
-        // } else {
-        // Cria nova reserva do ingresso do lote selecionado
-        const checkoutStore = useCheckoutStore();
-        if(batch.release_type !== "fixed_date" && batch.release_type !== null) {
-          let resp =  await this.createReservation(ticket.id, ticket);
-
-          if (resp) {
-            localStorage.setItem('reservations', JSON.stringify(this.reservations));
-            checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:resp.token });
-          }
+      try {
+        this.setLoadingReservation(true, ticket);
+        await this.checkHasTickets(ticket.id, batch)
+        if(!haveAvailableTickets(batch)) {
+          batch.soldOff = true
+          return 'Sem ingresso disponível'
         } else {
-        // Para eventos que estão configurados para liberar por data || esgotar lote || sem regra
-          checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:hash });
+          batch.soldOff = false
         }
-      // }
+        if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
+          ticket.selected_tickets += 1;
+          batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
+          const checkoutStore = useCheckoutStore();
+          if(batch.release_type !== "fixed_date" && batch.release_type !== null) {
+            let resp =  await this.createReservation(ticket.id, ticket);
+            if (resp) {
+              localStorage.setItem('reservations', JSON.stringify(this.reservations));
+              checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:resp.token });
+              return resp.token
+            }
+          } else {
+            // Para eventos que estão configurados para liberar por data || esgotar lote || sem regra
+            checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:hash });
+          }
+        }
+        return true
+      } catch (error) {
+        return error
+      } finally {
+        this.setLoadingReservation(false, ticket);
       }
-      this.setLoadingReservation(false, ticket);
     },
     async subTicket(batch_group, hash) {
       const batch = this.batches.find(x => x.id == batch_group.id);
