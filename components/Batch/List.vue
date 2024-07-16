@@ -131,24 +131,27 @@ function validatePlusBtn(batch, disabled = false) {
   return false
 }
 
-onMounted(() => {
+onMounted(async () => {
   const route = useRoute();
-  for (const key in route.query) {
-    if (key.startsWith('o_')) {
-      const offerHash = key.slice(2);
-      const howManyTicketsToPreSelect = route.query[key]
-      batches.value.forEach(batch => {
-        batch.tickets.forEach(ticket => {
-          if(ticket.hash === offerHash) {
-            for (let i = 0; i < howManyTicketsToPreSelect; i++) {
-              preCheckout.addTicket(batch, offerHash);
+  setTimeout(async () => {
+    for (const key in route.query) {
+      if (key.startsWith('o_')) {
+        const offerHash = key.slice(2);
+        const howManyTicketsToPreSelect = route.query[key];
+        
+        for (const batch of batches.value) {
+          for (const ticket of batch.tickets) {
+            if (ticket.hash === offerHash) {
+              for (let i = 0; i < howManyTicketsToPreSelect; i++) {
+                await preCheckout.addTicket(batch, offerHash);
+              }
             }
           }
-        })
-      })
+        }
+      }
     }
-  }
-})
+  },1500)
+});
 
 </script>
 
