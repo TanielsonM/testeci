@@ -22,4 +22,8 @@ const { product } = useProductStore();
   overflow: auto;
   padding: 10px 0px;
 }
+
+.md-editor-preview {
+  word-break: break-word;
+}
 </style>
