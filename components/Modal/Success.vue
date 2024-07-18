@@ -389,6 +389,7 @@ function openPix(id: number) {
       :email="personalStore.email"
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
+      :address="storeLead.address"
     />
   </ClientOnly>
 </template>

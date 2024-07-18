@@ -15,7 +15,15 @@ interface Props {
   sale_id?: number;
   chc_id?: number;
   product_name?: string;
-  uuid?: any;
+  uuid? : string;
+  address?: {
+    zip_code: string;
+    state: string;
+    city: string;
+    street: string;
+    number: string;
+    country_code: string;
+  };
 }
 
 const pixelStore = usePixelStore();
@@ -31,7 +39,6 @@ onMounted(async () => {
     await pixelStore.syncPixels(props.event, props.amount);
     await pixelStore.getPixels().then((response) => {
       const { event_id, pixels } = response;
-
       if (pixels && pixels.length) {
         pixels.forEach((pixel) => {     
           handleIframe(
@@ -48,7 +55,11 @@ onMounted(async () => {
             props.name,
             props.email,
             props.cellphone,
-            props.uuid
+            props.uuid,
+            props.address?.city,
+            props.address?.country_code,
+            props.address?.state,
+            props.address?.zip_code
           );
         });
       }
@@ -68,7 +79,11 @@ onMounted(async () => {
       name: string | undefined,
       email: string | undefined,
       cellphone: string | undefined,
-      uuid: any
+      uuid: string | undefined,
+      city: string | undefined,
+      country_code: string | undefined,
+      state: string | undefined,
+      zip_code: string | undefined
     ) {
       const url = `http://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -82,6 +97,10 @@ onMounted(async () => {
       if (!!sale_id) query.append("sale_id", sale_id.toString());
       if (!!original_amount)query.append("original_amount", amount.toString());
       if (!!uuid)query.append("uuid", uuid.toString());
+      if (!!city)query.append("city", city.toString());
+      if (!!country_code)query.append("country_code", country_code.toString());
+      if (!!state)query.append("state", state.toString());
+      if (!!zip_code)query.append("zip_code", zip_code.toString());
 
       if (!!name)query.append("name", name.toString());
       if (!!email)query.append("email", email.toString());
