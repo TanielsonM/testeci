@@ -16,11 +16,11 @@ interface Props {
   sale_id?: number;
   chc_id?: number;
   product_name?: string;
+  uuid?: any;
 }
 
 const pixelStore = usePixelStore();
 const props = defineProps<Props>();
-const personalStore = usePersonalStore()
 
 onMounted(async () => {
   if (process.client) {
@@ -34,10 +34,11 @@ onMounted(async () => {
       const { event_id, pixels } = response;
 
       if (pixels && pixels.length) {
-        
-        pixels.forEach((pixel) => {          
+        console.log(   'werfgwerfwerf',         props.name,
+        props.email,)
+        pixels.forEach((pixel) => {     
           handleIframe(
-            pixel.host,
+            'localhost:81',
             pixel.product_id,
             props.event,
             event_id,
@@ -49,7 +50,8 @@ onMounted(async () => {
             props.original_amount,
             props.name,
             props.email,
-            props.cellphone
+            props.cellphone,
+            storeLead.uuid
           );
         });
       }
@@ -68,9 +70,10 @@ onMounted(async () => {
       original_amount: number,
       name: string | undefined,
       email: string | undefined,
-      cellphone: string | undefined
+      cellphone: string | undefined,
+      uuid: any
     ) {
-      const url = `https://${host}/${product_id}`;
+      const url = `http://${host}/${product_id}`;
       const query = new URLSearchParams();
 
       if (!!event) query.append("event", event);
@@ -81,6 +84,7 @@ onMounted(async () => {
       if (!!affiliate_id) query.append("affiliate_id", affiliate_id.toString());
       if (!!sale_id) query.append("sale_id", sale_id.toString());
       if (!!original_amount)query.append("original_amount", amount.toString());
+      if (!!uuid)query.append("uuid", uuid.toString());
 
       if (!!name)query.append("name", name.toString());
       if (!!email)query.append("email", email.toString());
