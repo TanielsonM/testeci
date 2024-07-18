@@ -16,6 +16,7 @@ interface Props {
   sale_id?: number;
   chc_id?: number;
   product_name?: string;
+  products?: any;
 }
 
 const pixelStore = usePixelStore();
@@ -23,6 +24,14 @@ const props = defineProps<Props>();
 const personalStore = usePersonalStore()
 
 onMounted(async () => {
+  let allSales = props.products;
+  let ids = [] as any;
+  
+  if(allSales && allSales.sales){
+    ids = allSales.sales
+    .filter((item: any) => item.product_id != props.product_id)
+    .map((item: any) => item.product_id);
+  }  
   if (process.client) {
     pixelStore.amount = props.amount;
     pixelStore.original_amount = props.original_amount;
@@ -49,7 +58,8 @@ onMounted(async () => {
             props.original_amount,
             props.name,
             props.email,
-            props.cellphone
+            props.cellphone,
+            ids
           );
         });
       }
@@ -68,11 +78,13 @@ onMounted(async () => {
       original_amount: number,
       name: string | undefined,
       email: string | undefined,
-      cellphone: string | undefined
+      cellphone: string | undefined,
+      products_ids: {}[]
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
 
+      if (!!products_ids) query.append("products_ids", products_ids.toString());
       if (!!event) query.append("event", event);
       if (!!event_id) query.append("event_id", event_id);
       if (!!pixel_id) query.append("pixel_id", pixel_id.toString());

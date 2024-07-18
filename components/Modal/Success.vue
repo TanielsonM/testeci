@@ -384,6 +384,7 @@ function openPix(id: number) {
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
       :name="personalStore.name"
+      :products="checkoutStore.sales"
       :email="personalStore.email"
       :cellphone="personalStore.cellphone"
     />
