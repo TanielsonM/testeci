@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { usePersonalStore } from "~/store/forms/personal";
 import { usePixelStore } from "~~/store/modules/pixel";
 
 // Props interface
@@ -34,8 +33,6 @@ onMounted(async () => {
       const { event_id, pixels } = response;
 
       if (pixels && pixels.length) {
-        console.log(   'werfgwerfwerf',         props.name,
-        props.email,)
         pixels.forEach((pixel) => {     
           handleIframe(
             'localhost:81',
@@ -51,7 +48,7 @@ onMounted(async () => {
             props.name,
             props.email,
             props.cellphone,
-            storeLead.uuid
+            props.uuid
           );
         });
       }
