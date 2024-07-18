@@ -1,0 +1,43 @@
+###############################
+### CONTAINER CONFIGURATION ###
+###############################
+
+nginx_default_image = "${NGINX_IMAGE}"
+php_default_image = "${PHP_IMAGE}"
+cpu = 1028
+memory = 2048
+max_capacity = 0
+min_capacity = 0
+
+#############################
+### GENERAL CONFIGURATION ###
+#############################
+
+name = "greenn"
+environment = "staging"
+application = "payfast-pci"
+cluster_name = "greenn-stg-pci-cluster"
+
+#############################
+### NETWORK CONFIGURATION ###
+#############################
+
+vpc_id = "vpc-02bd94c96cab0a4b4"
+app_subnets = [ 
+    "subnet-01ff6c49a4d77e207", 
+    "subnet-088a0cef803859b4d" 
+]
+container_security_group = [ 
+    "sg-0d54fbeec3af71757" 
+]
+
+#########################
+### ALB CONFIGURATION ###
+#########################
+
+application_host_header_values = [
+  "payfast.stg.greenn.com.br"
+]
+
+target_deployment_role = "${TARGET_DEPLOYMENT_ROLE}"
+alb_https_listener = "arn:aws:elasticloadbalancing:us-east-1:654654442222:listener/app/greenn-stg-pci-alb/6c0b45dae621e474/cfe3e0c0ab867b2c"
