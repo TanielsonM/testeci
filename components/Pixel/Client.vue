@@ -35,7 +35,7 @@ onMounted(async () => {
       if (pixels && pixels.length) {
         pixels.forEach((pixel) => {     
           handleIframe(
-            'localhost:81',
+            pixel.host,
             pixel.product_id,
             props.event,
             event_id,
