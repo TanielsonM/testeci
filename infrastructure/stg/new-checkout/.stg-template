@@ -6,8 +6,8 @@ nginx_default_image = "${NGINX_IMAGE}"
 php_default_image = "${PHP_IMAGE}"
 cpu = 1024
 memory = 2048
-max_capacity = 0
-min_capacity = 0
+max_capacity = 1
+min_capacity = 1
 
 #############################
 ### GENERAL CONFIGURATION ###
