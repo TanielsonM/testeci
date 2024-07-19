@@ -78,7 +78,7 @@ Este guia irá ajudá-lo a executar o projeto localmente usando o Docker Compose
 ## Parar execução do container:
 
    ```sh
-  docker-compose -f local.docker-compose.yaml down
+  docker-compose -f local.docker-compose.yaml down -
    ```
 
  
