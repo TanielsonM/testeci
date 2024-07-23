@@ -109,11 +109,18 @@ export const useLeadsStore = defineStore("Leads", {
       };
     },
     async syncLead() {
-      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(this.payment.product_id);
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(
+        this.payment.product_id
+      );
       // Implementação de chamada de API para sincronizar ou recuperar um lead
-      const response = await useApi().read("/lead", {
-        query: { uuid: this.uuid, product_id: this.payment.product_id },
-      }, false, useApiFast);
+      const response = await useApi().read(
+        "/lead",
+        {
+          query: { uuid: this.uuid, product_id: this.payment.product_id },
+        },
+        false,
+        useApiFast
+      );
 
       if (response && response.uuid) {
         this.step = response.step;
@@ -130,10 +137,12 @@ export const useLeadsStore = defineStore("Leads", {
         seller_id: this.payment.seller_id,
         country_code: this.address.country_code ?? "BR",
         uuid: this.uuid,
-        step: this.step
+        step: this.step,
       };
 
-      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(this.payment.product_id);
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(
+        this.payment.product_id
+      );
 
       await useApi()
         .create("/lead", data, {}, false, useApiFast)
@@ -156,24 +165,27 @@ export const useLeadsStore = defineStore("Leads", {
             proposal_id: this.payment.proposal_id,
             seller_id: this.payment.seller_id,
             affiliate_id: this.payment.affiliate_id,
-            name: this.personal.name,
-            email: this.personal.email,
-            cpf: this.personal.document,
-            zip_code: this.address.zip_code,
-            street: this.address.street,
-            number: this.address.number,
-            neighborhood: this.address.neighborhood,
-            city: this.address.city,
-            state: this.address.state,
+            name: this.personal.name ?? null,
+            email: this.personal.email ?? null,
+            cpf: this.personal.document ?? null,
+            zip_code: this.address?.zip_code ?? null,
+            street: this.address?.street ?? null,
+            number: this.address?.number ?? null,
+            neighborhood: this.address?.neighborhood ?? null,
+            city: this.address?.city ?? null,
+            state: this.address?.state ?? null,
             step: this.step,
             uuid: this.uuid,
-            complement: this.address.complement,
-            country_code: this.address.country_code,
+            complement: this.address?.complement ?? null,
+            country_code: this.address?.country_code ?? null,
             status: this.purchase.status,
             cellphone: updatedCellphone,
           };
 
-          const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(this.payment.product_id);
+          const useApiFast =
+            useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(
+              this.payment.product_id
+            );
 
           await useApi()
             .update(`lead/${this.uuid}`, data, {}, false, useApiFast)
