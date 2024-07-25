@@ -40,6 +40,11 @@ variable "vpc_id" {
   type = string
 }
 
+variable "dd_key_secret" {
+  type = string
+}
+
+
 variable "alb_https_listener" {
   type = string
 }
