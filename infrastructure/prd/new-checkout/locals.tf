@@ -29,7 +29,7 @@ locals {
         },
         {
           name  = "DD_API_KEY",
-          value = "40d3f690fc42de54e11baacb1dbbbcc1"
+          value = "${var.dd_key_secret}"
         }
 
       ]
