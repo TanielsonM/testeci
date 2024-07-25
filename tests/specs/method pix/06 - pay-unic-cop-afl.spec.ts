@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue } from '../../helpers/helpers';
 
-test('Processo completo de pagamento via PIX', async ({ page }) => {
-  const paymentId = '35008';
+test('Pagamento Valor Único Com Co-Seller + Afiliado', async ({ page }) => {
+  const paymentId = '47196?a_id=79167';
   const expectedValue = 'R$ 20,00';
 
-  // Carregando o checkout
+  // Carregando o checkout com o parâmetro adicional
   await navigateToPaymentPage(page, paymentId);
   
   // Preenchendo dados
@@ -15,8 +15,8 @@ test('Processo completo de pagamento via PIX', async ({ page }) => {
   await selectPaymentMethodPix(page);
   await clickBuyNowButton(page);
   
-  // Verificando o valor na página de agradecimento
+  // Verificando o valor no modal de obrigado
   await verifyThankYouPageValue(page, expectedValue);
-});
 
+});
 

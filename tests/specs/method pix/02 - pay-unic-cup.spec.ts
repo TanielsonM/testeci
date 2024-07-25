@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, applyDiscountCoupon, verifyThankYouPageValue } from '../../helpers/helpers';
 
-test('Processo completo de pagamento via PIX com cupom de desconto', async ({ page }) => {
+test('Pagamento Valor Único Com Cupom', async ({ page }) => {
   const paymentId = '35008';
   const expectedValue = 'R$ 19,00';
   
