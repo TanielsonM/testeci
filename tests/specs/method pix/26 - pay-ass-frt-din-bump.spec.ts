@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { fillForm, fillAddress, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, verifyThankYouPageValueFreight, verifyThankYouPageBumpText, clickDivInHeaderWithText} from '../../helpers/helpers';
+import { fillForm, fillAddress, navigateToPaymentPage, clickDivInHeaderWithText, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, verifyThankYouPageValueFreight, verifyThankYouPageBumpTextSub } from '../../helpers/helpers';
 
-test('Pagamento Valor Único + Bump Frete Fixo', async ({ page }) => {
-  const paymentId = '35008?b_id_1=37607';
+test('Pagamento Assinatura Com Frete Dinâmico + Bump Assinatura', async ({ page }) => {
+  const paymentId = '69440?b_id_1=46730';
   const headerText = 'Sim, eu quero!';
   const expectedValue = 'R$ 20,00';
-  const expectedValueFreight = 'R$ 10,00';
+  const expectedValueFreight = 'R$ 11,47';
+  const bumpText = 'Bump - Assinatura - Mensal';
 
   // Carregando o checkout
   await navigateToPaymentPage(page, paymentId);
@@ -28,4 +29,7 @@ test('Pagamento Valor Único + Bump Frete Fixo', async ({ page }) => {
 
   // Verificando o valor do frete na página de agradecimento
   await verifyThankYouPageValueFreight(page, expectedValueFreight);
+
+  // Verificando se o bump aparece no modal de obrigado
+  await verifyThankYouPageBumpTextSub(page, bumpText);
 });

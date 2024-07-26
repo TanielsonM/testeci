@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { fillForm, fillAddress, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, verifyThankYouPageValueFreight } from '../../helpers/helpers';
 
-test('Pagamento Valor Único Com Frete Fixo', async ({ page }) => {
-  const paymentId = '37607';
+test('Pagamento Assinatura Com Frete Fixo', async ({ page }) => {
+  const paymentId = '69438';
   const expectedValue = 'R$ 20,00';
   const expectedValueFreight = 'R$ 10,00';
 
