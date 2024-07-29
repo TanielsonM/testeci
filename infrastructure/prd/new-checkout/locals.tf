@@ -28,7 +28,7 @@ locals {
           value = "true"
         }
       ]
-      secretOptions = [
+      secrets = [
         {
           name      = "DD_API_KEY"
           valueFrom = "${var.dd_key_secret}"
