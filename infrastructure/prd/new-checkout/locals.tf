@@ -26,12 +26,13 @@ locals {
         {
           name  = "DD_APM_ENABLED",
           value = "true"
-        },
-        {
-          name  = "DD_API_KEY",
-          value = "${var.dd_key_secret}"
         }
-
+      ]
+      secretOptions = [
+        {
+          name      = "DD_API_KEY"
+          valueFrom = "${var.dd_key_secret}"
+        }
       ]
     }
   ]
