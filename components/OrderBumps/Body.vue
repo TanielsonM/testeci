@@ -26,6 +26,11 @@ const props = defineProps({
     required: true,
     default: () => 0,
   },
+  installments: {
+    type: [String, Number],
+    required: true,
+    default: () => 0,
+  },
   hasCustomCharges: {
     type: [Function, Boolean],
     required: false,
@@ -83,6 +88,9 @@ const hasTrial = computed(() => !!props.bump.trial);
 const isBumpSellerEqual = computed(() => {
   return product.value.seller.id == props.bump.seller.id;
 });
+
+const formattedAmount = computed(() => formatMoney(Number(props.amount)));
+const installmentValue = computed(() => formattedAmount.value);
 
 const showDescription = computed(() =>
   customCheckout.hasCustomBump ? customCheckout.bump_options.description : true
@@ -169,7 +177,7 @@ function getType(type = "") {
             <span
               v-if="!hasTrial && !hasCustomCharges"
               class="info-value custom-color"
-              >{{ `${formatMoney(amount)}` }}</span
+              >{{ installments }}x de {{ installmentValue }}</span
             >
             <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
               <p

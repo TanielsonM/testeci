@@ -5,6 +5,7 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAddressStore } from "@/store/forms/address";
 import { useProductStore } from "~~/store/product";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 // Utils
 import { formatMoney } from "~/utils/money";
 
@@ -30,6 +31,10 @@ const { product } = storeToRefs(productStore);
 const shipping = ref({});
 const shippingOptions = ref([]);
 const shippingLoading = ref(false);
+
+const installmentsStore = useInstallmentsStore();
+const {  installments } = storeToRefs(checkoutStore);
+const { getInstallmentsWithAmount } = installmentsStore;
 
 // Computed methods
 const stylesheet = computed(() => {  
@@ -110,6 +115,14 @@ const hasShippingFee = computed(() => !!props.bump.has_shipping_fee);
 const isFixedShipping = computed(
   () => props.bump.type_shipping_fee === "FIXED"
 );
+const numberOfInstallments = computed(() => installments.value);
+const installmentValues = computed(() => {
+  if(numberOfInstallments.value > 1){
+    return getInstallmentsWithAmount(amount.value, numberOfInstallments.value);
+  }else{
+    return amount.value;
+  }
+});
 
 // Watches
 watch(
@@ -148,12 +161,13 @@ if (isFixedShipping.value)
         :disabled="!!bump?.disabled"
       />
       <p class="item-value">
-        {{ !!bump.trial ? trialMessage : formatMoney(amount) }}
+        {{ !!bump.trial ? trialMessage : `${numberOfInstallments}x de ${formatMoney(installmentValues)}` }}
       </p>
     </header>
     <OrderBumpsBody
       :bump="bump"
-      :amount="amount"
+      :amount="installmentValues"
+      :installments="numberOfInstallments"
       :shipping="shipping"
       :shipping-options="shippingOptions"
       :shipping-loading="shippingLoading"
