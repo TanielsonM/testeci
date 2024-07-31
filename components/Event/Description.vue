@@ -8,9 +8,7 @@ const { product } = useProductStore();
 <template>
   <div class="mb-3">
     <p class="text-[16px] font-[700] text-main-color"> {{ $t("pre_checkout.details") }} </p>
-    <p class="block w-full text-[15px] font-[400] leading-relaxed text-input-color mb-3">
-      <MdPreview v-model="product.description" style="background-color: transparent;" previewTheme="github" />
-    </p>
+    <p class="text-[16px] font-[500] leading-relaxed text-input-color mt-3">{{ product?.description }} </p>
   </div>
 </template>
 
