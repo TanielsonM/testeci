@@ -6,12 +6,13 @@ import { addressData } from '../data/andress';
 // Acessa a url do checkout
 export async function navigateToPaymentPage(page: Page, id: string) {
   let url = `https://payfast.greenn.com.br/${id}`;
-  // let url = `http://localhost:3000/${id}`;
+  //let url = `https://payfast.stg.greenn.com.br/${id}`;
   await page.goto(url);
 }
 
 // Faz o preenchimento dos dados pessoais
 export async function fillForm(page: Page) {
+  await page.waitForTimeout(6000);
   await page.locator('#name-field').fill(userData.name);
   await page.locator('#email-field').fill(userData.email);
   await page.locator('.vti__input').fill(userData.phone);

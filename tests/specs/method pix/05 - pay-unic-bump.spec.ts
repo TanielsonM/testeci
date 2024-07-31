@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import percySnapshot from '@percy/playwright';
 import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, clickDivInHeaderWithText, verifyThankYouPageBumpText } from '../../helpers/helpers';
 
 test('Pagamento Valor Único + Bump ', async ({ page }) => {
@@ -25,6 +26,8 @@ test('Pagamento Valor Único + Bump ', async ({ page }) => {
 
   // Verificando se o bump aparece no modal de obrigado
   await verifyThankYouPageBumpText(page, bumpText);
+
+  await percySnapshot(page, 'Pagina de obrigado PIX + Bump Unico');
 });
 
 

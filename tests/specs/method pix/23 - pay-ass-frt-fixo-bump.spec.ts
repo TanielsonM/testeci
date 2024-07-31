@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import percySnapshot from '@percy/playwright';
 import { fillForm, fillAddress, navigateToPaymentPage, clickDivInHeaderWithText, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, verifyThankYouPageValueFreight, verifyThankYouPageBumpText } from '../../helpers/helpers';
 
 test('Pagamento Assinatura Com Frete Fixo + Bump', async ({ page }) => {
@@ -29,6 +30,8 @@ test('Pagamento Assinatura Com Frete Fixo + Bump', async ({ page }) => {
 
   // Verificando o valor do frete na página de agradecimento
   await verifyThankYouPageValueFreight(page, expectedValueFreight);
+
+  await percySnapshot(page, 'Pagina de obrigado PIX Assinatura + Bump');
 
   // Verificando se o bump aparece no modal de obrigado
   await verifyThankYouPageBumpText(page, bumpText);

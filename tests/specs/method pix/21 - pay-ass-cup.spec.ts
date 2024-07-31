@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import percySnapshot from '@percy/playwright';
 import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, applyDiscountCoupon, verifyThankYouPageValue } from '../../helpers/helpers';
 
 test('Pagamento Assinatura Com Cupom Personalizado', async ({ page }) => {
@@ -20,4 +21,6 @@ test('Pagamento Assinatura Com Cupom Personalizado', async ({ page }) => {
   
   // Verificando o valor na página de agradecimento
   await verifyThankYouPageValue(page, expectedValue);
+
+  await percySnapshot(page, 'Pagina de obrigado PIX');
 });
