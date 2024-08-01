@@ -193,6 +193,7 @@ export type pixelState = {
   zip_code?: string;
   state?: string;
   city?: string;
+  products_ids?:any;
   country_code?: string;
 };
 

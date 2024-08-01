@@ -1,4 +1,4 @@
-import { pixelState, Pixel } from "@/types";
+import { type pixelState, type Pixel } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
@@ -54,13 +54,25 @@ export const usePixelStore = defineStore("Pixel", {
     state: '',
     city: '',
     country_code: '',
+    products_ids: '',
   }),
   getters: {},
   actions: {
+    getOrderBumps(sales){
+      let ids = [];
+      let allSales = sales;
+      if(allSales && allSales.sales){
+        ids = allSales.sales
+        .filter((item: any) => item.product_id != productStore().product_id)
+        .map((item: any) => item.product_id);
+      } 
+      return ids;
+    },
     async syncPixels(event: string, amount: any) {
       this.event = event;
       this.product_id = productStore().product_id;
       this.method = checkoutStore().method;
+      this.products_ids = this.getOrderBumps(checkoutStore().sales);
       this.affiliate_id = checkoutStore().hasAffiliateId;
       this.email = personalStore().email;
       this.cellphone = personalStore().cellphone;
