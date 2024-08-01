@@ -101,6 +101,7 @@ export const usePixelStore = defineStore("Pixel", {
         state: this.state,
         city: this.city,
         country_code: this.country_code,
+        products_ids: this.products_ids
       };
 
       return await useApi()
