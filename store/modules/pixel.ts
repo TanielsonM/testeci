@@ -4,6 +4,7 @@ import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
 import { usePersonalStore } from "../forms/personal";
 import { useAmountStore } from "./amount";
+import { useLeadsStore } from "@/store/modules/leads";
 
 // const productStore = useProductStore();
 // const checkoutStore = useCheckoutStore();
@@ -30,6 +31,11 @@ export function amountStore() {
   return store;
 }
 
+export function leadsStore(){
+  const store = useLeadsStore()
+  return store;
+}
+
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
     event: "view",
@@ -44,6 +50,10 @@ export const usePixelStore = defineStore("Pixel", {
     email: undefined,
     cellphone: undefined,
     name: undefined,
+    zip_code: '',
+    state: '',
+    city: '',
+    country_code: '',
   }),
   getters: {},
   actions: {
@@ -56,6 +66,11 @@ export const usePixelStore = defineStore("Pixel", {
       this.cellphone = personalStore().cellphone;
       this.amount = amount || amountStore().amount;
       this.name = personalStore().name;
+      this.zip_code = leadsStore().address?.zip_code
+      this.state = leadsStore().address?.state
+      this.city = leadsStore().address?.city
+      this.country_code = leadsStore().address?.country_code
+
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
@@ -70,6 +85,10 @@ export const usePixelStore = defineStore("Pixel", {
         amount: this.amount,
         a_id: this.affiliate_id,
         name: this.name,
+        zip_code: this.zip_code,
+        state: this.state,
+        city: this.city,
+        country_code: this.country_code,
       };
 
       return await useApi()

@@ -190,6 +190,10 @@ export type pixelState = {
   email?: string;
   cellphone?: string;
   name?: string;
+  zip_code?: string;
+  state?: string;
+  city?: string;
+  country_code?: string;
 };
 
 export type Product = {
