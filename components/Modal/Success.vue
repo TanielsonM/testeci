@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { formatMoney } from "@/utils/money";
 import { type Sale, type ProductOffer } from "@/types";
 import { useProductStore } from "~~/store/product";
+import { useLeadsStore } from "@/store/modules/leads";
 import { useCheckoutStore } from "~~/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useModalStore } from "~~/store/modal/success";
@@ -15,6 +16,7 @@ const productStore = useProductStore();
 const amountStore = useAmountStore();
 const checkoutStore = useCheckoutStore();
 const preCheckout = usePreCheckoutStore();
+const storeLead = useLeadsStore()
 const { sales, productOffer } = storeToRefs(checkoutStore);
 const { product } = useProductStore();
 const { batches,  } = usePreCheckoutStore();
@@ -384,8 +386,11 @@ function openPix(id: number) {
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
       :name="personalStore.name"
+      :products="checkoutStore.sales"
       :email="personalStore.email"
       :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
     />
   </ClientOnly>
 </template>
