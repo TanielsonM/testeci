@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: codebuild-greenn-github-codebuild-${{ github.run_id }}-${{ github.run_attempt }}
+
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      REPOSITORY_URI: ${{ secrets.REPOSITORY_URI }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to DockerHub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Log in to Amazon ECR
+        run: |
+          echo Logging in to Amazon ECR...
+          aws ecr get-login-password --region ${{ secrets.AWS_DEFAULT_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+
+      - name: Set up environment variables
+        run: |
+          COMMIT_HASH=$(echo $GITHUB_SHA | cut -c 1-7)
+          IMAGE_TAG=${COMMIT_HASH:=latest}
+          echo Substituindo as secrets e criando arquivo de env.
+          envsubst < .env.template > .env
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Build Docker images
+        run: |
+          echo Build started on $(date)
+          echo Building the Docker image...
+          docker build -t ${{ secrets.REPOSITORY_URI }}:node -f "Dockerfile" .
+          docker build -t ${{ secrets.REPOSITORY_URI }}:nginx -f "nginx.Dockerfile" .
+          docker tag ${{ secrets.REPOSITORY_URI }}:node ${{ secrets.REPOSITORY_URI }}:node-$IMAGE_TAG
+          docker tag ${{ secrets.REPOSITORY_URI }}:nginx ${{ secrets.REPOSITORY_URI }}:nginx-$IMAGE_TAG
+          echo Build completed on $(date)
+
+      - name: Push Docker images
+        run: |
+          echo Pushing the Docker image...
+          docker push ${{ secrets.REPOSITORY_URI }}:node-$IMAGE_TAG
+          docker push ${{ secrets.REPOSITORY_URI }}:nginx-$IMAGE_TAG
+          printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' ${{ secrets.REPOSITORY_URI }}:nginx-$IMAGE_TAG ${{ secrets.REPOSITORY_URI }}:node-$IMAGE_TAG > imageDetail.sh
