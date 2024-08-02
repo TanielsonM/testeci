@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useCheckoutStore } from "~~/store/checkout";
 import { saleHasStarted, haveAvailableTickets, dependsOnAnotherBatch } from "@/utils/validateBatch";
+import { useRoute } from 'vue-router'
 
 const { $moment } = useNuxtApp();
 
@@ -129,6 +130,28 @@ function validatePlusBtn(batch, disabled = false) {
   }
   return false
 }
+
+onMounted(async () => {
+  const route = useRoute();
+  setTimeout(async () => {
+    for (const key in route.query) {
+      if (key.startsWith('o_')) {
+        const offerHash = key.slice(2);
+        const howManyTicketsToPreSelect = route.query[key];
+        
+        for (const batch of batches.value) {
+          for (const ticket of batch.tickets) {
+            if (ticket.hash === offerHash) {
+              for (let i = 0; i < howManyTicketsToPreSelect; i++) {
+                await preCheckout.addTicket(batch, offerHash);
+              }
+            }
+          }
+        }
+      }
+    }
+  },1500)
+});
 
 </script>
 

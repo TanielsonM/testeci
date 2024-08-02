@@ -21,17 +21,17 @@ phases:
     commands:
       - "cd ${TERRAFORM_PATH}"
       - "echo ## TERRAFORM APPLY : Starting with the Terraform Apply"
-      - envsubst < .prd-template > prd.tfvars
+      - envsubst < .stg-template > stg.tfvars
       - terraform init
       - terraform validate
-      - terraform plan -var-file prd.tfvars
-      - terraform apply -var-file prd.tfvars -auto-approve
+      - terraform plan -var-file stg.tfvars
+      - terraform apply -var-file stg.tfvars -auto-approve
       - "echo ## TERRAFORM APPLY : Completed"
   
   post_build:
     commands:
       - "echo ## TERRAFORM APPLY : Completed"
       - "echo ## Cleanning CloudFlare cache"
-      - "cd ../../scripts"
-      - ". ./clear_cache.sh $CLOUDFLARE_API_TOKEN"
+      # - "cd ../../scripts"
+      # - ". ./clear_cache.sh $CLOUDFLARE_API_TOKEN"
       - "echo ## CloudFlare cache cleared"

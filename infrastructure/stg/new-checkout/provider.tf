@@ -18,7 +18,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "greenn-devops-state"
-    key    = "greenn-pci-prd/new-checkout/state.tfstate"
+    key    = "greenn-pci-stg/new-checkout/state.tfstate"
     region = "us-east-1"
   }
 }

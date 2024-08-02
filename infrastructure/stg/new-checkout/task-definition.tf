@@ -5,7 +5,7 @@ locals {
 
 resource "aws_ecs_task_definition" "payfast-pci-td" {
 
-  family                   = "payfast-pci-family"
+  family                   = "payfast-stg-pci-family"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
 
@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "payfast-pci-td" {
     {
       essential   = true
       image       = "${var.php_default_image}",
-      name        = "greenn-payfast-pci-php-pod"
+      name        = "greenn-payfast-stg-pci-php-pod"
       networkMode = "awsvpc"
       portMappings = [
         {
@@ -44,25 +44,20 @@ resource "aws_ecs_task_definition" "payfast-pci-td" {
         options = {
           dd_message_key = "log"
           provider       = "ecs"
-          dd_service     = "payfast-pci-back"
-          dd_source      = "node"
+          dd_service     = "payfast-stg-pci-back"
+          dd_source      = "greenn-payfast-stg-pci-php-pod"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
           dd_tags        = "project:fluent-bit,environment:${var.environment}"
           Name           = "datadog"
+          apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
-        secretOptions = [
-          {
-            name      = "apikey"
-            valueFrom = "${var.dd_key_secret}"
-          }
-        ]
       }
     },
     {
       essential   = true
       image       = "${var.nginx_default_image}",
-      name        = "greenn-payfast-pci-nginx-pod"
+      name        = "greenn-payfast-stg-pci-nginx-pod"
       networkMode = "awsvpc"
       portMappings = [
         {
@@ -77,7 +72,7 @@ resource "aws_ecs_task_definition" "payfast-pci-td" {
       dependsOn = [
         {
           condition     = "HEALTHY"
-          containerName = "greenn-payfast-pci-php-pod"
+          containerName = "greenn-payfast-stg-pci-php-pod"
         }
       ]
       linuxParameters = {
@@ -98,19 +93,14 @@ resource "aws_ecs_task_definition" "payfast-pci-td" {
         options = {
           dd_message_key = "log"
           provider       = "ecs"
-          dd_service     = "payfast-pci-nginx"
-          dd_source      = "nginx"
+          dd_service     = "payfast-stg-pci-nginx"
+          dd_source      = "greenn-payfast-stg-pci-nginx-pod"
           Host           = "http-intake.logs.datadoghq.com"
           TLS            = "on"
           dd_tags        = "project:fluent-bit,environment:${var.environment}"
           Name           = "datadog"
+          apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
-        secretOptions = [
-          {
-            name      = "apikey"
-            valueFrom = "${var.dd_key_secret}"
-          }
-        ]
       }
     }
   ], local.default_sidecar_container_definition))
