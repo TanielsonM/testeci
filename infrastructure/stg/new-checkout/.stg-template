@@ -41,3 +41,6 @@ application_host_header_values = [
 
 target_deployment_role = "${TARGET_DEPLOYMENT_ROLE}"
 alb_https_listener = "arn:aws:elasticloadbalancing:us-east-1:654654442222:listener/app/greenn-stg-pci-alb/6c0b45dae621e474/cfe3e0c0ab867b2c"
+
+
+dd_key_secret = "arn:aws:secretsmanager:us-east-1:654654442222:secret:stag/DD-0ojUpF:DD_API_KEY::"
