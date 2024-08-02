@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import percySnapshot from '@percy/playwright';
 import { fillForm, fillAddress, navigateToPaymentPage, clickDivInHeaderWithText, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, verifyThankYouPageValueFreight, verifyThankYouPageBumpText } from '../../helpers/helpers';
 
 test('Pagamento Assinatura Com Frete Dinâmico + Bump', async ({ page }) => {
@@ -26,6 +27,8 @@ test('Pagamento Assinatura Com Frete Dinâmico + Bump', async ({ page }) => {
   
   // Verificando o valor na página de agradecimento
   await verifyThankYouPageValue(page, expectedValue);
+
+  await percySnapshot(page, 'Pagina de obrigado PIX Assinatura + Bump');
 
   // Verificando o valor do frete na página de agradecimento
   await verifyThankYouPageValueFreight(page, expectedValueFreight);

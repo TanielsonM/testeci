@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
+import percySnapshot from '@percy/playwright';
 import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, applyDiscountCoupon, verifyThankYouPageValue } from '../../helpers/helpers';
 
 test('Pagamento Valor Único Com Cupom Personalizado', async ({ page }) => {
   const paymentId = '35008';
-  const expectedValue = 'R$ 18,00';
+  const expectedValue = 'R$ 20,00';
   
   // Carregando o checkout
   await navigateToPaymentPage(page, paymentId);
@@ -20,4 +21,6 @@ test('Pagamento Valor Único Com Cupom Personalizado', async ({ page }) => {
   
   // Verificando o valor na página de agradecimento
   await verifyThankYouPageValue(page, expectedValue);
+
+  await percySnapshot(page, 'Pagina de obrigado PIX');
 });

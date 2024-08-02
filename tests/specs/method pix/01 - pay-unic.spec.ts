@@ -17,4 +17,5 @@ test('Pagamento Valor único', async ({ page }) => {
   
   // Verificando o valor na página de agradecimento
   await verifyThankYouPageValue(page, expectedValue);
+  await percySnapshot(page, 'Pagina de obrigado PIX');
 });
