@@ -35,6 +35,11 @@ export async function selectPaymentMethodPix(page: Page) {
   await page.getByRole('button', { name: 'Pix' }).click();
 }
 
+// Seleciona a opção "Boleto"
+export async function selectPaymentMethodBoleto(page: Page) {
+  await page.getByRole('button', { name: 'Boleto' }).click();
+}
+
 // Seleciona a opção do "Bump"
 export async function clickDivInHeaderWithText(page: Page, text: string) {
   await page.locator('header', { hasText: text }).locator('div').click();

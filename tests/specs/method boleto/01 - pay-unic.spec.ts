@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue } from '../../helpers/helpers';
+import { fillForm, navigateToPaymentPage, selectPaymentMethodBoleto, clickBuyNowButton, verifyThankYouPageValue } from '../../helpers/helpers';
 
 test('Pagamento Valor único', async ({ page }) => {
   const paymentId = '35008';
@@ -12,9 +12,11 @@ test('Pagamento Valor único', async ({ page }) => {
   await fillForm(page);
 
   // Realizando compra
-  await selectPaymentMethodPix(page);
+  await selectPaymentMethodBoleto(page);
   await clickBuyNowButton(page);
   
   // Verificando o valor na página de agradecimento
   await verifyThankYouPageValue(page, expectedValue);
 });
+
+

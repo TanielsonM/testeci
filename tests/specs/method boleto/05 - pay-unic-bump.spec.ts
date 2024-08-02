@@ -1,13 +1,13 @@
-import { test, expect } from '@playwright/test';
-import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, clickDivInHeaderWithText, verifyThankYouPageBumpText } from '../../helpers/helpers';
+import { test } from '@playwright/test';
+import { fillForm, navigateToPaymentPage, selectPaymentMethodBoleto, clickBuyNowButton, verifyThankYouPageValue, clickDivInHeaderWithText, verifyThankYouPageBumpText } from '../../helpers/helpers';
 
-test('Pagamento Valor Único Com Afiliado e Co-Seller + Bump', async ({ page }) => {
-  const paymentId = '47196?a_id=79167&b_id_1=35011';
+test('Pagamento Valor Único + Bump ', async ({ page }) => {
+  const paymentId = '35008?b_id_1=35011';
   const headerText = 'Sim, eu quero!';
   const expectedValue = 'R$ 20,00';
   const bumpText = 'Bump - Valor Unico';
 
-  // Carregando o checkout
+  // Carregando o checkout com o parâmetro adicional
   await navigateToPaymentPage(page, paymentId);
   
   // Preenchendo dados
@@ -17,10 +17,10 @@ test('Pagamento Valor Único Com Afiliado e Co-Seller + Bump', async ({ page }) 
   await clickDivInHeaderWithText(page, headerText);
 
   // Realizando compra
-  await selectPaymentMethodPix(page);
+  await selectPaymentMethodBoleto(page);
   await clickBuyNowButton(page);
   
-  // Verificando o valor na página de agradecimento
+  // Verificando o valor no modal de obrigado
   await verifyThankYouPageValue(page, expectedValue);
 
   // Verificando se o bump aparece no modal de obrigado

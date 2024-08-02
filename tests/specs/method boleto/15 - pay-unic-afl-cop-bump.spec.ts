@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, clickDivInHeaderWithText, verifyThankYouPageBumpText } from '../../helpers/helpers';
+import { test } from '@playwright/test';
+import { fillForm, navigateToPaymentPage, selectPaymentMethodBoleto, clickBuyNowButton, verifyThankYouPageValue, clickDivInHeaderWithText, verifyThankYouPageBumpText } from '../../helpers/helpers';
 
 test('Pagamento Valor Único Com Afiliado e Co-Seller + Bump', async ({ page }) => {
   const paymentId = '47196?a_id=79167&b_id_1=35011';
@@ -17,7 +17,7 @@ test('Pagamento Valor Único Com Afiliado e Co-Seller + Bump', async ({ page }) 
   await clickDivInHeaderWithText(page, headerText);
 
   // Realizando compra
-  await selectPaymentMethodPix(page);
+  await selectPaymentMethodBoleto(page);
   await clickBuyNowButton(page);
   
   // Verificando o valor na página de agradecimento
