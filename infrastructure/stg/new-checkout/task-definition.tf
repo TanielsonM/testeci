@@ -50,8 +50,13 @@ resource "aws_ecs_task_definition" "payfast-pci-td" {
           TLS            = "on"
           dd_tags        = "project:fluent-bit,environment:${var.environment}"
           Name           = "datadog"
-          apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
+        secretOptions = [
+          {
+            name      = "apikey"
+            valueFrom = "${var.dd_key_secret}"
+          }
+        ]
       }
     },
     {
@@ -99,8 +104,13 @@ resource "aws_ecs_task_definition" "payfast-pci-td" {
           TLS            = "on"
           dd_tags        = "project:fluent-bit,environment:${var.environment}"
           Name           = "datadog"
-          apikey         = "40d3f690fc42de54e11baacb1dbbbcc1"
         }
+        secretOptions = [
+          {
+            name      = "apikey"
+            valueFrom = "${var.dd_key_secret}"
+          }
+        ]
       }
     }
   ], local.default_sidecar_container_definition))
