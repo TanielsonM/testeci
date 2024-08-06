@@ -9,7 +9,7 @@ const product = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const installmentsStore = useInstallmentsStore();
 
-const { method, installments, max_installments, hasFees, fixed_installments, reuseCreditCard, setReuseCreditCard, secondSaleFlag } =
+const { method, bump_list, installments, max_installments, hasFees, fixed_installments, reuseCreditCard, setReuseCreditCard, secondSaleFlag } =
   storeToRefs(checkout);
 const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
@@ -95,8 +95,20 @@ const showInstallments = computed(() => {
   return false;
 });
 
-// if subscription page is true
-const {urlSubscription} = props;
+const minInstallments = computed(() => {
+  if (Array.isArray(bump_list.value) && bump_list.value.length > 0) {
+    const checkedBumps = bump_list.value.filter(bump => bump.checkbox);
+    if (checkedBumps.length > 0) {
+      const bumpsMaxInstallments = checkedBumps.map(bump => Number(bump.max_installments));
+      const maxInstallmentsValue = Number(max_installments.value);
+      const minInstallmentsValue = Math.min(maxInstallmentsValue, ...bumpsMaxInstallments);
+      return minInstallmentsValue;
+    }
+  }
+  return max_installments.value;
+});
+
+
 
 const showReuseCreditCard = computed(() => {
   if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value) && secondSaleFlag.value) {
@@ -107,7 +119,13 @@ const showReuseCreditCard = computed(() => {
 
 function saveData() {
   setReuseCreditCard(reuseCreditCard)
-}
+};
+
+watch(minInstallments, (newVal) => {
+  installments.value = newVal;
+}, { immediate: true });
+
+
 </script>
 
 <template>
@@ -119,7 +137,7 @@ function saveData() {
       <template #fallback>
         <LoadingShimmer width="50%" height="55px" />
       </template>
-      <BaseSelect
+      <BaseSelect        
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="w-full lg:w-1/2"
         v-model="installments"
@@ -141,7 +159,7 @@ function saveData() {
         <!-- Installments -->
         <option
           v-else
-          v-for="(d, index) in max_installments"
+          v-for="(d, index) in minInstallments"
           :key="index"
           :value="d"
           class="cursor-pointer select-none rounded hover:bg-main-color"

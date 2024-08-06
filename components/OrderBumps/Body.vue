@@ -15,6 +15,8 @@ const { product } = storeToRefs(productStore);
 
 const { t } = useI18n();
 const customCheckout = useCustomCheckoutStore();
+const checkoutStore = useCheckoutStore();
+const {  installments } = storeToRefs(checkoutStore);
 const props = defineProps({
   bump: {
     type: Object,
@@ -22,11 +24,6 @@ const props = defineProps({
     default: () => {},
   },
   amount: {
-    type: [String, Number],
-    required: true,
-    default: () => 0,
-  },
-  installments: {
     type: [String, Number],
     required: true,
     default: () => 0,
@@ -177,7 +174,7 @@ function getType(type = "") {
             <span
               v-if="!hasTrial && !hasCustomCharges"
               class="info-value custom-color"
-              >{{ installments }}x de {{ installmentValue }}</span
+              >{{ `${installments}x ${$t("order.de")} ${(installmentValue)}` }}</span
             >
             <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
               <p

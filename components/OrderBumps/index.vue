@@ -115,15 +115,13 @@ const hasShippingFee = computed(() => !!props.bump.has_shipping_fee);
 const isFixedShipping = computed(
   () => props.bump.type_shipping_fee === "FIXED"
 );
-const numberOfInstallments = computed(() => installments.value);
 const installmentValues = computed(() => {
-  if(numberOfInstallments.value > 1){
-    return getInstallmentsWithAmount(amount.value, numberOfInstallments.value);
+  if(installments.value > 1){
+    return getInstallmentsWithAmount(props.bump, installments.value);
   }else{
     return amount.value;
   }
 });
-
 // Watches
 watch(
   () => props.bump.checkbox,
@@ -161,13 +159,12 @@ if (isFixedShipping.value)
         :disabled="!!bump?.disabled"
       />
       <p class="item-value">
-        {{ !!bump.trial ? trialMessage : `${numberOfInstallments}x de ${formatMoney(installmentValues)}` }}
+        {{ !!bump.trial ? trialMessage : `${installments}x ${$t("order.de")} ${formatMoney(installmentValues)}` }}
       </p>
     </header>
     <OrderBumpsBody
       :bump="bump"
       :amount="installmentValues"
-      :installments="numberOfInstallments"
       :shipping="shipping"
       :shipping-options="shippingOptions"
       :shipping-loading="shippingLoading"

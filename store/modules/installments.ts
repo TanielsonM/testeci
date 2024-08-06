@@ -72,17 +72,14 @@ export const useInstallmentsStore = defineStore("installments", {
         return Number(Number((total + frete) / n));
       };
     },
-    getInstallmentsWithAmount: (state) => (amount: number, n:number) => {
-      const checkout = useCheckoutStore();
-      const { monthly_interest } = storeToRefs(checkout);
-
-      const i = parseFloat(monthly_interest.value) / 100; 
-      
-      // Calcula o valor da parcela com juros
-      const installmentAmount = (amount * i) / (1 - Math.pow(1 + i, -n));
-
-      // Arredonda para duas casas decimais
-      return Math.round(installmentAmount * 100) / 100;
+    getInstallmentsWithAmount: (state) => (bump: Product, numberOfInstallments: number) => {
+    const checkout = useCheckoutStore();
+    const { monthly_interest} = storeToRefs(checkout);
+    const i = parseFloat(monthly_interest.value) / 100; 
+    
+    let installmentAmount = (bump.amount * i) / (1 - Math.pow(1 + i, -numberOfInstallments));
+    installmentAmount / numberOfInstallments;
+    return Math.round(installmentAmount * 100) / 100;
     },
     getTotal(state: InstallmentsState) {
       const amountStore = useAmountStore();
