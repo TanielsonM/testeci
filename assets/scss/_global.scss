@@ -90,17 +90,37 @@ textarea {
   background-color: var(--checkout) !important;
 }
 
-.Vue-Toastification__toast.custom_toast {
-  --notification-title-color: #00e4a0;
-  --notification-text-color: #5f5c6b;
+.Vue-Toastificationtoast.custom_toast {
   background-color: #f2fefa !important;
   border: 2px solid #00e4a0;
   color: #00e4a0 !important;
   width: 400px;
+  --notification-title-color: #00e4a0;
+  --notification-text-color: #5f5c6b;
+}
 
-  .Vue-Toastification__close-button {
-    color: #5f5c6b;
-    opacity: 0.5;
-    align-self: flex-start;
-  }
+.Vue-Toastificationtoast--warning {
+  background-color: #fff3cd !important;
+  border: 2px solid #ffeeba;
+  color: #856404 !important;
+}
+
+.Vue-Toastificationtoast--error {
+  background-color: #f8d7da !important;
+  border: 2px solid #f5c6cb;
+  color: #721c24 !important;
+}
+
+.Vue-Toastificationclose-button {
+  color: #5f5c6b;
+  opacity: 0.5;
+  align-self: flex-start;
+}
+
+.Vue-Toastificationtoast--warning .Vue-Toastificationclose-button {
+  color: #856404;
+}
+
+.Vue-Toastificationtoast--error .Vue-Toastificationclose-button {
+  color: #721c24;
 }
