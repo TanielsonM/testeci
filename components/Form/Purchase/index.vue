@@ -95,6 +95,8 @@ const showInstallments = computed(() => {
   return false;
 });
 
+const {urlSubscription} = props;
+
 const minInstallments = computed(() => {
   if (Array.isArray(bump_list.value) && bump_list.value.length > 0) {
     const checkedBumps = bump_list.value.filter(bump => bump.checkbox);

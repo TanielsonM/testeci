@@ -122,6 +122,9 @@ const installmentValues = computed(() => {
     return amount.value;
   }
 });
+const installmentString = computed(() => {
+  return `${installments.value}x ${t("order.de")} ${formatMoney(installmentValues.value)}`;
+});
 // Watches
 watch(
   () => props.bump.checkbox,
@@ -159,7 +162,7 @@ if (isFixedShipping.value)
         :disabled="!!bump?.disabled"
       />
       <p class="item-value">
-        {{ !!bump.trial ? trialMessage : `${installments}x ${$t("order.de")} ${formatMoney(installmentValues)}` }}
+        {{ !!bump.trial ? trialMessage : installmentString }}
       </p>
     </header>
     <OrderBumpsBody
@@ -172,6 +175,7 @@ if (isFixedShipping.value)
       :trial-message-alternative="trialMessageAlternative"
       :has-shipping-fee="hasShippingFee"
       :has-custom-charges="hasCustomCharges"
+      :installment-string="installmentString"
     />
   </BaseCard>
 </template>
