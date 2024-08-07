@@ -123,7 +123,11 @@ const installmentValues = computed(() => {
   }
 });
 const installmentString = computed(() => {
-  return `${installments.value}x ${t("order.de")} ${formatMoney(installmentValues.value)}`;
+  if(Number(installments.value) === 1){
+    return `${formatMoney(installmentValues.value)}`;
+  }else{
+    return `${installments.value}x ${t("order.de")} ${formatMoney(installmentValues.value)}`;
+  }
 });
 // Watches
 watch(

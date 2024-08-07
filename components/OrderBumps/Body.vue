@@ -15,8 +15,6 @@ const { product } = storeToRefs(productStore);
 
 const { t } = useI18n();
 const customCheckout = useCustomCheckoutStore();
-const checkoutStore = useCheckoutStore();
-const {  installments } = storeToRefs(checkoutStore);
 const props = defineProps({
   bump: {
     type: Object,
