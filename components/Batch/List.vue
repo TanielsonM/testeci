@@ -105,10 +105,11 @@ const hasFixedBatch = () => {
 }
 
 function verifyIfHasSoldOffField(id) {
-  let filter = batches.find(x => x.id == id)
+  let batch = batches.find(x => x.id == id)
 
-  if(filter && filter?.soldOff)
+  if (batch && batch?.soldOff) {
     return false
+  }
 
   return true
 }
@@ -202,7 +203,7 @@ onMounted(async () => {
           </div>
           <div 
             v-if="
-              verifyIfHasSoldOffField(batches[index].id) ||
+              haveAvailableTickets(batch) && !preCheckout.soldOffTickets ||
               batch.release_type === 'fixed_date' && haveAvailableTickets(batch) || 
               (!haveAvailableTickets(batch) && ticket?.selected_tickets > 0) ||
               batch.release_type === null"

@@ -9,7 +9,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     batches: [],
     reservations: [],
     loadingReservation: false,
-    hasAvailableTickets: true
+    hasAvailableTickets: true,
+    soldOffTickets: false
   }),
   getters: {
     getBatches: (state) => state.batches,
@@ -145,7 +146,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         this.setLoadingReservation(true, ticket);
         await this.checkHasTickets(ticket.id, batch)
-        if(!haveAvailableTickets(batch)) {
+        if (!haveAvailableTickets(batch)) {
           batch.soldOff = true
           return 'Sem ingresso disponível'
         } else {
@@ -215,10 +216,12 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         const res = await useApi().create('/event/reservation', payload);
         if (res === null) {
+          this.soldOffTickets = true
           const toast = Toast.useToast();
           toast.error("Ingressos esgotados.");
           throw new Error; 
         } else {
+          this.soldOffTickets = false
           this.addReservation({ ...res, offer_id, offer_group_id:ticket.offer_group_id });
           this.updateAvailableTickets(res.tickets, false);
         }
