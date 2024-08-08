@@ -9,7 +9,8 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
     batches: [],
     reservations: [],
     loadingReservation: false,
-    hasAvailableTickets: true
+    hasAvailableTickets: true,
+    soldOffTickets: false
   }),
   getters: {
     getBatches: (state) => state.batches,
@@ -123,16 +124,21 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       return totalSelectedTickets;
     },
     async checkHasTickets(offer, batch) {
-      const hasTicket = await useApi().create('/event/reservation/check-amount', { offer_id: offer })
-
-      if(!hasTicket){
-        if(batch.release_type === 'fixed_date' && isTimerSameOrAfter(batch) || batch.release_type === null){
-          return this.hasAvailableTickets = true
+      try {
+        const hasTicket = await useApi().create('/event/reservation/check-amount', { offer_id: offer })
+        if(!hasTicket){
+          if(batch.release_type === 'fixed_date' && isTimerSameOrAfter(batch) || batch.release_type === null){
+            this.hasAvailableTickets = true
+            return true
+          }
+          this.hasAvailableTickets = false
+          return false
         }
-        return this.hasAvailableTickets = false
+        this.hasAvailableTickets = true
+        return hasTicket
+      } catch (error) {
+        console.error(error)
       }
-      
-      this.hasAvailableTickets = true
     },
     async addTicket(batch_group, hash) {
       let batch = this.batches.find(x => x.id == batch_group.id);
@@ -140,24 +146,26 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       try {
         this.setLoadingReservation(true, ticket);
         await this.checkHasTickets(ticket.id, batch)
-        if(!haveAvailableTickets(batch)) {
+        if (!haveAvailableTickets(batch)) {
           batch.soldOff = true
           return 'Sem ingresso disponível'
         } else {
           batch.soldOff = false
         }
         if (haveAvailableTickets(batch) && saleHasStarted(batch) && !dependsOnAnotherBatch(batch)) {
-          ticket.selected_tickets += 1;
-          batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
           const checkoutStore = useCheckoutStore();
-          if(batch.release_type !== "fixed_date" && batch.release_type !== null) {
-            let resp =  await this.createReservation(ticket.id, ticket);
+          if (batch.release_type !== "fixed_date" && batch.release_type !== null) {
+            let resp = await this.createReservation(ticket.id, ticket);
             if (resp) {
+              ticket.selected_tickets += 1;
+              batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
               localStorage.setItem('reservations', JSON.stringify(this.reservations));
               checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:resp.token });
               return resp.token
             }
           } else {
+            ticket.selected_tickets += 1;
+            batch.selected_batch_tickets = this.someTotalTicket(batch.tickets);
             // Para eventos que estão configurados para liberar por data || esgotar lote || sem regra
             checkoutStore.setProductListPreCheckout({ ...ticket, user_identification:hash });
           }
@@ -207,8 +215,16 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
       this.setLoadingReservation(true, ticket);
       try {
         const res = await useApi().create('/event/reservation', payload);
-        this.addReservation({ ...res, offer_id, offer_group_id:ticket.offer_group_id });
-        this.updateAvailableTickets(res.tickets, false);
+        if (res === null) {
+          this.soldOffTickets = true
+          const toast = Toast.useToast();
+          toast.error("Ingressos esgotados.");
+          throw new Error; 
+        } else {
+          this.soldOffTickets = false
+          this.addReservation({ ...res, offer_id, offer_group_id:ticket.offer_group_id });
+          this.updateAvailableTickets(res.tickets, false);
+        }
         return res;
       } catch (err) {
         this.hasAvailableTickets = false
@@ -217,7 +233,7 @@ export const usePreCheckoutStore = defineStore("preCheckout", {
           toast.warning("Ingresso configurado com data limite para vendas não tem controle de reservas.");
           throw new Error; 
         }
-        return err;
+        return false;
       } finally {
         this.setLoadingReservation(false, ticket);
       }
