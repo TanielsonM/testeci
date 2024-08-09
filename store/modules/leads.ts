@@ -155,9 +155,11 @@ export const useLeadsStore = defineStore("Leads", {
     async updateLead() {
       if (this.uuid) {
         try {
-          let updatedCellphone = this.personal.cellphone;
-          if (this.personal.cellphone !== null) {
-            updatedCellphone = updatedCellphone.replace(/\s/g, "");
+          let updatedCellphone = null;
+          if (this.personal) {
+            if (this.personal.cellphone !== null) {
+              updatedCellphone = this.personal.cellphone.replace(/\s/g, "");
+            }
           }
 
           const data = {
@@ -165,9 +167,9 @@ export const useLeadsStore = defineStore("Leads", {
             proposal_id: this.payment.proposal_id,
             seller_id: this.payment.seller_id,
             affiliate_id: this.payment.affiliate_id,
-            name: this.personal.name ?? null,
-            email: this.personal.email ?? null,
-            cpf: this.personal.document ?? null,
+            name: this.personal?.name ?? null,
+            email: this.personal?.email ?? null,
+            cpf: this.personal?.document ?? null,
             zip_code: this.address?.zip_code ?? null,
             street: this.address?.street ?? null,
             number: this.address?.number ?? null,
@@ -179,7 +181,7 @@ export const useLeadsStore = defineStore("Leads", {
             complement: this.address?.complement ?? null,
             country_code: this.address?.country_code ?? null,
             status: this.purchase.status,
-            cellphone: updatedCellphone,
+            cellphone: updatedCellphone ?? null,
           };
 
           const useApiFast =

@@ -995,6 +995,8 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     setSelectedShipping(product_id, shipping) {
+      const amountStore3 = useAmountStore();
+
       const product = this.product_list
         .filter((item) => item.id == parseInt(product_id))
         .pop();
@@ -1002,13 +1004,16 @@ export const useCheckoutStore = defineStore("checkout", {
         product.shipping_options = [];
         return;
       }
+      
       // Remove shipping amount
       this.product_list.forEach((item) => {
         if (item.id == parseInt(product_id) && item.shipping?.amount) {
-          amountStore.setAmount(parseFloat(item.shipping?.amount) * -1);
-          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
+          const amount = parseFloat(item.shipping?.amount ?? 0) * -1;
+          amountStore3.setAmount(amount);
+          amountStore3.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
         }
       });
+      
       // Set shipping infos in product
       this.product_list = this.product_list.map((item) => {
         if (item.id == parseInt(product_id)) {
@@ -1024,15 +1029,15 @@ export const useCheckoutStore = defineStore("checkout", {
       // Add shipping amount
       this.product_list.forEach((item) => {
         if (item.id == parseInt(product_id) && item.shipping?.amount) {
-          amountStore.setAmount(parseFloat(item.shipping?.amount));
-          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
+          amountStore3.setAmount(parseFloat(item.shipping?.amount));
+          amountStore3.setOriginalAmount(parseFloat(item.shipping?.amount));
         }
       });
 
       this.shipping_selected = {
         frete_anterior: +shipping.price,
         service_name: shipping.name,
-        old_amount: amountStore.getAmount,
+        old_amount: amountStore3.getAmount,
         amount: +shipping.price,
         frete: shipping,
       };
