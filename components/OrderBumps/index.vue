@@ -122,7 +122,7 @@ const installmentValues = computed(() => {
     return amount.value;
   }
 });
-const installmentString = computed(() => {
+const bumpInstallmentText = computed(() => {
   if(Number(installments.value) === 1){
     return `${formatMoney(installmentValues.value)}`;
   }else{
@@ -166,7 +166,7 @@ if (isFixedShipping.value)
         :disabled="!!bump?.disabled"
       />
       <p class="item-value">
-        {{ !!bump.trial ? trialMessage : installmentString }}
+        {{ !!bump.trial ? trialMessage : bumpInstallmentText }}
       </p>
     </header>
     <OrderBumpsBody
@@ -179,7 +179,7 @@ if (isFixedShipping.value)
       :trial-message-alternative="trialMessageAlternative"
       :has-shipping-fee="hasShippingFee"
       :has-custom-charges="hasCustomCharges"
-      :installment-string="installmentString"
+      :bump-installment-text="bumpInstallmentText"
     />
   </BaseCard>
 </template>
