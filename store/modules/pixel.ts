@@ -55,10 +55,12 @@ export const usePixelStore = defineStore("Pixel", {
     city: '',
     country_code: '',
     products_ids: '',
+    fbc:'',
+    fbp:''
   }),
   getters: {},
   actions: {
-    getOrderBumps(sales){
+    getOrderBumps(sales: any){
       let ids = [];
       let allSales = sales;
       if(allSales && allSales.sales){
@@ -82,7 +84,8 @@ export const usePixelStore = defineStore("Pixel", {
       this.state = leadsStore().address?.state
       this.city = leadsStore().address?.city
       this.country_code = leadsStore().address?.country_code
-
+      this.fbc = leadsStore().fbc,
+      this.fbp = leadsStore().fbp      
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
@@ -101,7 +104,9 @@ export const usePixelStore = defineStore("Pixel", {
         state: this.state,
         city: this.city,
         country_code: this.country_code,
-        products_ids: this.products_ids
+        products_ids: this.products_ids,
+        fbc: this.fbc,
+        fbp: this.fbp,
       };
 
       return await useApi()

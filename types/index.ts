@@ -195,6 +195,8 @@ export type pixelState = {
   city?: string;
   products_ids?:any;
   country_code?: string;
+  fbc?: string;
+  fbp?: string;
 };
 
 export type Product = {
@@ -543,6 +545,8 @@ export type InstallmentsState = {
 export type leadsState = {
   step: number;
   uuid: any;
+  fbc:string,
+  fbp: string,
   personal: {
     name: any;
     email: any;

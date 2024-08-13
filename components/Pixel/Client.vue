@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useLeadsStore } from "~/store/modules/leads";
 import { usePixelStore } from "~~/store/modules/pixel";
 
 // Props interface
@@ -28,6 +29,7 @@ interface Props {
 }
 
 const pixelStore = usePixelStore();
+const leadStore = useLeadsStore()
 const props = defineProps<Props>();
 
 onMounted(async () => {
@@ -44,6 +46,13 @@ onMounted(async () => {
     pixelStore.original_amount = props.original_amount;
     pixelStore.sale_id = props.sale_id;
     pixelStore.client_has_contract = props.chc_id;
+
+    let fbp = useCookie('_fbp').value ?? ''
+    let fbc = useCookie('_fbc').value ?? ''
+
+    leadStore.setFbc(fbc)
+    leadStore.setFbp(fbp)
+
 
     await pixelStore.syncPixels(props.event, props.amount);
     await pixelStore.getPixels().then((response) => {
@@ -69,7 +78,9 @@ onMounted(async () => {
             props.address?.city,
             props.address?.country_code,
             props.address?.state,
-            props.address?.zip_code
+            props.address?.zip_code,
+            fbc,
+            fbp,
           );
         });
       }
@@ -94,7 +105,9 @@ onMounted(async () => {
       city: string | undefined,
       country_code: string | undefined,
       state: string | undefined,
-      zip_code: string | undefined
+      zip_code: string | undefined,
+      fbc: string ,
+      fbp: string ,
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -113,6 +126,8 @@ onMounted(async () => {
       if (!!country_code)query.append("country_code", country_code.toString());
       if (!!state)query.append("state", state.toString());
       if (!!zip_code)query.append("zip_code", zip_code.toString());
+      if (!!fbc)query.append("fbc", fbc.toString());
+      if (!!fbp)query.append("fbp", fbp.toString());
 
       if (!!name)query.append("name", name.toString());
       if (!!email)query.append("email", email.toString());
