@@ -149,7 +149,7 @@ export const usePaymentStore = defineStore("Payment", {
         product,
         product_global_settings,
         recipientIsActivated,
-        baas_activited
+        baas_activited,
       } = productStore;
 
       const { name, email, document, cellphone } = personalStore;
@@ -891,7 +891,8 @@ export const usePaymentStore = defineStore("Payment", {
 
           if (
             result == "PAGARME" &&
-            (!recipientIsActivated || !baas_activited) &&
+            !recipientIsActivated && 
+            !baas_activited &&
             valuegatewayLowInstallment == "IUGU"
           ) {
             result = "IUGU";
