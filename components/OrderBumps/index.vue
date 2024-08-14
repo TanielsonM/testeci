@@ -5,6 +5,7 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAddressStore } from "@/store/forms/address";
 import { useProductStore } from "~~/store/product";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 // Utils
 import { formatMoney } from "~/utils/money";
 
@@ -30,6 +31,10 @@ const { product } = storeToRefs(productStore);
 const shipping = ref({});
 const shippingOptions = ref([]);
 const shippingLoading = ref(false);
+
+const installmentsStore = useInstallmentsStore();
+const {  installments } = storeToRefs(checkoutStore);
+const { getInstallmentsWithAmount } = installmentsStore;
 
 // Computed methods
 const stylesheet = computed(() => {  
@@ -110,7 +115,20 @@ const hasShippingFee = computed(() => !!props.bump.has_shipping_fee);
 const isFixedShipping = computed(
   () => props.bump.type_shipping_fee === "FIXED"
 );
-
+const installmentValues = computed(() => {
+  if(installments.value > 1){
+    return getInstallmentsWithAmount(props.bump, installments.value);
+  }else{
+    return amount.value;
+  }
+});
+const bumpInstallmentText = computed(() => {
+  if(Number(installments.value) === 1){
+    return `${formatMoney(installmentValues.value)}`;
+  }else{
+    return `${installments.value}x ${t("order.de")} ${formatMoney(installmentValues.value)}`;
+  }
+});
 // Watches
 watch(
   () => props.bump.checkbox,
@@ -148,12 +166,12 @@ if (isFixedShipping.value)
         :disabled="!!bump?.disabled"
       />
       <p class="item-value">
-        {{ !!bump.trial ? trialMessage : formatMoney(amount) }}
+        {{ !!bump.trial ? trialMessage : bumpInstallmentText }}
       </p>
     </header>
     <OrderBumpsBody
       :bump="bump"
-      :amount="amount"
+      :amount="installmentValues"
       :shipping="shipping"
       :shipping-options="shippingOptions"
       :shipping-loading="shippingLoading"
@@ -161,6 +179,7 @@ if (isFixedShipping.value)
       :trial-message-alternative="trialMessageAlternative"
       :has-shipping-fee="hasShippingFee"
       :has-custom-charges="hasCustomCharges"
+      :bump-installment-text="bumpInstallmentText"
     />
   </BaseCard>
 </template>
