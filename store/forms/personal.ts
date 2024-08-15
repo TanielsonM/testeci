@@ -23,6 +23,8 @@ export const usePersonalStore = defineStore("personal", {
     forceConfirmEmail: false,
     forceCellphone: false,
     forceDocument: false,
+    valueFirstStep: false
+
   }),
   getters: {},
   actions: {
@@ -49,5 +51,8 @@ export const usePersonalStore = defineStore("personal", {
         this.forceDocument = this.force;
       }
     },
+    setValueValid(value: boolean){      
+      this.valueFirstStep = value
+    }
   },
 });

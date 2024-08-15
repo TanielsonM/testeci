@@ -10,6 +10,7 @@ import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
 import { useLeadsStore } from "@/store/modules/leads";
+import { usePersonalStore } from "~/store/forms/personal";
 
 const nuxtApp = useNuxtApp();
 
@@ -25,6 +26,7 @@ const stepsStore = useStepStore();
 const amountStore = useAmountStore();
 const storeLead = useLeadsStore()
 const route = useRoute();
+const personalStore = usePersonalStore()
 
 // Variables
 const { t, locale } = useI18n();
@@ -55,8 +57,11 @@ const {
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
 
-
 // Computeds
+const valueFirstStep = computed (()=>{
+  return personalStore.valueFirstStep
+})
+
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
     switch (item) {
@@ -290,6 +295,7 @@ const isCustomOne = computed(() => {
   <NuxtLayout>
     <section class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]">
       <!-- Purchase card -->
+       {{teste}}
       <BaseCard class="w-full p-5 md:px-[60px] md:py-[50px]">
         <BaseButton color="transparent" size="sm" class="mb-4" v-if="currentStep > 1 && currentStep <= 3 && isMobile && !isOneStep" @click="stepsStore.back()">
           <div class="flex items-start justify-start text-left">
@@ -465,6 +471,22 @@ const isCustomOne = computed(() => {
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"/>
       <Captcha />
+      <PixelClient 
+        v-if="valueFirstStep"
+        :key="pixelComponentKey" 
+        :event="'filled_data'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"/>
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />
