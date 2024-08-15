@@ -98,6 +98,9 @@ const showInstallments = computed(() => {
 const {urlSubscription} = props;
 
 const minInstallments = computed(() => {
+  if (productType.value === "SUBSCRIPTION") {
+    return installments.value;
+  }
   if (Array.isArray(bump_list.value) && bump_list.value.length > 0) {
     const checkedBumps = bump_list.value.filter(bump => bump.checkbox);
     if (checkedBumps.length > 0) {
@@ -124,7 +127,7 @@ function saveData() {
 };
 
 watch(minInstallments, (newVal) => {
-  installments.value = newVal;
+    installments.value = newVal;
 }, { immediate: true });
 
 
