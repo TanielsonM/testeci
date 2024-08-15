@@ -385,6 +385,7 @@ function openPix(id: number) {
       :sale_id="parseInt(saleId!.toString())"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
       :name="personalStore.name"
       :products="checkoutStore.sales"
       :email="personalStore.email"

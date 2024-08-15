@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { useLeadsStore } from "~/store/modules/leads";
+import type { Category } from "~/types";
 import { usePixelStore } from "~~/store/modules/pixel";
 
 // Props interface
 interface Props {
   event: string;
   product_id: number;
+  productCategory: Category,
   affiliate_id: number | string | null;
   method: string;
   amount: number;
@@ -53,6 +55,8 @@ onMounted(async () => {
     leadStore.setFbc(fbc)
     leadStore.setFbp(fbp)
 
+    let productUrl = window.location.href
+    let categoryName = props.productCategory.name ?? ''
 
     await pixelStore.syncPixels(props.event, props.amount);
     await pixelStore.getPixels().then((response) => {
@@ -62,6 +66,9 @@ onMounted(async () => {
           handleIframe(
             pixel.host,
             pixel.product_id,
+            props.product_name,
+            categoryName,
+            productUrl,
             props.event,
             event_id,
             pixel.pixel_id,
@@ -89,6 +96,9 @@ onMounted(async () => {
     function handleIframe(
       host: string,
       product_id: number,
+      productName: string | undefined,
+      categoryName: string,
+      productUrl: string,
       event: string,
       event_id: string,
       pixel_id: number | string,
@@ -128,6 +138,9 @@ onMounted(async () => {
       if (!!zip_code)query.append("zip_code", zip_code.toString());
       if (!!fbc)query.append("fbc", fbc.toString());
       if (!!fbp)query.append("fbp", fbp.toString());
+      if (!!categoryName)query.append("productCategory", categoryName.toString());
+      if (!!productName)query.append("productName", productName.toString());
+      if (!!productUrl)query.append("productUrl", productUrl.toString());
 
       if (!!name)query.append("name", name.toString());
       if (!!email)query.append("email", email.toString());

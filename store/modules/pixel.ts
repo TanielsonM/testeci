@@ -55,6 +55,9 @@ export const usePixelStore = defineStore("Pixel", {
     city: '',
     country_code: '',
     products_ids: '',
+    productName: '',
+    productCategory: '',
+    productUrl: '',
     fbc:'',
     fbp:''
   }),
@@ -73,6 +76,9 @@ export const usePixelStore = defineStore("Pixel", {
     async syncPixels(event: string, amount: any) {
       this.event = event;
       this.product_id = productStore().product_id;
+      this.productCategory = productStore().productCategory?.name
+      this.productName = productStore().productName
+      this.productUrl =  window.location.href
       this.method = checkoutStore().method;
       this.products_ids = this.getOrderBumps(checkoutStore().sales);
       this.affiliate_id = checkoutStore().hasAffiliateId;
@@ -90,6 +96,9 @@ export const usePixelStore = defineStore("Pixel", {
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
       const query = {
         product_id: this.product_id,
+        productCategory:this.productCategory,
+        productName: this.productName,
+        productUrl: this.productUrl,
         event: this.event,
         event_id: this.event_id,
         method: this.method,

@@ -462,6 +462,7 @@ const isCustomOne = computed(() => {
         :amount="amountStore.getAmount" 
         :original_amount="amountStore.getOriginalAmount" 
         :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"/>
       <Captcha />
     </ClientOnly>
