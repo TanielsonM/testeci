@@ -152,10 +152,9 @@ export const usePixelStore = defineStore("Pixel", {
     },
     
     async encodeHash(toString: string):Promise<string> {
-      if(!toString) return ''
+      if(!toString || toString.trim() == '') return ''
       const encoder = new TextEncoder();
-      const encodeData = encoder.encode(toString);
-
+      const encodeData = encoder.encode(toString.trim());
       // Calcular o hash SHA-256
       const hashBuffer = await crypto.subtle.digest('SHA-256', encodeData);
 
