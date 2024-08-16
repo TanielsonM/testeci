@@ -35,7 +35,12 @@ export function leadsStore(){
   const store = useLeadsStore()
   return store;
 }
-
+interface HashOptions {
+  telefone?: boolean;
+  lestName?: boolean;
+  firstName?: boolean;
+  zipCode?: boolean; 
+}
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
     event: "view",
@@ -59,8 +64,9 @@ export const usePixelStore = defineStore("Pixel", {
     productCategory: '',
     productUrl: '',
     fbc:'',
-    fbp:''
+    fbp:''  
   }),
+  
   getters: {},
   actions: {
     getOrderBumps(sales: any){
@@ -128,5 +134,35 @@ export const usePixelStore = defineStore("Pixel", {
           return {};
         });
     },
-  },
+    async setHahsDataPixel(data:string | undefined, options: HashOptions = {}): Promise<string>{
+      //Inpede que seja feito um hash em um dado vazio 
+      if(!data || data.trim() == '') return ''
+
+      let stringLow = data.toLowerCase()
+      if(options.firstName || options.lestName){
+        let names = stringLow.split(' ')
+        return this.encodeHash(options.firstName ? names[0]: names[1])
+      }else if(options.telefone){
+        return this.encodeHash(stringLow.replace(/\D/g, '')) 
+      }else if(options.zipCode){
+        return this.encodeHash(stringLow.substring(0, 5))
+      }
+
+      return this.encodeHash(stringLow);
+    },
+    
+    async encodeHash(toString: string):Promise<string> {
+      if(!toString) return ''
+      const encoder = new TextEncoder();
+      const encodeData = encoder.encode(toString);
+
+      // Calcular o hash SHA-256
+      const hashBuffer = await crypto.subtle.digest('SHA-256', encodeData);
+
+      // Converter o ArrayBuffer para uma string hexadecimal
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex 
+    }
+  }
 });

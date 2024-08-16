@@ -58,11 +58,13 @@ onMounted(async () => {
     let productUrl = window.location.href
     let categoryName = props.productCategory.name ?? ''
 
+    const hashData = pixelStore.setHahsDataPixel
+
     await pixelStore.syncPixels(props.event, props.amount);
     await pixelStore.getPixels().then((response) => {
       const { event_id, pixels } = response;
       if (pixels && pixels.length) {
-        pixels.forEach((pixel) => {     
+        pixels.forEach(async (pixel) => {     
           handleIframe(
             pixel.host,
             pixel.product_id,
@@ -77,22 +79,23 @@ onMounted(async () => {
             props.affiliate_id,
             props.sale_id,
             props.original_amount,
-            props.name,
-            props.email,
-            props.cellphone,
+            await hashData(props.name,),
+            await hashData(props.email),
+            await hashData(props.cellphone,{telefone: true}),
             ids,
             props.uuid,
-            props.address?.city,
-            props.address?.country_code,
-            props.address?.state,
-            props.address?.zip_code,
+            await hashData(props.address?.city),
+            await hashData(props.address?.country_code),
+            await hashData(props.address?.state),
+            await hashData(props.address?.zip_code,{zipCode:true}),
             fbc,
             fbp,
-          );
+            await hashData(props.name, {lestName:true}),
+            await hashData(props.name, {firstName:true}),
+          )
         });
       }
     });
-
     function handleIframe(
       host: string,
       product_id: number,
@@ -118,6 +121,8 @@ onMounted(async () => {
       zip_code: string | undefined,
       fbc: string ,
       fbp: string ,
+      lestName: string,
+      firstName: string,
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -131,20 +136,23 @@ onMounted(async () => {
       if (!!affiliate_id) query.append("affiliate_id", affiliate_id.toString());
       if (!!sale_id) query.append("sale_id", sale_id.toString());
       if (!!original_amount)query.append("original_amount", amount.toString());
-      if (!!uuid)query.append("uuid", uuid.toString());
-      if (!!city)query.append("city", city.toString());
-      if (!!country_code)query.append("country_code", country_code.toString());
-      if (!!state)query.append("state", state.toString());
-      if (!!zip_code)query.append("zip_code", zip_code.toString());
-      if (!!fbc)query.append("fbc", fbc.toString());
+      if (!!uuid)query.append("uuid", uuid.toString());// hash
+      if (!!city)query.append("city", city.toString());// hahs
+      if (!!country_code)query.append("country_code", country_code.toString()); // hash
+      if (!!state)query.append("state", state.toString()); //hash
+      if (!!zip_code)query.append("zip_code", zip_code.toString()); // hash
+      if (!!fbc)query.append("fbc", fbc.toString()); 
       if (!!fbp)query.append("fbp", fbp.toString());
       if (!!categoryName)query.append("productCategory", categoryName.toString());
       if (!!productName)query.append("productName", productName.toString());
       if (!!productUrl)query.append("productUrl", productUrl.toString());
 
-      if (!!name)query.append("name", name.toString());
-      if (!!email)query.append("email", email.toString());
-      if (!!cellphone)query.append("cellphone", cellphone.toString().replace(/\s+/g, ''));
+      if (!!name)query.append("name", name.toString()); // hash
+      if (!!lestName)query.append("ln", lestName.toString()); // hash
+      if (!!firstName)query.append("fn", firstName.toString()); // hash
+
+      if (!!email)query.append("email", email.toString()); //hash
+      if (!!cellphone)query.append("cellphone", cellphone.toString().replace(/\s+/g, '')); // hash
 
       const iframe = document.createElement("iframe");
       iframe.src = `${url}?${query.toString()}`;
