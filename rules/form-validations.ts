@@ -44,7 +44,7 @@ export const validateExpiryMonth = yup.string().min(2).max(2).required();
 export const validateExpiryYear = yup.string().min(4).max(4).required();
 export const validateCardAmount = yup.number().positive().min(1).required();
 
-export const validateFirstStep = async (): Promise<boolean> => {
+export const validateFirstStep = async (returnThree?: boolean): Promise<boolean> => {
   const personalStore = usePersonalStore();
   const phoneStore = usePhoneValidation();
   const { name, document, cellphone, email } = storeToRefs(personalStore)
@@ -59,7 +59,9 @@ export const validateFirstStep = async (): Promise<boolean> => {
   );
   const stepStore = useStepStore();
   const { isEmailValid } = storeToRefs(stepStore);
-
+  if(returnThree){
+    return validName && validEmail && validPhone;
+  }
   if (showDocumentInput) {
     const store = useCheckoutStore();
     const { hasPhone } = storeToRefs(store);

@@ -114,7 +114,7 @@ function validateEmailWithVeeValidate(validateField) {
 
 async function allBlurInputEvent(isEmail = false) {
   if (isEmail) email.value = email.value.trim();
-  let step = await validateFirstStep() 
+  let step = await validateFirstStep(true) 
   personalStore.setValueValid(step)
   setTimeout(function () {
     leadsStore.updateLead();
