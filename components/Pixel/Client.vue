@@ -92,6 +92,7 @@ onMounted(async () => {
             fbp,
             await hashData(props.name, {lestName:true}),
             await hashData(props.name, {firstName:true}),
+            document.referrer
           )
         });
       }
@@ -123,6 +124,7 @@ onMounted(async () => {
       fbp: string ,
       lestName: string,
       firstName: string,
+      referrerUrl: string | undefined,
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -146,6 +148,7 @@ onMounted(async () => {
       if (!!categoryName)query.append("productCategory", categoryName.toString());
       if (!!productName)query.append("productName", productName.toString());
       if (!!productUrl)query.append("productUrl", productUrl.toString());
+      if (!!referrerUrl)query.append("referrerUrl", referrerUrl.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash

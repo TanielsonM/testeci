@@ -197,6 +197,7 @@ export type pixelState = {
   productName?: string,
   productCategory?: string,
   productUrl?: string ,
+  referrerUrl?: string,
   country_code?: string;
   fbc?: string;
   fbp?: string;

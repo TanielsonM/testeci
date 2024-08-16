@@ -63,6 +63,7 @@ export const usePixelStore = defineStore("Pixel", {
     productName: '',
     productCategory: '',
     productUrl: '',
+    referrerUrl: '',
     fbc:'',
     fbp:''  
   }),
@@ -85,6 +86,7 @@ export const usePixelStore = defineStore("Pixel", {
       this.productCategory = productStore().productCategory?.name
       this.productName = productStore().productName
       this.productUrl =  window.location.href
+      this.referrerUrl = document.referrer
       this.method = checkoutStore().method;
       this.products_ids = this.getOrderBumps(checkoutStore().sales);
       this.affiliate_id = checkoutStore().hasAffiliateId;
@@ -109,6 +111,7 @@ export const usePixelStore = defineStore("Pixel", {
         event_id: this.event_id,
         method: this.method,
         sale_id: this.sale_id,
+        referrerUrl: this.referrerUrl,
         chc_id: this.client_has_contract,
         em: this.email,
         ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
