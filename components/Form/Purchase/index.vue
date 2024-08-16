@@ -98,13 +98,10 @@ const showInstallments = computed(() => {
 const {urlSubscription} = props;
 
 const minInstallments = computed(() => {
-  if (productType.value === "SUBSCRIPTION") {
-    return installments.value;
-  }
   if (Array.isArray(bump_list.value) && bump_list.value.length > 0) {
     const checkedBumps = bump_list.value.filter(bump => bump.checkbox);
     if (checkedBumps.length > 0) {
-      const bumpsMaxInstallments = checkedBumps.map(bump => bump.max_installments !== null ? Number(bump.max_installments) : Number(max_installments.value));
+      const bumpsMaxInstallments = checkedBumps.map(bump =>  Number(bump.max_installments) || Number(bump.max_subscription_installments) || 12);
       const maxInstallmentsValue = Number(max_installments.value);
       const minInstallmentsValue = Math.min(maxInstallmentsValue, ...bumpsMaxInstallments);
       return minInstallmentsValue;
@@ -126,9 +123,12 @@ function saveData() {
   setReuseCreditCard(reuseCreditCard)
 };
 
-watch(minInstallments, (newVal) => {
-    installments.value = newVal;
-}, { immediate: true });
+watch([minInstallments, method], ([newVal, newMethod]) => {
+  if(installments.value <= newVal ){
+    return;
+  }
+  installments.value = newVal;
+});
 
 
 </script>
