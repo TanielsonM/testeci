@@ -105,6 +105,9 @@ export const usePixelStore = defineStore("Pixel", {
     getStartTrial(state){
       return state.pixelConfig?.find(x=> x.event === 'viewContent' && x.is_active)
     },
+    getPurchasePaid(state){
+      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_paid')
+    },
   },
   actions: {
     getOrderBumps(sales: any){
