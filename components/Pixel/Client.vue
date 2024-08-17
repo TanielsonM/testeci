@@ -65,6 +65,9 @@ onMounted(async () => {
     await pixelStore.syncPixels(props.event, props.amount);
     await pixelStore.getPixels().then((response) => {
       const { event_id, pixels } = response;
+
+      const eventId = event_id+'_'+props.event
+
       if (pixels && pixels.length) {
         pixels.forEach(async (pixel) => {     
           handleIframe(
@@ -74,7 +77,7 @@ onMounted(async () => {
             categoryName,
             productUrl,
             props.event,
-            event_id,
+            eventId,
             pixel.pixel_id,
             props.method,
             props.amount,
