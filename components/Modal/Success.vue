@@ -11,6 +11,7 @@ import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
 import { resetReservations } from "@/utils/validateBatch";
 import { usePersonalStore } from "~/store/forms/personal";
+import { usePixelStore } from "~/store/modules/pixel";
 
 const productStore = useProductStore();
 const amountStore = useAmountStore();
@@ -22,6 +23,9 @@ const { product } = useProductStore();
 const { batches,  } = usePreCheckoutStore();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const personalStore = usePersonalStore();
+const pixelStore = usePixelStore();
+
+const { getPixelConfig, getPurchase } = storeToRefs(pixelStore);
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -376,7 +380,27 @@ function openPix(id: number) {
 
   <ClientOnly class="hidden">
     <PixelClient
+      v-if="!getPixelConfig.length"
       :event="'conversion'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="parseInt(saleId!.toString())"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+    />
+    <PixelClient
+      v-if="getPurchase.key === 'on_payment_success'"
+      :event="'Purchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"

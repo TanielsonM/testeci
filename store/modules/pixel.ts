@@ -1,4 +1,4 @@
-import { type pixelState, type Pixel } from "@/types";
+import { type pixelState, type Pixel, type PixelConfiguration } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { useProductStore } from "../product";
 import { useCheckoutStore } from "../checkout";
@@ -44,6 +44,7 @@ interface HashOptions {
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
     event: "view",
+    pixelConfig:[],
     product_id: 0,
     event_id: uuidv4(),
     method: "",
@@ -68,7 +69,40 @@ export const usePixelStore = defineStore("Pixel", {
     fbp:''  
   }),
   
-  getters: {},
+  getters: {
+    getPixelConfig: (state) => state.pixelConfig,
+
+    getPageView(state){
+      return state.pixelConfig?.find(x=> x.event === 'PageView' && x.is_active)
+    },
+    getViewContent(state){
+      return state.pixelConfig?.find(x=> x.event === 'ViewContent' && x.is_active)
+    },
+    getInitiateCheckout(state){
+      return state.pixelConfig?.find(x=> x.event === 'InitiateCheckout' && x.is_active)
+    },
+    getAddPaymentInfo(state){
+      return state.pixelConfig?.find(x=> x.event === 'AddPaymentInfo' && x.is_active)
+    },    
+    getAddToCartOnMainProduct(state){
+      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.key === 'on_main_product')
+    },    
+    getAddToCartOnOrderBump(state){
+      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.key === 'on_orderbump')
+    },     
+    getPurchase(state){
+      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active)
+    },
+    getOrderBumpPurchase(state){
+      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active)
+    },
+    getStartTrial(state){
+      return state.pixelConfig?.find(x=> x.event === 'viewContent' && x.is_active)
+    },
+    getStartSubscribe(state){
+      return state.pixelConfig?.find(x=> x.event === 'StartSubscribe' && x.is_active)
+    },
+  },
   actions: {
     getOrderBumps(sales: any){
       let ids = [];
@@ -165,6 +199,9 @@ export const usePixelStore = defineStore("Pixel", {
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
       return hashHex 
+    },
+    setPixelConfig(value: PixelConfiguration[]){
+      this.pixelConfig = value
     }
   }
 });

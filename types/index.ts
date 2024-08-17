@@ -177,10 +177,21 @@ export type Pixel = {
   host: string;
 };
 
+export type PixelConfiguration ={
+  id: number;
+  produc_has_pixel_id:number;
+  event: string;
+  key: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export type pixelState = {
   event: String;
   product_id: number;
   event_id: String;
+  pixelConfig?:  PixelConfiguration[],
   method: String;
   amount: Number;
   original_amount: Number;

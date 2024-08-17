@@ -7,6 +7,7 @@ import { useAmountStore } from "./modules/amount";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
+import { usePixelStore } from "./modules/pixel";
 
 // const purchaseStore = usePurchaseStore();
 // const amountStore = useAmountStore();
@@ -20,6 +21,12 @@ function amountStore() {
   const store = useAmountStore();
   return store;
 }
+
+function pixelStore() {
+  const store = usePixelStore();
+  return store;
+}
+
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -410,9 +417,13 @@ export const useCheckoutStore = defineStore("checkout", {
 
               preCheckout.setBatches(response.batches);
             }
-
+            
             if (response?.second_sale_flag) {
               this.secondSaleFlag = response.second_sale_flag
+            }
+
+            if(response?.data.pixel_configuration){
+              pixelStore.setPixelConfig(response.data.pixel_configuration)
             }
 
             return response

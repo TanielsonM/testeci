@@ -26,7 +26,9 @@ export const usePersonalStore = defineStore("personal", {
     valueFirstStep: false
 
   }),
-  getters: {},
+  getters: {
+    getValueFirstStep: (state) => state.valueFirstStep
+  },
   actions: {
     setFields(fields: Fields) {
       this.force = fields.force === "true";

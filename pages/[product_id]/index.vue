@@ -11,6 +11,8 @@ import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/valid
 import { storeToRefs } from "pinia";
 import { useLeadsStore } from "@/store/modules/leads";
 import { usePersonalStore } from "~/store/forms/personal";
+import { usePixelStore } from "~/store/modules/pixel";
+import { validateThristStep } from "~/rules/form-validations";
 
 const nuxtApp = useNuxtApp();
 
@@ -27,13 +29,15 @@ const amountStore = useAmountStore();
 const storeLead = useLeadsStore()
 const route = useRoute();
 const personalStore = usePersonalStore()
-
+const pixelStore = usePixelStore()
 // Variables
 const { t, locale } = useI18n();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
+const { getPixelConfig, getViewContent, getAddPaymentInfo, getAddToCartOnMainProduct, getAddToCartOnOrderBump, getPurchase } = storeToRefs(pixelStore);
+const { getValueFirstStep } = storeToRefs(personalStore)
 
 const {
   method,
@@ -56,11 +60,13 @@ const {
 // Refs
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
+const hasClickPayment = ref(false);
+
 
 // Computeds
-const valueFirstStep = computed (()=>{
-  return personalStore.valueFirstStep
-})
+
+const getPurchaseSetp = computed(()=> validateThristStep)
+const getProductListLength = computed(()=> product_list.length)
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -182,8 +188,10 @@ function closeModal() {
 const timeStemp = ref(null);
 
 async function callPayment() {
-  const newDateTimeStemp = new Date();
+  hasClickPayment.value = true
 
+  const newDateTimeStemp = new Date();
+  
   if(timeStemp.value && (newDateTimeStemp.getTime() - timeStemp.value) < 1000) return
   timeStemp.value = newDateTimeStemp.getTime();
   if(!isPaymentFetching.value) {
@@ -459,7 +467,11 @@ const isCustomOne = computed(() => {
     <ClientOnly class="hidden">
       <ModalCloseUp />
       <LeadsClient />
+      
+      <Captcha />
+
       <PixelClient 
+        v-if="!getPixelConfig?.length"
         :key="pixelComponentKey" 
         :event="'view'" 
         :product_id="productStore.product_id" 
@@ -469,12 +481,27 @@ const isCustomOne = computed(() => {
         :original_amount="amountStore.getOriginalAmount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
-        :uuid="storeLead.uuid"/>
-      <Captcha />
+        :uuid="storeLead.uuid"
+      />
+
       <PixelClient 
-        v-if="valueFirstStep"
+        v-if="getViewContent"
         :key="pixelComponentKey" 
-        :event="'filled_data'"
+        :event="'ViewContent'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+      />
+
+      <PixelClient 
+        v-if="getValueFirstStep && getInitiateCheckout"
+        :key="pixelComponentKey" 
+        :event="'InitiateCheckout'"
         :product_id="productStore.product_id" 
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
@@ -486,7 +513,75 @@ const isCustomOne = computed(() => {
         :email="personalStore.email"
         :cellphone="personalStore.cellphone"
         :uuid="storeLead.uuid"
-        :address="storeLead.address"/>
+        :address="storeLead.address"
+      />
+
+      <PixelClient 
+        v-if="getAddPaymentInfo && getPurchaseSetp"
+        :key="pixelComponentKey" 
+        :event="'AddPaymentInfo'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+      />
+
+      <PixelClient 
+        v-if="getAddToCartOnMainProduct"
+        :key="pixelComponentKey" 
+        :event="'AddToCart'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+      />
+
+      <PixelClient 
+        v-if="getAddToCartOnOrderBump && getProductListLength"
+        :key="pixelComponentKey" 
+        :event="'AddToCart'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+      />
+      <PixelClient 
+        v-if="getPurchase.key === 'on_payment_try' && hasClickPayment"
+        :key="pixelComponentKey" 
+        :event="'Purchase'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+      />
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />
