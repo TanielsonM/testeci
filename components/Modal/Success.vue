@@ -25,7 +25,13 @@ const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const personalStore = usePersonalStore();
 const pixelStore = usePixelStore();
 
-const { getPixelConfig, getPurchaseSuccess, getOrderBumpPurchaseSuccess, getStartTrial, getPurchasePaid } = storeToRefs(pixelStore);
+const {
+  getEventsDefault,
+  getPurchaseSuccess,
+  getOrderBumpPurchaseSuccess,
+  getStartTrial,
+  getPurchasePaid
+} = storeToRefs(pixelStore);
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -380,7 +386,7 @@ function openPix(id: number) {
 
   <ClientOnly class="hidden">
     <PixelClient
-      v-if="!getPixelConfig.length"
+      v-if="getEventsDefault"
       :event="'conversion'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"

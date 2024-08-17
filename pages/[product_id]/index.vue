@@ -36,8 +36,8 @@ const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
-const { 
-  getPixelConfig,
+const {
+  getEventsDefault,
   getViewContent,
   getAddPaymentInfo,
   getAddToCartOnMainProduct,
@@ -484,7 +484,7 @@ const isCustomOne = computed(() => {
       <Captcha />
 
       <PixelClient 
-        v-if="!getPixelConfig?.length"
+        v-if="getEventsDefault"
         :key="pixelComponentKey" 
         :event="'view'" 
         :product_id="productStore.product_id" 

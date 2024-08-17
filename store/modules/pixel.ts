@@ -43,6 +43,7 @@ interface HashOptions {
 }
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
+    eventsDefault: true,
     event: "view",
     pixels:[],
     product_id: 0,
@@ -70,6 +71,9 @@ export const usePixelStore = defineStore("Pixel", {
   }),
   
   getters: {
+    getEventsDefault(state){
+      return state.pixels?.some(pixel => !pixel.pixel_configuration?.length)
+    },
     getPageView(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'PageView' && x.is_active))
     },

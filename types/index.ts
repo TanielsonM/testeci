@@ -189,6 +189,7 @@ export type PixelConfiguration ={
 }
 
 export type pixelState = {
+  eventsDefault: Boolean;
   event: String;
   product_id: number;
   event_id: String;
