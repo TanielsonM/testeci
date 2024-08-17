@@ -23,7 +23,7 @@ export const usePurchaseStore = defineStore("purchase", {
     isFormValid: false
   }),
   getters: {
-    async getPurchaseFormValid() {
+    async getValidateThristStep() {
       return await validateThristStep()
     },
     isPurchaseFormValid: (state) => state.isFormValid

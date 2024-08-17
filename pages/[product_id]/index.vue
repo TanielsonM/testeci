@@ -40,13 +40,14 @@ const { product_list } = storeToRefs(checkout);
 const {
   getEventsDefault,
   getViewContent,
+  getInitiateCheckout,
   getAddPaymentInfo,
   getAddToCartOnMainProduct,
   getAddToCartOnOrderBump,
   getPurchaseTry,
   getOrderBumpPurchaseTry
 } = storeToRefs(pixelStore);
-const { getValueFirstStep } = storeToRefs(personalStore)
+const { isPersonalFormValid } = storeToRefs(personalStore)
 const { isPurchaseFormValid } = storeToRefs(purchaseStore)
 
 const {
@@ -512,7 +513,7 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getValueFirstStep && getInitiateCheckout"
+        v-if="getInitiateCheckout && isPersonalFormValid"
         :key="pixelComponentKey" 
         :event="'InitiateCheckout'"
         :product_id="productStore.product_id" 

@@ -58,6 +58,7 @@ export const validateFirstStep = async (returnThree?: boolean): Promise<boolean>
   const stepStore = useStepStore();
   const { isEmailValid } = storeToRefs(stepStore);
   if(returnThree){
+    personalStore.setIsFormValid(validName && validEmail && validPhone);
     return validName && validEmail && validPhone;
   }
   if (showDocumentInput) {
@@ -65,16 +66,25 @@ export const validateFirstStep = async (returnThree?: boolean): Promise<boolean>
     const { hasPhone } = storeToRefs(store);
     const validDocument = await validateDocument.isValid(document.value);
     if (hasPhone?.value?.length >= 13) {
+      personalStore.setIsFormValid(validName && validEmail && validDocument);
       return validName && validEmail && validDocument;
     }
-    return (
+
+    const result = (
       validName &&
       validEmail &&
       isEmailValid.value &&
       validPhone &&
       validDocument
     );
+
+    personalStore.setIsFormValid(result);
+
+    return result;
   }
+
+  personalStore.setIsFormValid(validName && validEmail && isEmailValid.value && validPhone);
+
   return validName && validEmail && isEmailValid.value && validPhone;
 };
 
