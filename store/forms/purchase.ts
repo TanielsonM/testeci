@@ -1,5 +1,6 @@
 import { formatMoney } from "@/utils/money";
 import { useInstallmentsStore } from "../modules/installments";
+import { validateThristStep } from "~/rules/form-validations";
 
 export const usePurchaseStore = defineStore("purchase", {
   state: () => ({
@@ -19,8 +20,14 @@ export const usePurchaseStore = defineStore("purchase", {
       year: "",
       cvv: "",
     },
+    isFormValid: false
   }),
-  getters: {},
+  getters: {
+    async getPurchaseFormValid() {
+      return await validateThristStep()
+    },
+    isPurchaseFormValid: (state) => state.isFormValid
+  },
   actions: {
     setCardsAmount() {
       const instStore = useInstallmentsStore();
@@ -37,5 +44,8 @@ export const usePurchaseStore = defineStore("purchase", {
       }
       this.first.amount = instStore.getTotal();
     },
+    setIsFormValid(value: boolean) {
+      this.isFormValid = value
+    }
   },
 });

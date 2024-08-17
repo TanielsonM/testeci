@@ -11,8 +11,8 @@ import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/valid
 import { storeToRefs } from "pinia";
 import { useLeadsStore } from "@/store/modules/leads";
 import { usePersonalStore } from "~/store/forms/personal";
+import { usePurchaseStore } from "~/store/forms/purchase";
 import { usePixelStore } from "~/store/modules/pixel";
-import { validateThristStep } from "~/rules/form-validations";
 
 const nuxtApp = useNuxtApp();
 
@@ -29,6 +29,7 @@ const amountStore = useAmountStore();
 const storeLead = useLeadsStore()
 const route = useRoute();
 const personalStore = usePersonalStore()
+const purchaseStore = usePurchaseStore()
 const pixelStore = usePixelStore()
 // Variables
 const { t, locale } = useI18n();
@@ -46,6 +47,7 @@ const {
   getOrderBumpPurchaseTry
 } = storeToRefs(pixelStore);
 const { getValueFirstStep } = storeToRefs(personalStore)
+const { isPurchaseFormValid } = storeToRefs(purchaseStore)
 
 const {
   method,
@@ -72,8 +74,6 @@ const hasClickPayment = ref(false);
 
 
 // Computeds
-
-const getPurchaseSetp = computed(()=> validateThristStep)
 const getProductListLength = computed(()=> product_list.length)
 const pixelProductIds = computed(()=> {
   return product_list.value
@@ -530,7 +530,7 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getAddPaymentInfo && getPurchaseSetp"
+        v-if="getAddPaymentInfo && isPurchaseFormValid"
         :key="pixelComponentKey" 
         :event="'AddPaymentInfo'"
         :product_id="productStore.product_id" 

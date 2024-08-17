@@ -9,11 +9,6 @@ import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
 import { usePixelStore } from "./modules/pixel";
 
-function purchaseStore() {
-  const store = usePurchaseStore();
-  return store;
-}
-
 function amountStore() {
   const store = useAmountStore();
   return store;
