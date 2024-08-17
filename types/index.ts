@@ -181,7 +181,7 @@ export type PixelConfiguration ={
   id: number;
   produc_has_pixel_id:number;
   event: string;
-  key: string;
+  action: string;
   is_active: boolean;
   created_at?: string;
   updated_at?: string;

@@ -85,22 +85,22 @@ export const usePixelStore = defineStore("Pixel", {
       return state.pixelConfig?.find(x=> x.event === 'AddPaymentInfo' && x.is_active)
     },    
     getAddToCartOnMainProduct(state){
-      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.key === 'on_main_product')
+      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_main_product')
     },    
     getAddToCartOnOrderBump(state){
-      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.key === 'on_orderbump')
+      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_orderbump')
     },     
     getPurchaseSuccess(state){
-      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.key === 'on_payment_success')
+      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_success')
     },
     getPurchaseTry(state){
-      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.key === 'on_payment_try')
+      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_try')
     },
     getOrderBumpPurchaseSuccess(state){
-      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.key === 'on_payment_success')
+      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_success')
     },
     getOrderBumpPurchaseTry(state){
-      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.key === 'on_payment_try')
+      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_try')
     },
     getStartTrial(state){
       return state.pixelConfig?.find(x=> x.event === 'viewContent' && x.is_active)
