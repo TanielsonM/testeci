@@ -25,7 +25,7 @@ const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const personalStore = usePersonalStore();
 const pixelStore = usePixelStore();
 
-const { getPixelConfig, getPurchase } = storeToRefs(pixelStore);
+const { getPixelConfig, getPurchaseSuccess, getOrderBumpPurchaseSuccess, getStartTrial } = storeToRefs(pixelStore);
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -398,8 +398,9 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
     />
+
     <PixelClient
-      v-if="getPurchase.key === 'on_payment_success'"
+      v-if="getPurchaseSuccess"
       :event="'Purchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
@@ -417,6 +418,47 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
     />
+
+    <PixelClient
+      v-if="getOrderBumpPurchaseSuccess && checkoutStore.product_list.length > 1 "
+      :event="'OrderBumpPurchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="parseInt(saleId!.toString())"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+    />
+
+    <PixelClient
+      v-if="getStartTrial && !data.sale?.sales?.length"
+      :event="'StartTrial'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="parseInt(saleId!.toString())"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+    />
+
   </ClientOnly>
 </template>
 

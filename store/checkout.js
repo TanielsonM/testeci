@@ -423,6 +423,7 @@ export const useCheckoutStore = defineStore("checkout", {
             }
 
             if(response?.data.pixel_configuration){
+              
               pixelStore.setPixelConfig(response.data.pixel_configuration)
             }
 

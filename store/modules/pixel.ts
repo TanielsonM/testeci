@@ -90,17 +90,20 @@ export const usePixelStore = defineStore("Pixel", {
     getAddToCartOnOrderBump(state){
       return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.key === 'on_orderbump')
     },     
-    getPurchase(state){
-      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active)
+    getPurchaseSuccess(state){
+      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.key === 'on_payment_success')
     },
-    getOrderBumpPurchase(state){
-      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active)
+    getPurchaseTry(state){
+      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.key === 'on_payment_try')
+    },
+    getOrderBumpPurchaseSuccess(state){
+      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.key === 'on_payment_success')
+    },
+    getOrderBumpPurchaseTry(state){
+      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.key === 'on_payment_try')
     },
     getStartTrial(state){
       return state.pixelConfig?.find(x=> x.event === 'viewContent' && x.is_active)
-    },
-    getStartSubscribe(state){
-      return state.pixelConfig?.find(x=> x.event === 'StartSubscribe' && x.is_active)
     },
   },
   actions: {

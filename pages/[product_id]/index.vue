@@ -36,7 +36,15 @@ const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
-const { getPixelConfig, getViewContent, getAddPaymentInfo, getAddToCartOnMainProduct, getAddToCartOnOrderBump, getPurchase } = storeToRefs(pixelStore);
+const { 
+  getPixelConfig,
+  getViewContent,
+  getAddPaymentInfo,
+  getAddToCartOnMainProduct,
+  getAddToCartOnOrderBump,
+  getPurchaseTry,
+  getOrderBumpPurchaseTry
+} = storeToRefs(pixelStore);
 const { getValueFirstStep } = storeToRefs(personalStore)
 
 const {
@@ -67,6 +75,12 @@ const hasClickPayment = ref(false);
 
 const getPurchaseSetp = computed(()=> validateThristStep)
 const getProductListLength = computed(()=> product_list.length)
+const pixelProductIds = computed(()=> {
+  return product_list.value
+    .filter((item) => item.product_id != productStore.product_id)
+    .map((item) => item.product_id);
+})
+
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -303,7 +317,6 @@ const isCustomOne = computed(() => {
   <NuxtLayout>
     <section class="flex w-full max-w-[520px] flex-col gap-10 lg:max-w-[780px] xl:min-w-[780px]">
       <!-- Purchase card -->
-       {{teste}}
       <BaseCard class="w-full p-5 md:px-[60px] md:py-[50px]">
         <BaseButton color="transparent" size="sm" class="mb-4" v-if="currentStep > 1 && currentStep <= 3 && isMobile && !isOneStep" @click="stepsStore.back()">
           <div class="flex items-start justify-start text-left">
@@ -549,7 +562,7 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getAddToCartOnOrderBump && getProductListLength"
+        v-if="getAddToCartOnOrderBump && getProductListLength > 1"
         :key="pixelComponentKey" 
         :event="'AddToCart'"
         :product_id="productStore.product_id" 
@@ -565,13 +578,33 @@ const isCustomOne = computed(() => {
         :uuid="storeLead.uuid"
         :address="storeLead.address"
       />
+
       <PixelClient 
-        v-if="getPurchase.key === 'on_payment_try' && hasClickPayment"
+        v-if="getPurchaseTry && hasClickPayment"
         :key="pixelComponentKey" 
         :event="'Purchase'"
         :product_id="productStore.product_id" 
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+      />
+
+      <PixelClient 
+        v-if="getOrderBumpPurchaseTry && hasClickPayment && getProductListLength > 1"
+        :key="pixelComponentKey" 
+        :event="'OrderBumpPurchase'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method"
+        :products="pixelProductIds"
         :amount="amountStore.getAmount" 
         :original_amount="amountStore.getOriginalAmount" 
         :product_name="productStore.productName" 

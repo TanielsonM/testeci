@@ -42,7 +42,9 @@ onMounted(async () => {
     ids = allSales.sales
     .filter((item: any) => item.product_id != props.product_id)
     .map((item: any) => item.product_id);
-  }  
+  }else if(props.products.length){
+    ids = props.products
+  }
   if (process.client) {
     pixelStore.amount = props.amount;
     pixelStore.original_amount = props.original_amount;
@@ -82,7 +84,7 @@ onMounted(async () => {
             await hashData(props.name,),
             await hashData(props.email),
             await hashData(props.cellphone,{telefone: true}),
-            ids,
+            ids ,
             props.uuid,
             await hashData(props.address?.city),
             await hashData(props.address?.country_code),
