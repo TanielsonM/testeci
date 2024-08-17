@@ -9,9 +9,6 @@ import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
 import { usePixelStore } from "./modules/pixel";
 
-// const purchaseStore = usePurchaseStore();
-// const amountStore = useAmountStore();
-
 function purchaseStore() {
   const store = usePurchaseStore();
   return store;
@@ -21,12 +18,6 @@ function amountStore() {
   const store = useAmountStore();
   return store;
 }
-
-function pixelStore() {
-  const store = usePixelStore();
-  return store;
-}
-
 
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
@@ -422,9 +413,9 @@ export const useCheckoutStore = defineStore("checkout", {
               this.secondSaleFlag = response.second_sale_flag
             }
 
-            if(response?.data.pixel_configuration){
-              
-              pixelStore.setPixelConfig(response.data.pixel_configuration)
+            if(response?.data?.pixels?.length){
+              const pixelStore = usePixelStore();
+              pixelStore.setPixels(response.data.pixels)
             }
 
             return response

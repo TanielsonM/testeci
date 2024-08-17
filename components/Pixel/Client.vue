@@ -42,7 +42,7 @@ onMounted(async () => {
     ids = allSales.sales
     .filter((item: any) => item.product_id != props.product_id)
     .map((item: any) => item.product_id);
-  }else if(props.products.length){
+  }else if(props?.products?.length){
     ids = props.products
   }
   if (process.client) {

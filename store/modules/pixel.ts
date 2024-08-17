@@ -44,7 +44,7 @@ interface HashOptions {
 export const usePixelStore = defineStore("Pixel", {
   state: (): pixelState => ({
     event: "view",
-    pixelConfig:[],
+    pixels:[],
     product_id: 0,
     event_id: uuidv4(),
     method: "",
@@ -70,43 +70,44 @@ export const usePixelStore = defineStore("Pixel", {
   }),
   
   getters: {
-    getPixelConfig: (state) => state.pixelConfig,
-
     getPageView(state){
-      return state.pixelConfig?.find(x=> x.event === 'PageView' && x.is_active)
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'PageView' && x.is_active))
     },
     getViewContent(state){
-      return state.pixelConfig?.find(x=> x.event === 'ViewContent' && x.is_active)
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'ViewContent' && x.is_active))
     },
     getInitiateCheckout(state){
-      return state.pixelConfig?.find(x=> x.event === 'InitiateCheckout' && x.is_active)
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active))
     },
     getAddPaymentInfo(state){
-      return state.pixelConfig?.find(x=> x.event === 'AddPaymentInfo' && x.is_active)
-    },    
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddPaymentInfo' && x.is_active))
+    },
     getAddToCartOnMainProduct(state){
-      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_main_product')
-    },    
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_main_product'))
+    },
     getAddToCartOnOrderBump(state){
-      return state.pixelConfig?.find(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_orderbump')
-    },     
-    getPurchaseSuccess(state){
-      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_success')
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_orderbump'))
     },
     getPurchaseTry(state){
-      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_try')
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_try'))
     },
-    getOrderBumpPurchaseSuccess(state){
-      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_success')
-    },
-    getOrderBumpPurchaseTry(state){
-      return state.pixelConfig?.find(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_try')
-    },
-    getStartTrial(state){
-      return state.pixelConfig?.find(x=> x.event === 'viewContent' && x.is_active)
+    getPurchaseSuccess(state){
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_success'))
     },
     getPurchasePaid(state){
-      return state.pixelConfig?.find(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_paid')
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_paid'))
+    },
+    getOrderBumpPurchaseTry(state){
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_try'))
+    },
+    getOrderBumpPurchaseSuccess(state){
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_success'))
+    },
+    getOrderBumpPurchasePaid(state){
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_paid'))
+    },
+    getStartTrial(state){
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'StartTrial' && x.is_active))
     },
   },
   actions: {
@@ -206,8 +207,8 @@ export const usePixelStore = defineStore("Pixel", {
       const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
       return hashHex 
     },
-    setPixelConfig(value: PixelConfiguration[]){
-      this.pixelConfig = value
+    setPixels(value) {
+      this.pixels = value
     }
   }
 });

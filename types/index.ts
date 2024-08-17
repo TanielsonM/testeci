@@ -175,11 +175,12 @@ export type Pixel = {
   label: any;
   amount: number;
   host: string;
+  pixel_configuration: PixelConfiguration[]
 };
 
 export type PixelConfiguration ={
   id: number;
-  produc_has_pixel_id:number;
+  produc_has_pixel_id: number;
   event: string;
   action: string;
   is_active: boolean;
@@ -191,7 +192,7 @@ export type pixelState = {
   event: String;
   product_id: number;
   event_id: String;
-  pixelConfig?:  PixelConfiguration[],
+  pixels?:  Pixel[],
   method: String;
   amount: Number;
   original_amount: Number;
