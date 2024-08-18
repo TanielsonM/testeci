@@ -77,6 +77,14 @@ export const usePixelStore = defineStore("Pixel", {
     getPageView(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'PageView' && x.is_active))
     },
+    getPageViewPixelIds(state){
+      if(this.getPageView) {
+        const pageViewConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'PageView' && x.is_active))
+        const pageViewConfigsIds = pageViewConfigs?.map(x => x.id)
+        return pageViewConfigsIds
+      }
+      return []
+    },
     getViewContent(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'ViewContent' && x.is_active))
     },
@@ -126,59 +134,81 @@ export const usePixelStore = defineStore("Pixel", {
       return ids;
     },
     async syncPixels(event: string, amount: any) {
-      this.event = event;
-      this.product_id = productStore().product_id;
-      this.productCategory = productStore().productCategory?.name
-      this.productName = productStore().productName
-      this.productUrl =  window.location.href
-      this.referrerUrl = document.referrer
-      this.method = checkoutStore().method;
-      this.products_ids = this.getOrderBumps(checkoutStore().sales);
-      this.affiliate_id = checkoutStore().hasAffiliateId;
-      this.email = personalStore().email;
-      this.cellphone = personalStore().cellphone;
-      this.amount = amount || amountStore().amount;
-      this.name = personalStore().name;
-      this.zip_code = leadsStore().address?.zip_code
-      this.state = leadsStore().address?.state
-      this.city = leadsStore().address?.city
-      this.country_code = leadsStore().address?.country_code
-      this.fbc = leadsStore().fbc,
-      this.fbp = leadsStore().fbp      
+      try {
+        this.event = event;
+        this.product_id = productStore().product_id;
+        this.productCategory = productStore().productCategory?.name
+        this.productName = productStore().productName
+        this.productUrl =  window.location.href
+        this.referrerUrl = document.referrer
+        this.method = checkoutStore().method;
+        this.products_ids = this.getOrderBumps(checkoutStore().sales);
+        this.affiliate_id = checkoutStore().hasAffiliateId;
+        this.email = personalStore().email;
+        this.cellphone = personalStore().cellphone;
+        this.amount = amount || amountStore().amount;
+        this.name = personalStore().name;
+        this.zip_code = leadsStore().address?.zip_code
+        this.state = leadsStore().address?.state
+        this.city = leadsStore().address?.city
+        this.country_code = leadsStore().address?.country_code
+        this.fbc = leadsStore().fbc,
+        this.fbp = leadsStore().fbp      
+        return 'ok'
+      } catch (err) {
+        console.error(err)
+        return err
+      }
     },
     async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
-      const query = {
-        product_id: this.product_id,
-        productCategory:this.productCategory,
-        productName: this.productName,
-        productUrl: this.productUrl,
-        event: this.event,
-        event_id: this.event_id,
-        method: this.method,
-        sale_id: this.sale_id,
-        referrerUrl: this.referrerUrl,
-        chc_id: this.client_has_contract,
-        em: this.email,
-        ph: this.cellphone ? this.cellphone.replace(/\D/g, "") : this.cellphone,
-        amount: this.amount,
-        a_id: this.affiliate_id,
-        name: this.name,
-        zip_code: this.zip_code,
-        state: this.state,
-        city: this.city,
-        country_code: this.country_code,
-        products_ids: this.products_ids,
-        fbc: this.fbc,
-        fbp: this.fbp,
-      };
 
+      const queryString = new URLSearchParams();
+      queryString.append('product_id', this.product_id);
+      queryString.append('productCategory', this.productCategory);
+      queryString.append('productName', this.productName);
+      queryString.append('productUrl', this.productUrl);
+      queryString.append('event', this.event);
+      queryString.append('event_id', this.event_id);
+      queryString.append('method', this.method);
+      queryString.append('sale_id', this.sale_id);
+      queryString.append('referrerUrl', this.referrerUrl);
+      queryString.append('chc_id', this.chc_id);
+      queryString.append('em', this.em);
+      queryString.append('ph', this.ph);
+      queryString.append('amount', this.amount);
+      queryString.append('a_id', this.a_id);
+      queryString.append('name', this.name);
+      queryString.append('zip_code', this.zip_code);
+      queryString.append('state', this.state);
+      queryString.append('city', this.city);
+      queryString.append('country_code', this.country_code);
+      queryString.append('products_ids', this.products_ids);
+      queryString.append('fbc', this.fbc);
+      queryString.append('fbp', this.fbp);
+   
+      switch (this.event) {
+        case 'PageView':
+          console.log(this.getPageViewPixelIds);
+
+          this.getPageViewPixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
+
+          console.log(queryString.toString());
+          break;
+      
+        default:
+          break;
+      }
+    
       return await useApi()
-        .read("lexip", { query })
+        .read("lexip/?"+queryString, )
         .then((response) => {
+          console.log(this.event, response);
           if (response) {
             return response;
           }
-
+    
           return {};
         });
     },
