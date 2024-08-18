@@ -41,7 +41,8 @@ const {
   getEventsDefault,
   getPageView,
   getViewContent,
-  getInitiateCheckout,
+  getInitiateCheckoutOnAccess,
+  getInitiateCheckoutOnFilledData,
   getAddPaymentInfo,
   getAddToCartOnMainProduct,
   getAddToCartOnOrderBump,
@@ -528,7 +529,21 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getInitiateCheckout && isPersonalFormValid"
+        v-if="getInitiateCheckoutOnAccess"
+        :key="pixelComponentKey" 
+        :event="'InitiateCheckout'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+      />
+
+      <PixelClient 
+        v-if="getInitiateCheckoutOnFilledData && isPersonalFormValid"
         :key="pixelComponentKey" 
         :event="'InitiateCheckout'"
         :product_id="productStore.product_id" 

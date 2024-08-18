@@ -104,11 +104,14 @@ export const usePixelStore = defineStore("Pixel", {
       }
       return []
     },
-    getInitiateCheckout(state){
-      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active))
+    getInitiateCheckoutOnAccess(state){
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_access'))
+    },
+    getInitiateCheckoutOnFilledData(state){
+      return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_filled_data'))
     },
     getInitiateCheckoutPixelIds(state) {
-      if(this.getInitiateCheckout) {
+      if(this.getInitiateCheckoutOnAccess || this.getInitiateCheckoutOnFilledData) {
         const initiateCheckoutConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active))
         const initiateCheckoutConfigsIds = initiateCheckoutConfigs?.map(x => x.id)
         return initiateCheckoutConfigsIds
