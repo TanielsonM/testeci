@@ -260,10 +260,10 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
         case 'ViewContent':
-            this.getViewContentPixelIds.forEach(pixel_id => {
-              queryString.append('pixel_ids[]', pixel_id);
-            });
-            break;
+          this.getViewContentPixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
+          break;
         case 'InitiateCheckout':
           this.getInitiateCheckoutPixelIds.forEach(pixel_id => {
             queryString.append('pixel_ids[]', pixel_id);
@@ -271,6 +271,11 @@ export const usePixelStore = defineStore("Pixel", {
           break;
         case 'AddPaymentInfo':
           this.getAddPaymentInfoPixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
+          break;
+        case 'AddToCart':
+          this.getAddToCartPixelIds.forEach(pixel_id => {
             queryString.append('pixel_ids[]', pixel_id);
           });
           break;
