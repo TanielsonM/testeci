@@ -410,7 +410,7 @@ export const useCheckoutStore = defineStore("checkout", {
               this.secondSaleFlag = response.second_sale_flag
             }
 
-            if(response?.data?.pixels?.length){
+            if(response?.data?.pixels?.length && !isBump){
               const pixelStore = usePixelStore();
               pixelStore.setPixels(response.data.pixels)
             }
