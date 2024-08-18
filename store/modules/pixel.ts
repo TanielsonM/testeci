@@ -74,6 +74,14 @@ export const usePixelStore = defineStore("Pixel", {
     getEventsDefault(state){
       return state.pixels?.some(pixel => !pixel.pixel_configuration?.length)
     },
+    getViewPixelIds(state){
+      if(this.getEventsDefault) {
+        const viewConfigs = state.pixels?.filter(pixel => !pixel.pixel_configuration?.length && pixel.view)
+        const viewConfigsIds = viewConfigs?.map(x => x.id)
+        return viewConfigsIds
+      }
+      return []
+    },
     getPageView(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'PageView' && x.is_active))
     },
@@ -88,17 +96,49 @@ export const usePixelStore = defineStore("Pixel", {
     getViewContent(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'ViewContent' && x.is_active))
     },
+    getViewContentPixelIds(state) {
+      if(this.getViewContent) {
+        const viewContentConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'ViewContent' && x.is_active))
+        const viewContentConfigsIds = viewContentConfigs?.map(x => x.id)
+        return viewContentConfigsIds
+      }
+      return []
+    },
     getInitiateCheckout(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active))
     },
+    getInitiateCheckoutPixelIds(state) {
+      if(this.getInitiateCheckout) {
+        const initiateCheckoutConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active))
+        const initiateCheckoutConfigsIds = initiateCheckoutConfigs?.map(x => x.id)
+        return initiateCheckoutConfigsIds
+      }
+      return []
+    },
     getAddPaymentInfo(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddPaymentInfo' && x.is_active))
+    },
+    getAddPaymentInfoPixelIds(state) {
+      if(this.getAddPaymentInfo) {
+        const addPaymentInfoConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddPaymentInfo' && x.is_active))
+        const addPaymentInfoConfigsIds = addPaymentInfoConfigs?.map(x => x.id)
+        return addPaymentInfoConfigsIds
+      }
+      return []
     },
     getAddToCartOnMainProduct(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_main_product'))
     },
     getAddToCartOnOrderBump(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddToCart' && x.is_active && x.action === 'on_orderbump'))
+    },
+    getAddToCartPixelIds(state) {
+      if(this.getAddToCartOnMainProduct || this.getAddToCartOnOrderBump) {
+        const addToCartConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'AddToCart' && x.is_active))
+        const addToCartConfigsIds = addToCartConfigs?.map(x => x.id)
+        return addToCartConfigsIds
+      }
+      return []
     },
     getPurchaseTry(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_try'))
@@ -109,6 +149,14 @@ export const usePixelStore = defineStore("Pixel", {
     getPurchasePaid(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_paid'))
     },
+    getPurchasePixelIds(state) {
+      if(this.getPurchaseTry || this.getPurchaseSuccess || this.getPurchasePaid) {
+        const purchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active))
+        const purchaseConfigsIds = purchaseConfigs?.map(x => x.id)
+        return purchaseConfigsIds
+      }
+      return []
+    },
     getOrderBumpPurchaseTry(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_try'))
     },
@@ -118,8 +166,24 @@ export const usePixelStore = defineStore("Pixel", {
     getOrderBumpPurchasePaid(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_paid'))
     },
+    getOrderBumpPurchasePixelIds(state) {
+      if(this.getStartTrial) {
+        const orderBumpPurchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active))
+        const orderBumpPurchaseConfigsIds = orderBumpPurchaseConfigs?.map(x => x.id)
+        return orderBumpPurchaseConfigsIds
+      }
+      return []
+    },
     getStartTrial(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'StartTrial' && x.is_active))
+    },
+    getStartTrialPixelIds(state) {
+      if(this.getStartTrial) {
+        const startTrialConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'StartTrial' && x.is_active))
+        const startTrialConfigsIds = startTrialConfigs?.map(x => x.id)
+        return startTrialConfigsIds
+      }
+      return []
     },
   },
   actions: {
@@ -160,14 +224,14 @@ export const usePixelStore = defineStore("Pixel", {
         return err
       }
     },
-    async getPixels(): Promise<{ event_id: string; pixels: Pixel[] }> {
+    async getPixels(event: string): Promise<{ event_id: string; pixels: Pixel[] }> {
 
       const queryString = new URLSearchParams();
       queryString.append('product_id', this.product_id);
       queryString.append('productCategory', this.productCategory);
       queryString.append('productName', this.productName);
       queryString.append('productUrl', this.productUrl);
-      queryString.append('event', this.event);
+      queryString.append('event', event);
       queryString.append('event_id', this.event_id);
       queryString.append('method', this.method);
       queryString.append('sale_id', this.sale_id);
@@ -186,18 +250,41 @@ export const usePixelStore = defineStore("Pixel", {
       queryString.append('fbc', this.fbc);
       queryString.append('fbp', this.fbp);
    
-      switch (this.event) {
+      switch (event) {
         case 'PageView':
-          console.log(this.getPageViewPixelIds);
-
           this.getPageViewPixelIds.forEach(pixel_id => {
             queryString.append('pixel_ids[]', pixel_id);
           });
-
-          console.log(queryString.toString());
           break;
-      
-        default:
+        case 'ViewContent':
+            this.getViewContentPixelIds.forEach(pixel_id => {
+              queryString.append('pixel_ids[]', pixel_id);
+            });
+            break;
+        case 'InitiateCheckout':
+          this.getInitiateCheckoutPixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
+          break;
+        case 'AddPaymentInfo':
+          this.getAddPaymentInfoPixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
+          break;
+        case 'Purchase':
+          this.getPurchasePixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
+          break;
+        case 'OrderBumpPurchase':
+          this.getOrderBumpPurchasePixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
+          break;
+        case 'StartTrial':
+          this.getOrderBumpPurchasePixelIds.forEach(pixel_id => {
+            queryString.append('pixel_ids[]', pixel_id);
+          });
           break;
       }
     
