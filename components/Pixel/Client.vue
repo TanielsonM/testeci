@@ -67,7 +67,10 @@ onMounted(async () => {
     await pixelStore.getPixels(props.event).then((response) => {
       const { event_id, pixels } = response;
 
-      const eventId = event_id+'_'+props.event
+      let eventId = event_id+'_'+props.event
+      if(props.event === 'AddPaymentInfo') {
+        eventId = eventId+'_'+props.method
+      }
 
       if (pixels && pixels.length) {
         pixels.forEach(async (pixel) => {     
