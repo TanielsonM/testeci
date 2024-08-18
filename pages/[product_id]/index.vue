@@ -78,7 +78,6 @@ const hasClickPayment = ref(false);
 
 
 // Computeds
-const getProductListLength = computed(()=> product_list.length)
 const pixelProductIds = computed(()=> {
   return product_list.value
     .filter((item) => item.product_id != productStore.product_id)
@@ -489,14 +488,14 @@ const isCustomOne = computed(() => {
 
       <PixelClient 
         v-if="getEventsDefault"
-        :key="pixelComponentKey" 
-        :event="'view'" 
-        :product_id="productStore.product_id" 
-        :affiliate_id="hasAffiliateId" 
-        :method="checkout.method" 
-        :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
-        :product_name="productStore.productName" 
+        :key="pixelComponentKey"
+        :event="'view'"
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :amount="amountStore.getAmount"
+        :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
       />
@@ -581,28 +580,28 @@ const isCustomOne = computed(() => {
 
       <PixelClient 
         v-if="getAddToCartOnMainProduct"
-        :key="pixelComponentKey" 
-        :event="'AddToCart'" 
-        :product_id="productStore.product_id" 
-        :affiliate_id="hasAffiliateId" 
-        :method="checkout.method" 
-        :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
-        :product_name="productStore.productName" 
+        :key="pixelComponentKey"
+        :event="'AddToCart'"
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :amount="amountStore.getAmount"
+        :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
       />
 
       <PixelClient 
-        v-if="getAddToCartOnOrderBump && getProductListLength > 1"
-        :key="pixelComponentKey" 
+        v-if="getAddToCartOnOrderBump && product_list.length > 1"
+        :key="pixelComponentKey"
         :event="'AddToCart'"
-        :product_id="productStore.product_id" 
-        :affiliate_id="hasAffiliateId" 
-        :method="checkout.method" 
-        :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
-        :product_name="productStore.productName" 
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :amount="amountStore.getAmount"
+        :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :name="personalStore.name"
         :email="personalStore.email"
@@ -615,12 +614,12 @@ const isCustomOne = computed(() => {
         v-if="getPurchaseTry && hasClickPayment"
         :key="pixelComponentKey" 
         :event="'Purchase'"
-        :product_id="productStore.product_id" 
-        :affiliate_id="hasAffiliateId" 
-        :method="checkout.method" 
-        :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
-        :product_name="productStore.productName" 
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :amount="amountStore.getAmount"
+        :original_amount="amountStore.getOriginalAmount"
+        :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :name="personalStore.name"
         :email="personalStore.email"
@@ -630,14 +629,14 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getOrderBumpPurchaseTry && hasClickPayment && getProductListLength > 1"
+        v-if="getOrderBumpPurchaseTry && hasClickPayment && product_list.length > 1"
         :key="pixelComponentKey" 
         :event="'OrderBumpPurchase'"
         :product_id="productStore.product_id" 
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method"
         :products="pixelProductIds"
-        :amount="amountStore.getAmount" 
+        :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
