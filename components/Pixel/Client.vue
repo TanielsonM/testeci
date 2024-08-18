@@ -71,6 +71,9 @@ onMounted(async () => {
       if(props.event === 'AddPaymentInfo') {
         eventId = eventId+'_'+props.method
       }
+      if(ids) {
+        eventId = eventId+'_'+ids
+      }
 
       if (pixels && pixels.length) {
         pixels.forEach(async (pixel) => {     
@@ -91,7 +94,7 @@ onMounted(async () => {
             await hashData(props.name),
             await hashData(props.email),
             await hashData(props.cellphone,{telefone: true}),
-            ids ,
+            ids,
             props.uuid,
             await hashData(props.address?.city),
             await hashData(props.address?.country_code),
