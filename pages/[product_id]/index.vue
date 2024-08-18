@@ -39,6 +39,7 @@ const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
 const {
   getEventsDefault,
+  getPageView,
   getViewContent,
   getInitiateCheckout,
   getAddPaymentInfo,
@@ -488,6 +489,20 @@ const isCustomOne = computed(() => {
         v-if="getEventsDefault"
         :key="pixelComponentKey" 
         :event="'view'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+      />
+
+      <PixelClient 
+        v-if="getPageView"
+        :key="pixelComponentKey" 
+        :event="'PageView'" 
         :product_id="productStore.product_id" 
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
