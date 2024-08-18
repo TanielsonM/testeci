@@ -562,7 +562,7 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getAddPaymentInfo && isPurchaseFormValid && getMethodChange"
+        v-if="getAddPaymentInfo && ((checkout.method === 'CREDIT_CARD' && isPurchaseFormValid) || checkout.method != 'CREDIT_CARD') && getMethodChange"
         :key="pixelComponentKey" 
         :event="'AddPaymentInfo'"
         :product_id="productStore.product_id" 
