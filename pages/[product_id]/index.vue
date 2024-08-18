@@ -599,6 +599,7 @@ const isCustomOne = computed(() => {
         :product_id="productStore.product_id"
         :affiliate_id="hasAffiliateId"
         :method="checkout.method"
+        :products="pixelProductIds"
         :amount="amountStore.getAmount"
         :original_amount="amountStore.getOriginalAmount"
         :product_name="productStore.productName"
