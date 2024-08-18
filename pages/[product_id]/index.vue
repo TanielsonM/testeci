@@ -59,7 +59,8 @@ const {
   hasAffiliateId,
   product_id,
   selectedCountry,
-  hasCustomCheckout
+  hasCustomCheckout,
+  getMethodChange
 } = storeToRefs(checkout);
 
 const { currentStep, getCountSteps, isMobile } = storeToRefs(stepsStore);
@@ -561,7 +562,7 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getAddPaymentInfo && isPurchaseFormValid"
+        v-if="getAddPaymentInfo && isPurchaseFormValid && getMethodChange"
         :key="pixelComponentKey" 
         :event="'AddPaymentInfo'"
         :product_id="productStore.product_id" 

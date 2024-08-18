@@ -35,6 +35,7 @@ const leadStore = useLeadsStore()
 const props = defineProps<Props>();
 
 onMounted(async () => {
+  console.log(props.event)
   let allSales = props.products;
   let ids = [] as any;
   
@@ -63,7 +64,7 @@ onMounted(async () => {
     const hashData = pixelStore.setHahsDataPixel
 
     await pixelStore.syncPixels(props.event, props.amount);
-    await pixelStore.getPixels().then((response) => {
+    await pixelStore.getPixels(props.event).then((response) => {
       const { event_id, pixels } = response;
 
       const eventId = event_id+'_'+props.event
@@ -84,7 +85,7 @@ onMounted(async () => {
             props.affiliate_id,
             props.sale_id,
             props.original_amount,
-            await hashData(props.name,),
+            await hashData(props.name),
             await hashData(props.email),
             await hashData(props.cellphone,{telefone: true}),
             ids ,

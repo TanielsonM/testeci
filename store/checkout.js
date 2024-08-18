@@ -89,7 +89,8 @@ export const useCheckoutStore = defineStore("checkout", {
     history_subscription: null,
     whatsappSaleId: null,
     reuseCreditCard: true,
-    secondSaleFlag: false
+    secondSaleFlag: false,
+    methodChange: true
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -97,6 +98,7 @@ export const useCheckoutStore = defineStore("checkout", {
      * Query getters
      */
     getAmount: (state) => state.amount,
+    getMethodChange: (state) => state.methodChange,
     hasAffiliateId: (state) => state.url.query?.a_id ?? null,
     hasBusiness: (state) => state.url.query?.b, // Jivochat
     hasBump: (state) => state.url.fullPath.includes("b_id"),
@@ -674,6 +676,12 @@ export const useCheckoutStore = defineStore("checkout", {
       if (this.history_subscription) this.installments = this.history_subscription.contract_installments
     },
     setMethod(method = "") {
+      
+      //Para disparar o pixel AddPaymentInfo na troca de método de pagamento
+      this.methodChange = false
+      setTimeout(() => {
+        this.methodChange = true
+      }, 1000);
 
       this.method = method;
 
