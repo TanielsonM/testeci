@@ -7,7 +7,7 @@ interface Fields {
 }
 
 import { defineStore } from "pinia";
-import { validateFirstStep } from "~/rules/form-validations";
+import { validateFirstStep, validateFirstStepWithoutDocument } from "~/rules/form-validations";
 
 export const usePersonalStore = defineStore("personal", {
   state: () => ({
@@ -24,13 +24,18 @@ export const usePersonalStore = defineStore("personal", {
     forceConfirmEmail: false,
     forceCellphone: false,
     forceDocument: false,
-    isFormValid: false
+    isFormValid: false,
+    isFormValidWithoutDocument: false
   }),
   getters: {
     getValueFirstStep: async () => {
       return await validateFirstStep();
     },
-    isPersonalFormValid: (state) => state.isFormValid
+    isPersonalFormValid: (state) => state.isFormValid,
+    getValueFirstStepWithoutDocument: async () => {
+      return await validateFirstStepWithoutDocument();
+    },
+    isPersonalFormValidWithoutDocument: (state) => state.isFormValidWithoutDocument,
   },
   actions: {
     setFields(fields: Fields) {
@@ -58,6 +63,9 @@ export const usePersonalStore = defineStore("personal", {
     },
     setIsFormValid(value: boolean){      
       this.isFormValid = value;
+    },
+    setIsFormValidWithoutDocument(value: boolean){      
+      this.isFormValidWithoutDocument = value;
     }
   },
 });
