@@ -50,7 +50,7 @@ const {
   getOrderBumpPurchaseTry,
   getSwitchProductList,
 } = storeToRefs(pixelStore);
-const { isPersonalFormValidWithoutDocument } = storeToRefs(personalStore)
+const { isPersonalFormValid } = storeToRefs(personalStore)
 const { isPurchaseFormValid } = storeToRefs(purchaseStore)
 
 const {
@@ -541,10 +541,11 @@ const isCustomOne = computed(() => {
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
+        action="on_access"
       />
 
       <PixelClient 
-        v-if="getInitiateCheckoutOnFilledData && isPersonalFormValidWithoutDocument"
+        v-if="getInitiateCheckoutOnFilledData && isPersonalFormValid"
         :key="pixelComponentKey" 
         :event="'InitiateCheckout'"
         :product_id="productStore.product_id" 
@@ -559,6 +560,7 @@ const isCustomOne = computed(() => {
         :cellphone="personalStore.cellphone"
         :uuid="storeLead.uuid"
         :address="storeLead.address"
+        action="on_filled_data"
       />
 
       <PixelClient 
@@ -628,6 +630,7 @@ const isCustomOne = computed(() => {
         :cellphone="personalStore.cellphone"
         :uuid="storeLead.uuid"
         :address="storeLead.address"
+        action="on_payment_try"
       />
 
       <PixelClient 
@@ -647,6 +650,7 @@ const isCustomOne = computed(() => {
         :cellphone="personalStore.cellphone"
         :uuid="storeLead.uuid"
         :address="storeLead.address"
+        action="on_payment_try"
       />
     </ClientOnly>
     <!-- End Client Only section -->

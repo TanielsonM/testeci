@@ -407,7 +407,7 @@ function openPix(id: number) {
     />
 
     <PixelClient
-      v-if="(getPurchaseSuccess || (getPurchasePaid && checkoutStore.method === 'CREDIT_CARD')) && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
+      v-if="getPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
       :event="'Purchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
@@ -424,10 +424,32 @@ function openPix(id: number) {
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      action="on_payment_success"
     />
 
     <PixelClient
-      v-if="(getOrderBumpPurchaseSuccess || (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD')) && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1 "
+      v-if="(getPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
+      :event="'Purchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_paid"
+    />
+
+    <PixelClient
+      v-if="getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
       :event="'OrderBumpPurchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
@@ -444,6 +466,28 @@ function openPix(id: number) {
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      action="on_payment_success"
+    />
+
+    <PixelClient
+      v-if="(getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+      :event="'OrderBumpPurchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_paid"
     />
 
     <PixelClient

@@ -111,9 +111,17 @@ export const usePixelStore = defineStore("Pixel", {
     getInitiateCheckoutOnFilledData(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_filled_data'))
     },
-    getInitiateCheckoutPixelIds(state) {
-      if(this.getInitiateCheckoutOnAccess || this.getInitiateCheckoutOnFilledData) {
-        const initiateCheckoutConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active))
+    getInitiateCheckoutSuccessPixelIds(state) {
+      if(this.getInitiateCheckoutOnAccess) {
+        const initiateCheckoutConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_access'))
+        const initiateCheckoutConfigsIds = initiateCheckoutConfigs?.map(x => x.id)
+        return initiateCheckoutConfigsIds
+      }
+      return []
+    },
+    getInitiateCheckoutFilledDataPixelIds(state) {
+      if(this.getInitiateCheckoutOnFilledData) {
+        const initiateCheckoutConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_filled_data'))
         const initiateCheckoutConfigsIds = initiateCheckoutConfigs?.map(x => x.id)
         return initiateCheckoutConfigsIds
       }
@@ -153,9 +161,25 @@ export const usePixelStore = defineStore("Pixel", {
     getPurchasePaid(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_paid'))
     },
-    getPurchasePixelIds(state) {
-      if(this.getPurchaseTry || this.getPurchaseSuccess || this.getPurchasePaid) {
-        const purchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active))
+    getPurchaseTryPixelIds(state) {
+      if(this.getPurchaseTry) {
+        const purchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_try'))
+        const purchaseConfigsIds = purchaseConfigs?.map(x => x.id)
+        return purchaseConfigsIds
+      }
+      return []
+    },
+    getPurchaseSuccessPixelIds(state) {
+      if(this.getPurchaseSuccess) {
+        const purchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_success'))
+        const purchaseConfigsIds = purchaseConfigs?.map(x => x.id)
+        return purchaseConfigsIds
+      }
+      return []
+    },
+    getPurchasePaidPixelIds(state) {
+      if(this.getPurchasePaid) {
+        const purchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'Purchase' && x.is_active && x.action === 'on_payment_paid'))
         const purchaseConfigsIds = purchaseConfigs?.map(x => x.id)
         return purchaseConfigsIds
       }
@@ -170,9 +194,25 @@ export const usePixelStore = defineStore("Pixel", {
     getOrderBumpPurchasePaid(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_paid'))
     },
-    getOrderBumpPurchasePixelIds(state) {
-      if(this.getOrderBumpPurchaseTry || this.getOrderBumpPurchaseSuccess || this.getOrderBumpPurchasePaid) {
-        const orderBumpPurchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active))
+    getOrderBumpPurchaseTryPixelIds(state) {
+      if(this.getOrderBumpPurchaseTry) {
+        const orderBumpPurchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_try'))
+        const orderBumpPurchaseConfigsIds = orderBumpPurchaseConfigs?.map(x => x.id)
+        return orderBumpPurchaseConfigsIds
+      }
+      return []
+    },
+    getOrderBumpPurchaseSuccessPixelIds(state) {
+      if(this.getOrderBumpPurchaseSuccess) {
+        const orderBumpPurchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_success'))
+        const orderBumpPurchaseConfigsIds = orderBumpPurchaseConfigs?.map(x => x.id)
+        return orderBumpPurchaseConfigsIds
+      }
+      return []
+    },
+    getOrderBumpPurchasePaidPixelIds(state) {
+      if(this.getOrderBumpPurchasePaid) {
+        const orderBumpPurchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_paid'))
         const orderBumpPurchaseConfigsIds = orderBumpPurchaseConfigs?.map(x => x.id)
         return orderBumpPurchaseConfigsIds
       }
@@ -233,7 +273,7 @@ export const usePixelStore = defineStore("Pixel", {
         return err
       }
     },
-    async getPixels(event: string): Promise<{ event_id: string; pixels: Pixel[] }> {
+    async getPixels(event: string, action: string): Promise<{ event_id: string; pixels: Pixel[] }> {
 
       const queryString = new URLSearchParams();
       queryString.append('product_id', this.product_id);
@@ -271,9 +311,19 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
         case 'InitiateCheckout':
-          this.getInitiateCheckoutPixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
+          switch (action) {
+            case 'on_access':
+              this.getInitiateCheckoutAccessPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+          
+            case 'on_filled_data':
+              this.getInitiateCheckoutFilledDataPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+          }
           break;
         case 'AddPaymentInfo':
           this.getAddPaymentInfoPixelIds.forEach(pixel_id => {
@@ -286,14 +336,45 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
         case 'Purchase':
-          this.getPurchasePixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
+          switch (action) {
+            case 'on_payment_try':
+              this.getPurchaseTryPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+            case 'on_payment_success':
+              this.getPurchaseSuccessPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+            case 'on_payment_paid':
+              this.getPurchasePaidPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+          }
           break;
         case 'OrderBumpPurchase':
           this.getOrderBumpPurchasePixelIds.forEach(pixel_id => {
             queryString.append('pixel_ids[]', pixel_id);
           });
+          switch (action) {
+            case 'on_payment_try':
+              this.getOrderBumpPurchaseTryPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+            case 'on_payment_success':
+              this.getOrderBumpPurchaseSuccessPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+            case 'on_payment_paid':
+              this.getOrderBumpPurchasePaidPixelIds.forEach(pixel_id => {
+                queryString.append('pixel_ids[]', pixel_id);
+              });
+              break;
+          }
           break;
         case 'StartTrial':
           this.getOrderBumpPurchasePixelIds.forEach(pixel_id => {

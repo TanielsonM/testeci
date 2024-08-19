@@ -63,7 +63,7 @@ onMounted(async () => {
     const hashData = pixelStore.setHahsDataPixel
 
     await pixelStore.syncPixels(props.event, props.amount);
-    await pixelStore.getPixels(props.event).then((response) => {
+    await pixelStore.getPixels(props.event, props.action).then((response) => {
       const { event_id, pixels } = response;
 
       let eventId = event_id+'_'+props.event
