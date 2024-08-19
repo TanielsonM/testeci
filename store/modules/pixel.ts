@@ -206,6 +206,8 @@ export const usePixelStore = defineStore("Pixel", {
     },
     async syncPixels(event: string, amount: any) {
       try {
+        
+
         this.event = event;
         this.product_id = productStore().product_id;
         this.productCategory = productStore().productCategory?.name
@@ -303,7 +305,6 @@ export const usePixelStore = defineStore("Pixel", {
       return await useApi()
         .read("lexip/?"+queryString, )
         .then((response) => {
-          console.log('efefe', this.event, response);
           if (response) {
             return response;
           }
@@ -329,7 +330,6 @@ export const usePixelStore = defineStore("Pixel", {
     },
     
     switchCardProductList(){
-      console.log("efeffe",this.switchProductList);
       
       this.switchProductList = false
       setTimeout(() => {

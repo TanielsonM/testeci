@@ -35,7 +35,6 @@ const leadStore = useLeadsStore()
 const props = defineProps<Props>();
 
 onMounted(async () => {
-  console.log(props.event)
   let allSales = props.products;
   let ids = [] as any;
   
