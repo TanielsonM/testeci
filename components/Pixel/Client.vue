@@ -28,6 +28,7 @@ interface Props {
     number: string;
     country_code: string;
   };
+  action?: string;
 }
 
 const pixelStore = usePixelStore();

@@ -111,9 +111,9 @@ export const usePixelStore = defineStore("Pixel", {
     getInitiateCheckoutOnFilledData(state){
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_filled_data'))
     },
-    getInitiateCheckoutSuccessPixelIds(state) {
+    getInitiateCheckoutAccessPixelIds(state) {
       if(this.getInitiateCheckoutOnAccess) {
-        const initiateCheckoutConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_access'))
+        const initiateCheckoutConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x => x.event === 'InitiateCheckout' && x.is_active && x.action === 'on_access'))
         const initiateCheckoutConfigsIds = initiateCheckoutConfigs?.map(x => x.id)
         return initiateCheckoutConfigsIds
       }
@@ -273,7 +273,7 @@ export const usePixelStore = defineStore("Pixel", {
         return err
       }
     },
-    async getPixels(event: string, action: string): Promise<{ event_id: string; pixels: Pixel[] }> {
+    async getPixels(event: string, action: string | undefined): Promise<{ event_id: string; pixels: Pixel[] }> {
 
       const queryString = new URLSearchParams();
       queryString.append('product_id', this.product_id);
@@ -311,6 +311,7 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
         case 'InitiateCheckout':
+          console.log('InitiateCheckout')
           switch (action) {
             case 'on_access':
               this.getInitiateCheckoutAccessPixelIds.forEach(pixel_id => {
