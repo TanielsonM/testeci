@@ -399,7 +399,7 @@ function openPix(id: number) {
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
       :original_amount="amountStore.getOriginalAmount"
-      :sale_id="parseInt(saleId!.toString())"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
       :productCategory="productStore.productCategory"
