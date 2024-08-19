@@ -356,9 +356,6 @@ export const usePixelStore = defineStore("Pixel", {
           }
           break;
         case 'OrderBumpPurchase':
-          this.getOrderBumpPurchasePixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
           switch (action) {
             case 'on_payment_try':
               this.getOrderBumpPurchaseTryPixelIds.forEach(pixel_id => {
