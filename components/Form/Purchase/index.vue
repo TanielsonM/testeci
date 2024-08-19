@@ -9,7 +9,7 @@ const product = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const installmentsStore = useInstallmentsStore();
 
-const { method, bump_list, installments, max_installments, hasFees, fixed_installments, reuseCreditCard, setReuseCreditCard, secondSaleFlag } =
+const { method, installments, max_installments, hasFees, fixed_installments, reuseCreditCard, setReuseCreditCard, secondSaleFlag } =
   storeToRefs(checkout);
 const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
@@ -95,6 +95,7 @@ const showInstallments = computed(() => {
   return false;
 });
 
+// if subscription page is true
 const {urlSubscription} = props;
 
 const minInstallments = computed(() => {
@@ -109,8 +110,6 @@ const minInstallments = computed(() => {
   }
   return max_installments.value;
 });
-
-
 
 const showReuseCreditCard = computed(() => {
   if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value) && secondSaleFlag.value) {
@@ -130,7 +129,6 @@ watch([minInstallments, method], ([newVal, newMethod]) => {
   installments.value = newVal;
 });
 
-
 </script>
 
 <template>
@@ -142,7 +140,7 @@ watch([minInstallments, method], ([newVal, newMethod]) => {
       <template #fallback>
         <LoadingShimmer width="50%" height="55px" />
       </template>
-      <BaseSelect        
+      <BaseSelect
         :label="$t('checkout.pagamento.metodos.um_cartao.parcelas')"
         class="w-full lg:w-1/2"
         v-model="installments"
@@ -164,7 +162,7 @@ watch([minInstallments, method], ([newVal, newMethod]) => {
         <!-- Installments -->
         <option
           v-else
-          v-for="(d, index) in minInstallments"
+          v-for="(d, index) in max_installments"
           :key="index"
           :value="d"
           class="cursor-pointer select-none rounded hover:bg-main-color"

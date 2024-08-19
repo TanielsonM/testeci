@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { usePersonalStore } from "~/store/forms/personal";
 import { usePixelStore } from "~~/store/modules/pixel";
 
 // Props interface
@@ -16,13 +15,30 @@ interface Props {
   sale_id?: number;
   chc_id?: number;
   product_name?: string;
+  products?: any;
+  uuid? : string;
+  address?: {
+    zip_code: string;
+    state: string;
+    city: string;
+    street: string;
+    number: string;
+    country_code: string;
+  };
 }
 
 const pixelStore = usePixelStore();
 const props = defineProps<Props>();
-const personalStore = usePersonalStore()
 
 onMounted(async () => {
+  let allSales = props.products;
+  let ids = [] as any;
+  
+  if(allSales && allSales.sales){
+    ids = allSales.sales
+    .filter((item: any) => item.product_id != props.product_id)
+    .map((item: any) => item.product_id);
+  }  
   if (process.client) {
     pixelStore.amount = props.amount;
     pixelStore.original_amount = props.original_amount;
@@ -32,10 +48,8 @@ onMounted(async () => {
     await pixelStore.syncPixels(props.event, props.amount);
     await pixelStore.getPixels().then((response) => {
       const { event_id, pixels } = response;
-
       if (pixels && pixels.length) {
-        
-        pixels.forEach((pixel) => {          
+        pixels.forEach((pixel) => {     
           handleIframe(
             pixel.host,
             pixel.product_id,
@@ -49,7 +63,13 @@ onMounted(async () => {
             props.original_amount,
             props.name,
             props.email,
-            props.cellphone
+            props.cellphone,
+            ids,
+            props.uuid,
+            props.address?.city,
+            props.address?.country_code,
+            props.address?.state,
+            props.address?.zip_code
           );
         });
       }
@@ -68,11 +88,18 @@ onMounted(async () => {
       original_amount: number,
       name: string | undefined,
       email: string | undefined,
-      cellphone: string | undefined
+      cellphone: string | undefined,
+      products_ids: {}[],
+      uuid: string | undefined,
+      city: string | undefined,
+      country_code: string | undefined,
+      state: string | undefined,
+      zip_code: string | undefined
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
 
+      if (!!products_ids) query.append("products_ids", products_ids.toString());
       if (!!event) query.append("event", event);
       if (!!event_id) query.append("event_id", event_id);
       if (!!pixel_id) query.append("pixel_id", pixel_id.toString());
@@ -81,6 +108,11 @@ onMounted(async () => {
       if (!!affiliate_id) query.append("affiliate_id", affiliate_id.toString());
       if (!!sale_id) query.append("sale_id", sale_id.toString());
       if (!!original_amount)query.append("original_amount", amount.toString());
+      if (!!uuid)query.append("uuid", uuid.toString());
+      if (!!city)query.append("city", city.toString());
+      if (!!country_code)query.append("country_code", country_code.toString());
+      if (!!state)query.append("state", state.toString());
+      if (!!zip_code)query.append("zip_code", zip_code.toString());
 
       if (!!name)query.append("name", name.toString());
       if (!!email)query.append("email", email.toString());

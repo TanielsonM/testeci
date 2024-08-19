@@ -9,6 +9,7 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
+import { useLeadsStore } from "@/store/modules/leads";
 
 const nuxtApp = useNuxtApp();
 
@@ -22,6 +23,7 @@ const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const amountStore = useAmountStore();
+const storeLead = useLeadsStore()
 const route = useRoute();
 
 // Variables
@@ -451,7 +453,16 @@ const isCustomOne = computed(() => {
     <ClientOnly class="hidden">
       <ModalCloseUp />
       <LeadsClient />
-      <PixelClient :key="pixelComponentKey" :event="'view'" :product_id="productStore.product_id" :affiliate_id="hasAffiliateId" :method="checkout.method" :amount="amountStore.getAmount" :original_amount="amountStore.getOriginalAmount" :product_name="productStore.productName" />
+      <PixelClient 
+        :key="pixelComponentKey" 
+        :event="'view'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="amountStore.getOriginalAmount" 
+        :product_name="productStore.productName" 
+        :uuid="storeLead.uuid"/>
       <Captcha />
     </ClientOnly>
     <!-- End Client Only section -->
