@@ -776,6 +776,7 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setProductList(product) {
       const amountStore3 = useAmountStore();
+      const pixelStore = usePixelStore()
 
       const index = this.product_list
         .map((item) => item.id)
@@ -802,10 +803,12 @@ export const useCheckoutStore = defineStore("checkout", {
           amountStore3.setOriginalAmount(product?.shipping?.amount || 0);
         }
         this.checkAllowedMethods();
+        pixelStore.switchCardProductList()
         this.product_list.push(product);
         return;
       }
       this.product_list.splice(index, 1);
+      pixelStore.switchCardProductList()
       amountStore3.setAmount(
         !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1

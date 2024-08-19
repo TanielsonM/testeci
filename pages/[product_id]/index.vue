@@ -47,7 +47,8 @@ const {
   getAddToCartOnMainProduct,
   getAddToCartOnOrderBump,
   getPurchaseTry,
-  getOrderBumpPurchaseTry
+  getOrderBumpPurchaseTry,
+  getSwitchProductList,
 } = storeToRefs(pixelStore);
 const { isPersonalFormValid } = storeToRefs(personalStore)
 const { isPurchaseFormValid } = storeToRefs(purchaseStore)
@@ -593,7 +594,7 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getAddToCartOnOrderBump && product_list.length > 1"
+        v-if="getAddToCartOnOrderBump && (getSwitchProductList && product_list.length > 1)"
         :key="pixelComponentKey"
         :event="'AddToCart'"
         :product_id="productStore.product_id"

@@ -138,7 +138,7 @@ onMounted(async () => {
       firstName: string,
       referrerUrl: string | undefined,
     ) {
-      const url = `https://${host}/${product_id}`;
+      const url = `http://${host}/${product_id}`;
       const query = new URLSearchParams();
 
       if (!!products_ids) query.append("products_ids", products_ids.toString());

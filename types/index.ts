@@ -214,6 +214,7 @@ export type pixelState = {
   country_code?: string;
   fbc?: string;
   fbp?: string;
+  switchProductList: boolean;
 };
 
 export type Product = {

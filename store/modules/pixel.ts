@@ -67,7 +67,8 @@ export const usePixelStore = defineStore("Pixel", {
     productUrl: '',
     referrerUrl: '',
     fbc:'',
-    fbp:''  
+    fbp:'',
+    switchProductList: false
   }),
   
   getters: {
@@ -188,6 +189,9 @@ export const usePixelStore = defineStore("Pixel", {
       }
       return []
     },
+    getSwitchProductList(state){
+      return state.switchProductList
+    }
   },
   actions: {
     getOrderBumps(sales: any){
@@ -299,7 +303,7 @@ export const usePixelStore = defineStore("Pixel", {
       return await useApi()
         .read("lexip/?"+queryString, )
         .then((response) => {
-          console.log(this.event, response);
+          console.log('efefe', this.event, response);
           if (response) {
             return response;
           }
@@ -324,6 +328,15 @@ export const usePixelStore = defineStore("Pixel", {
       return this.encodeHash(stringLow);
     },
     
+    switchCardProductList(){
+      console.log("efeffe",this.switchProductList);
+      
+      this.switchProductList = false
+      setTimeout(() => {
+        this.switchProductList = true
+      }, 1000);
+    },
+
     async encodeHash(toString: string):Promise<string> {
       if(!toString || toString.trim() == '') return ''
       const encoder = new TextEncoder();
