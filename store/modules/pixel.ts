@@ -170,7 +170,7 @@ export const usePixelStore = defineStore("Pixel", {
       return state.pixels?.some(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active && x.action === 'on_payment_paid'))
     },
     getOrderBumpPurchasePixelIds(state) {
-      if(this.getStartTrial) {
+      if(this.getOrderBumpPurchaseTry || this.getOrderBumpPurchaseSuccess || this.getOrderBumpPurchasePaid) {
         const orderBumpPurchaseConfigs = state.pixels?.filter(pixel => pixel.pixel_configuration?.some(x=> x.event === 'OrderBumpPurchase' && x.is_active))
         const orderBumpPurchaseConfigsIds = orderBumpPurchaseConfigs?.map(x => x.id)
         return orderBumpPurchaseConfigsIds

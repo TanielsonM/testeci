@@ -427,7 +427,7 @@ function openPix(id: number) {
     />
 
     <PixelClient
-      v-if="getOrderBumpPurchaseSuccess || (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && checkoutStore.product_list.length > 1 "
+      v-if="getOrderBumpPurchaseSuccess || (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && checkoutStore?.sales?.sales?.length > 1 "
       :event="'OrderBumpPurchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
