@@ -206,7 +206,7 @@ if(sellerHasFeatureTickets){
 }
 const computedAmountPixel = computed(() => {
   const sale: Sale = sales.value as Sale;
-  if(sale.sales[0].amount) {
+  if(sale?.sales?.length) {
     return sale.sales[0].amount
   }
   return amountStore.getAmount || amountStore.getOriginalAmount
@@ -353,6 +353,11 @@ function openPix(id: number) {
     </div>
   </div>
   <div v-if="!!data.productOffer?.data?.name">
+    1 {{ getPurchaseSuccess || (getPurchasePaid && checkoutStore.method === 'CREDIT_CARD') }} <br>
+    2 {{ getStartTrial && !data.sale?.sales?.length && !!data.productOffer?.data?.name }} <br>
+    3 {{ getStartTrial }} <br>
+    4 {{ !data.sale?.sales?.length }} <br>
+    5 {{ !!data.productOffer?.data?.name }}
     <div class="container">
       <ModalTrialInfos
         :name="data.productOffer.data.name"
@@ -447,7 +452,7 @@ function openPix(id: number) {
     />
 
     <PixelClient
-      v-if="getStartTrial && !data.sale"
+      v-if="getStartTrial && !data.sale?.sales?.length && !!data.productOffer?.data?.name"
       :event="'StartTrial'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
