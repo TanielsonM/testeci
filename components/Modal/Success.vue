@@ -30,7 +30,7 @@ const {
   getPurchaseSuccess,
   getOrderBumpPurchaseSuccess,
   getStartTrial,
-  getPurchasePaid
+  getPurchasePaid,
 } = storeToRefs(pixelStore);
 
 const route: any = useRoute();
@@ -406,7 +406,7 @@ function openPix(id: number) {
     />
 
     <PixelClient
-      v-if="getPurchaseSuccess"
+      v-if="getPurchaseSuccess || (getPurchasePaid && checkoutStore.method === 'CREDIT_CARD')"
       :event="'Purchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
@@ -448,26 +448,6 @@ function openPix(id: number) {
     <PixelClient
       v-if="getStartTrial && !data.sale?.sales?.length"
       :event="'StartTrial'"
-      :product_id="productStore.product_id"
-      :affiliate_id="checkoutStore.hasAffiliateId"
-      :method="checkoutStore.method"
-      :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
-      :sale_id="parseInt(saleId!.toString())"
-      :chc_id="parseInt(data.chc)"
-      :product_name="productStore.productName"
-      :productCategory="productStore.productCategory"
-      :name="personalStore.name"
-      :products="checkoutStore.sales"
-      :email="personalStore.email"
-      :cellphone="personalStore.cellphone"
-      :uuid="storeLead.uuid"
-      :address="storeLead.address"
-    />
-
-    <PixelClient
-      v-if="getPurchasePaid && checkoutStore.method === 'CREDIT_CARD'"
-      :event="'Purchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
