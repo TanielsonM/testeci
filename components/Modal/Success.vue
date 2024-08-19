@@ -447,7 +447,7 @@ function openPix(id: number) {
     />
 
     <PixelClient
-      v-if="getStartTrial && !data.sale?.sales?.length"
+      v-if="getStartTrial && !data.sale"
       :event="'StartTrial'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
