@@ -387,7 +387,7 @@ function openPix(id: number) {
 
   <ClientOnly class="hidden">
     <PixelClient
-      v-if="getEventsDefault"
+      v-if="getEventsDefault && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
       :event="'conversion'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
@@ -407,7 +407,7 @@ function openPix(id: number) {
     />
 
     <PixelClient
-      v-if="getPurchaseSuccess || (getPurchasePaid && checkoutStore.method === 'CREDIT_CARD')"
+      v-if="(getPurchaseSuccess || (getPurchasePaid && checkoutStore.method === 'CREDIT_CARD')) && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
       :event="'Purchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
@@ -427,7 +427,7 @@ function openPix(id: number) {
     />
 
     <PixelClient
-      v-if="getOrderBumpPurchaseSuccess || (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && checkoutStore?.sales?.sales?.length > 1 "
+      v-if="(getOrderBumpPurchaseSuccess || (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD')) && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1 "
       :event="'OrderBumpPurchase'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
