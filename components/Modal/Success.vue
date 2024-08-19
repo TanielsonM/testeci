@@ -353,11 +353,6 @@ function openPix(id: number) {
     </div>
   </div>
   <div v-if="!!data.productOffer?.data?.name">
-    1 {{ getPurchaseSuccess || (getPurchasePaid && checkoutStore.method === 'CREDIT_CARD') }} <br>
-    2 {{ getStartTrial && !data.sale?.sales?.length && !!data.productOffer?.data?.name }} <br>
-    3 {{ getStartTrial }} <br>
-    4 {{ !data.sale?.sales?.length }} <br>
-    5 {{ !!data.productOffer?.data?.name }}
     <div class="container">
       <ModalTrialInfos
         :name="data.productOffer.data.name"
