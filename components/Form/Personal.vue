@@ -7,6 +7,7 @@ import { useStepStore } from "@/store/modules/steps";
 import { defineProps } from 'vue';
 
 import {
+  validateFirstStepWithoutDocument,
   validateFirstStep,
   validateSecondStep,
   validateName,
@@ -91,6 +92,7 @@ const queryParams = useRoute().query;
 watch([name, email, cellphone, document], async () => {
   
   leadsStore.syncPersonal();
+  await validateFirstStepWithoutDocument();
   let isPersonalValid = await validateFirstStep();
   let isAddressValid = await validateSecondStep();
   let currentStep = stepStore.currentStep;

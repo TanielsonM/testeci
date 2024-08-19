@@ -50,7 +50,7 @@ const {
   getOrderBumpPurchaseTry,
   getSwitchProductList,
 } = storeToRefs(pixelStore);
-const { isPersonalFormValid } = storeToRefs(personalStore)
+const { isFormValidWithoutDocument } = storeToRefs(personalStore)
 const { isPurchaseFormValid } = storeToRefs(purchaseStore)
 
 const {
@@ -545,7 +545,7 @@ const isCustomOne = computed(() => {
       />
 
       <PixelClient 
-        v-if="getInitiateCheckoutOnFilledData && isPersonalFormValid"
+        v-if="getInitiateCheckoutOnFilledData && isFormValidWithoutDocument"
         :key="pixelComponentKey" 
         :event="'InitiateCheckout'"
         :product_id="productStore.product_id" 
