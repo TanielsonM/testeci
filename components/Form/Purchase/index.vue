@@ -98,19 +98,6 @@ const showInstallments = computed(() => {
 // if subscription page is true
 const {urlSubscription} = props;
 
-const minInstallments = computed(() => {
-  if (Array.isArray(bump_list.value) && bump_list.value.length > 0) {
-    const checkedBumps = bump_list.value.filter(bump => bump.checkbox);
-    if (checkedBumps.length > 0) {
-      const bumpsMaxInstallments = checkedBumps.map(bump =>  Number(bump.max_installments) || Number(bump.max_subscription_installments) || 12);
-      const maxInstallmentsValue = Number(max_installments.value);
-      const minInstallmentsValue = Math.min(maxInstallmentsValue, ...bumpsMaxInstallments);
-      return minInstallmentsValue;
-    }
-  }
-  return max_installments.value;
-});
-
 const showReuseCreditCard = computed(() => {
   if (["CREDIT_CARD", "TWO_CREDIT_CARDS"].includes(method.value) && secondSaleFlag.value) {
     return true;
@@ -120,15 +107,7 @@ const showReuseCreditCard = computed(() => {
 
 function saveData() {
   setReuseCreditCard(reuseCreditCard)
-};
-
-watch([minInstallments, method], ([newVal, newMethod]) => {
-  if(installments.value <= newVal ){
-    return;
-  }
-  installments.value = newVal;
-});
-
+}
 </script>
 
 <template>
