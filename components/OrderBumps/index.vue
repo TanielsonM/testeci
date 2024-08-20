@@ -5,6 +5,7 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { useStepStore } from "~~/store/modules/steps";
 import { useAddressStore } from "@/store/forms/address";
 import { useProductStore } from "~~/store/product";
+import { useInstallmentsStore } from "~~/store/modules/installments";
 // Utils
 import { formatMoney } from "~/utils/money";
 
@@ -30,6 +31,10 @@ const { product } = storeToRefs(productStore);
 const shipping = ref({});
 const shippingOptions = ref([]);
 const shippingLoading = ref(false);
+
+const installmentsStore = useInstallmentsStore();
+const {  installments } = storeToRefs(checkoutStore);
+const { getInstallmentsWithAmount } = installmentsStore;
 
 // Computed methods
 const stylesheet = computed(() => {  
@@ -162,12 +167,12 @@ if (isFixedShipping.value)
         :disabled="!!bump?.disabled"
       />
       <p class="item-value">
-        {{ !!bump.trial ? trialMessage : formatMoney(amount) }}
+        {{ !!bump.trial ? trialMessage : bumpInstallmentText }}
       </p>
     </header>
     <OrderBumpsBody
       :bump="bump"
-      :amount="amount"
+      :amount="installmentValues"
       :shipping="shipping"
       :shipping-options="shippingOptions"
       :shipping-loading="shippingLoading"
@@ -175,6 +180,7 @@ if (isFixedShipping.value)
       :trial-message-alternative="trialMessageAlternative"
       :has-shipping-fee="hasShippingFee"
       :has-custom-charges="hasCustomCharges"
+      :bump-installment-text="bumpInstallmentText"
     />
   </BaseCard>
 </template>
