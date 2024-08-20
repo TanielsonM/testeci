@@ -9,7 +9,7 @@ const product = useProductStore();
 const custom_checkout = useCustomCheckoutStore();
 const installmentsStore = useInstallmentsStore();
 
-const { method, installments, max_installments, hasFees, fixed_installments, reuseCreditCard, setReuseCreditCard, secondSaleFlag } =
+const { method, installments, max_installments, hasFees, fixed_installments, reuseCreditCard, setReuseCreditCard, secondSaleFlag, bump_list } =
   storeToRefs(checkout);
 const { hasSubscriptionInstallments, productType, getPeriod } =
   storeToRefs(product);
@@ -99,7 +99,7 @@ const showInstallments = computed(() => {
 const {urlSubscription} = props;
 
 const minInstallments = computed(() => {
-  if (Array.isArray(bump_list.value) && bump_list.value.length > 0) {
+  if (Array.isArray(bump_list?.value) && bump_list.value.length > 0) {
     const checkedBumps = bump_list.value.filter(bump => bump.checkbox);
     if (checkedBumps.length > 0) {
       const bumpsMaxInstallments = checkedBumps.map(bump =>  Number(bump.max_installments) || Number(bump.max_subscription_installments) || 12);
