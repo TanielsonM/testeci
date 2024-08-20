@@ -162,7 +162,7 @@ watch([minInstallments, method], ([newVal, newMethod]) => {
         <!-- Installments -->
         <option
           v-else
-          v-for="(d, index) in max_installments"
+          v-for="(d, index) in minInstallments"
           :key="index"
           :value="d"
           class="cursor-pointer select-none rounded hover:bg-main-color"
