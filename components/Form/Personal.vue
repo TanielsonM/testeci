@@ -7,6 +7,7 @@ import { useStepStore } from "@/store/modules/steps";
 import { defineProps } from 'vue';
 
 import {
+  validateFirstStepWithoutDocument,
   validateFirstStep,
   validateSecondStep,
   validateName,
@@ -91,6 +92,7 @@ const queryParams = useRoute().query;
 watch([name, email, cellphone, document], async () => {
   
   leadsStore.syncPersonal();
+  await validateFirstStepWithoutDocument();
   let isPersonalValid = await validateFirstStep();
   let isAddressValid = await validateSecondStep();
   let currentStep = stepStore.currentStep;
@@ -112,8 +114,10 @@ function validateEmailWithVeeValidate(validateField) {
   })
 }
 
-function updateLead(isEmail = false) {
+async function allBlurInputEvent(isEmail = false) {
   if (isEmail) email.value = email.value.trim();
+  let step = await validateFirstStep(true) 
+  personalStore.setIsFormValid(step)
   setTimeout(function () {
     leadsStore.updateLead();
   }, 1000);
@@ -136,7 +140,7 @@ onMounted(() => {
 <template>
   <VeeForm class="grid w-full grid-cols-12 gap-3" ref="personalForm" v-slot="{ validateField }">
     <BaseInput
-      @blur="updateLead"
+      @blur="allBlurInputEvent"
       class="col-span-12"
       :label="$t('forms.personal.inputs.name.label')"
       :placeholder="$t('forms.personal.inputs.name.placeholder')"
@@ -155,7 +159,7 @@ onMounted(() => {
       type="email"
       class="col-span-12"
       @change="validateEmailWithVeeValidate(validateField)"
-      @blur="updateLead(true)"
+      @blur="allBlurInputEvent(true)"
       :label="$t('forms.personal.inputs.mail.label')"
       :placeholder="$t('forms.personal.inputs.mail.placeholder')"
       input-name="email-field"
@@ -173,7 +177,7 @@ onMounted(() => {
 
     <BaseInput
       class="col-span-12"
-      @blur="updateLead"
+      @blur="allBlurInputEvent"
       :label="$t('forms.personal.inputs.confirmation_mail.label')"
       :placeholder="$t('forms.personal.inputs.confirmation_mail.placeholder')"
       type="email"
@@ -192,7 +196,7 @@ onMounted(() => {
 
     <BasePhone
       class="col-span-12"
-      @blur="updateLead"
+      @blur="allBlurInputEvent"
       :class="{ 'xl:col-span-6': showDocumentInput }"
       :label="$t('forms.personal.inputs.cellphone.label')"
       :placeholder="$t('forms.personal.inputs.cellphone.placeholder')"
@@ -210,7 +214,7 @@ onMounted(() => {
     </BasePhone>
     <BaseInput
       class="col-span-12"
-      @blur="updateLead"
+      @blur="allBlurInputEvent"
       :class="{ 'xl:col-span-6': showDocumentInput && !urlSubscription }"
       :label="documentText.label"
       :placeholder="documentText.placeholder"

@@ -72,14 +72,6 @@ export const useInstallmentsStore = defineStore("installments", {
         return Number(Number((total + frete) / n));
       };
     },
-    getInstallmentsWithAmount: (state) => (bump: Product, numberOfInstallments: number) => {
-      const checkout = useCheckoutStore();
-      const { monthly_interest} = storeToRefs(checkout);
-      const i = parseFloat(monthly_interest.value) / 100; 
-      
-      let installmentAmount = (bump.amount * i) / (1 - Math.pow(1 + i, -numberOfInstallments));
-      return Math.round(installmentAmount * 100) / 100;
-    },
     getTotal(state: InstallmentsState) {
       const amountStore = useAmountStore();
       const checkout = useCheckoutStore();

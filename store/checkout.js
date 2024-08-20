@@ -7,14 +7,7 @@ import { useAmountStore } from "./modules/amount";
 import { defineStore, storeToRefs } from "pinia";
 import { GreennLogs } from "@/utils/greenn-logs";
 import { haveAvailableTickets } from "@/utils/validateBatch";
-
-// const purchaseStore = usePurchaseStore();
-// const amountStore = useAmountStore();
-
-function purchaseStore() {
-  const store = usePurchaseStore();
-  return store;
-}
+import { usePixelStore } from "./modules/pixel";
 
 function amountStore() {
   const store = useAmountStore();
@@ -96,7 +89,8 @@ export const useCheckoutStore = defineStore("checkout", {
     history_subscription: null,
     whatsappSaleId: null,
     reuseCreditCard: true,
-    secondSaleFlag: false
+    secondSaleFlag: false,
+    methodChange: true
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -104,6 +98,7 @@ export const useCheckoutStore = defineStore("checkout", {
      * Query getters
      */
     getAmount: (state) => state.amount,
+    getMethodChange: (state) => state.methodChange,
     hasAffiliateId: (state) => state.url.query?.a_id ?? null,
     hasBusiness: (state) => state.url.query?.b, // Jivochat
     hasBump: (state) => state.url.fullPath.includes("b_id"),
@@ -410,9 +405,14 @@ export const useCheckoutStore = defineStore("checkout", {
 
               preCheckout.setBatches(response.batches);
             }
-
+            
             if (response?.second_sale_flag) {
               this.secondSaleFlag = response.second_sale_flag
+            }
+
+            if(response?.data?.pixels?.length && !isBump){
+              const pixelStore = usePixelStore();
+              pixelStore.setPixels(response.data.pixels)
             }
 
             return response
@@ -676,6 +676,12 @@ export const useCheckoutStore = defineStore("checkout", {
       if (this.history_subscription) this.installments = this.history_subscription.contract_installments
     },
     setMethod(method = "") {
+      
+      //Para disparar o pixel AddPaymentInfo na troca de método de pagamento
+      this.methodChange = false
+      setTimeout(() => {
+        this.methodChange = true
+      }, 1000);
 
       this.method = method;
 
@@ -770,6 +776,7 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setProductList(product) {
       const amountStore3 = useAmountStore();
+      const pixelStore = usePixelStore()
 
       const index = this.product_list
         .map((item) => item.id)
@@ -796,10 +803,12 @@ export const useCheckoutStore = defineStore("checkout", {
           amountStore3.setOriginalAmount(product?.shipping?.amount || 0);
         }
         this.checkAllowedMethods();
+        pixelStore.switchCardProductList()
         this.product_list.push(product);
         return;
       }
       this.product_list.splice(index, 1);
+      pixelStore.switchCardProductList()
       amountStore3.setAmount(
         !!product.custom_charges?.length
           ? product.custom_charges[0].amount * -1
@@ -995,6 +1004,8 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     setSelectedShipping(product_id, shipping) {
+      const amountStore3 = useAmountStore();
+
       const product = this.product_list
         .filter((item) => item.id == parseInt(product_id))
         .pop();
@@ -1002,13 +1013,16 @@ export const useCheckoutStore = defineStore("checkout", {
         product.shipping_options = [];
         return;
       }
+      
       // Remove shipping amount
       this.product_list.forEach((item) => {
         if (item.id == parseInt(product_id) && item.shipping?.amount) {
-          amountStore.setAmount(parseFloat(item.shipping?.amount) * -1);
-          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
+          const amount = parseFloat(item.shipping?.amount ?? 0) * -1;
+          amountStore3.setAmount(amount);
+          amountStore3.setOriginalAmount(parseFloat(item.shipping?.amount) * -1);
         }
       });
+      
       // Set shipping infos in product
       this.product_list = this.product_list.map((item) => {
         if (item.id == parseInt(product_id)) {
@@ -1024,15 +1038,15 @@ export const useCheckoutStore = defineStore("checkout", {
       // Add shipping amount
       this.product_list.forEach((item) => {
         if (item.id == parseInt(product_id) && item.shipping?.amount) {
-          amountStore.setAmount(parseFloat(item.shipping?.amount));
-          amountStore.setOriginalAmount(parseFloat(item.shipping?.amount));
+          amountStore3.setAmount(parseFloat(item.shipping?.amount));
+          amountStore3.setOriginalAmount(parseFloat(item.shipping?.amount));
         }
       });
 
       this.shipping_selected = {
         frete_anterior: +shipping.price,
         service_name: shipping.name,
-        old_amount: amountStore.getAmount,
+        old_amount: amountStore3.getAmount,
         amount: +shipping.price,
         frete: shipping,
       };
