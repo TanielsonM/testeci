@@ -4,7 +4,7 @@ interface Props {
   type?: string
   color?: "primary" | "secondary" | "success" | "danger" | "info" | "blue" | "bordered" | "transparent",
   size?: "vsm" | "sm" | "md" | "lg"
-  animation?: "top" | "rigth" | "bottom" | "left"
+  animation?: "top" | "rigth" | "bottom" | "left" | "pulse"
   loading?: boolean
 }
 

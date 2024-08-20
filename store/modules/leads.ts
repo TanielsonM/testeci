@@ -13,6 +13,8 @@ export const useLeadsStore = defineStore("Leads", {
   state: (): leadsState => ({
     step: 0,
     uuid: null,
+    fbc:'',
+    fbp:'',
     personal: {
       name: null,
       email: null,
@@ -49,6 +51,12 @@ export const useLeadsStore = defineStore("Leads", {
     },
     setUUID(uuid: string) {
       this.uuid = uuid;
+    },
+    setFbc(value: string) {
+      this.fbc = value;
+    },
+    setFbp(value: string) {
+      this.fbp = value;
     },
     syncPersonal() {
       const personalStore = usePersonalStore();

@@ -11,6 +11,7 @@ import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
 import { resetReservations } from "@/utils/validateBatch";
 import { usePersonalStore } from "~/store/forms/personal";
+import { usePixelStore } from "~/store/modules/pixel";
 
 const productStore = useProductStore();
 const amountStore = useAmountStore();
@@ -22,6 +23,16 @@ const { product } = useProductStore();
 const { batches,  } = usePreCheckoutStore();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const personalStore = usePersonalStore();
+const pixelStore = usePixelStore();
+
+const {
+  getEventsDefault,
+  getPurchaseSuccess,
+  getOrderBumpPurchaseSuccess,
+  getStartTrial,
+  getPurchasePaid,
+  getOrderBumpPurchasePaid
+} = storeToRefs(pixelStore);
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -195,7 +206,7 @@ if(sellerHasFeatureTickets){
 }
 const computedAmountPixel = computed(() => {
   const sale: Sale = sales.value as Sale;
-  if(sale.sales[0].amount) {
+  if(sale?.sales?.length) {
     return sale.sales[0].amount
   }
   return amountStore.getAmount || amountStore.getOriginalAmount
@@ -376,15 +387,17 @@ function openPix(id: number) {
 
   <ClientOnly class="hidden">
     <PixelClient
+      v-if="getEventsDefault && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
       :event="'conversion'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
       :original_amount="amountStore.getOriginalAmount"
-      :sale_id="parseInt(saleId!.toString())"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
       :name="personalStore.name"
       :products="checkoutStore.sales"
       :email="personalStore.email"
@@ -392,6 +405,111 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
     />
+
+    <PixelClient
+      v-if="getPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
+      :event="'Purchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_success"
+    />
+
+    <PixelClient
+      v-if="(getPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
+      :event="'Purchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_paid"
+    />
+
+    <PixelClient
+      v-if="getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+      :event="'OrderBumpPurchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_success"
+    />
+
+    <PixelClient
+      v-if="(getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+      :event="'OrderBumpPurchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_paid"
+    />
+
+    <PixelClient
+      v-if="getStartTrial && !data.sale?.sales?.length && !!data.productOffer?.data?.name"
+      :event="'StartTrial'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="amountStore.getOriginalAmount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+    />
+
   </ClientOnly>
 </template>
 

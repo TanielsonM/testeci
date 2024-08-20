@@ -14,8 +14,6 @@ export function checkout() {
   const store = useCheckoutStore();
   return storeToRefs(store);
 }
-// const checkout = useCheckoutStore();
-// const { global_settings, hasPhone } = storeToRefs(checkout);
 
 export const validateRequired = yup.string().required();
 export const validateName = yup.string().min(4).required();
@@ -44,7 +42,29 @@ export const validateExpiryMonth = yup.string().min(2).max(2).required();
 export const validateExpiryYear = yup.string().min(4).max(4).required();
 export const validateCardAmount = yup.number().positive().min(1).required();
 
-export const validateFirstStep = async (): Promise<boolean> => {
+export const validateFirstStepWithoutDocument = async (returnThree?: boolean): Promise<boolean> => {
+  const personalStore = usePersonalStore();
+  const phoneStore = usePhoneValidation();
+  const { name, cellphone, email } = storeToRefs(personalStore)
+  const { isValid } = storeToRefs(phoneStore)
+
+  const validName = await validateName.isValid(name.value);
+  const validEmail = await validateEmail.isValid(email.value);
+  const validPhone = isValid.value;
+
+  const stepStore = useStepStore();
+  const { isEmailValid } = storeToRefs(stepStore);
+  if(returnThree){
+    personalStore.setIsFormValidWithoutDocument(validName && validEmail && validPhone);
+    return validName && validEmail && validPhone;
+  }
+
+  personalStore.setIsFormValidWithoutDocument(validName && validEmail && isEmailValid.value && validPhone);
+
+  return validName && validEmail && isEmailValid.value && validPhone;
+};
+
+export const validateFirstStep = async (returnThree?: boolean): Promise<boolean> => {
   const personalStore = usePersonalStore();
   const phoneStore = usePhoneValidation();
   const { name, document, cellphone, email } = storeToRefs(personalStore)
@@ -59,22 +79,34 @@ export const validateFirstStep = async (): Promise<boolean> => {
   );
   const stepStore = useStepStore();
   const { isEmailValid } = storeToRefs(stepStore);
-
+  if(returnThree){
+    personalStore.setIsFormValid(validName && validEmail && validPhone);
+    return validName && validEmail && validPhone;
+  }
   if (showDocumentInput) {
     const store = useCheckoutStore();
     const { hasPhone } = storeToRefs(store);
     const validDocument = await validateDocument.isValid(document.value);
     if (hasPhone?.value?.length >= 13) {
+      personalStore.setIsFormValid(validName && validEmail && validDocument);
       return validName && validEmail && validDocument;
     }
-    return (
+
+    const result = (
       validName &&
       validEmail &&
       isEmailValid.value &&
       validPhone &&
       validDocument
     );
+
+    personalStore.setIsFormValid(result);
+
+    return result;
   }
+
+  personalStore.setIsFormValid(validName && validEmail && isEmailValid.value && validPhone);
+
   return validName && validEmail && isEmailValid.value && validPhone;
 };
 
@@ -146,6 +178,7 @@ export const validateThristStep = async (): Promise<boolean> => {
   const { first, second } = storeToRefs(purchaseStore);
 
   if (["PIX", "BOLETO"].includes(checkout.method)) {
+    purchaseStore.setIsFormValid(true)
     return true;
   }
 
@@ -173,7 +206,7 @@ export const validateThristStep = async (): Promise<boolean> => {
     );
     const validCvcSecond = await validateCvc.isValid(second.value.cvv);
 
-    return (
+    const result = (
       validNameOnCard &&
       validCardNumber &&
       validExpiryMonth &&
@@ -184,7 +217,11 @@ export const validateThristStep = async (): Promise<boolean> => {
       validCvc &&
       validNameOnCardSecond &&
       validCardNumberSecond
-    );
+    )
+
+    purchaseStore.setIsFormValid(result)
+
+    return result;
   }
 
   const stepStore = useStepStore();
@@ -200,10 +237,11 @@ export const validateThristStep = async (): Promise<boolean> => {
     const validDocument = validateDocument.isValidSync(document.value);
 
     if (["PIX", "BOLETO", "FREE"].includes(checkout.method)) {
+      purchaseStore.setIsFormValid(validDocument)
       return validDocument;
     }
 
-    return (
+    const result = (
       validNameOnCard &&
       validCardNumber &&
       validExpiryMonth &&
@@ -211,18 +249,26 @@ export const validateThristStep = async (): Promise<boolean> => {
       validCvc &&
       validDocument
     );
+
+    purchaseStore.setIsFormValid(result)
+
+    return result;
   }
 
-  return (
+  const result = (
     validNameOnCard &&
     validCardNumber &&
     validExpiryMonth &&
     validExpiryYear &&
     validCvc
   );
+
+  purchaseStore.setIsFormValid(result)
+
+  return result;
 };
 
-export const validateAll = async (isUpdateSubscription): Promise<boolean> => {
+export const validateAll = async (isUpdateSubscription: boolean): Promise<boolean> => {
   const checkout = useCheckoutStore();
   const stepStore = useStepStore();
   const { isMobile } = storeToRefs(stepStore);

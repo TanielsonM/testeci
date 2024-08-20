@@ -5,7 +5,6 @@ import { useCheckoutStore } from "@/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useProductStore } from "@/store/product";
 import { usePurchaseStore } from "@/store/forms/purchase";
-import { useAmountStore } from "~~/store/modules/amount";
 import { useInstallmentsStore } from "~~/store/modules/installments";
 import { usePaymentStore } from "@/store/modules/payment";
 
@@ -16,19 +15,18 @@ import {
   validateExpiryMonth,
   validateExpiryYear,
   validateCvc,
+  validateThristStep
 } from "@/rules/form-validations";
 
 const checkout = useCheckoutStore();
 const preCheckout = usePreCheckoutStore();
 const purchase = usePurchaseStore();
-const amountStore = useAmountStore();
 const prodStore = useProductStore();
 const instStore = useInstallmentsStore();
 const payment = usePaymentStore();
 
-const { getReservations, sellerHasFeatureTickets } = storeToRefs(preCheckout);
-const { getAmount } = storeToRefs(amountStore);
-const { method, installments, selectedCountry, allowed_methods, product } =
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+const { method, installments, selectedCountry, allowed_methods } =
   storeToRefs(checkout);
 const { productType } = storeToRefs(prodStore);
 const { first, second } = storeToRefs(purchase);
@@ -107,7 +105,8 @@ const isCardBack = ref(false);
 const creditCard = ref(null);
 const isOnFocus = ref("");
 
-function syncVerification(from) {
+async function syncVerification(from) {
+  await validateThristStep()
   verifyCard(from);
   changeAmount(from);
   onFocus("");
@@ -120,6 +119,16 @@ function flipCard(value) {
 
 function onFocus(value) {
   isOnFocus.value = value;
+}
+
+async function onBlur(value) {
+  if(value === 'holder_name') {
+    onFocus('')
+  }
+  if(value = 'card_cvv') {
+    flipCard(false)
+  }
+  await validateThristStep()
 }
 
 function verifyCard(from) {
@@ -282,6 +291,7 @@ const {urlSubscription} = props;
           mask="#### #### #### ####"
           class="col-span-12"
           @click="onFocus('number')"
+          @blur="onBlur()"
           v-model="first.number"
           input-id="card_number"
           input-name="card_number"
@@ -304,7 +314,7 @@ const {urlSubscription} = props;
           class="col-span-12"
           v-model="first.holder_name"
           @click="onFocus('name')"
-          @blur="onFocus('')"
+          @blur="onBlur('holder_name')"
           input-id="card_holder_name"
           input-name="card_holder_name"
           :error="
@@ -324,6 +334,7 @@ const {urlSubscription} = props;
           class="col-span-6 sm:col-span-4"
           :data="months"
           v-model="first.month"
+          @blur="onBlur()"
           select-id="card_month"
           select-name="card_month"
           :error="
@@ -343,6 +354,7 @@ const {urlSubscription} = props;
           class="col-span-6 sm:col-span-4"
           :data="years"
           v-model="first.year"
+          @blur="onBlur()"
           select-id="card_year"
           select-name="card_year"
           :error="
@@ -369,7 +381,7 @@ const {urlSubscription} = props;
               : undefined
           "
           @click="flipCard(true)"
-          @blur="flipCard(false)"
+          @blur="onBlur('card_cvv')"
           @focus="flipCard(true)"
         >
           <template #error>
@@ -414,6 +426,7 @@ const {urlSubscription} = props;
           mask="#### #### #### ####"
           class="col-span-12"
           v-model="second.number"
+          @blur="onBlur()"
           input-id="second-number-field"
           input-name="card_number"
           :error="
@@ -436,6 +449,7 @@ const {urlSubscription} = props;
           "
           class="col-span-12"
           v-model="second.holder_name"
+          @blur="onBlur()"
           input-id="second-holder_name-field"
           input-name="card_holder_name"
           :error="
@@ -455,6 +469,7 @@ const {urlSubscription} = props;
           class="col-span-6 sm:col-span-4"
           :data="months"
           v-model="second.month"
+          @blur="onBlur()"
           select-id="second-month-field"
           select-name="card_month"
           :error="
@@ -474,6 +489,7 @@ const {urlSubscription} = props;
           class="col-span-6 sm:col-span-4"
           :data="years"
           v-model="second.year"
+          @blur="onBlur()"
           select-id="second-year-field"
           select-name="card_year"
           :error="
@@ -492,6 +508,7 @@ const {urlSubscription} = props;
           class="col-span-12 sm:col-span-4"
           rules="required"
           v-model="second.cvv"
+          @blur="onBlur()"
           input-id="second-cvv-field"
           input-name="card_cvv"
           :error="
