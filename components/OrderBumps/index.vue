@@ -25,7 +25,7 @@ const addressStore = useAddressStore();
 const productStore = useProductStore();
 
 const { getCountSteps, isMobile, currentStep } = storeToRefs(stepsStore);
-const { showAddressStep, global_settings, method } = storeToRefs(checkoutStore)
+const { showAddressStep, global_settings } = storeToRefs(checkoutStore)
 const { product } = storeToRefs(productStore);
 
 const shipping = ref({});
@@ -123,10 +123,11 @@ const installmentValues = computed(() => {
   }
 });
 const bumpInstallmentText = computed(() => {
-  if(Number(installments.value) === 1 || method.value === "BOLETO"){
-    return `${formatMoney(amount.value)}`;
+  if(Number(installments.value) === 1){
+    return `${formatMoney(installmentValues.value)}`;
+  }else{
+    return `${installments.value}x ${t("order.de")} ${formatMoney(installmentValues.value)}`;
   }
-  return `${installments.value}x ${t("order.de")} ${formatMoney(installmentValues.value)}`;
 });
 // Watches
 watch(
