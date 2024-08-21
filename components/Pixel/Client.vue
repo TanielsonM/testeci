@@ -61,13 +61,13 @@ onMounted(async () => {
   if(allSales && allSales.sales){
     selectedOrderbumps = allSales.sales.filter((item: any) => item.product_id != props.product_id)
     ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
-  }else if(props?.products?.length && ((props.event !== 'AddToCart' && props.action !== 'on_orderbump') || props.event === 'OrderBumpPurchase')){
+  }else if(props?.products?.length && props.event !== 'AddToCart' && props.action !== 'on_orderbump'){
     selectedOrderbumps = checkoutStore.product_list
     .filter((item: any) => item.id != productStore.product_id)
     ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
   }
 
-  if(checkoutStore.product_list?.length > 1 && ((props.event === 'AddToCart' && props.action === 'on_orderbump') || props.event === 'OrderBumpPurchase')) {
+  if(checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
     selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
     product_name = selectedOrderbump.offer_name;
     product_amount = selectedOrderbump.amount;
@@ -121,8 +121,10 @@ onMounted(async () => {
       if(props.event === 'AddPaymentInfo') {
         eventId = eventId+'_'+props.method
       }
-      if(selectedOrderbumpId && checkoutStore.product_list?.length > 1 && ((props.event === 'AddToCart' && props.action === 'on_orderbump') || props.event === 'OrderBumpPurchase')) {
+      if(selectedOrderbumpId && checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
         eventId = eventId+'_'+selectedOrderbumpId
+      } else if(productStore.product_id != props.product_id && props.event === 'OrderBumpPurchase') {
+        eventId = eventId+'_'+props.product_id
       }
 
       if (pixels && pixels.length) {
