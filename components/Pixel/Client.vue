@@ -150,7 +150,8 @@ onMounted(async () => {
             await hashData(props.name, {lestName:true}),
             await hashData(props.name, {firstName:true}),
             document.referrer,
-            props.seller_id
+            props.seller_id,
+            JSON.stringify(contents)
           )
         });
       }
@@ -183,7 +184,8 @@ onMounted(async () => {
       lestName: string,
       firstName: string,
       referrerUrl: string | undefined,
-      seller_id: string | number
+      seller_id: string | number,
+      contents: string
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -209,6 +211,7 @@ onMounted(async () => {
       if (!!productUrl)query.append("productUrl", productUrl.toString());
       if (!!referrerUrl)query.append("referrerUrl", referrerUrl.toString());
       if (!!seller_id)query.append("seller_id", seller_id.toString());
+      if (!!contents)query.append("contents", contents.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash
