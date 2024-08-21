@@ -54,7 +54,6 @@ onMounted(async () => {
     product_amount = selectedOrderbump.amount;
     original_amount = selectedOrderbump.amount;
     selectedOrderbumpId = selectedOrderbump.id
-    console.log('selectedOrderbump', selectedOrderbump)
   }
   
   if(allSales && allSales.sales){
