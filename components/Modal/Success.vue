@@ -451,9 +451,9 @@ function openPix(id: number) {
       :seller_id="productStore.product.seller_id"
     />
 
-    <template v-for="bumpSale in checkoutStore?.sales?.sales">
+    <template v-for="(bumpSale, i) in checkoutStore?.sales?.sales">
       <PixelClient
-        v-if="getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+        v-if="i > 0 && getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
         :key="bumpSale.product_id"
         :event="'OrderBumpPurchase'"
         :product_id="bumpSale.product_id"
@@ -476,9 +476,9 @@ function openPix(id: number) {
       />
     </template>
 
-    <template v-for="bumpSale in checkoutStore?.sales?.sales">
+    <template v-for="(bumpSale, i) in checkoutStore?.sales?.sales">
       <PixelClient
-        v-if="(getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+        v-if="i > 0 && (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
         :key="bumpSale.product_id"
         :event="'OrderBumpPurchase'"
         :product_id="bumpSale.product_id"
