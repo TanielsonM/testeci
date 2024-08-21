@@ -82,6 +82,10 @@ onMounted(async () => {
     }];
   } else if(selectedOrderbumps?.length > 1) {
     selectedOrderbumps.forEach(ob => {
+      if(props.event === 'Purchase') {
+        product_amount = product_amount + ob.amount
+        original_amount = original_amount + ob.amount
+      }
       contents.push({
         item_id: ob.id,
         price: ob.amount,
