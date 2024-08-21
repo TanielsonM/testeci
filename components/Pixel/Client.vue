@@ -42,34 +42,29 @@ const props = defineProps<Props>();
 onMounted(async () => {
   let allSales = props.products;
   let ids = [] as any;
-  let ids_sem_amount = [] as any;
   let product_name = props.product_name;
   let product_amount = props.amount;
   let original_amount = props.original_amount;
   let selectedOrderbumpId = null;
+  let selectedOrderbump = null
 
   if(checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
-    const selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
+    selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
     product_name = selectedOrderbump.offer_name;
     product_amount = selectedOrderbump.amount;
     original_amount = selectedOrderbump.amount;
     selectedOrderbumpId = selectedOrderbump.id
+    console.log('selectedOrderbump', selectedOrderbump)
   }
   
   if(allSales && allSales.sales){
     ids = allSales.sales
     .filter((item: any) => item.product_id != props.product_id)
     .map((item: any) => item.product_id+'_'+item.amount);
-    ids_sem_amount = allSales.sales
-    .filter((item: any) => item.product_id != props.product_id)
-    .map((item: any) => item.product_id);
   }else if(props?.products?.length && props.event !== 'AddToCart' && props.action !== 'on_orderbump'){
     ids = checkoutStore.product_list
     .filter((item: any) => item.id != productStore.product_id)
     .map((item: any) => item.product_id+'_'+item.amount);
-    ids_sem_amount = checkoutStore.product_list
-    .filter((item: any) => item.id != productStore.product_id)
-    .map((item: any) => item.product_id);
   }
 
   if (process.client) {
@@ -89,7 +84,7 @@ onMounted(async () => {
 
     const hashData = pixelStore.setHahsDataPixel
 
-    await pixelStore.syncPixels(props.event, props.amount);
+    await pixelStore.syncPixels(props.event, props.amount, selectedOrderbump);
     await pixelStore.getPixels(props.event, props.action).then((response) => {
       const { event_id, pixels } = response;
 

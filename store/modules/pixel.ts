@@ -248,20 +248,20 @@ export const usePixelStore = defineStore("Pixel", {
       }
       return ids;
     },
-    async syncPixels(event: string, amount: any) {
+    async syncPixels(event: string, amount: any, orderbump = null) {
       try {
         this.event = event;
-        this.product_id = productStore().product_id;
+        this.product_id = orderbump ? orderbump.id : productStore().product_id;
         this.productCategory = productStore().productCategory?.name
-        this.productName = productStore().productName
+        this.productName = orderbump ? orderbump.offer_name : productStore().productName
         this.productUrl =  window.location.href
         this.referrerUrl = document.referrer
         this.method = checkoutStore().method;
-        this.products_ids = this.getOrderBumps(checkoutStore().sales);
+        this.products_ids = orderbump ? null : this.getOrderBumps(checkoutStore().sales);
         this.affiliate_id = checkoutStore().hasAffiliateId;
         this.email = personalStore().email;
         this.cellphone = personalStore().cellphone;
-        this.amount = amount || amountStore().amount;
+        this.amount = orderbump ? orderbump.amount : (amount || amountStore().amount);
         this.name = personalStore().name;
         this.zip_code = leadsStore().address?.zip_code
         this.state = leadsStore().address?.state
@@ -381,7 +381,7 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
       }
-    
+
       return await useApi()
         .read("lexip/?"+queryString, )
         .then((response) => {
