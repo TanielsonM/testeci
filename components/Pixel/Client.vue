@@ -2,6 +2,8 @@
 import { useLeadsStore } from "~/store/modules/leads";
 import type { Category } from "~/types";
 import { usePixelStore } from "~~/store/modules/pixel";
+import { useCheckoutStore } from "~~/store/checkout";
+import { useProductStore } from "~~/store/product";
 
 // Props interface
 interface Props {
@@ -33,6 +35,8 @@ interface Props {
 
 const pixelStore = usePixelStore();
 const leadStore = useLeadsStore()
+const checkoutStore = useCheckoutStore();
+const productStore = useProductStore();
 const props = defineProps<Props>();
 
 onMounted(async () => {
@@ -42,9 +46,11 @@ onMounted(async () => {
   if(allSales && allSales.sales){
     ids = allSales.sales
     .filter((item: any) => item.product_id != props.product_id)
-    .map((item: any) => item.product_id);
+    .map((item: any) => item.product_id+'_'+item.amount);
   }else if(props?.products?.length){
-    ids = props.products
+    ids = checkoutStore.product_list
+    .filter((item: any) => item.id != productStore.product_id)
+    .map((item: any) => item.product_id+'_'+item.amount);
   }
   if (process.client) {
     pixelStore.amount = props.amount;

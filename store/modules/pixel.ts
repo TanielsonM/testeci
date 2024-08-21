@@ -240,11 +240,11 @@ export const usePixelStore = defineStore("Pixel", {
       if(allSales && allSales.sales){
         ids = allSales.sales
         .filter((item: any) => item.product_id != productStore().product_id)
-        .map((item: any) => item.product_id);
+        .map((item: any) => item.product_id+'_'+item.amount);
       } else if(checkoutStore().product_list?.length > 1) {
         ids = checkoutStore().product_list
         .filter((item: any) => item.id != productStore().product_id)
-        .map((item: any) => item.product_id);
+        .map((item: any) => item.product_id+'_'+item.amount);
       }
       return ids;
     },
