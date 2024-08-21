@@ -46,12 +46,14 @@ onMounted(async () => {
   let product_name = props.product_name;
   let product_amount = props.amount;
   let original_amount = props.original_amount;
+  let selectedOrderbumpId = null;
 
   if(checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
     const selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
     product_name = selectedOrderbump.offer_name;
     product_amount = selectedOrderbump.amount;
     original_amount = selectedOrderbump.amount;
+    selectedOrderbumpId = selectedOrderbump.id
   }
   
   if(allSales && allSales.sales){
@@ -95,8 +97,8 @@ onMounted(async () => {
       if(props.event === 'AddPaymentInfo') {
         eventId = eventId+'_'+props.method
       }
-      if(ids) {
-        eventId = eventId+'_'+ids_sem_amount
+      if(selectedOrderbumpId && checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
+        eventId = eventId+'_'+selectedOrderbumpId
       }
 
       if (pixels && pixels.length) {
