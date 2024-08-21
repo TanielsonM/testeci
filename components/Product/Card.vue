@@ -12,6 +12,7 @@ const custom_checkout = useCustomCheckoutStore();
 const preCheckout = usePreCheckoutStore();
 const checkout = useCheckoutStore();
 const router = useRouter();
+const { $moment } = useNuxtApp();
 const { t } = useI18n();
 
 /* State */
@@ -21,6 +22,22 @@ const { trial_position } = storeToRefs(custom_checkout);
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { history_subscription } = storeToRefs(checkout);
 const isRendered = ref(false);
+
+const dateEvent = computed(() => {
+  return product.value.start_date && product.value.end_date ? 
+    `${formatEventStartDate(product.value.start_date)} ${t("components.event_date.until")} ${formatEventStartDate(product.value.end_date)}` 
+    : formatEventStartDate(product.value.start_date);
+});
+
+const horsEvent = computed(() => {
+  return product.value.start_time && product.value.end_time ? 
+    `${formatEventTime(product.value.start_time)} - ${formatEventTime(product.value.end_time)}` 
+    : formatEventTime(product.value.start_time);
+});
+
+const addressEvent = computed(() => {
+    return `${product.value?.address?.street} | ${product.value?.address?.city}`;
+});
 
 /* Props */
 const props = defineProps({
@@ -60,6 +77,19 @@ onMounted(() => {
 
 function onClientRender() {
   isRendered.value = true;
+}
+
+function formatEventStartDate(Date) {
+    const startDate = $moment(Date); 
+    const dayOfWeek = startDate.format('ddd'); 
+    const dateFormatted = startDate.format('D MMM, YYYY'); 
+    const startDateConcat = `${dayOfWeek}, ${dateFormatted}`; 
+    return startDateConcat;
+}
+
+function formatEventTime(hora){
+  const startHora = $moment(hora, "HH:mm:ss");
+  return startHora.format('HH[h]mm[m]'); 
 }
 
 </script>
@@ -193,6 +223,27 @@ function onClientRender() {
     <!-- Trial info -->
     <InfoTrial class="mx-5" v-if="!urlSubscription && trial_position === 'top'" />
     <DonationCampaign v-if="!urlSubscription && product?.seller?.donation_tax" />
+
+    <!-- address event -->
+     <section class="flex flex-col gap-3 px-5 pb-5" v-if="product.format == 'EVENT'">
+      <div class="data-container" >
+        <img src="../../assets/icons/calendar.svg" alt="calendar">
+        <p>
+          {{dateEvent}}
+        </p>
+      </div>
+      <div class="data-container" >
+        <img src="../../assets/icons/clock.svg" alt="calendar">
+        <p>
+          {{ horsEvent }}
+        </p>
+      </div>
+      <div class="data-container" >
+        <img src="../../assets/icons/location.svg" alt="calendar">
+        <p>{{ addressEvent }} </p>
+      </div>
+     </section>
+
     <!-- Purchase Details -->
     <PurchaseDetails />
     <!-- More product infos -->
@@ -272,6 +323,24 @@ function onClientRender() {
 </template>
 
 <style lang="scss" scoped>
+.data-container{
+  display: flex;
+  gap: 12px;
+  justify-content: start;
+  align-items: center;
+  p{
+    color: #000001; 
+    font-size: 14px; 
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: 400; 
+    line-height: 150%;
+  }
+  img{
+    width: 15px; 
+    height: 15px;
+  }
+}
 .custom_charges {
   width: 100%;
   display: flex;

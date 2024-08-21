@@ -71,6 +71,7 @@ if (
     PAYPAL: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-cartao}`,
     CREDIT_CARD: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-cartao}`,
     TWO_CREDIT_CARDS: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-cartao}`,
+    FREE: !!product.thank_you_page ? product.thank_you_page : `${runtimeConfig.public.BASE_URL}/obrigado-pagamento-free}`,
   });
 
   thankYouData.forEach(element => {
@@ -90,6 +91,9 @@ if (
       case "TWO_CREDIT_CARD": 
         customUrl.value.TWO_CREDIT_CARDS = element.url;
         break;
+      case "FREE": 
+        customUrl.value.FREE = element.url;
+        break;
     }
   });
 
@@ -101,7 +105,8 @@ if (
       modal.setTitle(t("pg_obrigado.pix.text_header.info_completa"));
       break;
     case "PAYPAL":
-    case "CREDIT_CARD":
+    case "CREDIT_CARD": 
+    case "FREE":
     case "TWO_CREDIT_CARDS":
       modal.setTitle(t("pg_obrigado.modal.text_header.info_completa"));
       break;

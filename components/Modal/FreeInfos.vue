@@ -2,6 +2,9 @@
 import { type SaleElement } from "@/types";
 import { formatMoney } from "@/utils/money";
 import { useI18n } from "vue-i18n";
+import { usePreCheckoutStore } from "~~/store/preCheckout";
+const preCheckout = usePreCheckoutStore();
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 
 const { t } = useI18n();
 
@@ -37,7 +40,7 @@ defineProps<InfosProps>();
         <section class="flex items-start">
           <section class="check-icon icon-success"></section>
           <section class="transaction">
-            <p>{{ sale.product.name }}</p>
+            <p>{{ !sellerHasFeatureTickets ? sale.product.name : sale.offer.name }}</p>
             <span>{{ $t("pg_obrigado.modal.transacao") }}</span>
           </section>
         </section>

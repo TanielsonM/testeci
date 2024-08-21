@@ -184,7 +184,7 @@ export const usePaymentStore = defineStore("Payment", {
 
         let data: Payment = {
           // Purchase infos
-          method: method,
+          method: getOriginalAmount === 0 ? "FREE" : method,
           amount: getOriginalAmount,
           total: total.value,
           installments:

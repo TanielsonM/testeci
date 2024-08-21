@@ -58,6 +58,9 @@
     }
   },
   "components": {
+    "event_date": {
+      "until": " hasta "
+    },
     "product_card": {
       "title_header": "COMPRA 100% SEGURA",
       "author": "Autor",
@@ -124,8 +127,8 @@
     "link_vendedor_nao_encontrado": "El enlace del vendedor no se encontró",
     "salvar_dados": "Guardar datos para futuras compras",
     "modal": {
-      "text_expiration": "Atención, tu sesión ha caducado",
-      "text_loading": "Deberá recargar la página para continuar comprando este evento.",
+      "text_expiration": "Tu sesión ha terminado",
+      "text_loading": "Después de 10 minutos, la sesión caduca y se liberan los tickets. Completa tu compra antes de que se acabe el tiempo.",
       "text_button": "Recargar la pagina",
       "text_ticket": "Cambiar billetes",
       "text_session": "Tu sesión aún no ha expirado, si regresas a la pantalla de pre-pago para cambiar tus boletos perderás tus datos guardados.",
@@ -391,7 +394,8 @@
     "payment_methods": "Métodos de pago",
     "total": "total",
     "or": "o",
-    "buy": "Comprar entradas"
+    "buy": "Comprar entradas",
+    "free": "Gratis"
   },
   "order": {
     "text_header": "COMPRA 100% SEGURA",
