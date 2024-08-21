@@ -151,7 +151,8 @@ onMounted(async () => {
             await hashData(props.name, {firstName:true}),
             document.referrer,
             props.seller_id,
-            JSON.stringify(contents)
+            JSON.stringify(contents),
+            pixel.label
           )
         });
       }
@@ -185,7 +186,8 @@ onMounted(async () => {
       firstName: string,
       referrerUrl: string | undefined,
       seller_id: string | number,
-      contents: string
+      contents: string,
+      pixel_label: string | null | undefined
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -212,6 +214,7 @@ onMounted(async () => {
       if (!!referrerUrl)query.append("referrerUrl", referrerUrl.toString());
       if (!!seller_id)query.append("seller_id", seller_id.toString());
       if (!!contents)query.append("contents", contents.toString());
+      if (!!pixel_label)query.append("pixel_label", pixel_label.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash
