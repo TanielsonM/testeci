@@ -152,7 +152,8 @@ onMounted(async () => {
             document.referrer,
             props.seller_id,
             JSON.stringify(contents),
-            pixel.label
+            pixel.label,
+            pixel.pixel_id
           )
         });
       }
@@ -187,7 +188,8 @@ onMounted(async () => {
       referrerUrl: string | undefined,
       seller_id: string | number,
       contents: string,
-      pixel_label: string | null | undefined
+      pixel_label: string | null | undefined,
+      pixel_id_integration: string | null | undefined
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -215,6 +217,7 @@ onMounted(async () => {
       if (!!seller_id)query.append("seller_id", seller_id.toString());
       if (!!contents)query.append("contents", contents.toString());
       if (!!pixel_label)query.append("pixel_label", pixel_label.toString());
+      if (!!pixel_id_integration)query.append("pixel_id_integration", pixel_id_integration.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash
