@@ -241,13 +241,15 @@ export const usePixelStore = defineStore("Pixel", {
         ids = allSales.sales
         .filter((item: any) => item.product_id != productStore().product_id)
         .map((item: any) => item.product_id);
-      } 
+      } else if(checkoutStore().product_list?.length > 1) {
+        ids = checkoutStore().product_list
+        .filter((item: any) => item.id != productStore().product_id)
+        .map((item: any) => item.product_id);
+      }
       return ids;
     },
     async syncPixels(event: string, amount: any) {
       try {
-        
-
         this.event = event;
         this.product_id = productStore().product_id;
         this.productCategory = productStore().productCategory?.name
@@ -311,7 +313,6 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
         case 'InitiateCheckout':
-          console.log('InitiateCheckout')
           switch (action) {
             case 'on_access':
               this.getInitiateCheckoutAccessPixelIds.forEach(pixel_id => {
