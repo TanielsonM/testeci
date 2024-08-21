@@ -49,6 +49,7 @@ onMounted(async () => {
   let selectedOrderbumpId = null;
   let selectedOrderbump = null
   let selectedOrderbumps = [];
+  let currency = productStore.product.currency;
   let contents = [{
       item_id: props.product_id,
       price: product_amount,
@@ -72,6 +73,7 @@ onMounted(async () => {
     product_amount = selectedOrderbump.amount;
     original_amount = selectedOrderbump.amount;
     selectedOrderbumpId = selectedOrderbump.id
+    currency = selectedOrderbump.currency
     contents = [{
       item_id: selectedOrderbumpId,
       price: product_amount,
@@ -155,7 +157,8 @@ onMounted(async () => {
             pixel.label,
             pixel.pixel_id,
             pixel.type,
-            pixel.amount
+            pixel.amount,
+            currency
           )
         });
       }
@@ -194,6 +197,7 @@ onMounted(async () => {
       pixel_id_integration: string | null | undefined,
       pixel_type: string | null | undefined,
       use_original_amount: string | number | boolean | null | undefined,
+      currency: string | null | undefined
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -224,6 +228,7 @@ onMounted(async () => {
       if (!!pixel_id_integration)query.append("pixel_id_integration", pixel_id_integration.toString());
       if (!!pixel_type)query.append("pixel_type", pixel_type.toString());
       if (!!use_original_amount)query.append("use_original_amount", use_original_amount.toString());
+      if (!!currency)query.append("currency", currency.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash
