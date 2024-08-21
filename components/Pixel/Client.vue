@@ -48,7 +48,7 @@ onMounted(async () => {
   let selectedOrderbumpId = null;
   let selectedOrderbump = null
 
-  if(checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
+  if(checkoutStore.product_list?.length > 1 && ((props.event === 'AddToCart' && props.action === 'on_orderbump') || props.event === 'OrderBumpPurchase')) {
     selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
     product_name = selectedOrderbump.offer_name;
     product_amount = selectedOrderbump.amount;
@@ -60,7 +60,7 @@ onMounted(async () => {
     ids = allSales.sales
     .filter((item: any) => item.product_id != props.product_id)
     .map((item: any) => item.product_id+'_'+item.amount);
-  }else if(props?.products?.length && props.event !== 'AddToCart' && props.action !== 'on_orderbump'){
+  }else if(props?.products?.length && ((props.event !== 'AddToCart' && props.action !== 'on_orderbump') || props.event === 'OrderBumpPurchase')){
     ids = checkoutStore.product_list
     .filter((item: any) => item.id != productStore.product_id)
     .map((item: any) => item.product_id+'_'+item.amount);
@@ -91,7 +91,7 @@ onMounted(async () => {
       if(props.event === 'AddPaymentInfo') {
         eventId = eventId+'_'+props.method
       }
-      if(selectedOrderbumpId && checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
+      if(selectedOrderbumpId && checkoutStore.product_list?.length > 1 && ((props.event === 'AddToCart' && props.action === 'on_orderbump') || props.event === 'OrderBumpPurchase')) {
         eventId = eventId+'_'+selectedOrderbumpId
       }
 
