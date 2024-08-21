@@ -454,7 +454,7 @@ function openPix(id: number) {
     <template v-for="bumpSale in checkoutStore?.sales?.sales">
       <PixelClient
         v-if="getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
-        :key="bumpSale.id"
+        :key="bumpSale.product_id"
         :event="'OrderBumpPurchase'"
         :product_id="bumpSale.product_id"
         :affiliate_id="checkoutStore.hasAffiliateId"
@@ -479,6 +479,7 @@ function openPix(id: number) {
     <template v-for="bumpSale in checkoutStore?.sales?.sales">
       <PixelClient
         v-if="(getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+        :key="bumpSale.product_id"
         :event="'OrderBumpPurchase'"
         :product_id="bumpSale.product_id"
         :affiliate_id="checkoutStore.hasAffiliateId"
