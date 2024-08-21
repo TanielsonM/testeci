@@ -593,6 +593,7 @@ const isCustomOne = computed(() => {
         :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
+        action="on_main_product"
       />
 
       <PixelClient 
@@ -612,6 +613,7 @@ const isCustomOne = computed(() => {
         :cellphone="personalStore.cellphone"
         :uuid="storeLead.uuid"
         :address="storeLead.address"
+        action="on_orderbump"
       />
 
       <PixelClient 

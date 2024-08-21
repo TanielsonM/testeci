@@ -42,16 +42,34 @@ const props = defineProps<Props>();
 onMounted(async () => {
   let allSales = props.products;
   let ids = [] as any;
+  let ids_sem_amount = [] as any;
+  let product_name = props.product_name;
+  let product_amount = props.amount;
+  let original_amount = props.original_amount;
+
+  if(checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
+    const selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
+    product_name = selectedOrderbump.offer_name;
+    product_amount = selectedOrderbump.amount;
+    original_amount = selectedOrderbump.amount;
+  }
   
   if(allSales && allSales.sales){
     ids = allSales.sales
     .filter((item: any) => item.product_id != props.product_id)
     .map((item: any) => item.product_id+'_'+item.amount);
-  }else if(props?.products?.length){
+    ids_sem_amount = allSales.sales
+    .filter((item: any) => item.product_id != props.product_id)
+    .map((item: any) => item.product_id);
+  }else if(props?.products?.length && props.event !== 'AddToCart' && props.action !== 'on_orderbump'){
     ids = checkoutStore.product_list
     .filter((item: any) => item.id != productStore.product_id)
     .map((item: any) => item.product_id+'_'+item.amount);
+    ids_sem_amount = checkoutStore.product_list
+    .filter((item: any) => item.id != productStore.product_id)
+    .map((item: any) => item.product_id);
   }
+
   if (process.client) {
     pixelStore.amount = props.amount;
     pixelStore.original_amount = props.original_amount;
@@ -78,7 +96,7 @@ onMounted(async () => {
         eventId = eventId+'_'+props.method
       }
       if(ids) {
-        eventId = eventId+'_'+ids
+        eventId = eventId+'_'+ids_sem_amount
       }
 
       if (pixels && pixels.length) {
@@ -86,17 +104,17 @@ onMounted(async () => {
           handleIframe(
             pixel.host,
             pixel.product_id,
-            props.product_name,
+            product_name,
             categoryName,
             productUrl,
             props.event,
             eventId,
             pixel.pixel_id,
             props.method,
-            props.amount,
+            product_amount,
             props.affiliate_id,
             props.sale_id,
-            props.original_amount,
+            original_amount,
             await hashData(props.name),
             await hashData(props.email),
             await hashData(props.cellphone,{telefone: true}),
