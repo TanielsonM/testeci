@@ -111,7 +111,7 @@ onMounted(async () => {
     const hashData = pixelStore.setHahsDataPixel
 
     await pixelStore.syncPixels(props.event, props.amount, selectedOrderbump);
-    await pixelStore.getPixels(props.event, props.action, props.seller_id, JSON.stringify(contents)).then((response) => {
+    await pixelStore.getPixels(props.event, props.action, props.seller_id, btoa(unescape(encodeURIComponent(JSON.stringify(contents))))).then((response) => {
       const { event_id, pixels } = response;
 
       let eventId = event_id+'_'+props.event
@@ -201,7 +201,7 @@ onMounted(async () => {
       currency: string | null | undefined,
       pixel_view: string | number | boolean | null | undefined
     ) {
-      const url = `https://${host}/${product_id}`;
+      const url = `http://${host}/${product_id}`;
       const query = new URLSearchParams();
 
       if (!!products_ids) query.append("products_ids", products_ids.toString());
