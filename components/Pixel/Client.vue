@@ -49,7 +49,7 @@ onMounted(async () => {
   let selectedOrderbumpId = null;
   let selectedOrderbump = null
   let selectedOrderbumps = [];
-  let currency = productStore.product.currency;
+  let currency = checkoutStore.checkoutPayment.base_currency;
   let contents = [{
       item_id: props.product_id,
       price: product_amount,
@@ -73,7 +73,6 @@ onMounted(async () => {
     product_amount = selectedOrderbump.amount;
     original_amount = selectedOrderbump.amount;
     selectedOrderbumpId = selectedOrderbump.id
-    currency = selectedOrderbump.currency
     contents = [{
       item_id: selectedOrderbumpId,
       price: product_amount,
