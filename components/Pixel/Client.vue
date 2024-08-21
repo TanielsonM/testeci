@@ -99,7 +99,7 @@ onMounted(async () => {
         pixels.forEach(async (pixel) => {     
           handleIframe(
             pixel.host,
-            pixel.product_id,
+            selectedOrderbumpId ?? pixel.product_id,
             product_name,
             categoryName,
             productUrl,
