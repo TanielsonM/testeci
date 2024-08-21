@@ -158,7 +158,8 @@ onMounted(async () => {
             pixel.pixel_id,
             pixel.type,
             pixel.amount,
-            currency
+            currency,
+            pixel.view
           )
         });
       }
@@ -197,7 +198,8 @@ onMounted(async () => {
       pixel_id_integration: string | null | undefined,
       pixel_type: string | null | undefined,
       use_original_amount: string | number | boolean | null | undefined,
-      currency: string | null | undefined
+      currency: string | null | undefined,
+      pixel_view: string | number | boolean | null | undefined
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -229,6 +231,7 @@ onMounted(async () => {
       if (!!pixel_type)query.append("pixel_type", pixel_type.toString());
       if (!!use_original_amount)query.append("use_original_amount", use_original_amount.toString());
       if (!!currency)query.append("currency", currency.toString());
+      if (!!pixel_view)query.append("pixel_view", pixel_view.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash
