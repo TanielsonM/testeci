@@ -393,7 +393,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -404,6 +404,7 @@ function openPix(id: number) {
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      :seller_id="productStore.product.seller_id"
     />
 
     <PixelClient
@@ -413,7 +414,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -425,6 +426,7 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
       action="on_payment_success"
+      :seller_id="productStore.product.seller_id"
     />
 
     <PixelClient
@@ -434,7 +436,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -446,6 +448,7 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
       action="on_payment_paid"
+      :seller_id="productStore.product.seller_id"
     />
 
     <PixelClient
@@ -455,7 +458,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -467,6 +470,7 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
       action="on_payment_success"
+      :seller_id="productStore.product.seller_id"
     />
 
     <PixelClient
@@ -476,7 +480,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -488,6 +492,7 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
       action="on_payment_paid"
+      :seller_id="productStore.product.seller_id"
     />
 
     <PixelClient
@@ -497,7 +502,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -508,6 +513,7 @@ function openPix(id: number) {
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      :seller_id="productStore.product.seller_id"
     />
 
   </ClientOnly>

@@ -31,6 +31,7 @@ interface Props {
     country_code: string;
   };
   action?: string;
+  seller_id: string | number;
 }
 
 const pixelStore = usePixelStore();
@@ -47,6 +48,23 @@ onMounted(async () => {
   let original_amount = props.original_amount;
   let selectedOrderbumpId = null;
   let selectedOrderbump = null
+  let selectedOrderbumps = [];
+  let contents = [{
+      item_id: props.product_id,
+      price: product_amount,
+      item_category: 'product',
+      item_name: product_name,
+      quantity: 1
+    }];
+  
+  if(allSales && allSales.sales){
+    selectedOrderbumps = allSales.sales.filter((item: any) => item.product_id != props.product_id)
+    ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
+  }else if(props?.products?.length && ((props.event !== 'AddToCart' && props.action !== 'on_orderbump') || props.event === 'OrderBumpPurchase')){
+    selectedOrderbumps = checkoutStore.product_list
+    .filter((item: any) => item.id != productStore.product_id)
+    ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
+  }
 
   if(checkoutStore.product_list?.length > 1 && ((props.event === 'AddToCart' && props.action === 'on_orderbump') || props.event === 'OrderBumpPurchase')) {
     selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
@@ -54,16 +72,23 @@ onMounted(async () => {
     product_amount = selectedOrderbump.amount;
     original_amount = selectedOrderbump.amount;
     selectedOrderbumpId = selectedOrderbump.id
-  }
-  
-  if(allSales && allSales.sales){
-    ids = allSales.sales
-    .filter((item: any) => item.product_id != props.product_id)
-    .map((item: any) => item.product_id+'_'+item.amount);
-  }else if(props?.products?.length && ((props.event !== 'AddToCart' && props.action !== 'on_orderbump') || props.event === 'OrderBumpPurchase')){
-    ids = checkoutStore.product_list
-    .filter((item: any) => item.id != productStore.product_id)
-    .map((item: any) => item.product_id+'_'+item.amount);
+    contents = [{
+      item_id: selectedOrderbumpId,
+      price: product_amount,
+      item_category: 'product',
+      item_name: product_name,
+      quantity: 1
+    }];
+  } else if(selectedOrderbumps?.length > 1) {
+    selectedOrderbumps.forEach(ob => {
+      contents.push({
+        item_id: ob.id,
+        price: ob.amount,
+        item_category: 'product',
+        item_name: ob.offer_name,
+        quantity: 1
+      })
+    })
   }
 
   if (process.client) {
@@ -84,7 +109,7 @@ onMounted(async () => {
     const hashData = pixelStore.setHahsDataPixel
 
     await pixelStore.syncPixels(props.event, props.amount, selectedOrderbump);
-    await pixelStore.getPixels(props.event, props.action).then((response) => {
+    await pixelStore.getPixels(props.event, props.action, props.seller_id, JSON.stringify(contents)).then((response) => {
       const { event_id, pixels } = response;
 
       let eventId = event_id+'_'+props.event
@@ -124,7 +149,8 @@ onMounted(async () => {
             fbp,
             await hashData(props.name, {lestName:true}),
             await hashData(props.name, {firstName:true}),
-            document.referrer
+            document.referrer,
+            props.seller_id
           )
         });
       }
@@ -157,6 +183,7 @@ onMounted(async () => {
       lestName: string,
       firstName: string,
       referrerUrl: string | undefined,
+      seller_id: string | number
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -181,6 +208,7 @@ onMounted(async () => {
       if (!!productName)query.append("productName", productName.toString());
       if (!!productUrl)query.append("productUrl", productUrl.toString());
       if (!!referrerUrl)query.append("referrerUrl", referrerUrl.toString());
+      if (!!seller_id)query.append("seller_id", seller_id.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash

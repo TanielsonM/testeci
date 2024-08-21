@@ -267,15 +267,16 @@ export const usePixelStore = defineStore("Pixel", {
         this.state = leadsStore().address?.state
         this.city = leadsStore().address?.city
         this.country_code = leadsStore().address?.country_code
-        this.fbc = leadsStore().fbc,
-        this.fbp = leadsStore().fbp      
+        this.fbc = leadsStore().fbc
+        this.fbp = leadsStore().fbp
+        this.original_amount = orderbump ? orderbump.amount : productStore().product?.amount
         return 'ok'
       } catch (err) {
         console.error(err)
         return err
       }
     },
-    async getPixels(event: string, action: string | undefined): Promise<{ event_id: string; pixels: Pixel[] }> {
+    async getPixels(event: string, action: string | undefined, seller_id: string | number, contents: string): Promise<{ event_id: string; pixels: Pixel[] }> {
 
       const queryString = new URLSearchParams();
       queryString.append('product_id', this.product_id);
@@ -300,6 +301,9 @@ export const usePixelStore = defineStore("Pixel", {
       queryString.append('products_ids', this.products_ids);
       queryString.append('fbc', this.fbc);
       queryString.append('fbp', this.fbp);
+      queryString.append('seller_id', seller_id)
+      queryString.append('contents', contents)
+      queryString.append('original_amount', this.original_amount)
    
       switch (event) {
         case 'PageView':
