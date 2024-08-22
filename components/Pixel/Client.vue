@@ -2,6 +2,8 @@
 import { useLeadsStore } from "~/store/modules/leads";
 import type { Category } from "~/types";
 import { usePixelStore } from "~~/store/modules/pixel";
+import { useCheckoutStore } from "~~/store/checkout";
+import { useProductStore } from "~~/store/product";
 
 // Props interface
 interface Props {
@@ -29,23 +31,70 @@ interface Props {
     country_code: string;
   };
   action?: string;
+  seller_id: string | number;
 }
 
 const pixelStore = usePixelStore();
 const leadStore = useLeadsStore()
+const checkoutStore = useCheckoutStore();
+const productStore = useProductStore();
 const props = defineProps<Props>();
 
 onMounted(async () => {
   let allSales = props.products;
   let ids = [] as any;
+  let product_name = props.product_name;
+  let product_amount = props.amount;
+  let original_amount = props.original_amount;
+  let selectedOrderbumpId = null;
+  let selectedOrderbump = null
+  let selectedOrderbumps = [];
+  let currency = checkoutStore.checkoutPayment.base_currency;
+  let contents = [{
+      item_id: props.product_id,
+      price: product_amount,
+      item_category: 'product',
+      item_name: product_name,
+      quantity: 1
+    }];
   
   if(allSales && allSales.sales){
-    ids = allSales.sales
-    .filter((item: any) => item.product_id != props.product_id)
-    .map((item: any) => item.product_id);
-  }else if(props?.products?.length){
-    ids = props.products
+    selectedOrderbumps = allSales.sales.filter((item: any) => item.product_id != props.product_id)
+    ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
+  }else if(props?.products?.length && props.event !== 'AddToCart' && props.action !== 'on_orderbump'){
+    selectedOrderbumps = checkoutStore.product_list.filter((item: any) => item.id != productStore.product_id)
+    ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
   }
+
+  if(checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
+    selectedOrderbump = checkoutStore.product_list[checkoutStore.product_list.length - 1]
+    product_name = selectedOrderbump.offer_name;
+    product_amount = selectedOrderbump.amount;
+    original_amount = selectedOrderbump.amount;
+    selectedOrderbumpId = selectedOrderbump.id
+    contents = [{
+      item_id: selectedOrderbumpId,
+      price: product_amount,
+      item_category: 'product',
+      item_name: product_name,
+      quantity: 1
+    }];
+  } else if(selectedOrderbumps?.length) {
+    selectedOrderbumps.forEach(ob => {
+      if(props.event === 'Purchase') {
+        product_amount = product_amount + ob.amount
+        original_amount = original_amount + ob.amount
+      }
+      contents.push({
+        item_id: ob.id,
+        price: ob.amount,
+        item_category: 'product',
+        item_name: ob.offer_name,
+        quantity: 1
+      })
+    })
+  }
+
   if (process.client) {
     pixelStore.amount = props.amount;
     pixelStore.original_amount = props.original_amount;
@@ -63,34 +112,36 @@ onMounted(async () => {
 
     const hashData = pixelStore.setHahsDataPixel
 
-    await pixelStore.syncPixels(props.event, props.amount);
-    await pixelStore.getPixels(props.event, props.action).then((response) => {
+    await pixelStore.syncPixels(props.event, props.amount, selectedOrderbump);
+    await pixelStore.getPixels(props.event, props.action, props.seller_id, btoa(JSON.stringify(contents))).then((response) => {
       const { event_id, pixels } = response;
 
       let eventId = event_id+'_'+props.event
       if(props.event === 'AddPaymentInfo') {
         eventId = eventId+'_'+props.method
       }
-      if(ids) {
-        eventId = eventId+'_'+ids
+      if(selectedOrderbumpId && checkoutStore.product_list?.length > 1 && props.event === 'AddToCart' && props.action === 'on_orderbump') {
+        eventId = eventId+'_'+selectedOrderbumpId
+      } else if(productStore.product_id != props.product_id && props.event === 'OrderBumpPurchase') {
+        eventId = eventId+'_'+props.product_id
       }
 
       if (pixels && pixels.length) {
         pixels.forEach(async (pixel) => {     
           handleIframe(
             pixel.host,
-            pixel.product_id,
-            props.product_name,
+            props.event === 'OrderBumpPurchase' ? props.product_id : (selectedOrderbumpId ?? pixel.product_id),
+            product_name,
             categoryName,
             productUrl,
             props.event,
             eventId,
             pixel.pixel_id,
             props.method,
-            props.amount,
+            product_amount,
             props.affiliate_id,
             props.sale_id,
-            props.original_amount,
+            original_amount,
             await hashData(props.name),
             await hashData(props.email),
             await hashData(props.cellphone,{telefone: true}),
@@ -104,7 +155,15 @@ onMounted(async () => {
             fbp,
             await hashData(props.name, {lestName:true}),
             await hashData(props.name, {firstName:true}),
-            document.referrer
+            document.referrer,
+            props.seller_id,
+            btoa(JSON.stringify(contents)),
+            pixel.label,
+            pixel.pixel_id,
+            pixel.type,
+            pixel.amount,
+            currency,
+            pixel.view
           )
         });
       }
@@ -137,6 +196,14 @@ onMounted(async () => {
       lestName: string,
       firstName: string,
       referrerUrl: string | undefined,
+      seller_id: string | number,
+      contents: string,
+      pixel_label: string | null | undefined,
+      pixel_id_integration: string | null | undefined,
+      pixel_type: string | null | undefined,
+      use_original_amount: string | number | boolean | null | undefined,
+      currency: string | null | undefined,
+      pixel_view: string | number | boolean | null | undefined
     ) {
       const url = `https://${host}/${product_id}`;
       const query = new URLSearchParams();
@@ -161,6 +228,14 @@ onMounted(async () => {
       if (!!productName)query.append("productName", productName.toString());
       if (!!productUrl)query.append("productUrl", productUrl.toString());
       if (!!referrerUrl)query.append("referrerUrl", referrerUrl.toString());
+      if (!!seller_id)query.append("seller_id", seller_id.toString());
+      if (!!contents)query.append("contents", contents.toString());
+      if (!!pixel_label)query.append("pixel_label", pixel_label.toString());
+      if (!!pixel_id_integration)query.append("pixel_id_integration", pixel_id_integration.toString());
+      if (!!pixel_type)query.append("pixel_type", pixel_type.toString());
+      if (!!use_original_amount)query.append("use_original_amount", use_original_amount.toString());
+      if (!!currency)query.append("currency", currency.toString());
+      if (!!pixel_view)query.append("pixel_view", pixel_view.toString());
 
       if (!!name)query.append("name", name.toString()); // hash
       if (!!lestName)query.append("ln", lestName.toString()); // hash

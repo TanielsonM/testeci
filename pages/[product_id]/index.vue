@@ -507,10 +507,11 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId"
         :method="checkout.method"
         :amount="amountStore.getAmount"
-        :original_amount="amountStore.getOriginalAmount"
+        :original_amount="productStore.product.amount"
         :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -521,10 +522,11 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
         :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
+        :original_amount="productStore.product.amount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -535,10 +537,11 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
         :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
+        :original_amount="productStore.product.amount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -549,11 +552,12 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
         :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
+        :original_amount="productStore.product.amount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
         action="on_access"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -564,7 +568,7 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
         :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
+        :original_amount="productStore.product.amount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
         :name="personalStore.name"
@@ -573,6 +577,7 @@ const isCustomOne = computed(() => {
         :uuid="storeLead.uuid"
         :address="storeLead.address"
         action="on_filled_data"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -583,7 +588,7 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId" 
         :method="checkout.method" 
         :amount="amountStore.getAmount" 
-        :original_amount="amountStore.getOriginalAmount" 
+        :original_amount="productStore.product.amount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
         :name="personalStore.name"
@@ -591,6 +596,7 @@ const isCustomOne = computed(() => {
         :cellphone="personalStore.cellphone"
         :uuid="storeLead.uuid"
         :address="storeLead.address"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -601,10 +607,12 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId"
         :method="checkout.method"
         :amount="amountStore.getAmount"
-        :original_amount="amountStore.getOriginalAmount"
+        :original_amount="productStore.product.amount"
         :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
+        action="on_main_product"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -616,7 +624,7 @@ const isCustomOne = computed(() => {
         :method="checkout.method"
         :products="pixelProductIds"
         :amount="amountStore.getAmount"
-        :original_amount="amountStore.getOriginalAmount"
+        :original_amount="productStore.product.amount"
         :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :name="personalStore.name"
@@ -624,6 +632,8 @@ const isCustomOne = computed(() => {
         :cellphone="personalStore.cellphone"
         :uuid="storeLead.uuid"
         :address="storeLead.address"
+        action="on_orderbump"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -634,7 +644,7 @@ const isCustomOne = computed(() => {
         :affiliate_id="hasAffiliateId"
         :method="checkout.method"
         :amount="amountStore.getAmount"
-        :original_amount="amountStore.getOriginalAmount"
+        :original_amount="productStore.product.amount"
         :product_name="productStore.productName"
         :productCategory="productStore.productCategory"
         :name="personalStore.name"
@@ -643,6 +653,7 @@ const isCustomOne = computed(() => {
         :uuid="storeLead.uuid"
         :address="storeLead.address"
         action="on_payment_try"
+        :seller_id="productStore.product.seller_id"
       />
 
       <PixelClient 
@@ -654,7 +665,7 @@ const isCustomOne = computed(() => {
         :method="checkout.method"
         :products="pixelProductIds"
         :amount="amountStore.getAmount"
-        :original_amount="amountStore.getOriginalAmount" 
+        :original_amount="productStore.product.amount" 
         :product_name="productStore.productName" 
         :productCategory="productStore.productCategory"
         :name="personalStore.name"
@@ -663,6 +674,7 @@ const isCustomOne = computed(() => {
         :uuid="storeLead.uuid"
         :address="storeLead.address"
         action="on_payment_try"
+        :seller_id="productStore.product.seller_id"
       />
     </ClientOnly>
     <!-- End Client Only section -->

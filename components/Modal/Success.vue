@@ -398,7 +398,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -409,6 +409,7 @@ function openPix(id: number) {
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      :seller_id="productStore.product.seller_id"
     />
 
     <PixelClient
@@ -418,7 +419,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -430,6 +431,7 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
       action="on_payment_success"
+      :seller_id="productStore.product.seller_id"
     />
 
     <PixelClient
@@ -439,7 +441,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -451,49 +453,58 @@ function openPix(id: number) {
       :uuid="storeLead.uuid"
       :address="storeLead.address"
       action="on_payment_paid"
+      :seller_id="productStore.product.seller_id"
     />
 
-    <PixelClient
-      v-if="getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
-      :event="'OrderBumpPurchase'"
-      :product_id="productStore.product_id"
-      :affiliate_id="checkoutStore.hasAffiliateId"
-      :method="checkoutStore.method"
-      :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
-      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
-      :chc_id="parseInt(data.chc)"
-      :product_name="productStore.productName"
-      :productCategory="productStore.productCategory"
-      :name="personalStore.name"
-      :products="checkoutStore.sales"
-      :email="personalStore.email"
-      :cellphone="personalStore.cellphone"
-      :uuid="storeLead.uuid"
-      :address="storeLead.address"
-      action="on_payment_success"
-    />
+    <template v-for="(bumpSale, i) in checkoutStore?.sales?.sales">
+      <PixelClient
+        v-if="i > 0 && getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+        :key="bumpSale.product_id"
+        :event="'OrderBumpPurchase'"
+        :product_id="bumpSale.product_id"
+        :affiliate_id="checkoutStore.hasAffiliateId"
+        :method="checkoutStore.method"
+        :amount="bumpSale.amount"
+        :original_amount="bumpSale.original_amount"
+        :sale_id="bumpSale.id"
+        :chc_id="parseInt(data.chc)"
+        :product_name="bumpSale.offer.name"
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :products="checkoutStore.sales"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_payment_success"
+        :seller_id="productStore.product.seller_id"
+      />
+    </template>
 
-    <PixelClient
-      v-if="(getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
-      :event="'OrderBumpPurchase'"
-      :product_id="productStore.product_id"
-      :affiliate_id="checkoutStore.hasAffiliateId"
-      :method="checkoutStore.method"
-      :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
-      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
-      :chc_id="parseInt(data.chc)"
-      :product_name="productStore.productName"
-      :productCategory="productStore.productCategory"
-      :name="personalStore.name"
-      :products="checkoutStore.sales"
-      :email="personalStore.email"
-      :cellphone="personalStore.cellphone"
-      :uuid="storeLead.uuid"
-      :address="storeLead.address"
-      action="on_payment_paid"
-    />
+    <template v-for="(bumpSale, i) in checkoutStore?.sales?.sales">
+      <PixelClient
+        v-if="i > 0 && (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+        :key="bumpSale.product_id"
+        :event="'OrderBumpPurchase'"
+        :product_id="bumpSale.product_id"
+        :affiliate_id="checkoutStore.hasAffiliateId"
+        :method="checkoutStore.method"
+        :amount="bumpSale.amount"
+        :original_amount="bumpSale.original_amount"
+        :sale_id="bumpSale.id"
+        :chc_id="parseInt(data.chc)"
+        :product_name="bumpSale.offer.name"
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :products="checkoutStore.sales"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_payment_paid"
+        :seller_id="productStore.product.seller_id"
+      />
+    </template>
 
     <PixelClient
       v-if="getStartTrial && !data.sale?.sales?.length && !!data.productOffer?.data?.name"
@@ -502,7 +513,7 @@ function openPix(id: number) {
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
+      :original_amount="productStore.product.amount"
       :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
@@ -513,6 +524,7 @@ function openPix(id: number) {
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      :seller_id="productStore.product.seller_id"
     />
 
   </ClientOnly>
