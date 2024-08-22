@@ -240,40 +240,43 @@ export const usePixelStore = defineStore("Pixel", {
       if(allSales && allSales.sales){
         ids = allSales.sales
         .filter((item: any) => item.product_id != productStore().product_id)
-        .map((item: any) => item.product_id);
-      } 
+        .map((item: any) => item.product_id+'_'+item.amount);
+      } else if(checkoutStore().product_list?.length > 1) {
+        ids = checkoutStore().product_list
+        .filter((item: any) => item.id != productStore().product_id)
+        .map((item: any) => item.product_id+'_'+item.amount);
+      }
       return ids;
     },
-    async syncPixels(event: string, amount: any) {
+    async syncPixels(event: string, amount: any, orderbump = null) {
       try {
-        
-
         this.event = event;
-        this.product_id = productStore().product_id;
+        this.product_id = orderbump ? orderbump.id : productStore().product_id;
         this.productCategory = productStore().productCategory?.name
-        this.productName = productStore().productName
+        this.productName = orderbump ? orderbump.offer_name : productStore().productName
         this.productUrl =  window.location.href
         this.referrerUrl = document.referrer
         this.method = checkoutStore().method;
-        this.products_ids = this.getOrderBumps(checkoutStore().sales);
+        this.products_ids = orderbump ? null : this.getOrderBumps(checkoutStore().sales);
         this.affiliate_id = checkoutStore().hasAffiliateId;
         this.email = personalStore().email;
         this.cellphone = personalStore().cellphone;
-        this.amount = amount || amountStore().amount;
+        this.amount = orderbump ? orderbump.amount : (amount || amountStore().amount);
         this.name = personalStore().name;
         this.zip_code = leadsStore().address?.zip_code
         this.state = leadsStore().address?.state
         this.city = leadsStore().address?.city
         this.country_code = leadsStore().address?.country_code
-        this.fbc = leadsStore().fbc,
-        this.fbp = leadsStore().fbp      
+        this.fbc = leadsStore().fbc
+        this.fbp = leadsStore().fbp
+        this.original_amount = orderbump ? orderbump.amount : productStore().product?.amount
         return 'ok'
       } catch (err) {
         console.error(err)
         return err
       }
     },
-    async getPixels(event: string, action: string | undefined): Promise<{ event_id: string; pixels: Pixel[] }> {
+    async getPixels(event: string, action: string | undefined, seller_id: string | number, contents: string): Promise<{ event_id: string; pixels: Pixel[] }> {
 
       const queryString = new URLSearchParams();
       queryString.append('product_id', this.product_id);
@@ -298,6 +301,9 @@ export const usePixelStore = defineStore("Pixel", {
       queryString.append('products_ids', this.products_ids);
       queryString.append('fbc', this.fbc);
       queryString.append('fbp', this.fbp);
+      queryString.append('seller_id', seller_id)
+      queryString.append('contents', contents)
+      queryString.append('original_amount', this.original_amount)
    
       switch (event) {
         case 'PageView':
@@ -311,7 +317,6 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
         case 'InitiateCheckout':
-          console.log('InitiateCheckout')
           switch (action) {
             case 'on_access':
               this.getInitiateCheckoutAccessPixelIds.forEach(pixel_id => {
@@ -380,7 +385,7 @@ export const usePixelStore = defineStore("Pixel", {
           });
           break;
       }
-    
+
       return await useApi()
         .read("lexip/?"+queryString, )
         .then((response) => {
