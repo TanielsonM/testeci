@@ -97,8 +97,8 @@ onMounted(async () => {
   }
 
   if (process.client) {
-    pixelStore.amount = props.amount;
-    pixelStore.original_amount = props.original_amount;
+    pixelStore.amount = product_amount ?? props.amount;
+    pixelStore.original_amount = original_amount ?? props.original_amount;
     pixelStore.sale_id = props.sale_id;
     pixelStore.client_has_contract = props.chc_id;
 
