@@ -62,8 +62,7 @@ onMounted(async () => {
     selectedOrderbumps = allSales.sales.filter((item: any) => item.product_id != props.product_id)
     ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
   }else if(props?.products?.length && props.event !== 'AddToCart' && props.action !== 'on_orderbump'){
-    selectedOrderbumps = checkoutStore.product_list
-    .filter((item: any) => item.id != productStore.product_id)
+    selectedOrderbumps = checkoutStore.product_list.filter((item: any) => item.id != productStore.product_id)
     ids = selectedOrderbumps.map((item: any) => item.product_id+'_'+item.amount);
   }
 
@@ -80,7 +79,7 @@ onMounted(async () => {
       item_name: product_name,
       quantity: 1
     }];
-  } else if(selectedOrderbumps?.length > 1) {
+  } else if(selectedOrderbumps?.length) {
     selectedOrderbumps.forEach(ob => {
       if(props.event === 'Purchase') {
         product_amount = product_amount + ob.amount
