@@ -61,6 +61,11 @@ const props = defineProps({
     required: false,
     default: () => false,
   },
+  bumpInstallmentText: {
+    type: String,
+    required: false,
+    default: () => "",
+  },
 });
 const details = ref(false);
 
@@ -169,7 +174,7 @@ function getType(type = "") {
             <span
               v-if="!hasTrial && !hasCustomCharges"
               class="info-value custom-color"
-              >{{ `${formatMoney(amount)}` }}</span
+              >{{ bumpInstallmentText }}</span
             >
             <section class="charges" :opened="details" v-if="hasCustomCharges && !exceptionSellerId">
               <p
