@@ -299,6 +299,9 @@
         "cvv_cartao": "Fill in the CVV number on the card."
       }
     },
+    "checkbox": {
+      "info": "Assign this ticket to the same data used in the purchase"
+    },
     "footer": {
       "btn_compra": "Buy now",
       "btn_renovar_assinatura": "Renovar assinatura",

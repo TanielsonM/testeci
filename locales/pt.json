@@ -300,6 +300,9 @@
         "cvv_cartao": "Preencha corretamente o número CVV do cartão."
       }
     },
+    "checkbox": {
+      "info": "Atribuir este ingresso aos mesmos dados utilizados na compra"
+    },
     "footer": {
       "btn_compra": "Comprar agora",
       "btn_renovar_assinatura": "Renovar assinatura",

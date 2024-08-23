@@ -132,6 +132,7 @@ export type Payment = {
   
   // Button to save credit card data
   reuse_credit_card?: boolean;
+  assoc_ticket?: boolean;
 
    //whatsapp sale id 
    wpp_id?: string | null

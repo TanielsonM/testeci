@@ -36,7 +36,7 @@ const { t, locale } = useI18n();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { product_list } = storeToRefs(checkout);
+const { product_list, assoc_ticket } = storeToRefs(checkout);
 const { $moment } = useNuxtApp();
 const {
   getEventsDefault,
@@ -85,7 +85,6 @@ const pixelProductIds = computed(()=> {
     .filter((item) => item.product_id != productStore.product_id)
     .map((item) => item.product_id);
 })
-
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -148,6 +147,12 @@ onMounted(() => {
         const queryParams = new URLSearchParams(route.query).toString();
         navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
       }
+      if (sellerHasFeatureTickets.value && product_list.value.length == 1) {
+        checkout.setAssocTicket(true);
+      } else {
+        checkout.setAssocTicket(false);
+      }
+        
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -392,7 +397,14 @@ const isCustomOne = computed(() => {
               </p>
               <OrderBumps v-for="(bump, index) in checkout.getBumpList" :key="index" :bump="bump" :class="{ 'mb-5': checkout.getBumpList.length !== index + 1 }" />
             </template>
-
+            <!-- assoc ticket automation -->
+            <BaseCheckbox
+               v-if="sellerHasFeatureTickets && product_list.length == 1 "
+              :saveData="true"
+              v-model:checked="assoc_ticket"
+              :label="$t('checkout.checkbox.info')"
+              :id="'assocTicketCheckbox'"
+            />
             <!-- Payment button -->
             <section>
               <BaseButton @click="callPayment" v-if="method !== 'PAYPAL'" class="my-7" :loading="isPaymentLoading" :disabled="isPaymentLoading">
