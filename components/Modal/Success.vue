@@ -414,12 +414,20 @@ function openPix(id: number) {
       :product_id="productStore.product_id" 
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method" 
-      :amount="amountStore.getAmount" 
+      :amount="computedAmountPixel"
       :original_amount="productStore.product.amount" 
       :product_name="productStore.productName" 
       :productCategory="productStore.productCategory"
       :uuid="storeLead.uuid"
       :seller_id="productStore.product.seller_id"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :address="storeLead.address"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      action="on_thanks_page"
     />
 
     <PixelClient
