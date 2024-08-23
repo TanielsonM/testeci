@@ -18,6 +18,7 @@ export const useProductStore = defineStore("product", {
     product_id: (state) => state.product.id,
     product_global_settings: (state) => state.product.global_settings,
     recipientIsActivated: (state) => state.product.seller.recipientIsActivated,
+    baas_activited: (state) => state.product.seller.baas_activited,
     isSubscription: (state) => state.product.type === "SUBSCRIPTION",
     isValid(state) {
       return () => {
