@@ -124,6 +124,10 @@ onMounted(async () => {
         eventId = eventId+'_'+selectedOrderbumpId
       } else if(productStore.product_id != props.product_id && props.event === 'OrderBumpPurchase') {
         eventId = eventId+'_'+props.product_id
+      } else if(props.event === 'PageView' && props.action === 'on_checkout_page') {
+        eventId = eventId+'_checkout_page'
+      } else if(props.event === 'PageView' && props.action === 'on_thanks_page') {
+        eventId = eventId+'_thanks_page'
       }
 
       if (pixels && pixels.length) {
