@@ -610,6 +610,11 @@ export const useCheckoutStore = defineStore("checkout", {
       const store = useAmountStore();
       const prodStore = useProductStore();
       const purchaseStore = usePurchaseStore();
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets, ticketList } = storeToRefs(preCheckout);
+      if(sellerHasFeatureTickets.value && ticketList.value.length === 0){
+        return;
+      }
       if (remove) {
         store.setAmount(store.getOriginalAmount - store.getAmount);
         this.coupon = {
