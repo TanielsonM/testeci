@@ -432,11 +432,11 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     async getCoupon() {
       // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-      let offerBatche = "";
-
       const { batches } = usePreCheckoutStore();
-      if (this.product_list.length && batches.length) {
-        offerBatche = this.product_list[0].hash;
+      if(this.product_list.length && batches.length){
+        const toast = Toast.useToast();
+        toast.warning("Desculpe, o cupom não está disponível no momento para eventos.");
+        throw new Error; 
       }
 
       const product_id = this.url.params.product_id;
@@ -445,15 +445,12 @@ export const useCheckoutStore = defineStore("checkout", {
       let url = `/coupon/check/${this.coupon.name}/${product_id}`;
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
-      } else if (offerBatche) {
-        url = url + `/offer/${offerBatche}`;
       }
       const query = {
         country: this.selectedCountry,
       };
 
-      const useApiFast =
-        useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(product_id);
+      const useApiFast = useRuntimeConfig().public.PRODUCT_TO_API_FAST.includes(product_id);
 
       try {
         const res = await useApi().read(url, { query }, false, useApiFast);
@@ -610,11 +607,6 @@ export const useCheckoutStore = defineStore("checkout", {
       const store = useAmountStore();
       const prodStore = useProductStore();
       const purchaseStore = usePurchaseStore();
-      const preCheckout = usePreCheckoutStore();
-      const { sellerHasFeatureTickets, ticketList } = storeToRefs(preCheckout);
-      if(sellerHasFeatureTickets.value && ticketList.value.length === 0){
-        return;
-      }
       if (remove) {
         store.setAmount(store.getOriginalAmount - store.getAmount);
         this.coupon = {
