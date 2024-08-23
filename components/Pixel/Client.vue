@@ -142,7 +142,7 @@ onMounted(async () => {
               productUrl,
               props.event,
               eventId,
-              pixel.pixel_id,
+              pixel.id,
               props.method,
               product_amount,
               props.affiliate_id,
@@ -212,7 +212,7 @@ onMounted(async () => {
       currency: string | null | undefined,
       pixel_view: string | number | boolean | null | undefined
     ) {
-      const url = `https://${host}/${product_id}`;
+      const url = `http://${host}/${product_id}`;
       const query = new URLSearchParams();
 
       if (!!products_ids) query.append("products_ids", products_ids.toString());
