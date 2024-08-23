@@ -27,6 +27,7 @@ const pixelStore = usePixelStore();
 
 const {
   getEventsDefault,
+  getPageView,
   getPurchaseSuccess,
   getOrderBumpPurchaseSuccess,
   getStartTrial,
@@ -404,6 +405,20 @@ function openPix(id: number) {
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      :seller_id="productStore.product.seller_id"
+    />
+
+    <PixelClient 
+      v-if="getPageView"
+      :event="'PageView'" 
+      :product_id="productStore.product_id" 
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method" 
+      :amount="amountStore.getAmount" 
+      :original_amount="productStore.product.amount" 
+      :product_name="productStore.productName" 
+      :productCategory="productStore.productCategory"
+      :uuid="storeLead.uuid"
       :seller_id="productStore.product.seller_id"
     />
 
