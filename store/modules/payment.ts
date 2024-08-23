@@ -892,8 +892,7 @@ export const usePaymentStore = defineStore("Payment", {
           if (
             result == "PAGARME" &&
             !recipientIsActivated && 
-            !baas_activited &&
-            valuegatewayLowInstallment == "IUGU"
+            !baas_activited
           ) {
             result = "IUGU";
           }
