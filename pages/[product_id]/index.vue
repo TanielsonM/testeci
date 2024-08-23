@@ -18,6 +18,7 @@ const nuxtApp = useNuxtApp();
 
 
 // Stores
+const purchase = usePurchaseStore();
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
@@ -37,6 +38,7 @@ const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
+const { first, second } = storeToRefs(purchase);
 const {
   getEventsDefault,
   getPageView,
@@ -369,6 +371,15 @@ const isCustomOne = computed(() => {
                 </template>
               </template>
             </section>
+            <div v-if="method == 'TWO_CREDIT_CARDS'" class="information-cards">
+              <span class="information-cards-span"> 
+                {{$t('checkout.pagamento.metodos.dois_cartoes.cards_information.start')}}
+                {{`
+                  ${first.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle")} ${first.number.length == 19 ? first.number.slice(-4) : '****'}
+                  ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle_2")} ${second.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.end")} ${second.number.length == 19 ? second.number.slice(-4) : '****'} .
+                `}}
+              </span>
+            </div>
             <!-- Bumps -->
             <template v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE' && !checkout.hasFreeBump">
               <p class="my-5 w-full text-txt-color">
@@ -670,3 +681,18 @@ const isCustomOne = computed(() => {
     <!-- <NotificationsCustom title="oi" name="Gabriel Reis" /> -->
   </NuxtLayout>
 </template>
+<style lang="scss">
+  .information-cards{
+    width: 323.65px;
+    height: 54px;
+    padding: 0 0 70px 0;
+  }
+  .information-cards-span{
+  color: #333333;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: justify;
+  }
+</style>
