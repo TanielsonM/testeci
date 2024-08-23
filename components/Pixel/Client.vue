@@ -142,7 +142,7 @@ onMounted(async () => {
               productUrl,
               props.event,
               eventId,
-              pixel.pixel_id,
+              pixel.id,
               props.method,
               product_amount,
               props.affiliate_id,
