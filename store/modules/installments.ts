@@ -52,8 +52,9 @@ export const useInstallmentsStore = defineStore("installments", {
           }
           // Verifica se tem cupom
           if (
-            (item.id == parseInt(product_id.value) && coupon.value.applied) ||
-            (sellerHasFeatureTickets && coupon.value.applied)
+            item.id == parseInt(product_id.value) &&
+            coupon.value.applied &&
+            !sellerHasFeatureTickets
           ) {
             value -= coupon.value.amount;
           }
@@ -73,6 +74,9 @@ export const useInstallmentsStore = defineStore("installments", {
               ((Math.pow(i + 1, n) - 1) / (Math.pow(i + 1, n) * i));
           }
         });
+        if (sellerHasFeatureTickets && coupon.value.applied) {
+          total -= coupon.value.amount;
+        }
         total = Math.round(total * 100) / 100;
         return Number(Number((total + frete) / n));
       };
