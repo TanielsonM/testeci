@@ -109,7 +109,7 @@ const hasSubscriptionCoupon = computed(() => {
     </section>
     <!-- Abre e tem cupom aplicado e pode remover -->
     <section
-      v-if="isOpen && coupon.applied"
+      v-if="isOpen && coupon.applied || !isOpen && coupon.applied"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">

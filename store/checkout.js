@@ -611,8 +611,10 @@ export const useCheckoutStore = defineStore("checkout", {
       const prodStore = useProductStore();
       const purchaseStore = usePurchaseStore();
       const preCheckout = usePreCheckoutStore();
+      const checkoutStore = useCheckoutStore();
+      const { product_list } = storeToRefs(checkoutStore);
       const { sellerHasFeatureTickets, ticketList } = storeToRefs(preCheckout);
-      if(sellerHasFeatureTickets.value && ticketList.value.length === 0){
+      if (sellerHasFeatureTickets.value && ticketList.value.length === 0) {
         return;
       }
       if (remove) {
@@ -642,7 +644,11 @@ export const useCheckoutStore = defineStore("checkout", {
 
         await this.getCoupon()
           .then(({ amount, available, due_date }) => {
-            this.coupon.amount = Math.abs(prodStore.amount - amount);
+            const baseAmount =
+              sellerHasFeatureTickets.value && ticketList.value.length >= 1
+                ? product_list.value[0].amount
+                : prodStore.amount;
+            this.coupon.amount = Math.abs(baseAmount - amount);
             this.coupon.available = available;
             this.coupon.due_date = due_date;
             this.coupon.discount = amount;
