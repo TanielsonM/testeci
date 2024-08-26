@@ -16,8 +16,6 @@ export const useInstallmentsStore = defineStore("installments", {
     getInstallments(state: InstallmentsState) {
       const amountStore = useAmountStore();
       const checkout = useCheckoutStore();
-      const preCheckout = usePreCheckoutStore();
-      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
       const {
         monthly_interest,
         product_list,
@@ -51,11 +49,7 @@ export const useInstallmentsStore = defineStore("installments", {
                 : item.shipping?.amount || 0;
           }
           // Verifica se tem cupom
-          if (
-            item.id == parseInt(product_id.value) &&
-            coupon.value.applied &&
-            !sellerHasFeatureTickets
-          ) {
+          if (item.id == parseInt(product_id.value) && coupon.value.applied) {
             value -= coupon.value.amount;
           }
           // Se for atualizaçao de assinatura
@@ -74,9 +68,6 @@ export const useInstallmentsStore = defineStore("installments", {
               ((Math.pow(i + 1, n) - 1) / (Math.pow(i + 1, n) * i));
           }
         });
-        if (sellerHasFeatureTickets && coupon.value.applied) {
-          total -= coupon.value.amount;
-        }
         total = Math.round(total * 100) / 100;
         return Number(Number((total + frete) / n));
       };

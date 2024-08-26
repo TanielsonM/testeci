@@ -8,8 +8,6 @@ import { usePaymentStore } from "~~/store/modules/payment";
 const payment = usePaymentStore();
 const checkout = useCheckoutStore();
 const product = useProductStore();
-const preCheckout = usePreCheckoutStore();
-const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { coupon, hasCoupon, history_subscription } = storeToRefs(checkout);
 const { productName } = storeToRefs(product);
 
@@ -111,7 +109,7 @@ const hasSubscriptionCoupon = computed(() => {
     </section>
     <!-- Abre e tem cupom aplicado e pode remover -->
     <section
-      v-if="(isOpen && coupon.applied) || (!isOpen && coupon.applied && sellerHasFeatureTickets)"
+      v-if="isOpen && coupon.applied"
       class="flex w-full flex-col items-start justify-start gap-2"
     >
       <p class="text-xs text-txt-color">
