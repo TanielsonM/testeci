@@ -39,7 +39,7 @@ export const useInstallmentsStore = defineStore("installments", {
         else total = 0;
         let frete = 0;
 
-        product_list.value.map((item: Product) => {
+        product_list.value.map((item: Product, index) => {
           let value = !!item.custom_charges?.length
             ? item.custom_charges[0].amount
             : item.amount;
@@ -52,9 +52,10 @@ export const useInstallmentsStore = defineStore("installments", {
           }
           // Verifica se tem cupom
           if (
-            item.id == parseInt(product_id.value) &&
-            coupon.value.applied &&
-            !sellerHasFeatureTickets
+            (item.id == parseInt(product_id.value) &&
+              coupon.value.applied &&
+              index === 0) ||
+            (sellerHasFeatureTickets && coupon.value.applied && index === 0)
           ) {
             value -= coupon.value.amount;
           }
@@ -74,9 +75,6 @@ export const useInstallmentsStore = defineStore("installments", {
               ((Math.pow(i + 1, n) - 1) / (Math.pow(i + 1, n) * i));
           }
         });
-        if (sellerHasFeatureTickets && coupon.value.applied) {
-          total -= coupon.value.amount;
-        }
         total = Math.round(total * 100) / 100;
         return Number(Number((total + frete) / n));
       };
