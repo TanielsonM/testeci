@@ -11,6 +11,7 @@ import { useModalStore } from "~~/store/modal/success";
 import { useAmountStore } from "~~/store/modules/amount";
 import { resetReservations } from "@/utils/validateBatch";
 import { usePersonalStore } from "~/store/forms/personal";
+import { usePixelStore } from "~/store/modules/pixel";
 
 const productStore = useProductStore();
 const amountStore = useAmountStore();
@@ -22,6 +23,17 @@ const { product } = useProductStore();
 const { batches,  } = usePreCheckoutStore();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const personalStore = usePersonalStore();
+const pixelStore = usePixelStore();
+
+const {
+  getEventsDefault,
+  getPageView,
+  getPurchaseSuccess,
+  getOrderBumpPurchaseSuccess,
+  getStartTrial,
+  getPurchasePaid,
+  getOrderBumpPurchasePaid
+} = storeToRefs(pixelStore);
 
 const route: any = useRoute();
 const modal = useModalStore();
@@ -195,7 +207,7 @@ if(sellerHasFeatureTickets){
 }
 const computedAmountPixel = computed(() => {
   const sale: Sale = sales.value as Sale;
-  if(sale.sales[0].amount) {
+  if(sale?.sales?.length) {
     return sale.sales[0].amount
   }
   return amountStore.getAmount || amountStore.getOriginalAmount
@@ -376,22 +388,163 @@ function openPix(id: number) {
 
   <ClientOnly class="hidden">
     <PixelClient
+      v-if="getEventsDefault && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
       :event="'conversion'"
       :product_id="productStore.product_id"
       :affiliate_id="checkoutStore.hasAffiliateId"
       :method="checkoutStore.method"
       :amount="computedAmountPixel"
-      :original_amount="amountStore.getOriginalAmount"
-      :sale_id="parseInt(saleId!.toString())"
+      :original_amount="productStore.product.amount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
       :chc_id="parseInt(data.chc)"
       :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
       :name="personalStore.name"
       :products="checkoutStore.sales"
       :email="personalStore.email"
       :cellphone="personalStore.cellphone"
       :uuid="storeLead.uuid"
       :address="storeLead.address"
+      :seller_id="productStore.product.seller_id"
     />
+
+    <PixelClient 
+      v-if="getPageView"
+      :event="'PageView'" 
+      :product_id="productStore.product_id" 
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method" 
+      :amount="computedAmountPixel"
+      :original_amount="productStore.product.amount" 
+      :product_name="productStore.productName" 
+      :productCategory="productStore.productCategory"
+      :uuid="storeLead.uuid"
+      :seller_id="productStore.product.seller_id"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :address="storeLead.address"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      action="on_thanks_page"
+    />
+
+    <PixelClient
+      v-if="getPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
+      :event="'Purchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="productStore.product.amount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_success"
+      :seller_id="productStore.product.seller_id"
+    />
+
+    <PixelClient
+      v-if="(getPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name)"
+      :event="'Purchase'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="productStore.product.amount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      action="on_payment_paid"
+      :seller_id="productStore.product.seller_id"
+    />
+
+    <template v-for="(bumpSale, i) in checkoutStore?.sales?.sales">
+      <PixelClient
+        v-if="i > 0 && getOrderBumpPurchaseSuccess && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+        :key="bumpSale.product_id"
+        :event="'OrderBumpPurchase'"
+        :product_id="bumpSale.product_id"
+        :affiliate_id="checkoutStore.hasAffiliateId"
+        :method="checkoutStore.method"
+        :amount="bumpSale.amount"
+        :original_amount="bumpSale.original_amount"
+        :sale_id="bumpSale.id"
+        :chc_id="parseInt(data.chc)"
+        :product_name="bumpSale.offer.name"
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :products="checkoutStore.sales"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_payment_success"
+        :seller_id="productStore.product.seller_id"
+      />
+    </template>
+
+    <template v-for="(bumpSale, i) in checkoutStore?.sales?.sales">
+      <PixelClient
+        v-if="i > 0 && (getOrderBumpPurchasePaid && checkoutStore.method === 'CREDIT_CARD') && !(!data.sale?.sales?.length && !!data.productOffer?.data?.name) && checkoutStore?.sales?.sales?.length > 1"
+        :key="bumpSale.product_id"
+        :event="'OrderBumpPurchase'"
+        :product_id="bumpSale.product_id"
+        :affiliate_id="checkoutStore.hasAffiliateId"
+        :method="checkoutStore.method"
+        :amount="bumpSale.amount"
+        :original_amount="bumpSale.original_amount"
+        :sale_id="bumpSale.id"
+        :chc_id="parseInt(data.chc)"
+        :product_name="bumpSale.offer.name"
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :products="checkoutStore.sales"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_payment_paid"
+        :seller_id="productStore.product.seller_id"
+      />
+    </template>
+
+    <PixelClient
+      v-if="getStartTrial && !data.sale?.sales?.length && !!data.productOffer?.data?.name"
+      :event="'StartTrial'"
+      :product_id="productStore.product_id"
+      :affiliate_id="checkoutStore.hasAffiliateId"
+      :method="checkoutStore.method"
+      :amount="computedAmountPixel"
+      :original_amount="productStore.product.amount"
+      :sale_id="saleId ? parseInt(saleId!.toString()) : undefined"
+      :chc_id="parseInt(data.chc)"
+      :product_name="productStore.productName"
+      :productCategory="productStore.productCategory"
+      :name="personalStore.name"
+      :products="checkoutStore.sales"
+      :email="personalStore.email"
+      :cellphone="personalStore.cellphone"
+      :uuid="storeLead.uuid"
+      :address="storeLead.address"
+      :seller_id="productStore.product.seller_id"
+    />
+
   </ClientOnly>
 </template>
 
