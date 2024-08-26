@@ -375,8 +375,8 @@ const isCustomOne = computed(() => {
               <span class="information-cards-span"> 
                 {{$t('checkout.pagamento.metodos.dois_cartoes.cards_information.start')}}
                 {{`
-                  ${first.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle")} ${first.number.length == 19 ? first.number.slice(-4) : '****'}
-                  ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle_2")} ${second.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.end")} ${second.number.length == 19 ? second.number.slice(-4) : '****'} .
+                  ${first.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle")} ${first.number.length == 19 ? first.number.slice(-4) : '****'}${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle_2")}
+                  ${second.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.end")} ${second.number.length == 19 ? second.number.slice(-4) : '****'}.
                 `}}
               </span>
             </div>
@@ -684,16 +684,15 @@ const isCustomOne = computed(() => {
 </template>
 <style lang="scss">
   .information-cards{
-    width: 323.65px;
-    height: 54px;
-    padding: 0 0 70px 0;
+    width: 49.73%;
+    height: 4.07%;
+    text-align: justify;
   }
   .information-cards-span{
-  color: #333333;
-  font-family: Montserrat;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  text-align: justify;
+    color: #333333;
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
   }
 </style>
