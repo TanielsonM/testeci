@@ -684,15 +684,12 @@ const isCustomOne = computed(() => {
 </template>
 <style lang="scss">
   .information-cards{
-    width: 49.73%;
-    height: 4.07%;
+    width: 49%;
     text-align: justify;
   }
   .information-cards-span{
-    color: #333333;
-    font-family: Montserrat;
+    color: var(--txt-color);
     font-size: 12px;
     font-weight: 400;
-    line-height: 18px;
   }
 </style>
