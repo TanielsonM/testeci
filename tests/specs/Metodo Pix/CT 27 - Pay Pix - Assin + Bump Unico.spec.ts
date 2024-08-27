@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import percySnapshot from '@percy/playwright';
 import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue, clickDivInHeaderWithText, verifyThankYouPageBumpText } from '../../helpers/helpers';
 
-test('Pagamento Assinatura + Bump', async ({ page }) => {
+test('Pagamento Assinatura + Bump Unico', async ({ page }) => {
   const paymentId = '35012?b_id_1=46730';
   const headerText = 'Sim, eu quero!';
   const expectedValue = 'R$ 20,00';

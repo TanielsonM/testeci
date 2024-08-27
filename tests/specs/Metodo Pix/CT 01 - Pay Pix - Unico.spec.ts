@@ -1,4 +1,5 @@
 import { test } from '@playwright/test';
+import percySnapshot from '@percy/playwright';
 import { fillForm, navigateToPaymentPage, selectPaymentMethodPix, clickBuyNowButton, verifyThankYouPageValue } from '../../helpers/helpers';
 
 test('Pagamento Valor único', async ({ page }) => {
