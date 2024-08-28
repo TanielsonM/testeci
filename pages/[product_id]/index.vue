@@ -692,4 +692,9 @@ const isCustomOne = computed(() => {
     font-size: 12px;
     font-weight: 400;
   }
+  @media(max-width: 1024px) {
+    .information-cards{
+      width: 100%;
+    }
+  }
 </style>
