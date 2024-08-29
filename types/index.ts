@@ -175,12 +175,25 @@ export type Pixel = {
   label: any;
   amount: number;
   host: string;
+  pixel_configuration: PixelConfiguration[]
 };
 
+export type PixelConfiguration ={
+  id: number;
+  produc_has_pixel_id: number;
+  event: string;
+  action: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export type pixelState = {
+  eventsDefault: Boolean;
   event: String;
   product_id: number;
   event_id: String;
+  pixels?:  Pixel[],
   method: String;
   amount: Number;
   original_amount: Number;
@@ -190,6 +203,18 @@ export type pixelState = {
   email?: string;
   cellphone?: string;
   name?: string;
+  zip_code?: string;
+  state?: string;
+  city?: string;
+  products_ids?:any;
+  productName?: string,
+  productCategory?: string,
+  productUrl?: string ,
+  referrerUrl?: string,
+  country_code?: string;
+  fbc?: string;
+  fbp?: string;
+  switchProductList: boolean;
 };
 
 export type Product = {
@@ -538,6 +563,8 @@ export type InstallmentsState = {
 export type leadsState = {
   step: number;
   uuid: any;
+  fbc:string,
+  fbp: string,
   personal: {
     name: any;
     email: any;

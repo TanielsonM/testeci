@@ -19,6 +19,11 @@ variable "target_deployment_role" {
   type = string
 }
 
+variable "dd_key_secret" {
+  type = string
+}
+
+
 variable "application_host_header_values" {
   type = list(any)
 }

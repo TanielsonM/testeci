@@ -9,6 +9,10 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAmountStore } from "~~/store/modules/amount";
 import { showUnloadAlertCheckout, showBeforeBackNavigation } from "@/utils/validateBatch";
 import { storeToRefs } from "pinia";
+import { useLeadsStore } from "@/store/modules/leads";
+import { usePersonalStore } from "~/store/forms/personal";
+import { usePurchaseStore } from "~/store/forms/purchase";
+import { usePixelStore } from "~/store/modules/pixel";
 
 const nuxtApp = useNuxtApp();
 
@@ -22,14 +26,32 @@ const address = useAddressStore();
 const payment = usePaymentStore();
 const stepsStore = useStepStore();
 const amountStore = useAmountStore();
+const storeLead = useLeadsStore()
 const route = useRoute();
-
+const personalStore = usePersonalStore()
+const purchaseStore = usePurchaseStore()
+const pixelStore = usePixelStore()
 // Variables
 const { t, locale } = useI18n();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
+const {
+  getEventsDefault,
+  getPageView,
+  getViewContent,
+  getInitiateCheckoutOnAccess,
+  getInitiateCheckoutOnFilledData,
+  getAddPaymentInfo,
+  getAddToCartOnMainProduct,
+  getAddToCartOnOrderBump,
+  getPurchaseTry,
+  getOrderBumpPurchaseTry,
+  getSwitchProductList,
+} = storeToRefs(pixelStore);
+const { isFormValidWithoutDocument } = storeToRefs(personalStore)
+const { isPurchaseFormValid } = storeToRefs(purchaseStore)
 
 const {
   method,
@@ -38,7 +60,8 @@ const {
   hasAffiliateId,
   product_id,
   selectedCountry,
-  hasCustomCheckout
+  hasCustomCheckout,
+  getMethodChange
 } = storeToRefs(checkout);
 
 const { currentStep, getCountSteps, isMobile } = storeToRefs(stepsStore);
@@ -52,9 +75,17 @@ const {
 // Refs
 const pixelComponentKey = 1;
 const alert_modal = ref(false);
+const hasClickPayment = ref(false);
 
 
 // Computeds
+const pixelProductIds = computed(()=> {
+  return product_list.value
+    .filter((item) => item.product_id != productStore.product_id)
+    .map((item) => item.product_id);
+})
+
+
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
     switch (item) {
@@ -175,8 +206,10 @@ function closeModal() {
 const timeStemp = ref(null);
 
 async function callPayment() {
-  const newDateTimeStemp = new Date();
+  hasClickPayment.value = true
 
+  const newDateTimeStemp = new Date();
+  
   if(timeStemp.value && (newDateTimeStemp.getTime() - timeStemp.value) < 1000) return
   timeStemp.value = newDateTimeStemp.getTime();
   if(!isPaymentFetching.value) {
@@ -451,8 +484,187 @@ const isCustomOne = computed(() => {
     <ClientOnly class="hidden">
       <ModalCloseUp />
       <LeadsClient />
-      <PixelClient :key="pixelComponentKey" :event="'view'" :product_id="productStore.product_id" :affiliate_id="hasAffiliateId" :method="checkout.method" :amount="amountStore.getAmount" :original_amount="amountStore.getOriginalAmount" :product_name="productStore.productName" />
+      
       <Captcha />
+
+      <PixelClient 
+        v-if="getEventsDefault"
+        :key="pixelComponentKey"
+        :event="'view'"
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :amount="amountStore.getAmount"
+        :original_amount="productStore.product.amount"
+        :product_name="productStore.productName"
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getPageView"
+        :key="pixelComponentKey" 
+        :event="'PageView'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="productStore.product.amount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+        :seller_id="productStore.product.seller_id"
+        action="on_checkout_page"
+      />
+
+      <PixelClient 
+        v-if="getViewContent"
+        :key="pixelComponentKey" 
+        :event="'ViewContent'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="productStore.product.amount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getInitiateCheckoutOnAccess"
+        :key="pixelComponentKey" 
+        :event="'InitiateCheckout'" 
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="productStore.product.amount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+        action="on_access"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getInitiateCheckoutOnFilledData && isFormValidWithoutDocument"
+        :key="pixelComponentKey" 
+        :event="'InitiateCheckout'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="productStore.product.amount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_filled_data"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getAddPaymentInfo && ((checkout.method === 'CREDIT_CARD' && isPurchaseFormValid) || checkout.method != 'CREDIT_CARD') && getMethodChange"
+        :key="pixelComponentKey" 
+        :event="'AddPaymentInfo'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method" 
+        :amount="amountStore.getAmount" 
+        :original_amount="productStore.product.amount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getAddToCartOnMainProduct"
+        :key="pixelComponentKey"
+        :event="'AddToCart'"
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :amount="amountStore.getAmount"
+        :original_amount="productStore.product.amount"
+        :product_name="productStore.productName"
+        :productCategory="productStore.productCategory"
+        :uuid="storeLead.uuid"
+        action="on_main_product"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getAddToCartOnOrderBump && (getSwitchProductList && product_list.length > 1)"
+        :key="pixelComponentKey"
+        :event="'AddToCart'"
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :products="pixelProductIds"
+        :amount="amountStore.getAmount"
+        :original_amount="productStore.product.amount"
+        :product_name="productStore.productName"
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_orderbump"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getPurchaseTry && hasClickPayment"
+        :key="pixelComponentKey" 
+        :event="'Purchase'"
+        :product_id="productStore.product_id"
+        :affiliate_id="hasAffiliateId"
+        :method="checkout.method"
+        :amount="amountStore.getAmount"
+        :original_amount="productStore.product.amount"
+        :product_name="productStore.productName"
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_payment_try"
+        :seller_id="productStore.product.seller_id"
+      />
+
+      <PixelClient 
+        v-if="getOrderBumpPurchaseTry && hasClickPayment && product_list.length > 1"
+        :key="pixelComponentKey" 
+        :event="'OrderBumpPurchase'"
+        :product_id="productStore.product_id" 
+        :affiliate_id="hasAffiliateId" 
+        :method="checkout.method"
+        :products="pixelProductIds"
+        :amount="amountStore.getAmount"
+        :original_amount="productStore.product.amount" 
+        :product_name="productStore.productName" 
+        :productCategory="productStore.productCategory"
+        :name="personalStore.name"
+        :email="personalStore.email"
+        :cellphone="personalStore.cellphone"
+        :uuid="storeLead.uuid"
+        :address="storeLead.address"
+        action="on_payment_try"
+        :seller_id="productStore.product.seller_id"
+      />
     </ClientOnly>
     <!-- End Client Only section -->
     <LeadsServer />
