@@ -12,44 +12,91 @@ jobs:
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      REPOSITORY_URI: ${{ secrets.REPOSITORY_URI }}
+      AWS_ACCOUNT_ID_STG: ${{ secrets.AWS_ACCOUNT_ID_STG }}
+      AWS_DEFAULT_REGION_STG: ${{ secrets.AWS_DEFAULT_REGION_STG }}
+      REPOSITORY_URI_STG: ${{ secrets.REPOSITORY_URI_STG }}
+      TARGET_DEPLOYMENT_ROLE: ${{ secrets.TARGET_DEPLOYMENT_ROLE_STG }}
+      CODE_SRC_DIR: "."
+      TF_VERSION: "1.8.5"
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TERRAFORM_PATH: infrastructure/stg/new-checkout
 
     steps:
+      - run: printenv
+      
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Log in to DockerHub
-        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
 
       - name: Log in to Amazon ECR
         run: |
           echo Logging in to Amazon ECR...
-          aws ecr get-login-password --region ${{ secrets.AWS_DEFAULT_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
-
+          aws ecr get-login-password --region $AWS_DEFAULT_REGION_STG | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID_STG.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION_STG }}.amazonaws.com
       - name: Set up environment variables
         run: |
           COMMIT_HASH=$(echo $GITHUB_SHA | cut -c 1-7)
-          IMAGE_TAG=${COMMIT_HASH:=latest}
+          if [ -z "$COMMIT_HASH" ]; then
+            IMAGE_TAG="latest"
+          else
+            IMAGE_TAG="$COMMIT_HASH"
+          fi
           echo Substituindo as secrets e criando arquivo de env.
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
           envsubst < .env.template > .env
         env:
           GITHUB_SHA: ${{ github.sha }}
+
 
       - name: Build Docker images
         run: |
           echo Build started on $(date)
           echo Building the Docker image...
-          docker build -t ${{ secrets.REPOSITORY_URI }}:node -f "Dockerfile" .
-          docker build -t ${{ secrets.REPOSITORY_URI }}:nginx -f "nginx.Dockerfile" .
-          docker tag ${{ secrets.REPOSITORY_URI }}:node ${{ secrets.REPOSITORY_URI }}:node-$IMAGE_TAG
-          docker tag ${{ secrets.REPOSITORY_URI }}:nginx ${{ secrets.REPOSITORY_URI }}:nginx-$IMAGE_TAG
+          docker build -t $REPOSITORY_URI_STG:node -f "Dockerfile" .
+          docker build -t $REPOSITORY_URI_STG:nginx -f "nginx.Dockerfile" .
+          docker tag $REPOSITORY_URI_STG:node $REPOSITORY_URI_STG:node-$IMAGE_TAG
+          docker tag $REPOSITORY_URI_STG:nginx $REPOSITORY_URI_STG:nginx-$IMAGE_TAG
           echo Build completed on $(date)
-
       - name: Push Docker images
         run: |
           echo Pushing the Docker image...
-          docker push ${{ secrets.REPOSITORY_URI }}:node-$IMAGE_TAG
-          docker push ${{ secrets.REPOSITORY_URI }}:nginx-$IMAGE_TAG
-          printf 'export NGINX_IMAGE=%s\nexport PHP_IMAGE=%s' ${{ secrets.REPOSITORY_URI }}:nginx-$IMAGE_TAG ${{ secrets.REPOSITORY_URI }}:node-$IMAGE_TAG > imageDetail.sh
+          docker push $REPOSITORY_URI_STG:node-$IMAGE_TAG
+          docker push $REPOSITORY_URI_STG:nginx-$IMAGE_TAG
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Python version
+        run: |
+          python3 --version
+      - name: Install Terraform
+        run: |
+          ls
+          rm -fr terraform
+          curl -s -qL -o terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+          unzip -o terraform.zip
+          sudo mv terraform /usr/local/bin/
+          rm terraform.zip
+          # . ./imageDetail.sh
+      - name: Terraform Init and Apply
+        run: |
+          cd $TERRAFORM_PATH
+          echo "## Debug: NGINX_IMAGE=$NGINX_IMAGE, PHP_IMAGE=$PHP_IMAGE IMAGE_TAG=$IMAGE_TAG"
+          echo "## TERRAFORM APPLY : Starting with the Terraform Apply"
+          export NGINX_IMAGE="${{ secrets.REPOSITORY_URI_STG }}:nginx-$IMAGE_TAG"
+          export PHP_IMAGE="${{ secrets.REPOSITORY_URI_STG }}:node-$IMAGE_TAG"
+          export TARGET_DEPLOYMENT_ROLE="${{ secrets.TARGET_DEPLOYMENT_ROLE_STG }}"
+          envsubst < .stg-template > stg.tfvars
+          terraform init
+          terraform validate
+          terraform plan -var-file stg.tfvars
+          terraform apply -var-file=stg.tfvars -auto-approve
+          echo "## TERRAFORM APPLY : Completed"
+      - name: Clear Cloudflare Cache
+        run: |
+          echo "## Cleanning CloudFlare cache"
+          # cd ../../scripts
+          # . ./clear_cache.sh $CLOUDFLARE_API_TOKEN_STG
+          echo "## CloudFlare cache cleared"
