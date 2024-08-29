@@ -16,6 +16,8 @@ export const useInstallmentsStore = defineStore("installments", {
     getInstallments(state: InstallmentsState) {
       const amountStore = useAmountStore();
       const checkout = useCheckoutStore();
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
       const {
         monthly_interest,
         product_list,
@@ -37,7 +39,7 @@ export const useInstallmentsStore = defineStore("installments", {
         else total = 0;
         let frete = 0;
 
-        product_list.value.map((item: Product) => {
+        product_list.value.map((item: Product, index) => {
           let value = !!item.custom_charges?.length
             ? item.custom_charges[0].amount
             : item.amount;
@@ -49,7 +51,12 @@ export const useInstallmentsStore = defineStore("installments", {
                 : item.shipping?.amount || 0;
           }
           // Verifica se tem cupom
-          if (item.id == parseInt(product_id.value) && coupon.value.applied) {
+          if (
+            (item.id == parseInt(product_id.value) &&
+              coupon.value.applied &&
+              index === 0) ||
+            (sellerHasFeatureTickets && coupon.value.applied && index === 0)
+          ) {
             value -= coupon.value.amount;
           }
           // Se for atualizaçao de assinatura
@@ -71,6 +78,14 @@ export const useInstallmentsStore = defineStore("installments", {
         total = Math.round(total * 100) / 100;
         return Number(Number((total + frete) / n));
       };
+    },
+    getInstallmentsWithAmount: (state) => (bump: Product, numberOfInstallments: number) => {
+      const checkout = useCheckoutStore();
+      const { monthly_interest} = storeToRefs(checkout);
+      const i = parseFloat(monthly_interest.value) / 100; 
+      
+      let installmentAmount = (bump.amount * i) / (1 - Math.pow(1 + i, -numberOfInstallments));
+      return Math.round(installmentAmount * 100) / 100;
     },
     getTotal(state: InstallmentsState) {
       const amountStore = useAmountStore();

@@ -527,6 +527,7 @@ const isCustomOne = computed(() => {
         :productCategory="productStore.productCategory"
         :uuid="storeLead.uuid"
         :seller_id="productStore.product.seller_id"
+        action="on_checkout_page"
       />
 
       <PixelClient 
