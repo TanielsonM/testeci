@@ -4,13 +4,18 @@ import { useCheckoutStore } from "~~/store/checkout";
 import { usePreCheckoutStore } from "~~/store/preCheckout";
 import { useExpiredSessionStore } from "~~/store/modal/expiredSession";
 import { showUnloadAlertCheckout } from "@/utils/validateBatch";
+const nuxtApp = useNuxtApp();
 
 const checkout = useCheckoutStore();
 const preCheckout = usePreCheckoutStore();
 const expiredSession = useExpiredSessionStore();
 const checkoutStore = useCheckoutStore();
 
+const productStore = useProductStore();
+const { product } = storeToRefs(productStore);
+
 const route = useRoute();
+const { $moment } = useNuxtApp();
 
 const hasReservations = preCheckout.$state
 const { product_list } = storeToRefs(checkoutStore);
@@ -77,6 +82,53 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', showUnloadAlertCheckout);
 });
+
+const dateEvent = computed(() => {
+  return formatEventStartDate(product.value?.start_date);
+});
+
+function formatEventStartDate(Date) {
+    const startDate = $moment(Date); 
+    const dayOfWeek = startDate.format('ddd'); 
+    const dateFormatted = startDate.format('D MMM, YYYY'); 
+    const startDateConcat = `${dayOfWeek}, ${dateFormatted}`; 
+    return startDateConcat;
+}
+
+await checkout.init().then(() => {
+  let ogTitle = "Greenn Tickets";
+  if (product?.value?.name) {
+    ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
+  }
+
+  let ogDescription = "A plataforma de pagamento simples";
+  if (product?.value?.description) {
+    ogDescription = product.value.description;
+  }
+
+  let currentUrlOg = ""
+  if (!process.client) {
+    currentUrlOg = `https://payfast.greenn.com.br/${route.fullPath}`
+  } else {
+    currentUrlOg = window.location.href;
+  }
+  let urlForOG = new URL(currentUrlOg);
+  urlForOG.searchParams.forEach((value, key) => urlForOG.searchParams.delete(key));
+
+  nuxtApp.runWithContext(() =>
+    useSeoMeta({
+      ogTitle: ogTitle,
+      ogDescription: ogDescription,
+      ogType: "website",
+      ogUrl: urlForOG.href,
+      ogImage: product?.value?.images[0]?.path || "https://paystatic.greenn.com.br/og-image_greenn.png",
+      ogImageHeight: "500",
+      ogImageWidth: "500",
+      ogSiteName: "Greenn - A plataforma de pagamentos simples",
+    })
+  );
+});
+
 </script>
 
 <template>

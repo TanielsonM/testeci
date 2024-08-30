@@ -166,8 +166,8 @@ onMounted(async () => {
         <div class="ml-5">
           <p class="text-[18px] font-bold text-input-color mb-2">{{ batch?.name }}</p>
           <p class="text-[16px] font-[400] text-txt-color">
-            {{ $t("pre_checkout.from") }}
-            {{ formatMoney(getSmallerAmount(batch.tickets)) }}
+            {{ formatMoney(getSmallerAmount(batch.tickets)) == "R$ 0,00" ? "" : $t("pre_checkout.from")}}
+            {{ formatMoney(getSmallerAmount(batch.tickets)) == "R$ 0,00" ? $t("pre_checkout.free") : formatMoney(getSmallerAmount(batch.tickets)) }}
           </p>
           <p class="text-[14px] font-[400] text-main-color max-w-[330px]">
             <template v-if="dependsOnAnotherBatch(batch)">

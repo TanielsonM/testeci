@@ -37,6 +37,7 @@ const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
 const { product_list } = storeToRefs(checkout);
+const { $moment } = useNuxtApp();
 const {
   getEventsDefault,
   getPageView,
@@ -252,13 +253,26 @@ if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
   }
 }
 
+const dateEvent = computed(() => {
+  return formatEventStartDate(product.value?.start_date);
+});
+
+function formatEventStartDate(Date) {
+    const startDate = $moment(Date); 
+    const dayOfWeek = startDate.format('ddd'); 
+    const dateFormatted = startDate.format('D MMM, YYYY'); 
+    const startDateConcat = `${dayOfWeek}, ${dateFormatted}`; 
+    return startDateConcat;
+}
+
 await checkout.init().then(() => {
+  let ogTitle = product?.value?.format == "EVENT" ? "Greenn Tickets" : "Greenn";
 
-  let ogTitle = "Greenn";
-  if (product?.value?.name) {
-    ogTitle = `${product.value.name} | Greenn`;
+  if (product?.value?.name && product?.value?.format == "EVENT") {
+    ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
+  }else{
+    ogTitle = `${product?.value?.name} | Greenn`;
   }
-
   let ogDescription = "A plataforma de pagamento simples";
   if (product?.value?.description) {
     ogDescription = product.value.description;

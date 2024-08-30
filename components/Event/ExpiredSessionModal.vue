@@ -15,9 +15,13 @@ function closeModal() {
 
 <template>
   <BaseModal :title="product.name.length > 10
-    ? product.name.substring(0, 25) + '...' + ' | ' + moment(product.start_date).format('DD') + ' de ' + moment(product.start_date).format('MMM').toUpperCase().charAt(0) + moment(product.start_date).format('MMM').slice(1)
-    : product.name + ' | ' + moment(product.start_date).format('DD') + ' de ' + moment(product.start_date).format('MMM').toUpperCase().charAt(0) + moment(product.start_date).format('MMM').slice(1)" :is-open="expiredSession.getHaveFinished" @close="closeModal" :closeButton="false" class="w-1/2">
-    <section class="flex w-full max-w-[400px] flex-col gap-5 p-6">
+    ? '🔥 ' + product.name.substring(0, 25) + '...' 
+    : '🔥 ' + product.name" 
+    :is-open="expiredSession.getHaveFinished" 
+    @close="closeModal" 
+    :closeButton="false" 
+    class="w-1/2">
+    <section class="flex w-full max-w-[500px] flex-col gap-5 p-10">
       <p class="flex justify-center items-center my-4">
         <img src="@/assets/icons/warning.svg" alt="warning" />
       </p>
