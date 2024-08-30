@@ -431,7 +431,6 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     async getCoupon() {
-      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
       let offerBatche = "";
 
       const { batches } = usePreCheckoutStore();
@@ -441,7 +440,6 @@ export const useCheckoutStore = defineStore("checkout", {
 
       const product_id = this.url.params.product_id;
 
-      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
       let url = `/coupon/check/${this.coupon.name}/${product_id}`;
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
