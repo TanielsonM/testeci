@@ -21,11 +21,19 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TERRAFORM_PATH: infrastructure/stg/new-checkout
 
+      
+
     steps:
       - run: printenv
       
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Get Secrets from AWS Secrets Manager
+        run: |
+          ls
+          cd infrastructure/scripts
+          . ./get_secrets_from_secrets_manager.sh
 
       - name: Log in to DockerHub
         run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
@@ -34,6 +42,7 @@ jobs:
         run: |
           echo Logging in to Amazon ECR...
           aws ecr get-login-password --region $AWS_DEFAULT_REGION_STG | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID_STG.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION_STG }}.amazonaws.com
+
       - name: Set up environment variables
         run: |
           COMMIT_HASH=$(echo $GITHUB_SHA | cut -c 1-7)
@@ -58,11 +67,13 @@ jobs:
           docker tag $REPOSITORY_URI_STG:node $REPOSITORY_URI_STG:node-$IMAGE_TAG
           docker tag $REPOSITORY_URI_STG:nginx $REPOSITORY_URI_STG:nginx-$IMAGE_TAG
           echo Build completed on $(date)
+
       - name: Push Docker images
         run: |
           echo Pushing the Docker image...
           docker push $REPOSITORY_URI_STG:node-$IMAGE_TAG
           docker push $REPOSITORY_URI_STG:nginx-$IMAGE_TAG
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -71,6 +82,7 @@ jobs:
       - name: Python version
         run: |
           python3 --version
+
       - name: Install Terraform
         run: |
           ls
@@ -80,6 +92,7 @@ jobs:
           sudo mv terraform /usr/local/bin/
           rm terraform.zip
           # . ./imageDetail.sh
+
       - name: Terraform Init and Apply
         run: |
           cd $TERRAFORM_PATH
@@ -94,6 +107,7 @@ jobs:
           terraform plan -var-file stg.tfvars
           terraform apply -var-file=stg.tfvars -auto-approve
           echo "## TERRAFORM APPLY : Completed"
+
       - name: Clear Cloudflare Cache
         run: |
           echo "## Cleanning CloudFlare cache"
