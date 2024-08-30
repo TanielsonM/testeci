@@ -305,85 +305,87 @@ export const usePixelStore = defineStore("Pixel", {
       queryString.append('contents', contents)
       queryString.append('original_amount', this.original_amount)
    
-      switch (event) {
-        case 'PageView':
-          this.getPageViewPixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
-          break;
-        case 'ViewContent':
-          this.getViewContentPixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
-          break;
-        case 'InitiateCheckout':
-          switch (action) {
-            case 'on_access':
-              this.getInitiateCheckoutAccessPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-          
-            case 'on_filled_data':
-              this.getInitiateCheckoutFilledDataPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-          }
-          break;
-        case 'AddPaymentInfo':
-          this.getAddPaymentInfoPixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
-          break;
-        case 'AddToCart':
-          this.getAddToCartPixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
-          break;
-        case 'Purchase':
-          switch (action) {
-            case 'on_payment_try':
-              this.getPurchaseTryPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-            case 'on_payment_success':
-              this.getPurchaseSuccessPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-            case 'on_payment_paid':
-              this.getPurchasePaidPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-          }
-          break;
-        case 'OrderBumpPurchase':
-          switch (action) {
-            case 'on_payment_try':
-              this.getOrderBumpPurchaseTryPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-            case 'on_payment_success':
-              this.getOrderBumpPurchaseSuccessPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-            case 'on_payment_paid':
-              this.getOrderBumpPurchasePaidPixelIds.forEach(pixel_id => {
-                queryString.append('pixel_ids[]', pixel_id);
-              });
-              break;
-          }
-          break;
-        case 'StartTrial':
-          this.getStartTrialPixelIds.forEach(pixel_id => {
-            queryString.append('pixel_ids[]', pixel_id);
-          });
-          break;
+      if(event != 'view' && event != 'conversion') {
+        switch (event) {
+          case 'PageView':
+            this.getPageViewPixelIds.forEach(pixel_id => {
+              queryString.append('pixel_ids[]', pixel_id);
+            });
+            break;
+          case 'ViewContent':
+            this.getViewContentPixelIds.forEach(pixel_id => {
+              queryString.append('pixel_ids[]', pixel_id);
+            });
+            break;
+          case 'InitiateCheckout':
+            switch (action) {
+              case 'on_access':
+                this.getInitiateCheckoutAccessPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+            
+              case 'on_filled_data':
+                this.getInitiateCheckoutFilledDataPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+            }
+            break;
+          case 'AddPaymentInfo':
+            this.getAddPaymentInfoPixelIds.forEach(pixel_id => {
+              queryString.append('pixel_ids[]', pixel_id);
+            });
+            break;
+          case 'AddToCart':
+            this.getAddToCartPixelIds.forEach(pixel_id => {
+              queryString.append('pixel_ids[]', pixel_id);
+            });
+            break;
+          case 'Purchase':
+            switch (action) {
+              case 'on_payment_try':
+                this.getPurchaseTryPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+              case 'on_payment_success':
+                this.getPurchaseSuccessPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+              case 'on_payment_paid':
+                this.getPurchasePaidPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+            }
+            break;
+          case 'OrderBumpPurchase':
+            switch (action) {
+              case 'on_payment_try':
+                this.getOrderBumpPurchaseTryPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+              case 'on_payment_success':
+                this.getOrderBumpPurchaseSuccessPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+              case 'on_payment_paid':
+                this.getOrderBumpPurchasePaidPixelIds.forEach(pixel_id => {
+                  queryString.append('pixel_ids[]', pixel_id);
+                });
+                break;
+            }
+            break;
+          case 'StartTrial':
+            this.getStartTrialPixelIds.forEach(pixel_id => {
+              queryString.append('pixel_ids[]', pixel_id);
+            });
+            break;
+        }
       }
 
       return await useApi()

@@ -124,47 +124,54 @@ onMounted(async () => {
         eventId = eventId+'_'+selectedOrderbumpId
       } else if(productStore.product_id != props.product_id && props.event === 'OrderBumpPurchase') {
         eventId = eventId+'_'+props.product_id
+      } else if(props.event === 'PageView' && props.action === 'on_checkout_page') {
+        eventId = eventId+'_checkout_page'
+      } else if(props.event === 'PageView' && props.action === 'on_thanks_page') {
+        eventId = eventId+'_thanks_page'
       }
 
       if (pixels && pixels.length) {
-        pixels.forEach(async (pixel) => {     
-          handleIframe(
-            pixel.host,
-            props.event === 'OrderBumpPurchase' ? props.product_id : (selectedOrderbumpId ?? pixel.product_id),
-            product_name,
-            categoryName,
-            productUrl,
-            props.event,
-            eventId,
-            pixel.pixel_id,
-            props.method,
-            product_amount,
-            props.affiliate_id,
-            props.sale_id,
-            original_amount,
-            await hashData(props.name),
-            await hashData(props.email),
-            await hashData(props.cellphone,{telefone: true}),
-            ids,
-            props.uuid,
-            await hashData(props.address?.city),
-            await hashData(props.address?.country_code),
-            await hashData(props.address?.state),
-            await hashData(props.address?.zip_code,{zipCode:true}),
-            fbc,
-            fbp,
-            await hashData(props.name, {lestName:true}),
-            await hashData(props.name, {firstName:true}),
-            document.referrer,
-            props.seller_id,
-            btoa(JSON.stringify(contents)),
-            pixel.label,
-            pixel.pixel_id,
-            pixel.type,
-            pixel.amount,
-            currency,
-            pixel.view
-          )
+        pixels.forEach(async (pixel) => {
+          const newFacebookEvents = ['PageView', 'ViewContent', 'InitiateCheckout', 'AddPaymentInfo', 'AddToCart', 'Purchase', 'OrderBumpPurchase', 'StartTrial', 'Subscribe'];
+          if((pixel.type === 'FACEBOOK' && newFacebookEvents.some(x => x === props.event)) || !newFacebookEvents.some(x => x === props.event)) {
+            handleIframe(
+              pixel.host,
+              props.event === 'OrderBumpPurchase' ? props.product_id : (selectedOrderbumpId ?? pixel.product_id),
+              product_name,
+              categoryName,
+              productUrl,
+              props.event,
+              eventId,
+              pixel.id,
+              props.method,
+              product_amount,
+              props.affiliate_id,
+              props.sale_id,
+              original_amount,
+              pixel.type != 'FACEBOOK' ? props.name : await hashData(props.name),
+              pixel.type != 'FACEBOOK' ? props.email : await hashData(props.email),
+              pixel.type != 'FACEBOOK' ? props.cellphone : await hashData(props.cellphone,{telefone: true}),
+              ids,
+              props.uuid,
+              pixel.type != 'FACEBOOK' ? props.address?.city : await hashData(props.address?.city),
+              pixel.type != 'FACEBOOK' ? props.address?.country_code : await hashData(props.address?.country_code),
+              pixel.type != 'FACEBOOK' ? props.address?.state : await hashData(props.address?.state),
+              pixel.type != 'FACEBOOK' ? props.address?.zip_code : await hashData(props.address?.zip_code,{zipCode:true}),
+              fbc,
+              fbp,
+              await hashData(props.name, {lestName:true}),
+              await hashData(props.name, {firstName:true}),
+              document.referrer,
+              props.seller_id,
+              btoa(JSON.stringify(contents)),
+              pixel.label,
+              pixel.pixel_id,
+              pixel.type,
+              pixel.amount,
+              currency,
+              pixel.view
+            )
+          }
         });
       }
     });

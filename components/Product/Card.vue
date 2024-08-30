@@ -314,7 +314,7 @@ function formatEventTime(hora){
       <!-- Coupon -->
       <ProductCoupon 
         :urlSubscription="urlSubscription"
-        v-if="(urlSubscription && history_subscription?.coupon) || (!urlSubscription && productStore.allowedCoupon && !sellerHasFeatureTickets)"
+        v-if="(urlSubscription && history_subscription?.coupon) || (!urlSubscription && productStore.allowedCoupon)"
       />
       <ProductCashback />
     </section>

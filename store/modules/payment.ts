@@ -149,6 +149,7 @@ export const usePaymentStore = defineStore("Payment", {
         product,
         product_global_settings,
         recipientIsActivated,
+        baas_activited,
       } = productStore;
 
       const { name, email, document, cellphone } = personalStore;
@@ -395,7 +396,8 @@ export const usePaymentStore = defineStore("Payment", {
               method,
               product_global_settings,
               data.installments ? Number(data.installments) : null,
-              recipientIsActivated
+              recipientIsActivated,
+              baas_activited
             );
 
             if (gateway) {
@@ -834,7 +836,8 @@ export const usePaymentStore = defineStore("Payment", {
       metodo: string,
       global_settings: GlobalSettingsCard[],
       installments: number | null,
-      recipientIsActivated: boolean
+      recipientIsActivated: boolean,
+      baas_activited: boolean
     ): any {
       const toast = Toast.useToast();
 
@@ -889,8 +892,8 @@ export const usePaymentStore = defineStore("Payment", {
 
           if (
             result == "PAGARME" &&
-            !recipientIsActivated &&
-            valuegatewayLowInstallment == "IUGU"
+            !recipientIsActivated && 
+            !baas_activited
           ) {
             result = "IUGU";
           }
