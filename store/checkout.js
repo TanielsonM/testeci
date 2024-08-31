@@ -90,7 +90,8 @@ export const useCheckoutStore = defineStore("checkout", {
     whatsappSaleId: null,
     reuseCreditCard: true,
     secondSaleFlag: false,
-    methodChange: true
+    methodChange: true,
+    assoc_ticket: false,
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -1076,6 +1077,9 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setReuseCreditCard(check) {
       return (this.reuseCreditCard = !check);
-    }
+    },
+    setAssocTicket(payload) {
+      this.assoc_ticket = payload;
+    },
   }
 });
