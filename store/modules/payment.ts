@@ -135,10 +135,10 @@ export const usePaymentStore = defineStore("Payment", {
         urlClientId,
         urlClientDocument,
         reuseCreditCard,
-        whatsappSaleId
-
+        whatsappSaleId,
+        assoc_ticket,
       } = checkoutStore;
-      
+
       const {
         productName,
         is_gift,
@@ -185,7 +185,7 @@ export const usePaymentStore = defineStore("Payment", {
 
         let data: Payment = {
           // Purchase infos
-          method: method,
+          method: getOriginalAmount === 0 ? "FREE" : method,
           amount: getOriginalAmount,
           total: total.value,
           installments:
@@ -223,6 +223,7 @@ export const usePaymentStore = defineStore("Payment", {
           upsell_id: hasUpsell ? hasUpsell.value : null,          
           wpp_id: whatsappSaleId,
           reuse_credit_card: reuseCreditCard,
+          assoc_ticket: assoc_ticket
         };
         
         if (sellerHasFeatureTickets) {

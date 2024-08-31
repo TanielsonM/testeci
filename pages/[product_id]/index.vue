@@ -36,7 +36,8 @@ const { t, locale } = useI18n();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { product_list } = storeToRefs(checkout);
+const { product_list, assoc_ticket } = storeToRefs(checkout);
+const { $moment } = useNuxtApp();
 const {
   getEventsDefault,
   getPageView,
@@ -84,7 +85,6 @@ const pixelProductIds = computed(()=> {
     .filter((item) => item.product_id != productStore.product_id)
     .map((item) => item.product_id);
 })
-
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -147,6 +147,12 @@ onMounted(() => {
         const queryParams = new URLSearchParams(route.query).toString();
         navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
       }
+      if (sellerHasFeatureTickets.value && product_list.value.length == 1) {
+        checkout.setAssocTicket(true);
+      } else {
+        checkout.setAssocTicket(false);
+      }
+        
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -252,13 +258,26 @@ if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
   }
 }
 
+const dateEvent = computed(() => {
+  return formatEventStartDate(product.value?.start_date);
+});
+
+function formatEventStartDate(Date) {
+    const startDate = $moment(Date); 
+    const dayOfWeek = startDate.format('ddd'); 
+    const dateFormatted = startDate.format('D MMM, YYYY'); 
+    const startDateConcat = `${dayOfWeek}, ${dateFormatted}`; 
+    return startDateConcat;
+}
+
 await checkout.init().then(() => {
+  let ogTitle = product?.value?.format == "EVENT" ? "Greenn Tickets" : "Greenn";
 
-  let ogTitle = "Greenn";
-  if (product?.value?.name) {
-    ogTitle = `${product.value.name} | Greenn`;
+  if (product?.value?.name && product?.value?.format == "EVENT") {
+    ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
+  }else{
+    ogTitle = `${product?.value?.name} | Greenn`;
   }
-
   let ogDescription = "A plataforma de pagamento simples";
   if (product?.value?.description) {
     ogDescription = product.value.description;
@@ -380,7 +399,14 @@ const isCustomOne = computed(() => {
               </p>
               <OrderBumps v-for="(bump, index) in checkout.getBumpList" :key="index" :bump="bump" :class="{ 'mb-5': checkout.getBumpList.length !== index + 1 }" />
             </template>
-
+            <!-- assoc ticket automation -->
+            <BaseCheckbox
+               v-if="sellerHasFeatureTickets && product_list.length == 1 "
+              :saveData="true"
+              v-model:checked="assoc_ticket"
+              :label="$t('checkout.checkbox.info')"
+              :id="'assocTicketCheckbox'"
+            />
             <!-- Payment button -->
             <section>
               <BaseButton @click="callPayment" v-if="method !== 'PAYPAL'" class="my-7" :loading="isPaymentLoading" :disabled="isPaymentLoading">
