@@ -271,11 +271,13 @@ function formatEventStartDate(Date) {
 }
 
 await checkout.init().then(() => {
-  let ogTitle = "Greenn Tickets";
-  if (product?.value?.name) {
-    ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
-  }
+  let ogTitle = product?.value?.format == "EVENT" ? "Greenn Tickets" : "Greenn";
 
+  if (product?.value?.name && product?.value?.format == "EVENT") {
+    ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
+  }else{
+    ogTitle = `${product?.value?.name} | Greenn`;
+  }
   let ogDescription = "A plataforma de pagamento simples";
   if (product?.value?.description) {
     ogDescription = product.value.description;
