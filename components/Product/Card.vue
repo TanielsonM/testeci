@@ -225,7 +225,7 @@ function formatEventTime(hora){
     <DonationCampaign v-if="!urlSubscription && product?.seller?.donation_tax" />
 
     <!-- address event -->
-     <section class="flex flex-col gap-3 px-5 pb-5" v-if="product.format == 'EVENT'">
+     <section class="flex flex-col gap-3 px-5 pb-5" v-if="product.product_type_id == 3 && sellerHasFeatureTickets">
       <div class="data-container" >
         <img src="../../assets/icons/calendar.svg" alt="calendar">
         <p>

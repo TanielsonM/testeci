@@ -20,6 +20,9 @@ const { $moment } = useNuxtApp();
 const hasReservations = preCheckout.$state
 const { product_list } = storeToRefs(checkoutStore);
 
+const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
+
+
 function byTickets() {
   expiredSession.setHaveFinished(false);
   const queryParams = new URLSearchParams(route.query).toString();
@@ -97,7 +100,8 @@ function formatEventStartDate(Date) {
 
 await checkout.init().then(() => {
   let ogTitle = "Greenn Tickets";
-  if (product?.value?.name) {
+  
+  if (product?.value?.name &&  product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value) {
     ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
   }
 
