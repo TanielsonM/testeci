@@ -58,6 +58,9 @@
     }
   },
   "components": {
+    "event_date": {
+      "until": " até "
+    },
     "product_card": {
       "title_header": "COMPRA 100% SEGURA",
       "author": "Autor",
@@ -124,9 +127,9 @@
     "link_vendedor_nao_encontrado": "Link do vendedor não encontrado",
     "salvar_dados": "Salvar dados para as próximas compras",
     "modal": {
-      "text_expiration": "Atenção, sua sessão foi expirada",
-      "text_loading": "Será necessário recarregar a página para continuar comprando este evento.",
-      "text_button": "Recarregar a página",
+      "text_expiration": "Sua sessão foi encerrada",
+      "text_loading": "Após 10 minutos, a sessão expira e os ingressos são liberados. Finalize a compra antes que o tempo se esgote.",
+      "text_button": "Recarregue a página para atualizar os lotes",
       "text_ticket": "Alterar ingressos",
       "text_session": "A sua sessão ainda não expirou, caso volte a tela de pré-checkout para alterar seus ingressos irá perder seus dados salvos.",
       "text_button_pre": " Voltar para o Pré-checkout"
@@ -303,6 +306,9 @@
         "cvv_cartao": "Preencha corretamente o número CVV do cartão."
       }
     },
+    "checkbox": {
+      "info": "Atribuir este ingresso aos mesmos dados utilizados na compra"
+    },
     "footer": {
       "btn_compra": "Comprar agora",
       "btn_renovar_assinatura": "Renovar assinatura",
@@ -397,7 +403,8 @@
     "payment_methods": "Formas de Pagamento",
     "total": "total",
     "or": "ou",
-    "buy": "Comprar ingressos"
+    "buy": "Comprar ingressos",
+    "free": "Grátis"
   },
   "order": {
     "text_header": "COMPRA 100% SEGURA",

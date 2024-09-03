@@ -16,6 +16,8 @@ export const useInstallmentsStore = defineStore("installments", {
     getInstallments(state: InstallmentsState) {
       const amountStore = useAmountStore();
       const checkout = useCheckoutStore();
+      const preCheckout = usePreCheckoutStore();
+      const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
       const {
         monthly_interest,
         product_list,
@@ -37,7 +39,7 @@ export const useInstallmentsStore = defineStore("installments", {
         else total = 0;
         let frete = 0;
 
-        product_list.value.map((item: Product) => {
+        product_list.value.map((item: Product, index) => {
           let value = !!item.custom_charges?.length
             ? item.custom_charges[0].amount
             : item.amount;
@@ -49,7 +51,12 @@ export const useInstallmentsStore = defineStore("installments", {
                 : item.shipping?.amount || 0;
           }
           // Verifica se tem cupom
-          if (item.id == parseInt(product_id.value) && coupon.value.applied) {
+          if (
+            (item.id == parseInt(product_id.value) &&
+              coupon.value.applied &&
+              index === 0) ||
+            (sellerHasFeatureTickets && coupon.value.applied && index === 0)
+          ) {
             value -= coupon.value.amount;
           }
           // Se for atualizaçao de assinatura

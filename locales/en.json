@@ -58,6 +58,9 @@
     }
   },
   "components": {
+    "event_date": {
+      "until": " until "
+    },
     "product_card": {
       "title_header": "100% SAFE PURCHASE",
       "author": "Author",
@@ -124,8 +127,8 @@
     "link_vendedor_nao_encontrado": "The seller link was not found",
     "salvar_dados": "Save data for future purchases",
     "modal": {
-      "text_expiration": "Attention, your session has expired",
-      "text_loading": "You will need to reload the page to continue purchasing this event.",
+      "text_expiration": "Your session has ended",
+      "text_loading": "After 10 minutes, the session expires and tickets are released. Complete your purchase before time runs out.",
       "text_button": "Reload the page",
       "text_ticket": "Change tickets",
       "text_session": "Your session has not expired yet, if you return to the pre-checkout screen to change your tickets you will lose your saved data.",
@@ -302,6 +305,9 @@
         "cvv_cartao": "Fill in the CVV number on the card."
       }
     },
+    "checkbox": {
+      "info": "Assign this ticket to the same data used in the purchase"
+    },
     "footer": {
       "btn_compra": "Buy now",
       "btn_renovar_assinatura": "Renovar assinatura",
@@ -396,7 +402,8 @@
     "payment_methods": "Payment Methods",
     "total": "total",
     "or": "or",
-    "buy": "Buy tickets"
+    "buy": "Buy tickets",
+    "free": "Free"
   },
   "order": {
     "text_header": "100% SAFE PURCHASE",
