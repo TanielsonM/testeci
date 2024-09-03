@@ -249,7 +249,13 @@
         "dois_cartoes": {
           "title": "Two cards",
           "flag": "Card",
-          "valor": "Value to be discounted"
+          "valor": "Value to be discounted",
+          "cards_information": {
+            "start": "The purchase will be split into two cards:",
+            "middle": "your card will be charged at the end",
+            "middle_2":", and",
+            "end": "on the card with ending"
+          }
         },
         "paypal": {
           "paypal": "Paypal",
