@@ -250,7 +250,13 @@
         "dois_cartoes": {
           "title": "Dos Tarjeta",
           "flag": "Tarjeta",
-          "valor": "Importe a cobrar"
+          "valor": "Importe a cobrar",
+          "cards_information": {
+            "start": "La compra se dividirá en dos tarjetas.:",
+            "middle": "se cargará a la tarjeta al final",
+            "middle_2":", y",
+            "end": "en la tarjeta con final"
+          }
         },
         "paypal": {
           "paypal": "Paypal",

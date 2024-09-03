@@ -250,7 +250,13 @@
         "dois_cartoes": {
           "title": "Dois cartões",
           "flag": "Cartão",
-          "valor": "Valor a ser descontado"
+          "valor": "Valor a ser descontado",
+          "cards_information": {
+            "start": "A compra será dividida em dois cartões:",
+            "middle": "será cobrado no cartão com final",
+            "middle_2":", e",
+            "end": "no cartão com final"
+          }
         },
         "paypal": {
           "paypal": "Paypal",
