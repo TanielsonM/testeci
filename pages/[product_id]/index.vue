@@ -273,9 +273,8 @@ function formatEventStartDate(Date) {
 }
 
 await checkout.init().then(() => {
-  let ogTitle = product?.value?.format == "EVENT" ? "Greenn Tickets" : "Greenn";
-
-  if (product?.value?.name && product?.value?.format == "EVENT") {
+  let ogTitle = product?.value?.format == "EVENT" && product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value ? "Greenn Tickets" : "Greenn";
+  if (product?.value?.name && product?.value?.format == "EVENT" && product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value) {
     ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
   }else{
     ogTitle = `${product?.value?.name} | Greenn`;
