@@ -1,6 +1,7 @@
 <script setup>
 /* ligth icons */
 import logo from "@/assets/logos/logo.png";
+import PciIcon from "@/assets/footer/pci.svg";
 import VisaIcon from "@/assets/footer/visa.svg";
 import MastercardIcon from "@/assets/footer/mastercard.svg";
 import HipercardIcon from "@/assets/footer/hipercard-v2.svg";
@@ -9,6 +10,7 @@ import EloIcon from "@/assets/footer/elo.svg";
 import BoletoBarcodeIcon from "@/assets/footer/boleto-barcode.svg";
 /* Dark icons */
 import logoDark from "@/assets/logos/logo2-dark.png";
+import PciIconDark from "@/assets/footer/pci-dark.svg";
 import VisaIconDark from "@/assets/footer/visa-dark.svg";
 import MastercardIconDark from "@/assets/footer/mastercard-dark.svg";
 import HipercardIconDark from "@/assets/footer/hipercard-v2-dark.svg";
@@ -30,6 +32,10 @@ const imgs = [
   {
     src: custom_checkout.theme === "light" ? logo : logoDark,
     alt: "Greenn logo",
+  },
+  {
+    src: custom_checkout.theme === "light" ? PciIcon : PciIconDark,
+    alt: "Pci icon",
   },
   {
     src: custom_checkout.theme === "light" ? VisaIcon : VisaIconDark,
