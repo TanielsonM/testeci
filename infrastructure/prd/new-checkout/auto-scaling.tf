@@ -51,7 +51,7 @@ resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_10" {
     min_capacity = 10
     max_capacity = 50
   }
-  schedule = "cron(0 10 * * ?)"
+  schedule = "cron(30 09 * * ?)"
 }
 
 resource "aws_appautoscaling_scheduled_action" "scheduled_action_min_40" {
