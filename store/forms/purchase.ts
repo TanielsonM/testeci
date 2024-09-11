@@ -44,6 +44,21 @@ export const usePurchaseStore = defineStore("purchase", {
       }
       this.first.amount = instStore.getTotal();
     },
+
+    resetCardState() {
+      const reset = {
+        amount: 0,
+        number: "",
+        holder_name: "",
+        month: "",
+        year: "",
+        cvv: "",
+      }
+
+     this.first = reset  
+     this.second = reset
+    },
+
     setIsFormValid(value: boolean) {
       this.isFormValid = value
     }
