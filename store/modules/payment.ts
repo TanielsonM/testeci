@@ -727,6 +727,7 @@ export const usePaymentStore = defineStore("Payment", {
       const checkoutStore = useCheckoutStore();
 
       const { product_id } = checkoutStore;
+      const purchaseStore = usePurchaseStore();
 
       checkoutStore.setLoading(false);
       this.loading = false;
@@ -773,6 +774,7 @@ export const usePaymentStore = defineStore("Payment", {
           break;
         case "INVALID_CREDIT_CARD":
           this.error_message = "error.INVALID_CREDIT_CARD";
+          purchaseStore.resetCardState();
           // this.resetCheckout("ALL");
           break;
         case "INSUFFICIENT_FUNDS":
@@ -804,6 +806,8 @@ export const usePaymentStore = defineStore("Payment", {
           break;
         case "CREDIT_CARD_INVALID":
           this.error_message = "error.CREDIT_CARD_INVALID";
+          purchaseStore.resetCardState();
+
           break;
         case "SUSPECTED_INTERN_FRAUD":
           this.error_message = "error.SUSPECTED_INTERN_FRAUD";
@@ -811,7 +815,7 @@ export const usePaymentStore = defineStore("Payment", {
         case "GENERIC":
         default:
           this.error_message = "error.GENERIC";
-          // this.resetCheckout("ALL");
+                    // this.resetCheckout("ALL");
           break;
       }
 
