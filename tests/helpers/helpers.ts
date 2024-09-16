@@ -5,8 +5,8 @@ import { addressData } from '../data/andress';
 
 // Acessa a url do checkout
 export async function navigateToPaymentPage(page: Page, id: string) {
-  let url = `https://payfast.greenn.com.br/${id}`;
-  //let url = `https://payfast.stg.greenn.com.br/${id}`;
+  // let url = `https://payfast.greenn.com.br/${id}`;
+  let url = `https://payfast.stg.greenn.com.br/${id}`;
   await page.goto(url);
 }
 
