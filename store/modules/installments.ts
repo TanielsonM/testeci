@@ -110,7 +110,7 @@ export const useInstallmentsStore = defineStore("installments", {
           let value = !!item.custom_charges?.length
             ? item.custom_charges[0].amount
             : item.amount;
-          // Verifica se produto tem frete
+                      // Verifica se produto tem frete
           if (!!item.has_shipping_fee) {
             frete +=
               item.type_shipping_fee === "FIXED"
@@ -118,8 +118,8 @@ export const useInstallmentsStore = defineStore("installments", {
                 : item.shipping?.amount || 0;
           }
           // Verifica se tem cupom
-          if (item.id == parseInt(product_id.value) && coupon.value.applied) {
-            value -= coupon.value.amount;
+          if (item.product_id == parseInt(product_id.value) && coupon.value.applied) {
+            value -= coupon.value.amount;     
           }
           // Cliente não paga juros
           if (!!item.no_interest_installments) {
@@ -134,7 +134,7 @@ export const useInstallmentsStore = defineStore("installments", {
           }
         });
         total = Math.round(total * 100) / 100;
-        return Number(Number((total + frete)));
+                return Number(Number((total + frete)));
       };
     },
   },

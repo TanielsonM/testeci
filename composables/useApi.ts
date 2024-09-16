@@ -167,6 +167,11 @@ export default function () {
           statusCode: 404,
           message: "Este link não existe ou não está disponível.",
         });
+      } else if (url.includes("offer") && error.statusCode === 404) {
+        throw showError({
+          statusCode: 404,
+          message: "Esta oferta é inválida ou não está mais disponível. Por favor, entre em contato com o produtor.",
+        });
       } else if (url.includes("product") && error.statusCode === 404) {
         throw showError({
           statusCode: 404,

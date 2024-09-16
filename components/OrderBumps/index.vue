@@ -6,10 +6,12 @@ import { useStepStore } from "~~/store/modules/steps";
 import { useAddressStore } from "@/store/forms/address";
 import { useProductStore } from "~~/store/product";
 import { useInstallmentsStore } from "~~/store/modules/installments";
+import { usePurchaseStore } from "@/store/forms/purchase";
 // Utils
 import { formatMoney } from "~/utils/money";
 
 
+const purchase = usePurchaseStore();
 const { t } = useI18n();
 const props = defineProps({
   bump: {
@@ -142,6 +144,7 @@ watch(
     if (getCountSteps.value === 2 && currentStep.value === 3 && !showAddressStep.value && isMobile.value) {
       stepsStore.back();
     }
+    purchase.setCardsAmount();
     }
   }
 );

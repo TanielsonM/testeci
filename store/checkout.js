@@ -90,7 +90,8 @@ export const useCheckoutStore = defineStore("checkout", {
     whatsappSaleId: null,
     reuseCreditCard: true,
     secondSaleFlag: false,
-    methodChange: true
+    methodChange: true,
+    assoc_ticket: false,
   }),
   getters: {
     isLoading: (state) => state.global_loading,
@@ -431,7 +432,6 @@ export const useCheckoutStore = defineStore("checkout", {
       }
     },
     async getCoupon() {
-      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
       let offerBatche = "";
 
       const { batches } = usePreCheckoutStore();
@@ -441,7 +441,6 @@ export const useCheckoutStore = defineStore("checkout", {
 
       const product_id = this.url.params.product_id;
 
-      // NÃO APLICAR O CUPOM ATE VALIDAR ESSE CENÁRIO↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
       let url = `/coupon/check/${this.coupon.name}/${product_id}`;
       if (this.url.params.hash) {
         url = url + `/offer/${this.url.params.hash}`;
@@ -1078,6 +1077,9 @@ export const useCheckoutStore = defineStore("checkout", {
     },
     setReuseCreditCard(check) {
       return (this.reuseCreditCard = !check);
-    }
+    },
+    setAssocTicket(payload) {
+      this.assoc_ticket = payload;
+    },
   }
 });

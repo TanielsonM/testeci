@@ -18,6 +18,7 @@ const nuxtApp = useNuxtApp();
 
 
 // Stores
+const purchase = usePurchaseStore();
 const customCheckoutStore = useCustomCheckoutStore();
 const productStore = useProductStore();
 const checkout = useCheckoutStore();
@@ -36,7 +37,9 @@ const { t, locale } = useI18n();
 const { sellerHasFeatureTickets } = storeToRefs(preCheckout);
 const { product, hasTicketInstallments } = storeToRefs(productStore);
 const { sameAddress, charge, shipping } = storeToRefs(address);
-const { product_list } = storeToRefs(checkout);
+const { first, second } = storeToRefs(purchase);
+const { product_list, assoc_ticket } = storeToRefs(checkout);
+const { $moment } = useNuxtApp();
 const {
   getEventsDefault,
   getPageView,
@@ -84,7 +87,6 @@ const pixelProductIds = computed(()=> {
     .filter((item) => item.product_id != productStore.product_id)
     .map((item) => item.product_id);
 })
-
 
 const tabs = computed(() => {
   return allowed_methods.value.map((item) => {
@@ -147,6 +149,12 @@ onMounted(() => {
         const queryParams = new URLSearchParams(route.query).toString();
         navigateTo(`/pre-checkout/${route.params?.product_id}${queryParams ? `?${queryParams}` : ''}`);
       }
+      if (sellerHasFeatureTickets.value && product_list.value.length == 1) {
+        checkout.setAssocTicket(true);
+      } else {
+        checkout.setAssocTicket(false);
+      }
+        
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -252,13 +260,25 @@ if (selectedCountry.value !== "BR" && !!product.value.seller.is_heaven) {
   }
 }
 
+const dateEvent = computed(() => {
+  return formatEventStartDate(product.value?.start_date);
+});
+
+function formatEventStartDate(Date) {
+    const startDate = $moment(Date); 
+    const dayOfWeek = startDate.format('ddd'); 
+    const dateFormatted = startDate.format('D MMM, YYYY'); 
+    const startDateConcat = `${dayOfWeek}, ${dateFormatted}`; 
+    return startDateConcat;
+}
+
 await checkout.init().then(() => {
-
-  let ogTitle = "Greenn";
-  if (product?.value?.name) {
-    ogTitle = `${product.value.name} | Greenn`;
+  let ogTitle = product?.value?.format == "EVENT" && product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value ? "Greenn Tickets" : "Greenn";
+  if (product?.value?.name && product?.value?.format == "EVENT" && product?.value?.product_type_id == 3 && sellerHasFeatureTickets?.value) {
+    ogTitle = `${product?.value?.name} | ${dateEvent.value} | Greenn Tickets`;
+  }else{
+    ogTitle = `${product?.value?.name} | Greenn`;
   }
-
   let ogDescription = "A plataforma de pagamento simples";
   if (product?.value?.description) {
     ogDescription = product.value.description;
@@ -369,6 +389,15 @@ const isCustomOne = computed(() => {
                 </template>
               </template>
             </section>
+            <div v-if="method == 'TWO_CREDIT_CARDS'" class="information-cards">
+              <span class="information-cards-span"> 
+                {{$t('checkout.pagamento.metodos.dois_cartoes.cards_information.start')}}
+                {{`
+                  ${first.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle")} ${first.number.length == 19 ? first.number.slice(-4) : '****'}${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.middle_2")}
+                  ${second.amount} ${$t("checkout.pagamento.metodos.dois_cartoes.cards_information.end")} ${second.number.length == 19 ? second.number.slice(-4) : '****'}.
+                `}}
+              </span>
+            </div>
             <!-- Bumps -->
             <template v-if="checkout.getBumpList.length && !hasTicketInstallments && product?.method !== 'FREE' && !checkout.hasFreeBump">
               <p class="my-5 w-full text-txt-color">
@@ -380,7 +409,14 @@ const isCustomOne = computed(() => {
               </p>
               <OrderBumps v-for="(bump, index) in checkout.getBumpList" :key="index" :bump="bump" :class="{ 'mb-5': checkout.getBumpList.length !== index + 1 }" />
             </template>
-
+            <!-- assoc ticket automation -->
+            <BaseCheckbox
+               v-if="sellerHasFeatureTickets && product_list.length == 1 "
+              :saveData="true"
+              v-model:checked="assoc_ticket"
+              :label="$t('checkout.checkbox.info')"
+              :id="'assocTicketCheckbox'"
+            />
             <!-- Payment button -->
             <section>
               <BaseButton @click="callPayment" v-if="method !== 'PAYPAL'" class="my-7" :loading="isPaymentLoading" :disabled="isPaymentLoading">
@@ -671,3 +707,19 @@ const isCustomOne = computed(() => {
     <!-- <NotificationsCustom title="oi" name="Gabriel Reis" /> -->
   </NuxtLayout>
 </template>
+<style lang="scss">
+  .information-cards{
+    width: 49%;
+    text-align: justify;
+  }
+  .information-cards-span{
+    color: var(--txt-color);
+    font-size: 12px;
+    font-weight: 400;
+  }
+  @media(max-width: 1024px) {
+    .information-cards{
+      width: 100%;
+    }
+  }
+</style>
