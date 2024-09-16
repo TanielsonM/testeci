@@ -42,6 +42,30 @@ npm run preview
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
 
+## Como Executar os Testes Automatizados
+
+1. Instalar o playwright
+
+```bash
+npx playwright install
+```
+Ou
+
+```bash
+yarn playwright install
+```
+
+2. Executando todos os testes
+
+```bash
+npx playwright test
+```
+
+3. Executando um teste específico
+
+```bash
+npx playwright test path/para/seu/teste.spec.ts
+```
 
 # Como Executar o Projeto Localmente em Docker
 
@@ -81,7 +105,6 @@ Este guia irá ajudá-lo a executar o projeto localmente usando o Docker Compose
   docker-compose -f local.docker-compose.yaml down -
    ```
 
- 
 
 
 
